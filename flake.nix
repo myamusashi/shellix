@@ -1,6 +1,6 @@
 {
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs?rev=f771eb401a46846c1aebd20552521b233dd7e18b";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
     nixpkgs-stable.url = "github:NixOS/nixpkgs/release-25.05";
     sops-nix.url = "github:Mic92/sops-nix";
     chaotic.url = "github:chaotic-cx/nyx/nyxpkgs-unstable";
