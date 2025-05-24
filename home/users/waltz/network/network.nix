@@ -24,9 +24,10 @@
   ];
 
   networking.extraHosts = ''
-    192.168.18.14 myamusashi.com
-    127.0.0.1 myamusashi.com
-    127.0.0.1 pma.myamusashi.com
+      192.168.18.14 myamusashi.com
+    127.0.0.1 cache.myamusashi.com
+      127.0.0.1 myamusashi.com
+      127.0.0.1 pma.myamusashi.com
   '';
   # Or disable the firewall altogether.
   networking.firewall.enable = true;

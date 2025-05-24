@@ -47,7 +47,7 @@
     vscode-langservers-extracted
     llvmPackages_19.clang-unwrapped
     gcc14
-		nodejs_22
+    nodejs_22
     typescript-language-server
     sass
     lua54Packages.luarocks_bootstrap
@@ -96,8 +96,8 @@
     docker-compose
     lazydocker
     btop
-		cachix
-		forgejo-runner
+    cachix
+    forgejo-runner
     attic-client
     attic-server
     # Stirling depends
