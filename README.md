@@ -1,0 +1,3 @@
+# nixDots
+
+nix flake
