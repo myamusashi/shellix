@@ -8,7 +8,7 @@
     enable = true;
     package = pkgs.nix-serve-ng;
     port = 5500;
-    secretKeyFile = config.sops.secrets.nix-serve_secret.path;
+    secretKeyFile = config.sops.secrets.nix-serve_secrets.path;
   };
 
   services.atticd = {
