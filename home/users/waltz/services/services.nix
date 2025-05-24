@@ -26,6 +26,10 @@
     enable = true;
     enablePHP = true;
     adminAddr = "admin@email.tld";
+    extraModules = [
+      "proxy"
+      "proxy_http"
+    ];
 
     extraConfig = ''
       DirectoryIndex index.html index.php
@@ -49,6 +53,20 @@
           <Directory "${phpmyadminPkg}">
             Options -Indexes
           </Directory>
+        '';
+      };
+      "cache.myamusashi.com" = {
+        documentRoot = "/var/www/nix-cache-ui";
+        extraConfig = ''
+          ProxyPassMatch "^/(nar|nix-cache-info)(.*)$" "http://127.0.0.1:5500/$1$2"
+
+          ProxyPassReverse "/nar" "http://127.0.0.1:5500/nar"
+          ProxyPassReverse "/nix-cache-info" "http://127.0.0.1:5500/nix-cache-info"
+            <LocationMatch "^/(nar|nix-cache-info)">
+              Header set Cache-Control "no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0"
+              ExpiresActive On
+              ExpiresDefault "access"
+            </LocationMatch>
         '';
       };
     };

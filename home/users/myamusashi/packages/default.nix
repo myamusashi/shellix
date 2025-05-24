@@ -47,7 +47,7 @@
     pkgs.waypaper
     pkgs.power-profiles-daemon
     pkgs.hyprsunset
-		pkgs.vesktop
+    pkgs.vesktop
     pkgs.hyprpicker
     pkgs.telegram-desktop
     # inputs.quickshell.packages.${pkgs.system}.default
