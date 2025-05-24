@@ -1,5 +1,5 @@
 keys:
-  - &waltz_server age17tr8ymvhtamgprddy0ujcep5ys8zyss3wq9638vj45qaddkn2e0s8ca83q
+  - &waltz_server age1h5522ps2vuddyk0rwvtw77rvxtpnzkgsgl7ekv3cw2a0wy9ymsrs57r060
 creation_rules:
   - path_regex: sops/secrets.json$
     key_groups:

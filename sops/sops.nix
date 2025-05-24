@@ -9,28 +9,7 @@
     defaultSopsFile = ./secrets.json;
     defaultSopsFormat = "json";
 
-    secrets.cloudflare_creds = {
-      format = "json";
-      owner = "cloudflared";
-      group = "cloudflared";
-      mode = "0400";
-    };
-
-    secrets.attic_env = {
-      format = "json";
-      owner = "atticd";
-      group = "atticd";
-      mode = "0400";
-    };
-
-    secrets.token_rs256_attic = {
-      format = "json";
-      owner = "atticd";
-      group = "atticd";
-      mode = "0400";
-    };
-
-    secrets.nix-serve_secret = {
+    secrets.nix-serve_secrets = {
       format = "json";
       mode = "0400";
     };

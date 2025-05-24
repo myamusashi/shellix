@@ -47,6 +47,7 @@
     vscode-langservers-extracted
     llvmPackages_19.clang-unwrapped
     gcc14
+		nodejs_22
     typescript-language-server
     sass
     lua54Packages.luarocks_bootstrap
@@ -68,7 +69,6 @@
     cmake
     ninja
     ntfs3g
-
     libgdiplus
     wl-clipboard
     ripgrep
@@ -97,6 +97,7 @@
     lazydocker
     btop
 		cachix
+		forgejo-runner
     attic-client
     attic-server
     # Stirling depends
