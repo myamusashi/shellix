@@ -74,7 +74,7 @@
     substituters = [
       # Priority
       "https://myamusashi.cachix.org"
-      # "https://cache.myamusashi.space"
+      "https://cache.myamusashi.space"
       "https://cache.nixos.org"
     ];
 
@@ -88,7 +88,7 @@
 
     trusted-public-keys = [
       "myamusashi.cachix.org-1:ra4PbY6yqM1pSvkGqJ78CZse3WWgjk4rOXBMtjD9YrY="
-      # "cache.myamusashi.space-1:IzPsZCUaUoHFEZYFwVShExap5toPvwhURZYnB0o0fjs="
+      "cache.myamusashi.space-1:IzPsZCUaUoHFEZYFwVShExap5toPvwhURZYnB0o0fjs="
       "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
     ];
 
