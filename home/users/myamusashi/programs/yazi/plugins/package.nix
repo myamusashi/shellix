@@ -71,7 +71,7 @@
 
   yatline = pkgs.fetchFromGitHub {
     owner = "imsi32";
-    repo = "yatline";
+    repo = "yatline.yazi";
     rev = "655facb7c31ddcf96a05185c65dd5b89d5954f2b";
     hash = "sha256-fjapFEaM5ORoJJivrzKxwPM9pe6B9UkVqPfOsUPxpEg=";
   };

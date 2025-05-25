@@ -3,14 +3,14 @@ final: prev: {
     doCheck = false;
   });
 
-  kitty = prev.kitty.overrideAttrs (oldAttrs: {
-    patches =
-      (oldAttrs.patches or [])
-      ++ [
-        ./patch/kitty-patch/fix_wl_platform_toplevel.patch
-        ./patch/kitty-patch/fix_xdg_toplevel_switch.patch
-      ];
-  });
+  # kitty = prev.kitty.overrideAttrs (oldAttrs: {
+  #   patches =
+  #     (oldAttrs.patches or [])
+  #     ++ [
+  #       ./patch/kitty-patch/fix_wl_platform_toplevel.patch
+  #       ./patch/kitty-patch/fix_xdg_toplevel_switch.patch
+  #     ];
+  # });
 
   vmware-workstation = prev.vmware-workstation.overrideAttrs (oldAttrs: let
     version = "17.6.1";
