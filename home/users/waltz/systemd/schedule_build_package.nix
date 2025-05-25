@@ -3,106 +3,64 @@
   pkgs,
   ...
 }: {
-  # Pastikan systemd diaktifkan (biasanya sudah default)
-  # systemd.enable = true;
+  # Definisikan direktori kerja untuk operasi flake
+  # Ini penting karena nix flake update harus dijalankan di dalam direktori flake
+  # Jika `/etc/nixos` bukan direktori flake, sesuaikan ini.
+  # Asumsi bahwa flake Anda adalah `/etc/nixos`.
 
-  # Service untuk Garbage Collection
-  systemd.services.nix-gc = lib.mkDefault {
-    description = "NixOS Garbage Collection";
+  # 1. Service Utama untuk menjalankan semua langkah secara berurutan
+  systemd.services.nixos-maintenance-and-build = let
+    flakeDir = "/etc/nixos";
+  in {
+    description = "NixOS Monthly Maintenance and Build";
     wantedBy = ["multi-user.target"];
-    path = with pkgs; [nix]; # Pastikan nix ada di PATH
+    path = with pkgs; [nix nixos-rebuild home-manager git]; # Pastikan semua tools yang dibutuhkan ada di PATH
     serviceConfig = {
       Type = "oneshot";
-      ExecStart = "${pkgs.nix}/bin/nix-collect-garbage -d";
+      # Gunakan 'bash -c' untuk menjalankan beberapa perintah secara berurutan
+      ExecStart = ''
+        ${pkgs.nix}/bin/nix-collect-garbage -d
+
+        # Pindah ke direktori flake sebelum melakukan flake update
+        pushd ${flakeDir}
+        ${pkgs.nix}/bin/nix flake update
+        popd
+
+        # Jalankan build untuk semua konfigurasi
+        ${pkgs.nixos-rebuild}/bin/nixos-rebuild build --keep-going --flake path:${flakeDir}#waltz
+        ${pkgs.nixos-rebuild}/bin/nixos-rebuild build --keep-going --flake path:${flakeDir}#nixos
+
+        # Jalankan Home Manager build
+        # Pastikan user 'myamusashi' ada dan direktori HOME-nya benar
+        # Jika Anda menjalankan ini sebagai root, pastikan home-manager dapat menemukan konfigurasi user tersebut.
+        HOME=/home/myamusashi ${pkgs.home-manager}/bin/home-manager build --accept-flake-config --keep-going --flake path:${flakeDir}#myamusashi
+      '';
+      User = "root"; # Jalankan sebagai root untuk hak akses yang diperlukan
     };
   };
 
-  # Timer untuk Garbage Collection (akan berjalan setiap bulan)
-  systemd.timers.nix-gc = lib.mkDefault {
-    description = "Monthly NixOS Garbage Collection";
+  # Timer untuk menjalankan service utama setiap bulan
+  systemd.timers.nixos-maintenance-and-build = {
+    description = "Monthly NixOS Maintenance and Build Timer";
     wantedBy = ["timers.target"];
     timerConfig = {
       OnCalendar = "monthly"; # Jalankan setiap bulan
       Persistent = true; # Jika mesin mati, akan dijalankan saat boot berikutnya
+      Unit = "nixos-maintenance-and-build.service"; # Memicu service utama
     };
   };
 
-  # Service untuk build server machine (waltz)
-  systemd.services.nixos-build-waltz = {
-    description = "NixOS Build for Waltz Server";
-    wantedBy = ["multi-user.target"];
-    path = with pkgs; [nix]; # Pastikan nix ada di PATH
-    # Pastikan garbage collection selesai sebelum build dimulai
-    after = ["nix-gc.service"];
-    requires = ["nix-gc.service"];
-    serviceConfig = {
-      Type = "oneshot";
-      ExecStart = "${pkgs.nixos-rebuild}/bin/nixos-rebuild build --keep-going --flake path:/etc/nixos#waltz";
-    };
-  };
+  # Hapus service dan timer terpisah yang lama agar tidak ada duplikasi
+  # lib.mkDefault akan memastikan ini di-override jika ada definisi lain
+  systemd.services.nix-gc = lib.mkDefault {enable = false;};
+  systemd.timers.nix-gc = lib.mkDefault {enable = false;};
 
-  # Timer untuk build server machine (waltz) - akan berjalan setiap bulan
-  systemd.timers.nixos-build-waltz = {
-    description = "Monthly NixOS Build for Waltz Server";
-    wantedBy = ["timers.target"];
-    timerConfig = {
-      OnCalendar = "monthly"; # Jalankan setiap bulan
-      Persistent = true;
-    };
-  };
+  systemd.services.nixos-build-waltz = lib.mkDefault {enable = false;};
+  systemd.timers.nixos-build-waltz = lib.mkDefault {enable = false;};
 
-  # Service untuk build main machine (nixos)
-  systemd.services.nixos-build-nixos = {
-    description = "NixOS Build for Main Machine";
-    wantedBy = ["multi-user.target"];
-    path = with pkgs; [nix]; # Pastikan nix ada di PATH
-    # Pastikan garbage collection selesai sebelum build dimulai
-    after = ["nix-gc.service"];
-    requires = ["nix-gc.service"];
-    serviceConfig = {
-      Type = "oneshot";
-      ExecStart = "${pkgs.nixos-rebuild}/bin/nixos-rebuild build --keep-going --flake path:/etc/nixos#nixos";
-    };
-  };
+  systemd.services.nixos-build-nixos = lib.mkDefault {enable = false;};
+  systemd.timers.nixos-build-nixos = lib.mkDefault {enable = false;};
 
-  # Timer untuk build main machine (nixos) - akan berjalan setiap bulan
-  systemd.timers.nixos-build-nixos = {
-    description = "Monthly NixOS Build for Main Machine";
-    wantedBy = ["timers.target"];
-    timerConfig = {
-      OnCalendar = "monthly"; # Jalankan setiap bulan
-      Persistent = true;
-    };
-  };
-
-  # Service untuk build home-manager (user level)
-  # Meskipun ini user level, kita jalankan sebagai root karena diminta
-  # dan untuk memastikan PATH dan lingkungan yang konsisten.
-  # Jika Anda ingin ini berjalan sebagai user tertentu, Anda perlu membuat
-  # user-level systemd service/timer, yang sedikit lebih kompleks.
-  systemd.services.home-manager-build-myamusashi = {
-    description = "Home-Manager Build for Myamusashi";
-    wantedBy = ["multi-user.target"];
-    path = with pkgs; [nix home-manager]; # Pastikan nix dan home-manager ada di PATH
-    # Pastikan garbage collection selesai sebelum build dimulai
-    after = ["nix-gc.service"];
-    requires = ["nix-gc.service"];
-    serviceConfig = {
-      Type = "oneshot";
-      ExecStart = "${pkgs.home-manager}/bin/home-manager build --keep-going --flake path:/etc/nixos#myamusashi";
-    };
-    Environment = {
-      HOME = "/home/myamusashi";
-    };
-  };
-
-  # Timer untuk build home-manager (user level) - akan berjalan setiap bulan
-  systemd.timers.home-manager-build-myamusashi = {
-    description = "Monthly Home-Manager Build for Myamusashi";
-    wantedBy = ["timers.target"];
-    timerConfig = {
-      OnCalendar = "monthly"; # Jalankan setiap bulan
-      Persistent = true;
-    };
-  };
+  systemd.services.home-manager-build-myamusashi = lib.mkDefault {enable = false;};
+  systemd.timers.home-manager-build-myamusashi = lib.mkDefault {enable = false;};
 }
