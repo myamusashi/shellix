@@ -564,7 +564,7 @@
       },
       "locked": {
         "lastModified": 1748036495,
-        "narHash": "sha256-kYyrhoxu8pZ/YHd2Yy2VNaRGeqydOh1OTayvknhweGg=",
+        "narHash": "sha256-rFS8IiGn3Zk2OKWQmmMOJKHl5tA/CCbnXsTNcM++gUQ=",
         "owner": "hyprwm",
         "repo": "Hyprland",
         "rev": "81cd526f923f4a9074bbfef59b4c7e9f3350c349",
@@ -1364,17 +1364,17 @@
     },
     "nixpkgs_5": {
       "locked": {
-        "lastModified": 1745526057,
-        "narHash": "sha256-ITSpPDwvLBZBnPRS2bUcHY3gZSwis/uTe255QgMtTLA=",
+        "lastModified": 1747744144,
+        "narHash": "sha256-W7lqHp0qZiENCDwUZ5EX/lNhxjMdNapFnbErcbnP11Q=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "f771eb401a46846c1aebd20552521b233dd7e18b",
+        "rev": "2795c506fe8fb7b03c36ccb51f75b6df0ab2553f",
         "type": "github"
       },
       "original": {
         "owner": "NixOS",
+        "ref": "nixos-unstable",
         "repo": "nixpkgs",
-        "rev": "f771eb401a46846c1aebd20552521b233dd7e18b",
         "type": "github"
       }
     },
@@ -1684,11 +1684,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1747785901,
-        "narHash": "sha256-K5cgZOBa74oDnZnf1z19BVeKnJd80m03BwMPZsG9ik0=",
+        "lastModified": 1748124174,
+        "narHash": "sha256-5KuupZFk5/2sqzuFyNTgtbtu8SKRCac3AOE0fikuc+Y=",
         "owner": "myamusashi",
         "repo": "zen-twilight-flake",
-        "rev": "72a7a151335905565624a4f292a42e587b748a65",
+        "rev": "3bebcb93a456b8ba82e7b78519277f73c14c0557",
         "type": "github"
       },
       "original": {
