@@ -56,17 +56,20 @@
         '';
       };
       "cache.myamusashi.com" = {
-        documentRoot = "/var/www/nix-cache-ui";
+        documentRoot = "/var/www/nix-cache-ui/src";
         extraConfig = ''
-          ProxyPassMatch "^/(nar|nix-cache-info)(.*)$" "http://127.0.0.1:5500/$1$2"
-
-          ProxyPassReverse "/nar" "http://127.0.0.1:5500/nar"
+          ProxyPass "/nix-cache-info" "http://127.0.0.1:5500/nix-cache-info"
           ProxyPassReverse "/nix-cache-info" "http://127.0.0.1:5500/nix-cache-info"
-            <LocationMatch "^/(nar|nix-cache-info)">
-              Header set Cache-Control "no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0"
-              ExpiresActive On
-              ExpiresDefault "access"
-            </LocationMatch>
+          ProxyPass "/nar" "http://127.0.0.1:5500/nar"
+          ProxyPassReverse "/nar" "http://127.0.0.1:5500/nar"
+
+          ProxyPass "/api/nix-builds" "http://127.0.0.1:3000/api/nix-builds"
+          ProxyPassReverse "/api/nix-builds" "http://127.0.0.1:3000/api/nix-builds"
+          <LocationMatch "^/(nar|nix-cache-info|api)">
+             Header set Cache-Control "no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0"
+             ExpiresActive On
+             ExpiresDefault "access"
+          </LocationMatch>
         '';
       };
     };

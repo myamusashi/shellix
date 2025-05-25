@@ -96,6 +96,8 @@
     docker-compose
     lazydocker
     btop
+    jq
+    procps
     cachix
     forgejo-runner
     attic-client
