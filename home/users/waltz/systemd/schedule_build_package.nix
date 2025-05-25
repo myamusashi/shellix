@@ -37,7 +37,7 @@
     requires = ["nix-gc.service"];
     serviceConfig = {
       Type = "oneshot";
-      ExecStart = "${pkgs.nixos-rebuild}/bin/nixos-rebuild build --flake path:/etc/nixos#waltz";
+      ExecStart = "${pkgs.nixos-rebuild}/bin/nixos-rebuild build --keep-going --flake path:/etc/nixos#waltz";
     };
   };
 
@@ -61,7 +61,7 @@
     requires = ["nix-gc.service"];
     serviceConfig = {
       Type = "oneshot";
-      ExecStart = "${pkgs.nixos-rebuild}/bin/nixos-rebuild build --flake path:/etc/nixos#nixos";
+      ExecStart = "${pkgs.nixos-rebuild}/bin/nixos-rebuild build --keep-going --flake path:/etc/nixos#nixos";
     };
   };
 
@@ -89,8 +89,10 @@
     requires = ["nix-gc.service"];
     serviceConfig = {
       Type = "oneshot";
-      ExecStart = "${pkgs.home-manager}/bin/home-manager build --flake path:/etc/nixos#myamusashi";
-      Environment = "HOME=/home/myamusashi";
+      ExecStart = "${pkgs.home-manager}/bin/home-manager build --keep-going --flake path:/etc/nixos#myamusashi";
+    };
+    Environment = {
+      HOME = "/home/myamusashi";
     };
   };
 
