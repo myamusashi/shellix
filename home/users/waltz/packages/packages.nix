@@ -28,7 +28,6 @@
     ]))
     neovim
     wget
-    alejandra
     lemminx
     nil
     svelte-language-server
@@ -68,37 +67,24 @@
     pnpm
     cmake
     ninja
-    ntfs3g
     libgdiplus
     wl-clipboard
-    ripgrep
     polkit
     tree-sitter
     pciutils
     vulkan-tools
     cloudflare-warp
-    android-tools
     dynamips
     ubridge
     busybox
     inetutils
-    docker
     libvirt
     virt-viewer
-    git
     p11-kit
     openssl
-    gh
     lftp
     cloudflared
-    sops
-    age
-    docker-compose
     lazydocker
-    btop
-    jq
-    procps
-    cachix
     forgejo-runner
     attic-client
     attic-server

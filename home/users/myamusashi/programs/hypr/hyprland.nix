@@ -319,6 +319,8 @@ in {
         "center,title:^(Image Properties)$"
         "center,title:^(Enter name of file to save to…)$"
         "center,title:^(vesktop)$"
+        "center,class:^(eu.),title:^(Properties|Select icon)"
+        "size 360 363,class:^(eu.),title:^(Properties)"
         "size 622 652,class:^(clipse)"
         "size 450 420,class:^(zen|zen-twilight),title:^(Sign In - Google Accounts — Zen Twilight|Sign In - Google Accounts — Zen)"
         "size 351 113,class:^(zen|zen-twilight),title:^()"

@@ -65,6 +65,10 @@
       inputs.hyprland.follows = "hyprland";
     };
 
+    kwin-effects-forceblur = {
+      url = "github:taj-ny/kwin-effects-forceblur";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     neovim-nightly-overlay.url = "github:nix-community/neovim-nightly-overlay";
     spicetify-nix.url = "github:Gerg-L/spicetify-nix";
     nixgl.url = "github:nix-community/nixGL";
@@ -75,13 +79,9 @@
       # Priority
       "https://myamusashi.cachix.org"
       "https://cache.myamusashi.space"
-      "https://cache.nixos.org"
-    ];
-
-    # NOTE: Gunain substituter kalau mau nambahin cache yang jarang digunakan, substituters buat prioritas pertama dan extra adalah cadangan
-    extra-substituters = [
-      "https://nix-community.cachix.org"
       "https://chaotic-nyx.cachix.org"
+      "https://cache.nixos.org"
+      "https://nix-community.cachix.org"
       "https://ezkea.cachix.org"
       "https://hyprland.cachix.org"
     ];
@@ -89,13 +89,9 @@
     trusted-public-keys = [
       "myamusashi.cachix.org-1:ra4PbY6yqM1pSvkGqJ78CZse3WWgjk4rOXBMtjD9YrY="
       "cache.myamusashi.space-1:IzPsZCUaUoHFEZYFwVShExap5toPvwhURZYnB0o0fjs="
-      "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
-    ];
-
-    # NOTE: extra-trusted-public-keys dan trusted-public-keys gak sepenting di atas
-    extra-trusted-public-keys = [
-      "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
       "chaotic-nyx.cachix.org-1:HfnXSw4pj95iI/n17rIDy40agHj12WfF+Gqk6SonIT8="
+      "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
+      "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
       "ezkea.cachix.org-1:ioBmUbJTZIKsHmWWXPe1FSFbeVe+afhfgqgTSNd34eI="
       "hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc="
     ];

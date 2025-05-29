@@ -2,17 +2,15 @@
   services = {
     cloudflare-warp.enable = true;
     xserver.videoDrivers = ["vmware"];
+    gnome.gnome-keyring.enable = true;
     scx.enable = true;
-
-    nix-serve = {
-      enable = false;
-      secretKeyFile = "/var/cache-priv-key.pem";
-    };
+    fwupd.enable = true;
+    throttled.enable = true;
 
     printing.enable = false;
     udisks2.enable = true;
 
-    gvfs.enable = true;
+    gvfs.enable = false;
 
     flatpak.enable = false;
 
@@ -24,15 +22,18 @@
     locate.package = pkgs.mlocate;
     locate.enable = true;
 
-    xserver = {
-      enable = false;
+    earlyoom = {
+      enable = true;
+      enableNotifications = true;
+      freeMemKillThreshold = 2;
+      freeSwapKillThreshold = 3;
+    };
 
+    xserver = {
       xkb = {
         layout = "us";
         variant = "";
       };
-
-      desktopManager.gnome.enable = false;
     };
 
     tlp = {
@@ -64,7 +65,6 @@
         NMI_WATCHDOG = 0;
       };
     };
-
     mysql = {
       enable = true;
       package = pkgs.mariadb;
