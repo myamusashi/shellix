@@ -1,3 +1,5 @@
 result
 *.pem
 nohup.out
+log
+*.log

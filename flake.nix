@@ -88,7 +88,7 @@
 
     trusted-public-keys = [
       "myamusashi.cachix.org-1:ra4PbY6yqM1pSvkGqJ78CZse3WWgjk4rOXBMtjD9YrY="
-      "cache.myamusashi.space-1:IzPsZCUaUoHFEZYFwVShExap5toPvwhURZYnB0o0fjs="
+      "cache.myamusashi.space-1:h8gKtIM1mykrzpwcHMUgCD7ZnOtK6R2ONfhXjMzDlnY="
       "chaotic-nyx.cachix.org-1:HfnXSw4pj95iI/n17rIDy40agHj12WfF+Gqk6SonIT8="
       "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
       "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
@@ -150,6 +150,7 @@
           ./home/common/programs/htop.nix
           ./home/common/programs/lazygit.nix
           ./home/common/services.nix
+					./home/common/packages.nix
         ];
         specialArgs = {inherit inputs;};
       };

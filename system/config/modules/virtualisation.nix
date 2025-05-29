@@ -38,7 +38,7 @@
       defaultNetwork.settings = {dns_enabled = true;};
     };
     vmware = {
-      host.enable = true;
+      host.enable = false;
       guest = {
         enable = true;
         package = pkgs.open-vm-tools;
