@@ -1,13 +1,19 @@
-{pkgs, ...}: {
+{
+  pkgs,
+  inputs,
+  ...
+}: let
+  qtfm = pkgs.callPackage ./extra/qtfm.nix {};
+in {
   environment.systemPackages = with pkgs; [
+    qtfm
+    inputs.kwin-effects-forceblur.packages.${system}.default
+    home-manager
     vim
     lftp
     zed-editor-fhs
-    lazydocker
-    wget
     poppler_utils
     libreoffice
-    ntfs3g
     proton-pass
     vulkan-tools
     libgdiplus
@@ -21,15 +27,30 @@
     libGLU
     pciutils
     blesh
+    gnome-keyring
     onlyoffice-desktopeditors
     ffmpeg
     pcsx2
     apacheHttpd
     nemo-with-extensions
     vulkan-tools
-    vmware-workstation
+    (
+      vmware-workstation.overrideAttrs (e: {
+        installPhase = ''
+          ${e.installPhase}
+          mv $out/bin/vmware $out/bin/vmware-bin
+          makeWrapper $out/bin/vmware-bin $out/bin/vmware \
+            --set GTK_THEME "Adwaita-dark"
+          if [ -f $out/share/applications/vmware-workstation.desktop ]; then
+            substituteInPlace $out/share/applications/vmware-workstation.desktop \
+              --replace "Exec=@@BINARY@@" "Exec=$out/bin/vmware"
+          fi
+        '';
+
+        nativeBuildInputs = (e.nativeBuildInputs or []) ++ [pkgs.makeWrapper];
+      })
+    )
     cloudflare-warp
-    android-tools
     udiskie
     udisks
     wineWowPackages.waylandFull
@@ -44,11 +65,21 @@
     ubridge
     busybox
     inetutils
-    docker
     libvirt
     python3
     upower
     upower-notify
     virt-viewer
+    alejandra
+    kdePackages.kcalc
+    kdePackages.kcharselect
+    kdePackages.kcolorchooser
+    kdePackages.ksystemlog
+    kdePackages.isoimagewriter
+    kdePackages.partitionmanager
+    kdePackages.dolphin
+    kdePackages.kate
+    hardinfo2
+    kdiff3
   ];
 }

@@ -10,17 +10,11 @@
     pkgs.wayland-protocols
     pkgs.rich-cli
     pkgs.gh
-    pkgs.zip
     pkgs.cloudflared
     pkgs.mysql-workbench
     pkgs.attic-client
     pkgs.git-credential-manager
-    pkgs.alejandra
-    pkgs.statix
-    pkgs.nixfmt-classic
     pkgs.wl-gammactl
-    pkgs.unzip
-    pkgs.ripgrep
     pkgs.yazi
     pkgs.rofi-wayland
     pkgs.grim
@@ -31,18 +25,14 @@
     pkgs.playerctl
     pkgs.pavucontrol
     pkgs.libnotify
-    pkgs.jq
     pkgs.hyprpanel
     pkgs.viewnior
     pkgs.mpg123
     pkgs.zathura
     pkgs.postman
-    pkgs.docker-compose
     pkgs.kdePackages.qt6ct
     pkgs.libsForQt5.qt5ct
     (config.lib.nixGL.wrap inputs.zen-browser.packages.${pkgs.system}.default)
-    pkgs.nushell
-    pkgs.geogebra
     pkgs.wf-recorder
     pkgs.waypaper
     pkgs.power-profiles-daemon
