@@ -4,9 +4,11 @@
   ...
 }: let
   qtfm = pkgs.callPackage ./extra/qtfm.nix {};
+  reactionary = pkgs.callPackage ./extra/reactionary.nix {};
 in {
   environment.systemPackages = with pkgs; [
     qtfm
+    reactionary
     inputs.kwin-effects-forceblur.packages.${system}.default
     home-manager
     vim
@@ -50,6 +52,7 @@ in {
         nativeBuildInputs = (e.nativeBuildInputs or []) ++ [pkgs.makeWrapper];
       })
     )
+    kdePackages.sddm-kcm
     cloudflare-warp
     udiskie
     udisks

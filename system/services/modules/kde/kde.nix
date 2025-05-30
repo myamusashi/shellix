@@ -1,6 +1,7 @@
 {pkgs, ...}: {
   services.displayManager.sddm = {
     enable = true;
+    theme = "reactionary";
     extraPackages = with pkgs; [
       kdePackages.sddm-kcm
     ];

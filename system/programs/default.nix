@@ -1,5 +1,5 @@
 {
-	programs.dconf.enable = true;
+  programs.dconf.enable = true;
   imports = [
     ./steam/steam.nix
     ./wireshark/wireshark.nix
