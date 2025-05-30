@@ -18,23 +18,15 @@
     serviceConfig = {
       Type = "oneshot";
       # Gunakan 'bash -c' untuk menjalankan beberapa perintah secara berurutan
-      ExecStart = ''
-        ${pkgs.nix}/bin/nix-collect-garbage -d
-
-        # Pindah ke direktori flake sebelum melakukan flake update
-        pushd ${flakeDir}
-        ${pkgs.nix}/bin/nix flake update
-        popd
-
-        # Jalankan build untuk semua konfigurasi
+      ExecStart = "${pkgs.writeShellScript "build_update" ''
         ${pkgs.nixos-rebuild}/bin/nixos-rebuild build --keep-going --flake path:${flakeDir}#waltz
         ${pkgs.nixos-rebuild}/bin/nixos-rebuild build --keep-going --flake path:${flakeDir}#nixos
 
         # Jalankan Home Manager build
         # Pastikan user 'myamusashi' ada dan direktori HOME-nya benar
         # Jika Anda menjalankan ini sebagai root, pastikan home-manager dapat menemukan konfigurasi user tersebut.
-        HOME=/home/myamusashi ${pkgs.home-manager}/bin/home-manager build --accept-flake-config --keep-going --flake path:${flakeDir}#myamusashi
-      '';
+        HOME=/home/myamusashi ${pkgs.home-manager}/bin/home-manager build --keep-going --flake path:${flakeDir}#myamusashi
+      ''}";
       User = "root"; # Jalankan sebagai root untuk hak akses yang diperlukan
     };
   };
