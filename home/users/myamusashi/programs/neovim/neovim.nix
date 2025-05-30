@@ -43,6 +43,8 @@
       nil # nix lsp
       svelte-language-server
       gopls
+      pnpm_10
+      yarn
       nixd
       gnumake
       mesonlsp
