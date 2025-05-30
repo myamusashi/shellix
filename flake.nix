@@ -4,6 +4,7 @@
     nixpkgs-stable.url = "github:NixOS/nixpkgs/release-25.05";
     sops-nix.url = "github:Mic92/sops-nix";
     chaotic.url = "github:chaotic-cx/nyx/nyxpkgs-unstable";
+    chaotic-stable.url = "github:chaotic-cx/nyx/nyxpkgs-unstable";
 
     home-manager = {
       url = "github:nix-community/home-manager";
@@ -103,6 +104,7 @@
     nixpkgs,
     nixpkgs-stable,
     chaotic,
+    chaotic-stable,
     nixgl,
     home-manager,
     ...
@@ -138,6 +140,9 @@
           ./home/common/services.nix
           ./home/common/packages.nix
           ./sops/sops.nix
+          chaotic-stable.nixosModules.nyx-cache
+          chaotic.nixosModules.nyx-overlay
+          chaotic.nixosModules.nyx-registry
         ];
         specialArgs = {
           inherit inputs;
