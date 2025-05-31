@@ -1,6 +1,6 @@
 {pkgs, ...}: {
   boot = {
-    kernelPackages = pkgs.linuxPackages_cachyos;
+    kernelPackages = pkgs.linuxPackages_zen;
     initrd.verbose = false;
     consoleLogLevel = 0;
     initrd.availableKernelModules = [

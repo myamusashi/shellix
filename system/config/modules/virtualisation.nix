@@ -1,5 +1,6 @@
 {
   config,
+  pkgs-stable,
   pkgs,
   ...
 }: {
@@ -38,7 +39,8 @@
       defaultNetwork.settings = {dns_enabled = true;};
     };
     vmware = {
-      host.enable = false;
+      host.enable = true;
+      # host.package = pkgs-stable.vmware-workstation;
       guest = {
         enable = true;
         package = pkgs.open-vm-tools;
