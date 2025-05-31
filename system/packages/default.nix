@@ -1,5 +1,6 @@
 {
   pkgs,
+  pkgs-stable,
   inputs,
   ...
 }: let
@@ -10,6 +11,8 @@ in {
     qtfm
     reactionary
     inputs.kwin-effects-forceblur.packages.${system}.default
+    pass-wayland
+    passExtensions.pass-import
     home-manager
     vim
     lftp
@@ -36,8 +39,24 @@ in {
     apacheHttpd
     nemo-with-extensions
     vulkan-tools
+    virt-v2v
+    (linuxKernel.packages.linux_zen.vmware.overrideAttrs (oldAttrs: {
+      src = fetchFromGitHub {
+        owner = "philipl";
+        repo = "vmware-host-modules";
+        rev = "93d8bf38d7e705a862dcbfa721884638a817d476";
+        hash = "sha256-i2E3QAy5P3U+EqSaFaCQGuiU4vt/yYKv3oJBP1qK9Og=";
+      };
+
+      patches = [
+        (fetchpatch {
+          url = "https://github.com/amadejkastelic/vmware-host-modules/commit/926cfc50c017a099c796662c8e2820d12f94d0bb.patch";
+          hash = "sha256-9XLhypr77Qy9Ty54Pm48DYYh3HT1WAmiwGOmBk3AfyI=";
+        })
+      ];
+    }))
     (
-      vmware-workstation.overrideAttrs (e: {
+      pkgs-stable.vmware-workstation.overrideAttrs (e: {
         installPhase = ''
           ${e.installPhase}
           mv $out/bin/vmware $out/bin/vmware-bin
