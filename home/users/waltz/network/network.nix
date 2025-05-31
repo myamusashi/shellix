@@ -3,31 +3,37 @@
   networking.firewall.allowedTCPPorts = [
     21
     22
+    25
     80
+    110
+    143
     443
+    465
+    587
+    9000
+    6379
+    5432
+    995
+    26379
+    6379
+    5432
+    993
     990 # ftps
     989 # ftps
     3000 # forgejo
     5500 # nix-serve
     4040 # Attic
+    8090
   ];
   networking.firewall.allowedUDPPorts = [
-    21
-    22
-    80
-    443
-    990 # ftps
-    989 # ftps
-    3000 # forgejo
-    5500 # nix-serve
-    4040 # Attic
   ];
 
   networking.extraHosts = ''
-      192.168.18.14 myamusashi.com
+    192.168.18.14 myamusashi.com
+    127.0.0.1 mail.myamusashi.com
     127.0.0.1 cache.myamusashi.com
-      127.0.0.1 myamusashi.com
-      127.0.0.1 pma.myamusashi.com
+    127.0.0.1 myamusashi.com
+    127.0.0.1 pma.myamusashi.com
   '';
   # Or disable the firewall altogether.
   networking.firewall.enable = true;

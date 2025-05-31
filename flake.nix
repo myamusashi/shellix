@@ -4,7 +4,6 @@
     nixpkgs-stable.url = "github:NixOS/nixpkgs/release-25.05";
     sops-nix.url = "github:Mic92/sops-nix";
     chaotic.url = "github:chaotic-cx/nyx/nyxpkgs-unstable";
-    chaotic-stable.url = "github:chaotic-cx/nyx/nyxpkgs-unstable";
 
     home-manager = {
       url = "github:nix-community/home-manager";
@@ -90,7 +89,7 @@
 
     trusted-public-keys = [
       "myamusashi.cachix.org-1:ra4PbY6yqM1pSvkGqJ78CZse3WWgjk4rOXBMtjD9YrY="
-      "cache.myamusashi.space-1:h8gKtIM1mykrzpwcHMUgCD7ZnOtK6R2ONfhXjMzDlnY="
+      "cache.myamusashi.space-1:7wJ0GThM/MBLSmvDw8u8Y0XMiXAshFmX1Hz1jJ0PKWg="
       "chaotic-nyx.cachix.org-1:HfnXSw4pj95iI/n17rIDy40agHj12WfF+Gqk6SonIT8="
       "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
       "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
@@ -104,7 +103,6 @@
     nixpkgs,
     nixpkgs-stable,
     chaotic,
-    chaotic-stable,
     nixgl,
     home-manager,
     ...
@@ -140,7 +138,7 @@
           ./home/common/services.nix
           ./home/common/packages.nix
           ./sops/sops.nix
-          chaotic-stable.nixosModules.nyx-cache
+          chaotic.nixosModules.nyx-cache
           chaotic.nixosModules.nyx-overlay
           chaotic.nixosModules.nyx-registry
         ];

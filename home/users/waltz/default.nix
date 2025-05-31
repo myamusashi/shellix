@@ -11,6 +11,6 @@
     ./virtualisation/virtualisation.nix
     ./systemd/stirling-pdf.nix
     ./systemd/forgejo_runner.nix
-    ./systemd/schedule_build_package.nix
+    # ./systemd/schedule_build_package.nix
   ];
 }
