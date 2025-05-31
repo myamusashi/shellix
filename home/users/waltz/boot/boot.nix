@@ -1,5 +1,5 @@
-{pkgs-stable, ...}: {
+{pkgs-stable,pkgs, ...}: {
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
-  boot.kernelPackages = pkgs-stable.linuxPackages_cachyos-server;
+  boot.kernelPackages = pkgs.linuxPackages_cachyos-server;
 }
