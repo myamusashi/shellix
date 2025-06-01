@@ -85,6 +85,7 @@
     lftp
     cloudflared
     lazydocker
+    home-manager
     forgejo-runner
     attic-client
     attic-server
