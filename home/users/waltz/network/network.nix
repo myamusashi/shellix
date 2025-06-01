@@ -32,6 +32,7 @@
     192.168.18.14 myamusashi.com
     127.0.0.1 mail.myamusashi.com
     127.0.0.1 cache.myamusashi.com
+    127.0.0.1 cloud.myamusashi.com
     127.0.0.1 myamusashi.com
     127.0.0.1 pma.myamusashi.com
   '';
