@@ -1,7 +1,6 @@
 {
   config,
   pkgs,
-  lib,
   ...
 }: {
   services.nix-serve = {
@@ -21,6 +20,53 @@
       };
     };
   };
+
+  services.postgresql = {
+    enable = true;
+    ensureDatabases = ["nextcloud"];
+    ensureUsers = [
+      {
+        name = "nextcloud";
+        ensureDBOwnership = true;
+      }
+    ];
+  };
+
+  systemd.tmpfiles.rules = [
+    "d /var/lib/nextcloud 0750 nextcloud nextcloud - -"
+    "d /var/lib/nextcloud/config 0750 nextcloud nextcloud - -"
+    "d /var/lib/nextcloud/data 0750 nextcloud nextcloud - -"
+  ];
+  services.nextcloud = {
+    enable = true;
+    package = pkgs.nextcloud31;
+    hostName = "cloud.myamusashi.com";
+    config = {
+      adminpassFile = config.sops.secrets.nextcloud_admin_pass.path;
+      dbtype = "pgsql";
+      adminuser = "admin";
+    };
+    settings = {
+      trusted_domains = [
+        "cloud.myamusashi.com"
+        "cloud.myamusashi.space"
+      ];
+    };
+    extraApps = {
+      inherit (config.services.nextcloud.package.packages.apps) contacts calendar tasks notes;
+    };
+    database.createLocally = true;
+    configureRedis = true;
+    autoUpdateApps.enable = true;
+    extraAppsEnable = true;
+  };
+
+  services.nginx.virtualHosts."cloud.myamusashi.com".listen = [
+    {
+      addr = "127.0.0.1";
+      port = 9010;
+    }
+  ];
 
   services.httpd = {
     enable = true;

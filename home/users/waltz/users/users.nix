@@ -15,6 +15,12 @@
     extraGroups = ["forgejo"];
   };
 
+  users.groups.nextcloud = {};
+  users.users.nextcloud = {
+    isSystemUser = true;
+    group = "nextcloud";
+  };
+
   users.groups.atticd = {};
   users.users.atticd = {
     isSystemUser = true;
