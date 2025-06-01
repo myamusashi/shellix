@@ -21,6 +21,8 @@
     procps
     btop
     htop
+    nix-output-monitor
+    nix-top
     git
     lazydocker
     lazygit

@@ -159,7 +159,10 @@
           ./home/common/services.nix
           ./home/common/packages.nix
         ];
-        specialArgs = {inherit inputs; inherit pkgs-stable;};
+        specialArgs = {
+          inherit inputs;
+          inherit pkgs-stable;
+        };
       };
     };
 
