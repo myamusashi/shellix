@@ -9,6 +9,11 @@
     defaultSopsFile = ./secrets.json;
     defaultSopsFormat = "json";
 
+    secrets.cloudflare_creds = {
+      format = "json";
+      mode = "0400";
+    };
+
     secrets.nix-serve_secrets = {
       format = "json";
       mode = "0400";

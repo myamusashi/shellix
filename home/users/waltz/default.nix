@@ -11,6 +11,7 @@
     ./virtualisation/virtualisation.nix
     ./systemd/stirling-pdf.nix
     ./systemd/forgejo_runner.nix
+    ./systemd/cloudflare_tunnel.nix
     # ./systemd/schedule_build_package.nix
   ];
 }
