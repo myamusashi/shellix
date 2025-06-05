@@ -45,6 +45,7 @@
       gopls
       pnpm_10
       yarn
+      nodejs_22
       nixd
       gnumake
       mesonlsp
@@ -69,6 +70,9 @@
       fish-lsp
       python312Packages.python-lsp-server
       pyright
+      markdownlint-cli
+      markdownlint-cli2
+      live-server
       rust-analyzer
       marksman
       tailwindcss-language-server

@@ -15,11 +15,12 @@
       enable = true;
       allowedTCPPorts = [
         22
-        19999
+        554
+        460
       ];
       allowedUDPPorts = [
         22
-        19999
+        556
       ];
     };
   };
