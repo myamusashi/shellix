@@ -12,15 +12,12 @@ in {
       hidePodcasts
       shuffle
       adblockify
-      # simpleBeautifulLyrics
       betterGenres
       copyToClipboard
-      # fullAppDisplayMod
     ];
-    theme = spicePkgs.themes.text;
+    theme = spicePkgs.themes.hazy;
     enabledCustomApps = with spicePkgs.apps; [
       lyricsPlus
     ];
-    colorScheme = "Kanagawa";
   };
 }

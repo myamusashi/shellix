@@ -3,16 +3,6 @@
   nixgl,
   ...
 }: {
-  nix.settings.experimental-features = [
-    "nix-command"
-    "flakes"
-  ];
-
-  nix.settings.trusted-users = [
-    "myamusashi"
-    "root"
-  ];
-
   nixpkgs.config.allowUnfree = true;
 
   # Nuh uh, don't fucking changing it
