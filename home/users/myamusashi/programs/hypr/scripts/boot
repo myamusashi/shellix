@@ -1,7 +1,0 @@
-#!/bin/sh
-
-NAMA=${USER}
-WAKTU=$(date +%c)
-
-sleep 5
-notify-send "Hai Gilang" "$WAKTU" -i "$HOME/.icons/Papirus/48x48/apps/nix-snowflake.svg"
