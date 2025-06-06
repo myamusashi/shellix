@@ -1,28 +1,39 @@
-name: "Build and Push to Cachix"
+name: "Update Inputs, Build and Push to Cachix"
 
 on:
   push:
     branches:
-      - "main"
-  workflow_dispatch:
+      - "master"
 
 jobs:
   build-and-push:
     runs-on: ubuntu-latest
     steps:
-      - name: "Checkout repository"
-        uses: actions/checkout@v4
+    - name: "Checkout repository"
+      uses: actions/checkout@v4
+    - uses: cachix/install-nix-action@v25
+      with:
+        nix_path: nixpkgs=channel:nixos-unstable
+    - name: "Update flake inputs"
+      run: nix flake update
 
-      - name: "Install Nix"
-        uses: DeterminateSystems/nix-installer-action@main
+    - name: "Check for changes"
+      id: git_status
+      run: echo "porcelain=$(git status --porcelain=v1 flake.lock)" >> $GITHUB_OUTPUT
 
-      - name: "Setup Cachix"
-        uses: cachix/cachix-action@v14
-        with:
-          name: myamusashi
-          authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
-
-      - name: "Build flake outputs"
-        run: |
-          nix build .#nixosConfigurations.waltz.config.system.build.toplevel
-          nix build .#homeConfigurations.myamusashi.activationPackage
+    - name: "Commit and push changes"
+      if: steps.git_status.outputs.porcelain
+      run: |
+        git config --global user.name 'github-actions[bot]'
+        git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+        git add flake.lock
+        git commit -m "chore: update flake.lock"
+        git push
+    - uses: cachix/cachix-action@v15
+      with:
+        name: myamusashi
+        authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
+    - name: "Build flake outputs"
+      run: |
+        nix build .#nixosConfigurations.waltz.config.system.build.toplevel
+        nix build .#homeConfigurations.myamusashi.activationPackage
