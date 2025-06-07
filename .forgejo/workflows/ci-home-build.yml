@@ -17,6 +17,8 @@ jobs:
         with:
           kvm_enabled: false
           nix_path: nixpkgs=channel:nixos-unstable
+      - name: "Clean up homeless-shelter directory"
+        run: sudo rm -rf /homeless-shelter
       - uses: cachix/cachix-action@v15
         with:
           name: myamusashi
