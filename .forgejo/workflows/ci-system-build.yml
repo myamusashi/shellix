@@ -1,10 +1,7 @@
 name: "Build system flake outputs"
 
 on:
-  workflow_run:
-    workflows: ["Update Flake Inputs"]
-    types:
-      - completed
+  workflow_dispatch:
 
 jobs:
   build:
