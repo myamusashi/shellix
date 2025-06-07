@@ -1,14 +1,14 @@
 name: "Update Inputs, Build and Push to Cachix"
 
 on:
-  workflow_call:
-    secrets:
-      CACHIX_AUTH_TOKEN:
-        required: false
+  pull_request:
+  push:
+
 jobs:
   build:
     runs-on: ubuntu-latest
     env:
+      # Menetapkan variabel USER, diperlukan oleh 'cachix use' di lingkungan 'act'
       USER: root
     steps:
       - name: "Checkout repository"
