@@ -10,9 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: "Checkout repository"
-      uses: actions/checkout@v4
-    # - name: "Install sudo (for local 'act' runner)"
-    #   run: apt-get update && apt-get install -y sudo
+    - uses: actions/checkout@v4
     - uses: DeterminateSystems/nix-installer-action@main
     - name: "Update flake inputs"
       run: nix flake update
@@ -29,11 +27,3 @@ jobs:
         git add flake.lock
         git commit -m "chore: update flake.lock"
         git push
-    - uses: cachix/cachix-action@v15
-      with:
-        name: myamusashi
-        authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
-    - name: "Build flake outputs"
-      run: |
-        nix build .#nixosConfigurations.waltz.config.system.build.toplevel
-        nix build .#homeConfigurations.myamusashi.activationPackage

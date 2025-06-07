@@ -1,0 +1,26 @@
+name: "Update Inputs, Build and Push to Cachix"
+
+on:
+  workflow_call:
+    secrets:
+      CACHIX_AUTH_TOKEN:
+        required: false
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      USER: root
+    steps:
+      - name: "Checkout repository"
+        uses: actions/checkout@v4
+      - name: "Install sudo (for local 'act' runner)"
+        run: apt-get update && apt-get install -y sudo
+      - uses: DeterminateSystems/nix-installer-action@main
+      - uses: cachix/cachix-action@v15
+        with:
+          name: myamusashi
+          authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
+      - name: "Build flake outputs"
+        run: |
+          nix build .#nixosConfigurations.waltz.config.system.build.toplevel
+          nix build .#homeConfigurations.myamusashi.activationPackage
