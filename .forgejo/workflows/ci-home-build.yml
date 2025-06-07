@@ -17,12 +17,18 @@ jobs:
         with:
           kvm_enabled: false
           nix_path: nixpkgs=channel:nixos-unstable
-      - name: "Clean up homeless-shelter directory"
-        run: sudo rm -rf /homeless-shelter
+      - name: "Setup build environment"
+        run: |
+          sudo rm -rf /homeless-shelter /tmp/nix-build-home || true
+          sudo mkdir -p /tmp/nix-build-home
+          sudo chmod 755 /tmp/nix-build-home
+          export HOME=/tmp/nix-build-home
       - uses: cachix/cachix-action@v15
         with:
           name: myamusashi
           authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
       - name: "Build flake outputs"
+        env:
+          HOME: /tmp/nix-build-home
         run: |
           nix build .#homeConfigurations.myamusashi.activationPackage
