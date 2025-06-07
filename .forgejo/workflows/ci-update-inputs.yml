@@ -10,6 +10,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
+    - name: "Install sudo (for local 'act' runner)"
+      run: apt-get update && apt-get install -y sudo
     - uses: cachix/install-nix-action@v31
       with:
         kvm_enabled: false
