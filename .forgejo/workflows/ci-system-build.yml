@@ -1,5 +1,4 @@
 name: "Build system flake outputs"
-
 on:
   workflow_dispatch:
 
@@ -11,19 +10,25 @@ jobs:
     steps:
       - name: "Checkout repository"
         uses: actions/checkout@v4
+      
+      - name: "Install sudo (for local 'act' runner)"
         run: apt-get update && apt-get install -y sudo
+      
       - name: "Install nix"
         uses: DeterminateSystems/nix-installer-action@main
+      
       - name: "Setup build environment"
         run: |
           sudo rm -rf /homeless-shelter /tmp/nix-build-home || true
           sudo mkdir -p /tmp/nix-build-home
           sudo chmod 755 /tmp/nix-build-home
           export HOME=/tmp/nix-build-home
+      
       - uses: cachix/cachix-action@v15
         with:
           name: myamusashi
           authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
+      
       - name: "Build flake outputs"
         env: 
           HOME: /tmp/nix-build-home
