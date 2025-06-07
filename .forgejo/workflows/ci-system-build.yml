@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  build:
+  system-build:
     runs-on: ubuntu-latest
     env:
       USER: root
