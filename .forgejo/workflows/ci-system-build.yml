@@ -12,7 +12,8 @@ jobs:
       - name: "Checkout repository"
         uses: actions/checkout@v4
         run: apt-get update && apt-get install -y sudo
-      - uses: DeterminateSystems/nix-installer-action@main
+      - name: "Install nix"
+        uses: DeterminateSystems/nix-installer-action@main
       - name: "Setup build environment"
         run: |
           sudo rm -rf /homeless-shelter /tmp/nix-build-home || true
