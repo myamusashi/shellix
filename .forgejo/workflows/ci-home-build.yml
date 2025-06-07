@@ -1,0 +1,30 @@
+name: "Build home flake outputs"
+
+on:
+  workflow_run:
+    workflows: ["Update Flake Inputs"]
+    types:
+      - completed
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      USER: root
+    steps:
+      - name: "Checkout repository"
+        uses: actions/checkout@v4
+      - name: "Install sudo (for local 'act' runner)"
+        run: apt-get update && apt-get install -y sudo
+      - uses: cachix/install-nix-action@v31
+        with:
+          kvm_enabled: false
+          install_url:  https://releases.nixos.org/nix/nix-2.3.7/install
+          nix_path: nixpkgs=channel:nixos-unstable
+      - uses: cachix/cachix-action@v15
+        with:
+          name: myamusashi
+          authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
+      - name: "Build flake outputs"
+        run: |
+          nix build .#homeConfigurations.myamusashi.activationPackage

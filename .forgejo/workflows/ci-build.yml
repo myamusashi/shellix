@@ -1,14 +1,15 @@
-name: "Update Inputs, Build and Push to Cachix"
+name: "Build system flake outputs"
 
 on:
-  pull_request:
-  push:
+  workflow_run:
+    workflows: ["Update Flake Inputs"]
+    types:
+      - completed
 
 jobs:
   build:
     runs-on: ubuntu-latest
     env:
-      # Menetapkan variabel USER, diperlukan oleh 'cachix use' di lingkungan 'act'
       USER: root
     steps:
       - name: "Checkout repository"
@@ -17,6 +18,8 @@ jobs:
         run: apt-get update && apt-get install -y sudo
       - uses: cachix/install-nix-action@v31
         with:
+          kvm_enabled: false
+          install_url:  https://releases.nixos.org/nix/nix-2.3.7/install
           nix_path: nixpkgs=channel:nixos-unstable
       - uses: cachix/cachix-action@v15
         with:
@@ -25,4 +28,3 @@ jobs:
       - name: "Build flake outputs"
         run: |
           nix build .#nixosConfigurations.waltz.config.system.build.toplevel
-          nix build .#homeConfigurations.myamusashi.activationPackage
