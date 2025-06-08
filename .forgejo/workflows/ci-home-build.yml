@@ -25,4 +25,6 @@ jobs:
 
       - name: "Build flake outputs"
         run: |
+          mkdir -p ~/.config/nix
+          echo "experimental-features = nix-command flakes" >> ~/.config/nix/nix.conf
           nix build .#homeConfigurations.myamusashi.activationPackage
