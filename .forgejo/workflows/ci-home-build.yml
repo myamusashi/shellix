@@ -11,21 +11,18 @@ jobs:
     steps:
       - name: "Checkout repository"
         uses: actions/checkout@v4
-      - name: "Install sudo (for local 'act' runner)"
-        run: apt-get update && apt-get install -y sudo
-      - uses: DeterminateSystems/nix-installer-action@main
-      - name: "Setup build environment"
+      - name: "Install nix"
         run: |
-          sudo rm -rf /homeless-shelter /tmp/nix-build-home || true
-          sudo mkdir -p /tmp/nix-build-home
-          sudo chmod 755 /tmp/nix-build-home
-          export HOME=/tmp/nix-build-home
+          curl --connect-timeout 60 --max-time 300 -L https://nixos.org/nix/install | sh -s -- --daemon
+          . /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
+          echo "/nix/var/nix/profiles/default/bin" >> $GITHUB_PATH
+          nix --version
+
       - uses: cachix/cachix-action@v15
         with:
           name: myamusashi
           authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
+
       - name: "Build flake outputs"
-        env:
-          HOME: /tmp/nix-build-home
         run: |
           nix build .#homeConfigurations.myamusashi.activationPackage
