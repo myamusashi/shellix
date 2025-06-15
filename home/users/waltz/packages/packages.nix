@@ -26,6 +26,32 @@
       tree-sitter-yaml
       tree-sitter-toml
     ]))
+    cachix
+    sops
+    age
+    gh
+    zip
+    alejandra
+    statix
+    nixfmt-classic
+    unzip
+    ripgrep
+    nushell
+    neovim
+    wget
+    ntfs3g
+    android-tools
+    jq
+    procps
+    btop
+    htop
+    nix-output-monitor
+    nix-top
+    git
+    lazydocker
+    lazygit
+    lazyjournal
+    lazysql
     neovim
     wget
     lemminx
@@ -105,5 +131,6 @@
     tesseract
     poppler_utils
     # Ends
+    mariadb
   ];
 }

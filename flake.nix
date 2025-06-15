@@ -111,7 +111,6 @@
           ./home/common/programs/htop.nix
           ./home/common/programs/lazygit.nix
           ./home/common/services.nix
-          ./home/common/packages.nix
           ./home/common/nixConfig.nix
           ./sops/sops.nix
           chaotic.nixosModules.nyx-cache

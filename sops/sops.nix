@@ -1,4 +1,8 @@
-{inputs, ...}: {
+{
+  inputs,
+  config,
+  ...
+}: {
   imports = [
     inputs.sops-nix.nixosModules.sops
   ];
@@ -22,6 +26,14 @@
     secrets.nextcloud_admin_pass = {
       format = "json";
       mode = "0400";
+    };
+
+    secrets.netdata-token = {
+      owner = config.services.netdata.user;
+      group = config.services.netdata.group;
+      format = "json";
+      mode = "0400";
+      path = "/var/lib/netdata-token/netdata-token.yaml";
     };
   };
 }
