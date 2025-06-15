@@ -39,6 +39,7 @@ in {
     apacheHttpd
     nemo-with-extensions
     vulkan-tools
+    mendeley
     virt-v2v
     (linuxKernel.packages.linux_zen.vmware.overrideAttrs (oldAttrs: {
       src = fetchFromGitHub {

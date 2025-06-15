@@ -70,6 +70,10 @@
       fish-lsp
       python312Packages.python-lsp-server
       pyright
+      texlab
+      kdePackages.qtdeclarative # Qml ls
+      qt6.qttools
+      texliveFull
       markdownlint-cli
       markdownlint-cli2
       live-server
