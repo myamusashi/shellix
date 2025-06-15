@@ -38,7 +38,7 @@ in {
     plugins = [
       "${inputs.hy3.packages.${pkgs.stdenv.hostPlatform.system}.hy3}/lib/libhy3.so"
       "${inputs.hypr-dynamic-cursors.packages.${pkgs.stdenv.hostPlatform.system}.hypr-dynamic-cursors}/lib/libhypr-dynamic-cursors.so"
-      "${inputs.hyprland-plugins.packages.${pkgs.stdenv.hostPlatform.system}.hyprscrolling}/hyprscrolling.so"
+      inputs.hyprland-plugins.packages.${pkgs.stdenv.hostPlatform.system}.hyprscrolling
       "${inputs.Hyprspace.packages.${pkgs.stdenv.hostPlatform.system}.Hyprspace}/lib/libHyprspace.so"
     ];
     settings = {
@@ -49,7 +49,7 @@ in {
         "${pkgs.hyprpolkitagent}/libexec/hyprpolkitagent"
       ];
 
-      monitor = ["eDP-1, 1366x768@60, 0x0, 1" "HDMI-A-2, 1920x1080@74.97, 0x768, 1"];
+      monitor = ["eDP-1, 1366x768@60, 0x0,1" "HDMI-A-2, 1920x1080@74.97, 0x768, 1"];
 
       input = {
         kb_file = "";
@@ -82,7 +82,7 @@ in {
         "col.active_border" = "rgba(C0A36Ee7) rgba(DCD7BAff) 45deg";
         "col.inactive_border" = "0x3636462E";
         no_border_on_floating = false;
-        layout = "hy3";
+        layout = "scrolling";
         snap = {
           enabled = true;
           window_gap = 35;
@@ -229,17 +229,22 @@ in {
           "$modalt, down, movefocus, d"
 
           # Alternative Movefocus
-          "$mod CTRL, left, exec, hyprctl dispatch hy3:movefocus l"
-          "$mod CTRL, right, exec, hyprctl dispatch hy3:movefocus r"
-          "$mod CTRL, up, exec, hyprctl dispatch hy3:movefocus u"
-          "$mod CTRL, down, exec, hyprctl dispatch hy3:movefocus d"
+          "$mod CTRL, k, layoutmsg, move -col"
+          "$mod CTRL, l, layoutmsg, move +col"
 
-          "SHIFT $modalt, G, exec, hyprctl dispatch hy3:makegroup tab"
+          "$mod CTRL, left, layoutmsg, focus l"
+          "$mod CTRL, right, layoutmsg, focus r"
+          "$mod CTRL, up, layoutmsg, focus u"
+          "$mod CTRL, down, layoutmsg, focus d"
 
-          "$mod, left, exec, hyprctl dispatch hy3:movewindow l"
-          "$mod, right, exec, hyprctl dispatch hy3:movewindow r"
-          "$mod, up, exec, hyprctl dispatch hy3:movewindow u"
-          "$mod, down, exec, hyprctl dispatch hy3:movewindow d"
+          "$modalt, a, layoutmsg, fit active"
+          "SHIFT $modalt, a, layoutmsg, fit all"
+
+          "$mod, left, layoutmsg, movewindowto l"
+          "$mod, right, layoutmsg, movewindowto r"
+          "$mod, up, layoutmsg, movewindowto u"
+          "$mod, down, layoutmsg, movewindowto d"
+
           "$modalt CTRL, left, resizeactive, -20 0"
           "$modalt CTRL, right, resizeactive, 20 0"
           "$modalt CTRL, up, resizeactive, 0 -20"
@@ -299,7 +304,6 @@ in {
         "float,class:^(blueman-manager)$"
         "float,title:^(Bluetooth Devices)$"
         "float,class:^(Rofi)$"
-        "float,initialTitle:^(yaziFM)$"
         "float,title:^(Image Properties)$"
         "float,class:^(nemo),title:.*Properties"
         "float,class:^(zen|zen-twilight),title:^(Sign In - Google Accounts — Zen Twilight|Sign In - Google Accounts — Zen)"
@@ -315,7 +319,6 @@ in {
         "center,title:^(rofi - )$"
         "center,title:^(rofi -  myamusashi@nixos)$"
         "center,title:^(rofi - APPS)$"
-        "center,initialTitle:^(yaziFM)$"
         "center,title:^(Image Properties)$"
         "center,title:^(Enter name of file to save to…)$"
         "center,title:^(vesktop)$"
@@ -331,7 +334,6 @@ in {
         "size 800 600,title:^(Import Hyprpanel Theme)$"
         "size 800 600,title:^(Hyprland Polkit Agent)$"
         "size 800 600,class:^(download)$"
-        "size 1096 520,initialTitle:^(yaziFM)$"
         "size 800 600,title:^(Volume Control)$"
         "size 493 254,title:^(Image Properties)$"
         "size 505 600,title:^(iwgtk)$"
@@ -403,6 +405,10 @@ in {
 
           # Animation
           overrideAnimSpeed = 0;
+        };
+
+        hyprscrolling = {
+          fullscreen_on_one_column = true;
         };
 
         hy3 = {

@@ -4,8 +4,6 @@
     enable = true;
 
     shellInit = ''
-      	 fastfetch
-
             alias ssh "kitty +kitten ssh"
             alias icat "kitten icat"
             alias ls "eza --icons"

@@ -37,8 +37,8 @@
   eza-preview = pkgs.fetchFromGitHub {
     owner = "ahkohd";
     repo = "eza-preview.yazi";
-    rev = "6575a9a4806d8dc96ac75adf28791155551804fb";
-    hash = "sha256-RwJu79bjdgmKbRaDH++y8wreBKdGGwbyGOx4G/px2PE=";
+    rev = "main";
+		hash = "sha256-Q8RwpzUkZkz8FKmG+z2v1Rn9NMnkbhu+z1n3cyc/NUk=";
   };
 
   glow = pkgs.fetchFromGitHub {
@@ -86,8 +86,8 @@
   githead = pkgs.fetchFromGitHub {
     owner = "llanosrocas";
     repo = "githead.yazi";
-    rev = "23750247d59da485e4b5257ad5e83837bb86a685";
-    hash = "sha256-VErtv5+I3BBnfbOQrHFvvLo7GAExXwVmhHNq+84kam8=";
+    rev = "8df5b681b878d63bbdebf8f616ef972ac9cf78aa";
+    hash = "sha256-/xXsbkWnSZlBGkLF+ODWew8K0BqSylSyPsW34359150=";
   };
 
   kanagawa = pkgs.fetchFromGitHub {

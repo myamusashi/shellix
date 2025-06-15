@@ -38,8 +38,16 @@
     pkgs.power-profiles-daemon
     pkgs.hyprsunset
     pkgs.vesktop
+    pkgs.material-symbols
+    pkgs.ibm-plex
+    pkgs.ddcutil
+    pkgs.python312Packages.aubio
+    pkgs.python312Packages.pyaudio
+    pkgs.python312Packages.numpy
     pkgs.hyprpicker
+    pkgs.kdePackages.kirigami
+    pkgs.kdePackages.qt5compat
     pkgs.telegram-desktop
-    # inputs.quickshell.packages.${pkgs.system}.default
+    inputs.quickshell.packages.${pkgs.system}.default
   ];
 }

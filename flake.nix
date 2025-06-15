@@ -69,6 +69,12 @@
       url = "github:taj-ny/kwin-effects-forceblur";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    quickshell = {
+      url = "git+https://git.outfoxxed.me/outfoxxed/quickshell?ref=refs/heads/master&rev=2b01a75679a03bd6557cf11c20b1588f436d6b94";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     neovim-nightly-overlay.url = "github:nix-community/neovim-nightly-overlay";
     spicetify-nix.url = "github:Gerg-L/spicetify-nix";
     nixgl.url = "github:nix-community/nixGL";
