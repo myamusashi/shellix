@@ -4,7 +4,7 @@
     isNormalUser = true;
     description = "gilang";
     shell = pkgs-stable.fish;
-    extraGroups = ["networkmanager" "wheel" "vsftpd" "docker"];
+    extraGroups = ["networkmanager" "wheel" "vsftpd" "docker" "podman"];
   };
 
   users.groups.cloudflared = {};
@@ -21,6 +21,12 @@
     group = "nextcloud";
   };
 
+  users.groups.netdata = {};
+  users.users.netdata = {
+    isSystemUser = true;
+    group = "netdata";
+  };
+
   users.groups.atticd = {};
   users.users.atticd = {
     isSystemUser = true;
@@ -31,6 +37,6 @@
   users.users.forgejo-runner = {
     isNormalUser = true;
     group = "forgejo-runner";
-    extraGroups = ["forgejo" "docker"];
+    extraGroups = ["forgejo" "docker" "podman"];
   };
 }

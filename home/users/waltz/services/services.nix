@@ -1,6 +1,7 @@
 {
   config,
   pkgs,
+  lib,
   ...
 }: {
   services.nix-serve = {
@@ -8,17 +9,6 @@
     package = pkgs.nix-serve-ng;
     port = 5500;
     secretKeyFile = config.sops.secrets.nix-serve_secrets.path;
-  };
-
-  services.atticd = {
-    enable = false;
-    environmentFile = "/etc/attic.env";
-    settings = {
-      listen = "[::1]:4040";
-      database = {
-        url = "postgresql:///attic?host=/run/postgresql";
-      };
-    };
   };
 
   services.postgresql = {
@@ -30,6 +20,51 @@
         ensureDBOwnership = true;
       }
     ];
+  };
+
+  services.grafana = {
+    enable = true;
+    settings = {
+      server = {
+        http_addr = "127.0.0.1";
+        http_port = 4032;
+        domain = "dash.myamusashi.com";
+        root_url = "http://dash.myamusashi.com";
+      };
+    };
+  };
+
+  services.prometheus.exporters.node = {
+    enable = true;
+    port = 9100;
+    enabledCollectors = ["systemd"];
+    extraFlags = ["--collector.ethtool" "--collector.softirqs" "--collector.tcpstat" "--collector.wifi"];
+  };
+
+  services.prometheus = {
+    enable = true;
+    port = 9090;
+    globalConfig.scrape_interval = "10s";
+    scrapeConfigs = [
+      {
+        job_name = "node";
+        static_configs = [
+          {
+            targets = ["localhost:${toString config.services.prometheus.exporters.node.port}"];
+          }
+        ];
+      }
+    ];
+  };
+
+  services.mysql = {
+    enable = true;
+    package = pkgs.mariadb;
+    settings = {
+      mysqld = {
+        bind-address = "0.0.0.0";
+      };
+    };
   };
 
   systemd.tmpfiles.rules = [
@@ -48,7 +83,6 @@
     };
     settings = {
       trusted_domains = [
-        "cloud.myamusashi.com"
         "cloud.myamusashi.space"
       ];
     };
@@ -61,25 +95,21 @@
     extraAppsEnable = true;
   };
 
-  services.nginx.virtualHosts."cloud.myamusashi.com".listen = [
-    {
-      addr = "127.0.0.1";
-      port = 9010;
-    }
-  ];
+  services.phpfpm.pools.phpmyadmin = {
+    user = "nginx";
+    settings = {
+      "pm" = "dynamic";
+      "listen.owner" = "nginx";
+      "pm.max_children" = 32;
+      "pm.start_servers" = 2;
+      "pm.min_spare_servers" = 2;
+      "pm.max_spare_servers" = 4;
+      "pm.max_requests" = 500;
+    };
+  };
 
-  services.httpd = {
+  services.nginx = {
     enable = true;
-    enablePHP = true;
-    adminAddr = "admin@email.tld";
-    extraModules = [
-      "proxy"
-      "proxy_http"
-    ];
-
-    extraConfig = ''
-      DirectoryIndex index.html index.php
-    '';
 
     virtualHosts = let
       configFile = pkgs.writeText "config.inc.php" ''
@@ -93,29 +123,54 @@
       '';
       phpmyadminPkg = pkgs.callPackage ./pkg.nix {inherit configFile;};
     in {
-      "pma.myamusashi.com" = {
-        documentRoot = phpmyadminPkg;
-        extraConfig = ''
-          <Directory "${phpmyadminPkg}">
-            Options -Indexes
-          </Directory>
-        '';
+      "cloud.myamusashi.com".listen = [
+        {
+          addr = "127.0.0.1";
+          port = 9010;
+        }
+      ];
+      "dash.myamusashi.com" = {
+        locations."/" = {
+          proxyPass = "http://0.0.0.0:4032";
+          proxyWebsockets = true;
+          recommendedProxySettings = true;
+        };
       };
-      "cache.myamusashi.com" = {
-        documentRoot = "/var/www/nix-cache-ui/src";
-        extraConfig = ''
-          ProxyPass "/nix-cache-info" "http://127.0.0.1:5500/nix-cache-info"
-          ProxyPassReverse "/nix-cache-info" "http://127.0.0.1:5500/nix-cache-info"
-          ProxyPass "/nar" "http://127.0.0.1:5500/nar"
-          ProxyPassReverse "/nar" "http://127.0.0.1:5500/nar"
+      "pma.myamusashi.com" = {
+        root = phpmyadminPkg;
 
-          ProxyPass "/api/nix-builds" "http://127.0.0.1:3000/api/nix-builds"
-          ProxyPassReverse "/api/nix-builds" "http://127.0.0.1:3000/api/nix-builds"
-          <LocationMatch "^/(nar|nix-cache-info|api)">
-             Header set Cache-Control "no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0"
-             ExpiresActive On
-             ExpiresDefault "access"
-          </LocationMatch>
+        listen = [
+          {
+            addr = "127.0.0.1";
+            port = 9000;
+          }
+        ];
+
+        locations."/" = {
+          index = "index.html index.php";
+          tryFiles = "$uri $uri/ =404";
+        };
+
+        locations."~ \\.php$" = {
+          extraConfig = ''
+            fastcgi_split_path_info ^(.+\.php)(/.+)$;
+            fastcgi_pass unix:${config.services.phpfpm.pools.phpmyadmin.socket};
+            fastcgi_index index.php;
+            include ${pkgs.nginx}/conf/fastcgi_params;
+            fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+            fastcgi_param PATH_INFO $fastcgi_path_info;
+          '';
+        };
+
+        extraConfig = ''
+          autoindex off;
+
+          location ~ /\. {
+            deny all;
+          }
+
+          add_header X-Frame-Options DENY;
+          add_header X-Content-Type-Options nosniff;
         '';
       };
     };

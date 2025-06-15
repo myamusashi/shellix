@@ -1,29 +1,10 @@
 {
   # Open ports in the firewall.
   networking.firewall.allowedTCPPorts = [
+    20
     21
     22
-    25
-    80
-    110
-    143
-    443
-    465
-    587
-    9000
-    6379
-    5432
-    995
-    26379
-    6379
-    5432
-    993
-    990 # ftps
-    989 # ftps
-    3000 # forgejo
-    5500 # nix-serve
-    4040 # Attic
-    8090
+    19999 ## NetData
   ];
   networking.firewall.allowedUDPPorts = [
   ];
@@ -31,12 +12,13 @@
   networking.extraHosts = ''
     192.168.18.14 myamusashi.com
     127.0.0.1 mail.myamusashi.com
-    127.0.0.1 cache.myamusashi.com
-    127.0.0.1 cloud.myamusashi.com
-    127.0.0.1 myamusashi.com
-    127.0.0.1 pma.myamusashi.com
+    127.0.0.1:9010 cloud.myamusashi.com
+    127.0.0.1:9000 pma.myamusashi.com
+		127.0.0.1:4032 dash.myamusashi.com
   '';
   # Or disable the firewall altogether.
+  # 25|465|587|110|143|993|995|80|443
+  #
   networking.firewall.enable = true;
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
 
