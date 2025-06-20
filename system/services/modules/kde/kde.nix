@@ -14,5 +14,7 @@
     # };
   };
 
+  environment.plasma6.excludePackages = [pkgs.kdePackages.drkonqi];
+
   services.desktopManager.plasma6.enable = true;
 }

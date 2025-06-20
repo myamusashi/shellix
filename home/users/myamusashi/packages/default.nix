@@ -44,12 +44,21 @@
     pkgs.python312Packages.aubio
     pkgs.python312Packages.pyaudio
     pkgs.python312Packages.numpy
+		pkgs.python312Packages.materialyoucolor
     pkgs.hyprpicker
+    pkgs.hyprland-qt-support
     pkgs.kdePackages.kirigami
     pkgs.kdePackages.qt5compat
     pkgs.telegram-desktop
     pkgs.php
     pkgs.claude-code
-    inputs.quickshell.packages.${pkgs.system}.default
+    pkgs.material-symbols
+    pkgs.nerd-fonts.jetbrains-mono
+    pkgs.ibm-plex
+    pkgs.cava
+    pkgs.bluez
+    pkgs.ddcutil
+    pkgs.brightnessctl
+    pkgs.imagemagick
   ];
 }

@@ -90,6 +90,8 @@ in {
     inetutils
     libvirt
     python3
+    libsForQt5.kirigami2
+    libsForQt5.qt5.qtquickcontrols
     upower
     upower-notify
     virt-viewer
