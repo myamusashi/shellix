@@ -21,7 +21,7 @@
     ];
 
     extra-substituters = [
-      "https://cache.myamusashi.space"
+      # "https://cache.myamusashi.space"
     ];
 
     trusted-public-keys = [
@@ -36,7 +36,7 @@
     ];
 
     extra-trusted-public-keys = [
-      "cache.myamusashi.space-1:7wJ0GThM/MBLSmvDw8u8Y0XMiXAshFmX1Hz1jJ0PKWg="
+      # "cache.myamusashi.space-1:7wJ0GThM/MBLSmvDw8u8Y0XMiXAshFmX1Hz1jJ0PKWg="
     ];
   };
 }
