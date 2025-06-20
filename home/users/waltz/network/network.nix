@@ -10,11 +10,11 @@
   ];
 
   networking.extraHosts = ''
-    192.168.18.14 myamusashi.com
-    127.0.0.1 mail.myamusashi.com
-    127.0.0.1:9010 cloud.myamusashi.com
-    127.0.0.1:9000 pma.myamusashi.com
-		127.0.0.1:4032 dash.myamusashi.com
+      192.168.18.14 myamusashi.com
+      127.0.0.1 mail.myamusashi.com
+      127.0.0.1:9010 cloud.myamusashi.com
+      127.0.0.1:9000 pma.myamusashi.com
+    127.0.0.1:4032 dash.myamusashi.com
   '';
   # Or disable the firewall altogether.
   # 25|465|587|110|143|993|995|80|443
