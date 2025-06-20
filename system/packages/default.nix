@@ -41,37 +41,37 @@ in {
     vulkan-tools
     mendeley
     virt-v2v
-    (linuxKernel.packages.linux_zen.vmware.overrideAttrs (oldAttrs: {
-      src = fetchFromGitHub {
-        owner = "philipl";
-        repo = "vmware-host-modules";
-        rev = "93d8bf38d7e705a862dcbfa721884638a817d476";
-        hash = "sha256-i2E3QAy5P3U+EqSaFaCQGuiU4vt/yYKv3oJBP1qK9Og=";
-      };
-
-      patches = [
-        (fetchpatch {
-          url = "https://github.com/amadejkastelic/vmware-host-modules/commit/926cfc50c017a099c796662c8e2820d12f94d0bb.patch";
-          hash = "sha256-9XLhypr77Qy9Ty54Pm48DYYh3HT1WAmiwGOmBk3AfyI=";
-        })
-      ];
-    }))
-    (
-      pkgs-stable.vmware-workstation.overrideAttrs (e: {
-        installPhase = ''
-          ${e.installPhase}
-          mv $out/bin/vmware $out/bin/vmware-bin
-          makeWrapper $out/bin/vmware-bin $out/bin/vmware \
-            --set GTK_THEME "Adwaita-dark"
-          if [ -f $out/share/applications/vmware-workstation.desktop ]; then
-            substituteInPlace $out/share/applications/vmware-workstation.desktop \
-              --replace "Exec=@@BINARY@@" "Exec=$out/bin/vmware"
-          fi
-        '';
-
-        nativeBuildInputs = (e.nativeBuildInputs or []) ++ [pkgs.makeWrapper];
-      })
-    )
+    # (linuxPackages_cachyos-lto.vmware.overrideAttrs (oldAttrs: {
+    #   src = fetchFromGitHub {
+    #     owner = "philipl";
+    #     repo = "vmware-host-modules";
+    #     rev = "93d8bf38d7e705a862dcbfa721884638a817d476";
+    #     hash = "sha256-i2E3QAy5P3U+EqSaFaCQGuiU4vt/yYKv3oJBP1qK9Og=";
+    #   };
+    #
+    #   patches = [
+    #     (fetchpatch {
+    #       url = "https://github.com/amadejkastelic/vmware-host-modules/commit/926cfc50c017a099c796662c8e2820d12f94d0bb.patch";
+    #       hash = "sha256-9XLhypr77Qy9Ty54Pm48DYYh3HT1WAmiwGOmBk3AfyI=";
+    #     })
+    #   ];
+    # }))
+    # (
+    #   pkgs-stable.vmware-workstation.overrideAttrs (e: {
+    #     installPhase = ''
+    #       ${e.installPhase}
+    #       mv $out/bin/vmware $out/bin/vmware-bin
+    #       makeWrapper $out/bin/vmware-bin $out/bin/vmware \
+    #         --set GTK_THEME "Adwaita-dark"
+    #       if [ -f $out/share/applications/vmware-workstation.desktop ]; then
+    #         substituteInPlace $out/share/applications/vmware-workstation.desktop \
+    #           --replace "Exec=@@BINARY@@" "Exec=$out/bin/vmware"
+    #       fi
+    #     '';
+    #
+    #     nativeBuildInputs = (e.nativeBuildInputs or []) ++ [pkgs.makeWrapper];
+    #   })
+    # )
     kdePackages.sddm-kcm
     cloudflare-warp
     udiskie

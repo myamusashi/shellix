@@ -3,7 +3,7 @@
   imports = [
     ./steam/steam.nix
     ./wireshark/wireshark.nix
-    # ./honkers/honkers.nix
+    ./virt/virt.nix
     ./xonsh/xonsh.nix
   ];
 }

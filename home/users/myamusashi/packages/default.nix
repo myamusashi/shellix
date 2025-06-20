@@ -48,6 +48,8 @@
     pkgs.kdePackages.kirigami
     pkgs.kdePackages.qt5compat
     pkgs.telegram-desktop
+    pkgs.php
+    pkgs.claude-code
     inputs.quickshell.packages.${pkgs.system}.default
   ];
 }

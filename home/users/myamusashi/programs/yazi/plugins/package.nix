@@ -38,7 +38,7 @@
     owner = "ahkohd";
     repo = "eza-preview.yazi";
     rev = "main";
-		hash = "sha256-Q8RwpzUkZkz8FKmG+z2v1Rn9NMnkbhu+z1n3cyc/NUk=";
+    hash = "sha256-Q8RwpzUkZkz8FKmG+z2v1Rn9NMnkbhu+z1n3cyc/NUk=";
   };
 
   glow = pkgs.fetchFromGitHub {

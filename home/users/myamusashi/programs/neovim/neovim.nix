@@ -73,6 +73,8 @@
       texlab
       kdePackages.qtdeclarative # Qml ls
       qt6.qttools
+      php
+      phpactor
       texliveFull
       markdownlint-cli
       markdownlint-cli2

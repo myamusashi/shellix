@@ -6,12 +6,12 @@
       kdePackages.sddm-kcm
     ];
     wayland.enable = true;
-    settings = {
-      Autologin = {
-        Session = "hyprland.desktop";
-        User = "myamusashi";
-      };
-    };
+    # settings = {
+    #   Autologin = {
+    #     Session = "hyprland.desktop";
+    #     User = "myamusashi";
+    #   };
+    # };
   };
 
   services.desktopManager.plasma6.enable = true;
