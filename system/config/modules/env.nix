@@ -7,6 +7,7 @@
     AQ_WLR_DEVICES = "/dev/dri/card1:/dev/dri/card0";
     AQ_MGPU_NO_EXPLICIT = 0;
     GDK_BACKEND = "wayland,x11";
+    XDG_CONFIG_HOME = "/home/$USER/.config";
     XDG_CURRENT_DESKTOP = "Hyprland";
     XDG_SESSION_TYPE = "wayland";
     XDG_SESSION_DESKTOP = "Hyprland";

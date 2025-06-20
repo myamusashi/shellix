@@ -44,7 +44,7 @@ in {
     ];
     settings = {
       exec-once = [
-        "hyprpanel"
+				"swww-daemon"
         "/tmp/scripts/start_boot"
         "udiskie --appindicator --menu-update-workaround --file-manager nautilus --tray --notify --automount"
         "${pkgs.hyprpolkitagent}/libexec/hyprpolkitagent"
@@ -130,8 +130,6 @@ in {
       };
 
       render = {
-        explicit_sync = true;
-        explicit_sync_kms = true;
         cm_fs_passthrough = true;
       };
 
@@ -160,9 +158,11 @@ in {
           "md2, 0.4, 0, 0.2, 1"
         ];
         animation = [
-          "windows, 1, 3, hyprnostretch, gnomed"
-          "windowsIn, 1, 3, md3_standard, gnomed"
-          "windowsOut, 1, 3, md3_accel, gnomed"
+          "windows, 1, 3, hyprnostretch, popin"
+          "windowsIn, 1, 3, md3_standard, slide"
+          "windowsOut, 1, 3, md3_accel, slide"
+          "hyprfocusIn, 1, 1.7,  overshot"
+          "hyprfocusOut, 1, 1.7, overshot"
           "border, 1, 10, default"
           "fade, 1, 3, md3_decel"
           "workspaces, 1, 7, menu_decel, slide"
@@ -406,6 +406,10 @@ in {
 
           # Animation
           overrideAnimSpeed = 0;
+        };
+
+        hyprfocus = {
+          mode = "flash";
         };
 
         hyprscrolling = {
