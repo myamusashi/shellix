@@ -36,6 +36,7 @@
     pkgs.vesktop
     pkgs.ddcutil
     pkgs.hyprpicker
+    pkgs.git-credential-manager
     pkgs.hyprland-qt-support
     pkgs.brightnessctl
     pkgs.qt6.qtmultimedia
