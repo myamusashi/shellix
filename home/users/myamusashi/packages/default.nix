@@ -11,9 +11,6 @@
     pkgs.rich-cli
     pkgs.gh
     pkgs.cloudflared
-    pkgs.mysql-workbench
-    pkgs.attic-client
-    pkgs.git-credential-manager
     pkgs.wl-gammactl
     pkgs.yazi
     pkgs.rofi-wayland
@@ -26,39 +23,26 @@
     pkgs.pavucontrol
     pkgs.libnotify
     pkgs.hyprpanel
-    pkgs.viewnior
+    pkgs.lxqt.lximage-qt
+    pkgs.matugen
+    pkgs.nm-tray
     pkgs.mpg123
     pkgs.zathura
-    pkgs.postman
-    pkgs.kdePackages.qt6ct
-    pkgs.libsForQt5.qt5ct
     (config.lib.nixGL.wrap inputs.zen-browser.packages.${pkgs.system}.default)
     pkgs.wf-recorder
     pkgs.waypaper
     pkgs.power-profiles-daemon
     pkgs.hyprsunset
     pkgs.vesktop
-    pkgs.material-symbols
-    pkgs.ibm-plex
     pkgs.ddcutil
-    pkgs.python312Packages.aubio
-    pkgs.python312Packages.pyaudio
-    pkgs.python312Packages.numpy
-    pkgs.python312Packages.materialyoucolor
     pkgs.hyprpicker
     pkgs.hyprland-qt-support
-    pkgs.kdePackages.kirigami
-    pkgs.kdePackages.qt5compat
+    pkgs.brightnessctl
+    pkgs.qt6.qtmultimedia
     pkgs.telegram-desktop
-    pkgs.php
-    pkgs.claude-code
-    pkgs.material-symbols
-    pkgs.nerd-fonts.jetbrains-mono
-    pkgs.ibm-plex
     pkgs.cava
     pkgs.bluez
     pkgs.ddcutil
-    pkgs.brightnessctl
     pkgs.imagemagick
   ];
 }

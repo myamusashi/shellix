@@ -13,5 +13,8 @@ in {
     pkgs.nerd-fonts.proggy-clean-tt
     pkgs.nerd-fonts.jetbrains-mono
     pkgs.nerd-fonts.inconsolata-lgc
+    pkgs.material-symbols
+    pkgs.nerd-fonts.jetbrains-mono
+    pkgs.ibm-plex
   ];
 }

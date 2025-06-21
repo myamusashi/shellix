@@ -14,11 +14,11 @@
       "application/x-extension-xhtml" = "zen.desktop";
       "application/x-extension-xht" = "zen.desktop";
       "text/plain" = "zen-browser.desktop";
-      "inode/directory" = "nemo.desktop";
-      "application/x-gnome-saved-search" = "nemo.desktop";
-      "image/png" = "viewnior.desktop";
+      "inode/directory" = "org.kde.dolphin.desktop";
+      "application/x-gnome-saved-search" = "org.kde.dolphin.desktop";
+      "image/png" = "lximage-qt.desktop.in";
       "x-scheme-handler/tg" = "org.telegram.desktop.desktop";
-      "image/jpeg" = "viewnior.desktop";
+      "image/jpeg" = "lximage-qt.desktop.in";
     };
 
     addedAssociations = {
@@ -36,12 +36,12 @@
       "text/plain" = ["neovide.desktop" "dev.zed.Zed.desktop" "zen-browser.desktop" "userapp-lvim-DQMET2.desktop" "lvim.desktop" "vim.desktop"];
       "application/vnd.openxmlformats-officedocument.wordprocessingml.document" = ["onlyoffice-desktopeditors.desktop"];
       "application/vnd.openxmlformats-officedocument.presentationml.presentation" = ["onlyoffice-desktopeditors.desktop"];
-      "image/png" = ["org.gnome.Loupe.desktop" "yazi.desktop"];
+      "image/png" = ["lximage-qt.desktop.in" "yazi.desktop"];
       "text/x-log" = ["lvim.desktop"];
-      "image/svg+xml" = ["ephoto.desktop" "viewnior.desktop"];
+      "image/svg+xml" = ["lximage-qt.desktop.in"];
       "x-scheme-handler/tg" = ["org.telegram.desktop.desktop"];
       "text/x-java-source" = ["nvim.desktop"];
-      "image/jpeg" = ["viewnior.desktop"];
+      "image/jpeg" = ["lximage-qt.desktop.in"];
     };
   };
 }
