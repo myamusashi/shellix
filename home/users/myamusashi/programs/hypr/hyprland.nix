@@ -44,7 +44,7 @@ in {
     ];
     settings = {
       exec-once = [
-				"swww-daemon"
+        "swww-daemon"
         "/tmp/scripts/start_boot"
         "udiskie --appindicator --menu-update-workaround --file-manager nautilus --tray --notify --automount"
         "${pkgs.hyprpolkitagent}/libexec/hyprpolkitagent"

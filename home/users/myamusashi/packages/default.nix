@@ -44,7 +44,7 @@
     pkgs.python312Packages.aubio
     pkgs.python312Packages.pyaudio
     pkgs.python312Packages.numpy
-		pkgs.python312Packages.materialyoucolor
+    pkgs.python312Packages.materialyoucolor
     pkgs.hyprpicker
     pkgs.hyprland-qt-support
     pkgs.kdePackages.kirigami
