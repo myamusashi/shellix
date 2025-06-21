@@ -50,7 +50,7 @@ in {
         "${pkgs.hyprpolkitagent}/libexec/hyprpolkitagent"
       ];
 
-      monitor = ["eDP-1, 1366x768@60, 0x0,1" "HDMI-A-2, 1920x1080@74.97, 0x768, 1"];
+      monitor = ["eDP-1, 1920x1080@60, 0x0,1" "HDMI-A-2, 1920x1080@74.97, 1920x0, 1"];
 
       input = {
         kb_file = "";
