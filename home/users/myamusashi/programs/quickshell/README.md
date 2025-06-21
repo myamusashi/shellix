@@ -1,66 +1,73 @@
-# Quickshell Module - Caelestia Shell Configuration
+# Kuru Kuru Bar
+![image](https://github.com/user-attachments/assets/caec808f-7945-466f-807e-765d69804c76)
+- Wallpaper source: [The Herta by meirong](https://www.pixiv.net/artworks/126270092)
 
-This module IS the Caelestia shell configuration for Quickshell, fully integrated into home-manager.
+A compat and adorable bar designed with the goal of speeening the kuru kuru.
+Designed in acordance to google's material 3 guidelines, you can generate
+colors from your wallpaper using [matugen](https://github.com/InioX/matugen)
+using [this template](../../../../nixosModules/external/matugen/templates/quickshell-colors.qml)
 
-## Structure
+### Depencencies
+- quickshell
+- material-symbols
+- nerdfonts
+- qtmultimedia (prolly already installed on your system)
+- powerprofilesdaemon (optional)
+- brightnessctl (optional)
 
+### Known Issues
+- `org.Hyprland.style is not installed`: see [#21](https://github.com/Rexcrazy804/Zaphkiel/issues/21#issuecomment-2906546939)
+- empty networktab: currently unimplemented waiting for qs to provide a service. For the time being you can use `nm-applet`
+- empty face icon in greeter: symlink an image (of any image type) to ~/.face.icon
+
+### Live running on nix
+This rice is exposed as a package in the toplevel flake and can be used to run the rice as follows
 ```
-quickshell/
-├── default.nix              # Module entry point
-├── packages.nix            # Nix derivations
-├── config.nix             # Configuration management
-├── shell.qml              # Shell entry point
-├── scripts.json           # Your toggle workspace apps
-├── modules/               # UI components
-│   ├── bar/              # Status bar
-│   ├── dashboard/        # Dashboard widget
-│   ├── launcher/         # App launcher
-│   └── ...
-├── widgets/              # Reusable QML widgets  
-├── services/             # System integrations
-├── config/               # Appearance settings
-└── assets/               # Images and resources
+nix run gitub:Rexcrazy804/Zaphkiel#quickshell
+```
+> Don't panic if its building `quickshell`, no binary cache for that yet
+
+## Acknowledgement
+- AlbumCover svg by [Squirrel Modeller](https://github.com/SquirrelModeller)
+- Particle System ~~stolen from~~ inspired by [soramanew/rainingkuru](https://github.com/soramanew/rainingkuru)
+
+## Many thanks to these homies :>
+end_4, sora, a certain individual that has not yet returned, foxxed, starch,
+aureus, caesus, oyudays, lysec, friday and squirrel modeller
+
+## Components outline
+```
+| Notch
+- | TopBar
+- - | WorkspacePill
+- - | MprisDot
+- - | TimePill
+- - | BrightnessDot
+- - | AudioSwiper
+- - | BatteryPill
+- | ExpanededPane
+- - | CentralPane
+- - - | HomeView
+- - - - | GreeterWidget
+- - - - | TrayItemMenu (exported from TrayItem)
+- - - - | TrayItem
+- - - | CalenderView
+- - - | SystemView
+- - - - | SessionDots
+- - - | MusicView
+- - - - | MprisItem
+- - - | SettingsView
+- - - - | PowerTab
+- - - - - | PowerInfo
+- - - - | AudioTab
+- - - - - | AudioSlider
+- - | KuruKuru
+- - - | KuruParticleSystem
+- - - | NotifDots
+- | PopupPane
+- - | PopupNotification
+- | InboxPane
+- - | Notification
 ```
 
-## Customization
-
-Everything in this directory (except .nix files) is YOUR shell configuration:
-
-- **shell.qml** - Main entry point
-- **modules/** - Modify UI components directly
-- **config/** - Change appearance, behavior
-- **scripts.json** - Configure toggle workspace apps
-- **widgets/** - Create custom widgets
-
-## Usage
-
-```bash
-# Commands using caelestia-quickshell wrapper
-caelestia-quickshell shell toggle dashboard    # Toggle dashboard
-caelestia-quickshell shell toggle launcher     # Toggle launcher  
-caelestia-quickshell shell toggle session      # Toggle session menu
-caelestia-quickshell shell media play-pause    # Media controls
-
-# Direct caelestia commands (no wrapper needed)
-caelestia toggle <workspace>        # Toggle special workspaces
-caelestia scheme <name>             # Change color scheme
-caelestia wallpaper -f <path>       # Set wallpaper
-
-# Service management
-systemctl --user restart caelestia-shell
-
-# Edit shell (opens this directory)
-caelestia-edit
-
-# Shell alias (after new terminal session)
-caelestia                          # Alias for caelestia-quickshell
-```
-
-## Development Workflow
-
-1. Edit any QML files directly in this directory
-2. Run `caelestia-quickshell shell reload-config` to see changes
-3. Rebuild system only when changing Nix configs
-4. All changes are tracked in git
-
-This is YOUR shell - modify it however you want!
+> with <3 by Rexiel Scarlet

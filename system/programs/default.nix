@@ -1,9 +1,8 @@
 {
-  programs.dconf.enable = true;
   imports = [
-    ./steam/steam.nix
+    # ./steam/steam.nix
     ./wireshark/wireshark.nix
     ./virt/virt.nix
-    ./xonsh/xonsh.nix
+    # ./xonsh/xonsh.nix
   ];
 }

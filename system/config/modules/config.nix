@@ -18,7 +18,9 @@
     };
     hyprland.enable = true;
     ccache.enable = true;
-    java.enable = true;
-    java.package = pkgs.jdk23;
+    java = {
+      enable = true;
+      package = pkgs.jdk21;
+    };
   };
 }
