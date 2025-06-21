@@ -56,5 +56,7 @@ in {
     alejandra
     hardinfo2
     kdiff3
+    rofi-network-manager
+    networkmanagerapplet
   ];
 }

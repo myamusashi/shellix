@@ -7,6 +7,7 @@
     ./btop/btop.nix
     # ./helix/helix.nix
     # ./lazygit/lazygit.nix
+    ./quickshell/default.nix
     ./mpv/mpv.nix
     ./wlogout/wlogout.nix
     ./rofi/rofi.nix
