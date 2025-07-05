@@ -15,52 +15,48 @@ final: prev: {
     };
   });
 
-  vmware-modules = prev.stdenv.mkDerivation {
-    pname = "vmware-modules";
-    # The 'prev.kernel' ensures we build against the kernel NixOS is configured to use.
-    version = "workstation-17.6.3-20250608-${prev.kernel.version}";
+  linuxPackages_cachyos-lto = prev.linuxPackages_cachyos-lto.extend (self: super: {
+    vmware = super.vmware.overrideAttrs (oldAttrs: {
+      version = "workstation-17.6.3-20250608-${self.kernel.version}";
 
-    src = prev.fetchFromGitHub {
-      owner = "philipl";
-      repo = "vmware-host-modules";
-      # This rev corresponds to VMware Workstation 17.5.2, not 17.6.3 as in your version string.
-      # You may need to update rev, version, and hash for the version you want.
-      rev = "e08764f84df3bd14407291e02346b7c5c54d0bf6";
-      hash = "sha256-RDVKropC+VOv1uJijOGlLt6iqZI8Cm9aWlbmvZj2CSk=";
-    };
+      src = final.fetchFromGitHub {
+        owner = "philipl";
+        repo = "vmware-host-modules";
+        rev = "e08764f84df3bd14407291e02346b7c5c54d0bf6";
+        hash = "sha256-RDVKropC+VOv1uJijOGlLt6iqZI8Cm9aWlbmvZj2CSk=";
+      };
 
-    # The rest of your derivation logic is mostly the same,
-    # but we reference dependencies using 'prev' (e.g., prev.kmod).
-    hardeningDisable = ["pic"];
-    nativeBuildInputs = prev.kernel.moduleBuildDependencies;
-    enableParallelBuilding = true;
-    postPatch = ''
-      substituteInPlace Makefile \
-        --replace '/lib/modules/$(VM_UNAME)/misc' "$out/lib/modules/${prev.kernel.modDirVersion}/misc" \
-        --replace /sbin/modinfo "${prev.kmod}/bin/modinfo" \
-        --replace 'test -z "$(DESTDIR)"' "0"
-      for module in "vmmon-only" "vmnet-only"; do
-        substituteInPlace "./$module/Makefile" \
-          --replace '/lib/modules/' "${prev.kernel.dev}/lib/modules/" \
-          --replace /bin/grep "${prev.gnugrep}/bin/grep"
-      done
-    '';
-    preInstall = ''
-      mkdir -p "$out/lib/modules/${prev.kernel.modDirVersion}/misc"
-    '';
+      nativeBuildInputs =
+        (oldAttrs.nativeBuildInputs or [])
+        ++ [
+          final.clang_20
+          final.llvm_20
+        ];
 
-    meta = with prev.lib; {
-      description = "Kernel modules needed for VMware hypervisor";
-      homepage = "https://github.com/mkubecek/vmware-host-modules";
-      license = licenses.gpl2Only;
-      platforms = ["x86_64-linux"];
-      broken = prev.kernel.kernelOlder "5.5" && prev.kernel.isHardened;
-      maintainers = with maintainers; [
-        deinferno
-        vifino
+      makeFlags =
+        (oldAttrs.makeFlags or [])
+        ++ [
+          "CC=${final.clang_20}/bin/clang"
+          "HOSTCC=${final.clang_20}/bin/clang"
+        ];
+
+      NIX_CFLAGS_COMPILE = toString [
+        "-Wno-error=implicit-function-declaration"
+        "-Wno-error=implicit-int"
+        "-Wno-error=deprecated-declarations"
+        "-Wno-error=format-security"
       ];
-    };
-  };
+
+      preBuild =
+        (oldAttrs.preBuild or "")
+        + ''
+          export CC=${final.clang_20}/bin/clang
+          export HOSTCC=${final.clang_20}/bin/clang
+          export LLVM=1
+          export KCFLAGS="$KCFLAGS -Wno-unused-command-line-argument"
+        '';
+    });
+  });
 
   # kitty = prev.kitty.overrideAttrs (oldAttrs: {
   #   patches =

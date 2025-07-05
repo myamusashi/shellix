@@ -1,7 +1,7 @@
 {
   imports = [
-    ./gtk/gtk.nix
-    ./fonts/fonts.nix
+    ./theme/default.nix
+    ./fonts/default.nix
     ./systemd/default.nix
   ];
 }
