@@ -30,7 +30,7 @@
 
     secrets.netdata-token = {
       owner = config.services.netdata.user;
-      group = config.services.netdata.group;
+      inherit (config.services.netdata) group;
       format = "json";
       mode = "0400";
       path = "/var/lib/netdata-token/netdata-token.yaml";

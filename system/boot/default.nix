@@ -6,51 +6,7 @@
   boot = {
     # Need when i want to use vmware
     # kernelPackages = pkgs.linuxPackages_xanmod_stable;
-    kernelPackages = pkgs.linuxPackages_cachyos-lto.extend (self: super: {
-      vmware = super.vmware.overrideAttrs (oldAttrs: {
-        version = "workstation-17.6.3-20250608-${self.kernel.version}";
-        src = pkgs.fetchFromGitHub {
-          owner = "philipl";
-          repo = "vmware-host-modules";
-          rev = "e08764f84df3bd14407291e02346b7c5c54d0bf6";
-          hash = "sha256-RDVKropC+VOv1uJijOGlLt6iqZI8Cm9aWlbmvZj2CSk=";
-        };
-
-        # Add build dependencies including clang
-        nativeBuildInputs =
-          (oldAttrs.nativeBuildInputs or [])
-          ++ [
-            pkgs.clang_20
-            pkgs.llvm_20
-          ];
-
-        # Force the build to use clang instead of gcc
-        makeFlags =
-          (oldAttrs.makeFlags or [])
-          ++ [
-            "CC=${pkgs.clang_20}/bin/clang"
-            "HOSTCC=${pkgs.clang_20}/bin/clang"
-          ];
-
-        # Set environment variables for the build
-        NIX_CFLAGS_COMPILE = toString [
-          "-Wno-error=implicit-function-declaration"
-          "-Wno-error=implicit-int"
-          "-Wno-error=deprecated-declarations"
-          "-Wno-error=format-security"
-        ];
-
-        # Ensure the kernel build system uses clang
-        preBuild =
-          (oldAttrs.preBuild or "")
-          + ''
-            export CC=${pkgs.clang_20}/bin/clang
-            export HOSTCC=${pkgs.clang_20}/bin/clang
-            export LLVM=1
-            export KCFLAGS="$KCFLAGS -Wno-unused-command-line-argument"
-          '';
-      });
-    });
+    kernelPackages = pkgs.linuxPackages_cachyos-lto;
     initrd.verbose = false;
     consoleLogLevel = 0;
     initrd.availableKernelModules = [
