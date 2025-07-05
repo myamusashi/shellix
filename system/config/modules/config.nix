@@ -20,7 +20,25 @@
     ccache.enable = true;
     java = {
       enable = true;
-      package = pkgs.jdk21;
+      package = pkgs.jdk23;
+    };
+  };
+
+  environment.etc = {
+    "qemu/myamusashi.conf" = {
+      text = "allow all";
+      user = "root";
+      group = "root";
+      mode = "0640";
+    };
+
+    "qemu/bridge.conf" = {
+      text = ''
+        include /etc/qemu/myamusashi.conf
+      '';
+      user = "myamusashi";
+      group = "root";
+      mode = "0640";
     };
   };
 }

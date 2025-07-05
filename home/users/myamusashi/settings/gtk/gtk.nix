@@ -11,13 +11,23 @@ in {
     future-cyan-hyprcursor
     pkgs.morewaita-icon-theme
     vimix-icon
+    pkgs.kdePackages.qt6ct
     pkgs.kanagawa-gtk-theme
     pkgs.kanagawa-icon-theme
     # pkgs.vimix-icon-theme
     # pkgs.numix-icon-theme
     pkgs.papirus-icon-theme
     pkgs.kdePackages.qtstyleplugin-kvantum
-    pkgs.libsForQt5.qt5ct
+    (pkgs.whitesur-kde.override {
+      })
+    (pkgs.whitesur-icon-theme.override {
+      themeVariants = ["default"];
+    })
+    (pkgs.whitesur-gtk-theme.override {
+      themeVariants = ["blue"];
+      colorVariants = ["dark"];
+      darkerColor = true;
+    })
     (pkgs.vimix-gtk-themes.override {
       themeVariants = ["ruby"];
       colorVariants = ["dark"];
@@ -38,30 +48,16 @@ in {
     enable = true;
     style = {
       name = "kvantum";
-      package = pkgs.gruvbox-kvantum;
     };
   };
 
   gtk = {
     enable = true;
 
-    iconTheme = {name = "Kanagawa";};
-    theme = {name = "Kanagawa-B";};
+    iconTheme = {name = "WhiteSur-dark";};
+    theme = {name = "WhiteSur-Dark-blue";};
 
-    gtk2 = {
-      #configLocation = "${config.home.homeDirectory}/.gtkrc-2.0";
-      extraConfig = ''
-        gtk-application-prefer-dark-theme = 1
-        gtk-enable-event-sounds = 1
-        gtk-enable-input-feedback-sounds = 0
-        gtk-xft-antialias = 1
-        gtk-xft-hinting = 1
-        gtk-xft-hintstyle = hintslight
-        gtk-xft-rgba = rgb
-      '';
-    };
     gtk3 = {
-      #configLocation = "${config.xdg.configHome}/gtk-3.0/settings.ini";
       extraConfig = {
         "gtk-application-prefer-dark-theme" = 1;
         "gtk-enable-event-sounds" = 1;
@@ -73,7 +69,6 @@ in {
       };
     };
     gtk4 = {
-      #configLocation = "${config.xdg.configHome}/gtk-4.0/settings.ini";
       extraConfig = {"gtk-application-prefer-dark-theme" = 1;};
     };
   };

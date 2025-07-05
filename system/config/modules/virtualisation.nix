@@ -39,11 +39,10 @@
       defaultNetwork.settings = {dns_enabled = true;};
     };
     vmware = {
-      host.enable = false;
-      # host.package = pkgs-stable.vmware-workstation;
+      host.enable = true;
       guest = {
         enable = true;
-        package = pkgs.open-vm-tools;
+        headless = false;
       };
     };
   };

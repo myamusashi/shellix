@@ -4,7 +4,17 @@
   users.users.myamusashi = {
     isNormalUser = true;
     shell = pkgs.fish;
-    extraGroups = ["networkmanager" "wheel" "mlocate" "gns3" "docker" "libvirtd" "wireshark" "ubridge" "video" "input" "wireshark"];
+    extraGroups = [
+      "networkmanager"
+      "wheel"
+      "docker"
+      "libvirtd"
+      "qemu-libvirtd"
+      "kvm"
+      "video"
+      "input"
+      "wireshark"
+    ];
   };
 
   users.groups.ubridge = {};

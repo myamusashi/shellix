@@ -19,7 +19,10 @@ in {
     zed-editor-fhs
     poppler_utils
     proton-pass
+    protonmail-bridge
+    protonmail-bridge-gui
     vulkan-tools
+    vmware-workstation
     libgdiplus
     polkit
     tree-sitter
@@ -31,9 +34,10 @@ in {
     onlyoffice-desktopeditors
     pcsx2
     apacheHttpd
-    nemo-with-extensions
     vulkan-tools
     mendeley
+    bitwarden-desktop
+    whitesur-kde
     virt-v2v
     cloudflare-warp
     udiskie
