@@ -38,7 +38,7 @@ in {
     plugins = [
       "${inputs.hy3.packages.${pkgs.stdenv.hostPlatform.system}.hy3}/lib/libhy3.so"
       "${inputs.hypr-dynamic-cursors.packages.${pkgs.stdenv.hostPlatform.system}.hypr-dynamic-cursors}/lib/libhypr-dynamic-cursors.so"
-      inputs.hyprland-plugins.packages.${pkgs.stdenv.hostPlatform.system}.hyprfocus
+      # inputs.hyprland-plugins.packages.${pkgs.stdenv.hostPlatform.system}.hyprfocus
       inputs.hyprland-plugins.packages.${pkgs.stdenv.hostPlatform.system}.hyprscrolling
       "${inputs.Hyprspace.packages.${pkgs.stdenv.hostPlatform.system}.Hyprspace}/lib/libHyprspace.so"
     ];
@@ -50,7 +50,7 @@ in {
         "${pkgs.hyprpolkitagent}/libexec/hyprpolkitagent"
       ];
 
-      monitor = ["eDP-1, 1920x1080@60, 0x0,1" "HDMI-A-2, 1920x1080@74.97, 1920x0, 1"];
+      monitor = ["eDP-1, 1920x1080@60, 0x0,1.25" "HDMI-A-2, 1920x1080@74.97, 1536x0, 1"];
 
       input = {
         kb_file = "";
@@ -161,8 +161,8 @@ in {
           "windows, 1, 3, hyprnostretch, popin"
           "windowsIn, 1, 3, md3_standard, slide"
           "windowsOut, 1, 3, md3_accel, slide"
-          "hyprfocusIn, 1, 1.7,  overshot"
-          "hyprfocusOut, 1, 1.7, overshot"
+          # "hyprfocusIn, 1, 1.7,  overshot"
+          # "hyprfocusOut, 1, 1.7, overshot"
           "border, 1, 10, default"
           "fade, 1, 3, md3_decel"
           "workspaces, 1, 7, menu_decel, slide"
@@ -178,7 +178,7 @@ in {
       "$term" = "kitty";
       "$screencapture" = "/tmp/scripts/screen-capture.sh";
       "$files" = "footclient --title=yaziFM yazi";
-      "$zen-browser" = "zen";
+      "$browser" = "zen";
       "$vm" = "vmware";
       "$launcher" = "rofi -show drun";
       "$powermenu" = "wlogout";
@@ -196,7 +196,7 @@ in {
       bind =
         [
           "$modalt, RETURN, exec, $term"
-          "$modalt, F, exec, $zen-browser"
+          "$modalt, F, exec, $browser"
           "$modalt, E, exec, $files"
           "SHIFT $modalt, C, exec, $clipmanager"
           "$modalt, C, exec, $emoji"

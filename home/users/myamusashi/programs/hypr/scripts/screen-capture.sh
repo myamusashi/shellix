@@ -1,18 +1,35 @@
 #!/usr/bin/env bash
 
-wf-recorder_check() {
-	if pgrep -x "wf-recorder" >/dev/null; then
-		pkill -INT -x wf-recorder
-		notify-send "Stopping all instances of wf-recorder" "$(cat /tmp/recording.txt)"
-		wl-copy <"$(cat /tmp/recording.txt)"
-		exit 0
-	fi
-}
+SCREENSHOT_DIR="$HOME/Pictures/screenshot"
+SOUND_FILE="$HOME/.dots/home/programs/hypr/scripts/camera-13695.mp3"
+WOFI_CONFIG="$HOME/.config/wofi/screenshot.css"
 
-SELECTION=$(echo -e "screenshot window\nscreenshot selection\nscreenshot eDP-1\nscreenshot HDMI-A-2\nscreenshot both screens" | fuzzel -d -p "󰄀 " -w 25 -l 6 -b e06c7510)
+# Create screenshot directory if it doesn't exist
+mkdir -p "$SCREENSHOT_DIR"
 
-IMG="$HOME/Pictures/screenshot/$(date +%Y-%m-%d_%H-%m-%s).png"
+# Screenshot options (matching your original script)
+OPTIONS="screenshot window
+screenshot selection
+screenshot eDP-1
+screenshot HDMI-A-2
+screenshot both screens"
 
+# Show wofi menu
+SELECTION=$(echo -e "$OPTIONS" | wofi \
+	--dmenu \
+	--prompt "󰄀 " \
+	--width 220 \
+	--height 400 \
+	--lines 5 \
+	--style "$WOFI_CONFIG" \
+	--cache-file=/dev/null \
+	--hide-scroll \
+	--matching=contains)
+
+# Generate filename with timestamp (matching your format)
+IMG="$SCREENSHOT_DIR/$(date +%Y-%m-%d_%H-%m-%s).png"
+
+# Function to handle post-screenshot actions (matching your original goto_link function)
 goto_link() {
 	ACTION=$(notify-send -a "Screen Capture" --action="default=open link" -i "$IMG" "Screenshot Taken" "${IMG}")
 
@@ -21,6 +38,7 @@ goto_link() {
 	fi
 }
 
+# Execute based on selection (keeping your original logic)
 case "$SELECTION" in
 "screenshot window")
 	output=$(hyprshot -m window -d -s -o "$HOME/Pictures/screenshot/" -f "$(date +%Y-%m-%d_%H-%m-%s).png")
@@ -83,5 +101,8 @@ case "$SELECTION" in
 		notify-send -u critical -a "Screen Capture" "Screenshot Failed" "Failed to take screenshot on both screens."
 	fi
 	;;
-*) ;;
+*)
+	# User cancelled or no selection
+	exit 0
+	;;
 esac

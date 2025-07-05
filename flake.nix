@@ -82,6 +82,7 @@
 
     neovim-nightly-overlay.url = "github:nix-community/neovim-nightly-overlay";
     spicetify-nix.url = "github:Gerg-L/spicetify-nix";
+    matugen.url = "github:/InioX/Matugen/v2.4.1";
     nixgl.url = "github:nix-community/nixGL";
   };
 
@@ -145,6 +146,11 @@
           ./home/common/services.nix
           ./home/common/packages.nix
           ./home/common/nixConfig.nix
+          {
+            nixpkgs.overlays = [
+              (import ./overlays/default.nix)
+            ];
+          }
         ];
         specialArgs = {
           inherit inputs;

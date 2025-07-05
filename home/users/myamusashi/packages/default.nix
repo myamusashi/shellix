@@ -23,6 +23,7 @@
     pkgs.pavucontrol
     pkgs.libnotify
     pkgs.hyprpanel
+    (config.lib.nixGL.wrap pkgs.brave)
     pkgs.lxqt.lximage-qt
     pkgs.matugen
     pkgs.nm-tray
@@ -37,7 +38,6 @@
     pkgs.ddcutil
     pkgs.hyprpicker
     pkgs.git-credential-manager
-    pkgs.hyprland-qt-support
     pkgs.brightnessctl
     pkgs.qt6.qtmultimedia
     pkgs.telegram-desktop

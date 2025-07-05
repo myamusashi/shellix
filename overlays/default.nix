@@ -15,6 +15,53 @@ final: prev: {
     };
   });
 
+  vmware-modules = prev.stdenv.mkDerivation {
+    pname = "vmware-modules";
+    # The 'prev.kernel' ensures we build against the kernel NixOS is configured to use.
+    version = "workstation-17.6.3-20250608-${prev.kernel.version}";
+
+    src = prev.fetchFromGitHub {
+      owner = "philipl";
+      repo = "vmware-host-modules";
+      # This rev corresponds to VMware Workstation 17.5.2, not 17.6.3 as in your version string.
+      # You may need to update rev, version, and hash for the version you want.
+      rev = "e08764f84df3bd14407291e02346b7c5c54d0bf6";
+      hash = "sha256-RDVKropC+VOv1uJijOGlLt6iqZI8Cm9aWlbmvZj2CSk=";
+    };
+
+    # The rest of your derivation logic is mostly the same,
+    # but we reference dependencies using 'prev' (e.g., prev.kmod).
+    hardeningDisable = ["pic"];
+    nativeBuildInputs = prev.kernel.moduleBuildDependencies;
+    enableParallelBuilding = true;
+    postPatch = ''
+      substituteInPlace Makefile \
+        --replace '/lib/modules/$(VM_UNAME)/misc' "$out/lib/modules/${prev.kernel.modDirVersion}/misc" \
+        --replace /sbin/modinfo "${prev.kmod}/bin/modinfo" \
+        --replace 'test -z "$(DESTDIR)"' "0"
+      for module in "vmmon-only" "vmnet-only"; do
+        substituteInPlace "./$module/Makefile" \
+          --replace '/lib/modules/' "${prev.kernel.dev}/lib/modules/" \
+          --replace /bin/grep "${prev.gnugrep}/bin/grep"
+      done
+    '';
+    preInstall = ''
+      mkdir -p "$out/lib/modules/${prev.kernel.modDirVersion}/misc"
+    '';
+
+    meta = with prev.lib; {
+      description = "Kernel modules needed for VMware hypervisor";
+      homepage = "https://github.com/mkubecek/vmware-host-modules";
+      license = licenses.gpl2Only;
+      platforms = ["x86_64-linux"];
+      broken = prev.kernel.kernelOlder "5.5" && prev.kernel.isHardened;
+      maintainers = with maintainers; [
+        deinferno
+        vifino
+      ];
+    };
+  };
+
   # kitty = prev.kitty.overrideAttrs (oldAttrs: {
   #   patches =
   #     (oldAttrs.patches or [])
@@ -23,45 +70,4 @@ final: prev: {
   #       ./patch/kitty-patch/fix_xdg_toplevel_switch.patch
   #     ];
   # });
-
-  vmware-workstation = prev.vmware-workstation.overrideAttrs (oldAttrs: let
-    version = "17.6.1";
-    build = "24319023";
-    baseUrl = "https://web.archive.org/web/20241105192443if_/https://softwareupdate.vmware.com/cds/vmw-desktop/ws/${version}/${build}/linux";
-    vmware-unpack-env = prev.buildFHSEnv {
-      pname = "vmware-unpack-env";
-      inherit version;
-      targetPkgs = pkgs: [pkgs.zlib];
-    };
-  in {
-    src =
-      prev.fetchzip {
-        url = "${baseUrl}/core/VMware-Workstation-${version}-${build}.x86_64.bundle.tar";
-        hash = "sha256-VzfiIawBDz0f1w3eynivW41Pn4SqvYf/8o9q14hln4s=";
-        stripRoot = false;
-      }
-      + "/VMware-Workstation-${version}-${build}.x86_64.bundle";
-    installPhase = ''
-      ${oldAttrs.installPhase}
-
-      mv $out/bin/vmware $out/bin/vmware-bin
-      makeWrapper $out/bin/vmware-bin $out/bin/vmware \
-        --set GTK_THEME "Adwaita-dark"
-
-      if [ -f $out/share/applications/vmware-workstation.desktop ]; then
-        substituteInPlace $out/share/applications/vmware-workstation.desktop \
-          --replace "Exec=@@BINARY@@" "Exec=$out/bin/vmware"
-
-        substituteInPlace $out/share/applications/vmware-player.desktop \
-          --replace "Exec=@@BINARY@@" "Exec=$out/bin/vmware"
-      fi
-    '';
-
-    # Make sure makeWrapper is available
-    # nativeBuildInputs = (oldAttrs.nativeBuildInputs or []) ++ [pkgs.makeWrapper];
-
-    unpackPhase = ''
-      ${vmware-unpack-env}/bin/vmware-unpack-env -c "sh ${final.vmware-workstation.src} --extract unpacked"
-    '';
-  });
 }

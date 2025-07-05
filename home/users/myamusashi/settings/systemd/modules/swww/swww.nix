@@ -7,7 +7,8 @@
     Service = {
       Type = "exec";
       ExecStart = "${pkgs.swww}/bin/swww-daemon";
-      Restart = "on-failure";
+      ExecStop = "${pkgs.swww}/bin/swww kill";
+      Restart = "${pkgs.swww}/bin/swww kill | ${pkgs.swww}/bin/swww-daemon &";
       Slice = "app-graphical.slice";
     };
     Install = {
