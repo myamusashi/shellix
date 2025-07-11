@@ -5,7 +5,7 @@
 }: {
   programs.kitty = lib.mkForce {
     enable = true;
-    themeFile = "kanagawa_dragon";
+    themeFile = "3024_Night";
     keybindings = {
       "ctrl+g" = "lazygit";
     };

@@ -6,6 +6,6 @@
     ./modules/get_adzan_data/default.nix
     ./modules/swww/swww.nix
     ./modules/nm_applet/default.nix
-    ./modules/warp/default.nix
+    # ./modules/warp/default.nix
   ];
 }

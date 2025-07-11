@@ -34,9 +34,9 @@
     docker.enable = false;
     libvirtd.enable = true;
     podman = {
-      enable = false;
+      enable = true;
       dockerCompat = true;
-      defaultNetwork.settings = {dns_enabled = true;};
+      defaultNetwork.settings.dns_enabled = true;
     };
     vmware = {
       host.enable = true;

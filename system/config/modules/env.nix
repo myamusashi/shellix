@@ -1,4 +1,4 @@
-{
+{config, ...}: {
   environment.sessionVariables = {
     GTK_THEME = "WhiteSur-Dark-blue";
     HYPRCURSOR_THEME = "Future-Cyan-Hyprcursor_Theme";

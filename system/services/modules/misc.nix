@@ -1,6 +1,6 @@
 {pkgs, ...}: {
   services = {
-    cloudflare-warp.enable = true;
+    cloudflare-warp.enable = false;
     gnome.gnome-keyring.enable = true;
     scx.enable = true;
     fwupd.enable = true;
