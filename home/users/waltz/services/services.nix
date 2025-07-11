@@ -1,7 +1,7 @@
 {
   config,
   pkgs,
-  lib,
+  pkgs-stable,
   ...
 }: {
   services.nix-serve = {
@@ -55,6 +55,37 @@
         ];
       }
     ];
+  };
+
+  services.vaultwarden = {
+    enable = true;
+    package = pkgs-stable.vaultwarden;
+    webVaultPackage = pkgs-stable.vaultwarden.webvault;
+    dbBackend = "sqlite";
+    backupDir = "/var/backup/vaultwarden";
+    config = {
+      DOMAIN = "https://vault.myamusashi.space";
+      SIGNUPS_ALLOWED = false;
+
+      ROCKET_ADDRESS = "127.0.0.1";
+      ROCKET_PORT = 8222;
+
+      ROCKET_LOG = "critical";
+    };
+  };
+
+  services.matomo = {
+    enable = true;
+    package = pkgs-stable.matomo;
+    hostname = "matomo.myamusashi.org";
+    nginx = {
+      enableACME = false;
+      locations = {
+        "/" = {
+          proxyPass = "http://localhost:3000";
+        };
+      };
+    };
   };
 
   services.mysql = {
@@ -129,6 +160,11 @@
           port = 9010;
         }
       ];
+      "vault.myamusashi.com" = {
+        locations."/" = {
+          proxyPass = "http://127.0.0.1:${toString config.services.vaultwarden.config.ROCKET_PORT}";
+        };
+      };
       "dash.myamusashi.com" = {
         locations."/" = {
           proxyPass = "http://0.0.0.0:4032";
