@@ -23,6 +23,13 @@
       mode = "0400";
     };
 
+    secrets.gemini_key = {
+      path = "/var/lib/gemini/key";
+      format = "json";
+      owner = "myamusashi";
+      mode = "0400";
+    };
+
     secrets.nextcloud_admin_pass = {
       format = "json";
       mode = "0400";

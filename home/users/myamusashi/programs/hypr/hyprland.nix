@@ -39,18 +39,22 @@ in {
       "${inputs.hy3.packages.${pkgs.stdenv.hostPlatform.system}.hy3}/lib/libhy3.so"
       "${inputs.hypr-dynamic-cursors.packages.${pkgs.stdenv.hostPlatform.system}.hypr-dynamic-cursors}/lib/libhypr-dynamic-cursors.so"
       # inputs.hyprland-plugins.packages.${pkgs.stdenv.hostPlatform.system}.hyprfocus
-      inputs.hyprland-plugins.packages.${pkgs.stdenv.hostPlatform.system}.hyprscrolling
+      # inputs.hyprland-plugins.packages.${pkgs.stdenv.hostPlatform.system}.hyprscrolling
       "${inputs.Hyprspace.packages.${pkgs.stdenv.hostPlatform.system}.Hyprspace}/lib/libHyprspace.so"
     ];
     settings = {
       exec-once = [
-        "swww-daemon"
+        "bitwarden"
         "/tmp/scripts/start_boot"
         "udiskie --appindicator --menu-update-workaround --file-manager nautilus --tray --notify --automount"
-        "${pkgs.hyprpolkitagent}/libexec/hyprpolkitagent"
+        "${pkgs.kdePackages.polkit-kde-agent-1}/libexec/polkit-kde-authentication-agent-1"
       ];
 
       monitor = ["eDP-1, 1920x1080@60, 0x0,1.25" "HDMI-A-2, 1920x1080@74.97, 1536x0, 1"];
+
+      # experimental = {
+      # 	new_render_scheduling = true;
+      # };
 
       input = {
         kb_file = "";
@@ -83,7 +87,7 @@ in {
         "col.active_border" = "rgba(C0A36Ee7) rgba(DCD7BAff) 45deg";
         "col.inactive_border" = "0x3636462E";
         no_border_on_floating = false;
-        layout = "scrolling";
+        layout = "hy3";
         snap = {
           enabled = true;
           window_gap = 35;
@@ -229,22 +233,37 @@ in {
           "$modalt, up, movefocus, u"
           "$modalt, down, movefocus, d"
 
-          # Alternative Movefocus
-          "$mod CTRL, k, layoutmsg, move -col"
-          "$mod CTRL, l, layoutmsg, move +col"
+          # hy3
+          "$mod CTRL, left, exec, hyprctl dispatch hy3:movefocus l"
+          "$mod CTRL, right, exec, hyprctl dispatch hy3:movefocus r"
+          "$mod CTRL, up, exec, hyprctl dispatch hy3:movefocus u"
+          "$mod CTRL, down, exec, hyprctl dispatch hy3:movefocus d"
 
-          "$mod CTRL, left, layoutmsg, focus l"
-          "$mod CTRL, right, layoutmsg, focus r"
-          "$mod CTRL, up, layoutmsg, focus u"
-          "$mod CTRL, down, layoutmsg, focus d"
+          "SHIFT $modalt, G, exec, hyprctl dispatch hy3:makegroup tab"
 
-          "$modalt, a, layoutmsg, fit active"
-          "SHIFT $modalt, a, layoutmsg, fit all"
+          "$mod, left, exec, hyprctl dispatch hy3:movewindow l"
+          "$mod, right, exec, hyprctl dispatch hy3:movewindow r"
+          "$mod, up, exec, hyprctl dispatch hy3:movewindow u"
+          "$mod, down, exec, hyprctl dispatch hy3:movewindow d"
+          # end
 
-          "$mod, left, layoutmsg, movewindowto l"
-          "$mod, right, layoutmsg, movewindowto r"
-          "$mod, up, layoutmsg, movewindowto u"
-          "$mod, down, layoutmsg, movewindowto d"
+          # Scrolling
+          # "$mod CTRL, k, layoutmsg, move -col"
+          # "$mod CTRL, l, layoutmsg, move +col"
+          #
+          # "$mod CTRL, left, layoutmsg, focus l"
+          # "$mod CTRL, right, layoutmsg, focus r"
+          # "$mod CTRL, up, layoutmsg, focus u"
+          # "$mod CTRL, down, layoutmsg, focus d"
+          #
+          # "$modalt, a, layoutmsg, fit active"
+          # "SHIFT $modalt, a, layoutmsg, fit all"
+          #
+          # "$mod, left, layoutmsg, movewindowto l"
+          # "$mod, right, layoutmsg, movewindowto r"
+          # "$mod, up, layoutmsg, movewindowto u"
+          # "$mod, down, layoutmsg, movewindowto d"
+          # end
 
           "$modalt CTRL, left, resizeactive, -20 0"
           "$modalt CTRL, right, resizeactive, 20 0"

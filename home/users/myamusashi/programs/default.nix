@@ -5,6 +5,7 @@
     ./kitty/kitty.nix
     ./neovim/neovim.nix
     ./btop/btop.nix
+    ./tmux/default.nix
     # ./helix/helix.nix
     # ./lazygit/lazygit.nix
     ./quickshell/default.nix

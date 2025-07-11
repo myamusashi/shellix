@@ -1,6 +1,6 @@
 {lib, ...}: {
   zramSwap = {
-    enable = false;
+    enable = true;
     priority = 1;
     algorithm = "zstd";
     memoryPercent = 50;

@@ -20,6 +20,7 @@
             tree-sitter-html
             tree-sitter-svelte
             tree-sitter-json
+            tree-sitter-typescript
             tree-sitter-lua
             tree-sitter-nix
             tree-sitter-sql
@@ -45,7 +46,7 @@
       gopls
       pnpm_10
       yarn
-      nodejs_22
+      bun
       nixd
       gnumake
       mesonlsp
@@ -58,7 +59,6 @@
       vscode-langservers-extracted
       llvmPackages_19.clang-unwrapped # C stuff
       gcc14
-      libgcc
       typescript-language-server
       sqls
       sass

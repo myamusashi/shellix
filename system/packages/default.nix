@@ -39,7 +39,6 @@ in {
     bitwarden-desktop
     whitesur-kde
     virt-v2v
-    cloudflare-warp
     udiskie
     udisks
     wineWowPackages.waylandFull
@@ -62,5 +61,8 @@ in {
     kdiff3
     rofi-network-manager
     networkmanagerapplet
+    dive
+    podman-tui
+    podman-compose
   ];
 }
