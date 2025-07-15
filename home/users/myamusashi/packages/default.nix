@@ -19,6 +19,9 @@
     pkgs.hyprshot
     pkgs.ffmpegthumbnailer
     pkgs.swww
+    pkgs.poppler-utils
+    pkgs.libreoffice
+    pkgs.unoconv
     pkgs.playerctl
     pkgs.pavucontrol
     pkgs.libnotify

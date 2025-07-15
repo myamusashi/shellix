@@ -1,4 +1,6 @@
-{
+let
+  matugen = import ./matugen.nix;
+in {
   programs.foot = {
     enable = true;
     server.enable = true;
@@ -17,16 +19,16 @@
       };
 
       colors = {
-        foreground = "DCD7BA";
-        background = "16161D";
-        regular0 = "1E1F28"; #black
-        regular1 = "E82424"; #red
-        regular2 = "98BB6C"; #green
-        regular3 = "E6C384"; #yellow
-        regular4 = "7E9CD8"; #blue
-        regular5 = "957FB8"; #magenta
-        regular6 = "9CABCA"; #cyan
-        regular7 = "DAD5B8"; #white
+        foreground = matugen.on_background;
+        background = matugen.background;
+        regular0 = matugen.scrim; #black
+        regular1 = matugen.error; #red
+        regular2 = matugen.secondary; #green
+        regular3 = matugen.tertiary; #yellow
+        regular4 = matugen.inverse_on_surface; #blue
+        regular5 = matugen.primary_container; #magenta
+        regular6 = matugen.surface_tint; #cyan
+        regular7 = matugen.on_background; #white
       };
 
       mouse = {

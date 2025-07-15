@@ -2,12 +2,10 @@
   config,
   pkgs,
   inputs,
-  lib,
   ...
 }: {
   imports = [
     ./packages.nix # Caelestia scripts and quickshell wrapper derivations
-    # ./config.nix # Configuration files and environment setup
   ];
 
   # Main packages
@@ -52,7 +50,7 @@
   systemd.user.services.kurukuru-bar = {
     Unit = {
       Description = "kurukuru-bar desktop shell";
-      After = ["graphical-session.target"];
+      After = ["hyprland-session.target"];
     };
     Service = {
       Type = "exec";
@@ -61,7 +59,7 @@
       Slice = "app-graphical.slice";
     };
     Install = {
-      WantedBy = ["graphical-session.target"];
+      WantedBy = ["hyprland-session.target"];
     };
   };
 }

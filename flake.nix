@@ -31,7 +31,7 @@
     };
 
     Hyprspace = {
-      url = "github:KZDKM/Hyprspace";
+      url = "github:myamusashi/Hyprspace";
       inputs.hyprland.follows = "hyprland";
     };
 

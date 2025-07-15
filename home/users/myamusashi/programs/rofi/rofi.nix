@@ -1,4 +1,6 @@
-{pkgs, ...}: {
+{pkgs, ...}: let
+  matugen = import ./matugen.nix;
+in {
   home.packages = with pkgs; [roboto];
   programs.rofi = {
     enable = true;
@@ -20,14 +22,14 @@
       * {
         font: "Roboto 10";
 
-        bg0    : #1f1f1f80;
-        bg1    : #202020bf;
-        bg2    : #2c2c2c;
-        bg3    : #393939bf;
-        fg0    : #ffffff;
-        fg1    : #cecece;
-        accent : #FFA066;
-        urgent : @accent;
+        bg0    : "#${matugen.background}";
+        bg1    : "#${matugen.surface}";
+        bg2    : "#${matugen.surface_container_low}";
+        bg3    : "#${matugen.surface_variant}";
+        fg0    : "#${matugen.on_background}";
+        fg1    : "#${matugen.on_surface_variant}";
+        accent : "#${matugen.primary}";
+        urgent : "#${matugen.error}";
 
         background-color : transparent;
         text-color       : @fg0;

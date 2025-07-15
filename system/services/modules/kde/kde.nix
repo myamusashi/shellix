@@ -1,6 +1,6 @@
 {pkgs, ...}: {
   services.displayManager.sddm = {
-    enable = true;
+    enable = false;
     theme = "WhiteSur-dark";
     extraPackages = with pkgs; [
       kdePackages.plasma-desktop
