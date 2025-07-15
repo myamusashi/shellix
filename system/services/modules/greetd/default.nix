@@ -1,6 +1,6 @@
 {pkgs, ...}: {
   services.greetd = {
-    enable = false;
+    enable = true;
     vt = 3;
     settings = {
       initial_session = {

@@ -1,20 +1,14 @@
-{
-  pkgs,
-  inputs,
-  ...
-}: let
-  kanagawaColors = import ./colors/kanagawa.nix;
-  mochaColors = import ./colors/mocha.nix;
+{pkgs, ...}: let
+  matugenrgb = import ./colors/matugen_rgba.nix;
+  matugenhex = import ./colors/matugen.nix;
 
   fontFamily = "ProggyClean Nerd Font";
-  accentAlpha = "${mochaColors.mauveAlpha}";
 in {
   programs.hyprlock = {
     enable = true;
     package = pkgs.hyprlock;
     settings = {
       general = {
-        disable_loading_bar = false;
         hide_cursor = false;
         ignore_empty_input = true;
       };
@@ -26,7 +20,7 @@ in {
       blur_size = 5
       monitor = eDP-1
       path = $HOME/.cache/wall/eDP.png
-      color = ${kanagawaColors.background}
+      color = ${matugenrgb.background}
     }
 
     background {
@@ -34,14 +28,14 @@ in {
       blur_size = 2
       monitor = HDMI-A-2
       path = $HOME/.cache/wall/HDMI.png
-      color = ${kanagawaColors.background}
+      color = ${matugenrgb.background}
     }
 
     # TIME
     label {
       monitor = eDP-1
       text = cmd[update:30000] echo "$(date +'%R')"
-      color = ${kanagawaColors.color1}
+      color = ${matugenrgb.on_primary}
       font_size = 70
       font_family = ${fontFamily}
       position = 0, 50
@@ -52,7 +46,7 @@ in {
     label {
       monitor = HDMI-A-2
       text = cmd[update:30000] echo "$(date +'%R')"
-      color = ${kanagawaColors.color1}
+      color = ${matugenrgb.on_primary}
       font_size = 70
       font_family = ${fontFamily}
       position = 0, -10
@@ -64,7 +58,7 @@ in {
     label {
       monitor = eDP-1
       text = cmd[update:43200000] echo "$(date +'%A, %d %B %Y')"
-      color = ${kanagawaColors.color1}
+      color = ${matugenrgb.on_primary_fixed}
       font_size = 25
       font_family = ${fontFamily}
       position = 0, -10
@@ -75,7 +69,7 @@ in {
     label {
       monitor = HDMI-A-2
       text = cmd[update:43200000] echo "$(date +'%A, %d %B %Y')"
-      color = ${kanagawaColors.color1}
+      color = ${matugenrgb.on_primary_fixed}
       font_size = 25
       font_family = ${fontFamily}
       position = 0, -70
@@ -115,7 +109,7 @@ in {
     shape {
       monitor = eDP-1
       size = 480, 480
-      color = rgba(30, 30, 46, 0.65)
+      color = ${matugenrgb.on_secondary_container}
       rounding = 30
       rotate = 0
       xray = false
@@ -127,7 +121,7 @@ in {
     shape {
       monitor = HDMI-A-2
       size = 550, 550
-      color = rgba(30, 30, 46, 0.65)
+      color = ${matugenrgb.on_secondary_container}
       rounding = 30
       rotate = 0
       xray = false
@@ -140,10 +134,10 @@ in {
     shape {
       monitor = eDP-1
       size = 300, 60
-      color = ${kanagawaColors.color8}
+      color = ${matugenrgb.on_primary}
       rounding = -1
       border_size = 4
-      border_color = ${kanagawaColors.color0}
+      border_color = ${matugenrgb.inverse_on_surface}
       xray = false
       rotate = 0
       position = 0, -100
@@ -154,7 +148,7 @@ in {
     label {
       monitor = eDP-1
       text =  $USER
-      color = ${kanagawaColors.color15}
+      color = ${matugenrgb.primary}
       font_size = 25
       font_family = ${fontFamily}
       position = 0, -100
@@ -165,10 +159,10 @@ in {
     shape {
       monitor = HDMI-A-2
       size = 300, 60
-      color = ${kanagawaColors.color8}
+      color = ${matugenrgb.primary}
       rounding = -1
       border_size = 4
-      border_color = ${kanagawaColors.color0}
+      border_color = ${matugenrgb.inverse_on_surface}
       xray = false
       rotate = 0
       position = 0, -200
@@ -179,7 +173,7 @@ in {
     label {
       monitor = HDMI-A-2
       text =  $USER
-      color = ${kanagawaColors.color15}
+      color = ${matugenrgb.on_primary}
       font_size = 25
       font_family = ${fontFamily}
       position = 0, -200
@@ -195,14 +189,15 @@ in {
       dots_size = 0.2
       dots_spacing = 0.2
       dots_center = true
-      outer_color = ${kanagawaColors.color4}
-      inner_color = ${kanagawaColors.color8}
-      font_color = ${kanagawaColors.color15}
+      outer_color = ${matugenrgb.outline}
+      inner_color = ${matugenrgb.surface}
+      font_color = ${matugenrgb.secondary}
       fade_on_empty = false
-      placeholder_text = <i><span foreground='##${kanagawaColors.color10accent}'>󰌾 Aduh </span> <span foreground='##${accentAlpha}'><b>gantengnya</b></span></i>
+      placeholder_text = <i><span foreground='##${matugenhex.surface_tint}'>󰌾 Aduh </span> <span foreground='##${matugenhex.secondary}'><b>gantengnya</b></span></i>
       hide_input = false
+			fail_color = ${matugenrgb.error}
       fail_text = <i>Tolol, Coba lagi<b>($ATTEMPTS)</b></i>
-      capslock_color = ${kanagawaColors.color3}
+      capslock_color = ${matugenrgb.on_primary}
       position = 0, -185
       halign = center
       valign = center
@@ -216,14 +211,15 @@ in {
       dots_size = 0.2
       dots_spacing = 0.2
       dots_center = true
-      outer_color = ${kanagawaColors.color4}
-      inner_color = ${kanagawaColors.color8}
-      font_color = ${kanagawaColors.color15}
+      outer_color = ${matugenrgb.outline}
+      inner_color = ${matugenrgb.surface}
+      font_color = ${matugenrgb.secondary}
       fade_on_empty = false
-      placeholder_text = <i><span foreground='##${kanagawaColors.color10accent}'>󰌾 Aduh </span> <span foreground='##${accentAlpha}'><b>gantengnya</b></span></i>
+      placeholder_text = <i><span foreground='##${matugenhex.surface_tint}'>󰌾 Aduh </span> <span foreground='##${matugenhex.secondary}'><b>gantengnya</b></span></i>
       hide_input = false
-      fail_text = <i>Tolol, Coba lagi<b>($ATTEMPTS)</b></i>
-      capslock_color = ${kanagawaColors.color3}
+      fail_color = ${matugenrgb.error}
+			fail_text = <i>Tolol, Coba lagi<b>($ATTEMPTS)</b></i>
+      capslock_color = ${matugenrgb.on_primary}
       position = 0, -285
       halign = center
       valign = center

@@ -1,34 +1,10 @@
 {
   inputs,
   pkgs,
-  config,
   ...
 }: let
-  spotify-adblock = pkgs.rustPlatform.buildRustPackage rec {
-    pname = "spotify-adblock";
-    version = "8e0312d6085a6e4f9afeb7c2457517a75e8b8f9d";
-    src = pkgs.fetchFromGitHub {
-      owner = "abba23";
-      repo = "${pname}";
-      rev = "${version}";
-      hash = "sha256-nwiX2wCZBKRTNPhmrurWQWISQdxgomdNwcIKG2kSQsE=";
-    };
-    cargoLock.lockFile = "${src}/Cargo.lock";
-  };
-
-  cliphist-img-display = pkgs.buildGoModule rec {
-    pname = "cliphist-wofi-img";
-    version = "0.0.3";
-
-    src = pkgs.fetchFromGitHub {
-      owner = "pdf";
-      repo = "${pname}";
-      rev = "v${version}";
-      hash = "sha256-2N7LPetEMRXVWXQ4ls3deEZmT/cxztBIGwAz0IUbnDQ=";
-    };
-
-    vendorHash = null;
-  };
+  matugen = import ./colors/matugen.nix;
+  matugenrgba = import ./colors/matugen_rgba.nix;
 in {
   imports = [./hyprlock.nix ./hypridle.nix];
 
@@ -36,25 +12,20 @@ in {
     enable = true;
     package = pkgs.hyprland;
     plugins = [
-      "${inputs.hy3.packages.${pkgs.stdenv.hostPlatform.system}.hy3}/lib/libhy3.so"
+      # "${inputs.hy3.packages.${pkgs.stdenv.hostPlatform.system}.hy3}/lib/libhy3.so"
       "${inputs.hypr-dynamic-cursors.packages.${pkgs.stdenv.hostPlatform.system}.hypr-dynamic-cursors}/lib/libhypr-dynamic-cursors.so"
       # inputs.hyprland-plugins.packages.${pkgs.stdenv.hostPlatform.system}.hyprfocus
-      # inputs.hyprland-plugins.packages.${pkgs.stdenv.hostPlatform.system}.hyprscrolling
+      inputs.hyprland-plugins.packages.${pkgs.stdenv.hostPlatform.system}.hyprscrolling
       "${inputs.Hyprspace.packages.${pkgs.stdenv.hostPlatform.system}.Hyprspace}/lib/libHyprspace.so"
     ];
     settings = {
       exec-once = [
-        "bitwarden"
         "/tmp/scripts/start_boot"
         "udiskie --appindicator --menu-update-workaround --file-manager nautilus --tray --notify --automount"
         "${pkgs.kdePackages.polkit-kde-agent-1}/libexec/polkit-kde-authentication-agent-1"
       ];
 
-      monitor = ["eDP-1, 1920x1080@60, 0x0,1.25" "HDMI-A-2, 1920x1080@74.97, 1536x0, 1"];
-
-      # experimental = {
-      # 	new_render_scheduling = true;
-      # };
+      monitor = ["eDP-1, preferred, 0x0,1.25" "HDMI-A-2, preferred, auto, 1"];
 
       input = {
         kb_file = "";
@@ -83,11 +54,11 @@ in {
       general = {
         gaps_in = 2;
         gaps_out = 5;
-        border_size = 2;
-        "col.active_border" = "rgba(C0A36Ee7) rgba(DCD7BAff) 45deg";
-        "col.inactive_border" = "0x3636462E";
+        border_size = 5;
+        "col.active_border" = "0x${matugen.primary} 0x${matugen.primary_container} 45deg";
+        "col.inactive_border" = "0x${matugen.inverse_primary}";
         no_border_on_floating = false;
-        layout = "hy3";
+        layout = "scrolling";
         snap = {
           enabled = true;
           window_gap = 35;
@@ -96,30 +67,38 @@ in {
       };
 
       decoration = {
-        rounding = 1;
+        rounding = 5;
+        rounding_power = 4.0;
         active_opacity = 1;
         inactive_opacity = 0.9;
 
         blur = {
           enabled = true;
-          size = 6;
-          passes = 2;
+          size = 4;
+          passes = 3;
           new_optimizations = true;
           input_methods = 1;
-          xray = false;
-          ignore_opacity = false;
+          xray = true;
+          ignore_opacity = true;
+        };
+
+        shadow = {
+          enabled = false;
+          color = "0x${matugen.shadow}";
+          color_inactive = "0x${matugen.surface_dim}";
         };
       };
       misc = {
         disable_hyprland_logo = true;
+        background_color = "0x${matugen.background}";
         disable_splash_rendering = true;
         disable_autoreload = false;
         mouse_move_enables_dpms = true;
         vfr = true;
         font_family = "CaskaydiaMono Nerd Font";
-        vrr = 1;
+        vrr = 2;
         render_ahead_of_time = false;
-        animate_manual_resizes = true;
+        animate_manual_resizes = false;
         mouse_move_focuses_monitor = true;
         enable_swallow = true;
         animate_mouse_windowdragging = true;
@@ -134,6 +113,7 @@ in {
       };
 
       render = {
+        new_render_scheduling = true;
         cm_fs_passthrough = true;
       };
 
@@ -234,35 +214,35 @@ in {
           "$modalt, down, movefocus, d"
 
           # hy3
-          "$mod CTRL, left, exec, hyprctl dispatch hy3:movefocus l"
-          "$mod CTRL, right, exec, hyprctl dispatch hy3:movefocus r"
-          "$mod CTRL, up, exec, hyprctl dispatch hy3:movefocus u"
-          "$mod CTRL, down, exec, hyprctl dispatch hy3:movefocus d"
-
-          "SHIFT $modalt, G, exec, hyprctl dispatch hy3:makegroup tab"
-
-          "$mod, left, exec, hyprctl dispatch hy3:movewindow l"
-          "$mod, right, exec, hyprctl dispatch hy3:movewindow r"
-          "$mod, up, exec, hyprctl dispatch hy3:movewindow u"
-          "$mod, down, exec, hyprctl dispatch hy3:movewindow d"
+          # "$mod CTRL, left, exec, hyprctl dispatch hy3:movefocus l"
+          # "$mod CTRL, right, exec, hyprctl dispatch hy3:movefocus r"
+          # "$mod CTRL, up, exec, hyprctl dispatch hy3:movefocus u"
+          # "$mod CTRL, down, exec, hyprctl dispatch hy3:movefocus d"
+          #
+          # "SHIFT $modalt, G, exec, hyprctl dispatch hy3:makegroup tab"
+          #
+          # "$mod, left, exec, hyprctl dispatch hy3:movewindow l"
+          # "$mod, right, exec, hyprctl dispatch hy3:movewindow r"
+          # "$mod, up, exec, hyprctl dispatch hy3:movewindow u"
+          # "$mod, down, exec, hyprctl dispatch hy3:movewindow d"
           # end
 
           # Scrolling
-          # "$mod CTRL, k, layoutmsg, move -col"
-          # "$mod CTRL, l, layoutmsg, move +col"
-          #
-          # "$mod CTRL, left, layoutmsg, focus l"
-          # "$mod CTRL, right, layoutmsg, focus r"
-          # "$mod CTRL, up, layoutmsg, focus u"
-          # "$mod CTRL, down, layoutmsg, focus d"
-          #
-          # "$modalt, a, layoutmsg, fit active"
-          # "SHIFT $modalt, a, layoutmsg, fit all"
-          #
-          # "$mod, left, layoutmsg, movewindowto l"
-          # "$mod, right, layoutmsg, movewindowto r"
-          # "$mod, up, layoutmsg, movewindowto u"
-          # "$mod, down, layoutmsg, movewindowto d"
+          "$mod CTRL, k, layoutmsg, move -col"
+          "$mod CTRL, l, layoutmsg, move +col"
+
+          "$mod CTRL, left, layoutmsg, focus l"
+          "$mod CTRL, right, layoutmsg, focus r"
+          "$mod CTRL, up, layoutmsg, focus u"
+          "$mod CTRL, down, layoutmsg, focus d"
+
+          "$modalt, a, layoutmsg, fit active"
+          "SHIFT $modalt, a, layoutmsg, fit all"
+
+          "$mod, left, layoutmsg, movewindowto l"
+          "$mod, right, layoutmsg, movewindowto r"
+          "$mod, up, layoutmsg, movewindowto u"
+          "$mod, down, layoutmsg, movewindowto d"
           # end
 
           "$modalt CTRL, left, resizeactive, -20 0"
@@ -299,6 +279,10 @@ in {
         "CAPS, Caps_Lock, exec, swayosd-client --caps-lock"
         ", toggle_numlock, exec, swayosd-client --num-lock"
       ];
+
+      binds = {
+        drag_threshold = 10;
+      };
 
       windowrulev2 = [
         "float,class:^(pavucontrol)$"
@@ -395,8 +379,8 @@ in {
         overview = {
           # Color workspaces window
           dragAlpha = 0.5;
-          panelColor = "rgba(46, 52, 64, 0.5)";
-          panelBorderColor = "rgb(243, 139, 168)";
+          panelColor = "${matugenrgba.background}";
+          panelBorderColor = "${matugenrgba.primary}";
 
           # Layout
           disableBlur = false;
@@ -465,14 +449,14 @@ in {
             text_height = 5; # default: 8
             text_padding = 1; # default: 3
             col = {
-              active = "0xf38ba8ff";
-              urgent = "0xffff4f4f";
-              inactive = "0x80808080";
+              active = "0x${matugen.background}";
+              urgent = "0x${matugen.on_tertiary}";
+              inactive = "0x${matugen.shadow}";
 
               text = {
-                active = "0xff000000";
-                urgent = "0xff000000";
-                inactive = "0xff000000";
+                active = "0x${matugen.primary}";
+                urgent = "0x${matugen.primary}";
+                inactive = "0x${matugen.primary}";
               };
             };
           };
@@ -557,7 +541,7 @@ in {
           # magnifies the cursor if its is being shaken
           shake = {
             # enables shake to find
-            enabled = false;
+            enabled = true;
 
             # use nearest-neighbour (pixelated) scaling when shaking
             # may look weird when effects are enabled
@@ -585,7 +569,6 @@ in {
             effects = false;
 
             # enable ipc events for shake
-            # see the `ipc` section below
             ipc = false;
           };
         };
