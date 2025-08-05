@@ -15,8 +15,13 @@ in {
     passExtensions.pass-import
     home-manager
     vim
+    lutris
+    protonup-qt
     lftp
     zed-editor-fhs
+    scrcpy
+    rembg
+    qtscrcpy
     poppler_utils
     proton-pass
     protonmail-bridge
@@ -38,7 +43,9 @@ in {
     mendeley
     bitwarden-desktop
     whitesur-kde
-    virt-v2v
+    pinentry-curses
+    pinentry-qt
+    pinentry-tty
     udiskie
     udisks
     wineWowPackages.waylandFull
