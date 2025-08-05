@@ -1,10 +1,12 @@
 {pkgs, ...}: let
   feather-font = pkgs.callPackage ./packages/feather-font.nix {};
   avenirLTPro-font = pkgs.callPackage ./packages/avenir-font.nix {};
+  volte-font = pkgs.callPackage ./packages/volte-rounded.nix {};
 in {
   home.packages = [
     feather-font
     avenirLTPro-font
+    volte-font
     pkgs.montserrat
     pkgs.overpass
     pkgs.nerd-fonts.caskaydia-mono
