@@ -12,11 +12,11 @@ in {
     enable = true;
     package = pkgs.hyprland;
     plugins = [
-      # "${inputs.hy3.packages.${pkgs.stdenv.hostPlatform.system}.hy3}/lib/libhy3.so"
+      "${inputs.hy3.packages.${pkgs.stdenv.hostPlatform.system}.hy3}/lib/libhy3.so"
       "${inputs.hypr-dynamic-cursors.packages.${pkgs.stdenv.hostPlatform.system}.hypr-dynamic-cursors}/lib/libhypr-dynamic-cursors.so"
       # inputs.hyprland-plugins.packages.${pkgs.stdenv.hostPlatform.system}.hyprfocus
-      inputs.hyprland-plugins.packages.${pkgs.stdenv.hostPlatform.system}.hyprscrolling
-      "${inputs.Hyprspace.packages.${pkgs.stdenv.hostPlatform.system}.Hyprspace}/lib/libHyprspace.so"
+      # inputs.hyprland-plugins.packages.${pkgs.stdenv.hostPlatform.system}.hyprscrolling
+      # "${inputs.Hyprspace.packages.${pkgs.stdenv.hostPlatform.system}.Hyprspace}/lib/libHyprspace.so"
     ];
     settings = {
       exec-once = [
@@ -58,7 +58,7 @@ in {
         "col.active_border" = "0x${matugen.primary} 0x${matugen.primary_container} 45deg";
         "col.inactive_border" = "0x${matugen.inverse_primary}";
         no_border_on_floating = false;
-        layout = "scrolling";
+        layout = "hy3";
         snap = {
           enabled = true;
           window_gap = 35;
@@ -97,7 +97,6 @@ in {
         vfr = true;
         font_family = "CaskaydiaMono Nerd Font";
         vrr = 2;
-        render_ahead_of_time = false;
         animate_manual_resizes = false;
         mouse_move_focuses_monitor = true;
         enable_swallow = true;
@@ -164,12 +163,11 @@ in {
       "$files" = "footclient --title=yaziFM yazi";
       "$browser" = "zen";
       "$vm" = "vmware";
-      "$launcher" = "rofi -show drun";
-      "$powermenu" = "wlogout";
+      "$launcher" = "qs -c caelestia ipc call drawers toggle launcher";
+      "$powermenu" = "qs -c caelestia ipc call drawers toggle session";
       "$colorpick" = "/tmp/scripts/picker.sh";
-      "$notifhistory" = "${pkgs.astal.io}/bin/astal -i hyprpanel -t notificationsmenu";
-      "$calendar" = "${pkgs.astal.io}/bin/astal -i hyprpanel -t calendarmenu";
-      "$dashboard" = "${pkgs.astal.io}/bin/astal -i hyprpanel -t dashboardmenu";
+      "$dashboard" = "qs -c caelestia ipc call drawers toggle dashboard";
+      "$lockscreen" = "qs -c caelestia ipc call lock lock";
       "$emoji" = "${pkgs.rofimoji}/bin/rofimoji --selector wofi";
       "$spotify" = "spotify";
       "$discord" = "vesktop";
@@ -191,6 +189,7 @@ in {
           "$mod, P, exec, $dashboard"
           "SuperShift, C, exec, $calendar"
           "$modalt, D, exec, $powermenu"
+          "$modalt, L, exec, $lockscreen"
           "$modalt, T, exec, telegram-desktop"
           "SHIFT $modalt, P, exec, $colorpick"
           "$mod, S, exec, $screencapture"
@@ -214,35 +213,35 @@ in {
           "$modalt, down, movefocus, d"
 
           # hy3
-          # "$mod CTRL, left, exec, hyprctl dispatch hy3:movefocus l"
-          # "$mod CTRL, right, exec, hyprctl dispatch hy3:movefocus r"
-          # "$mod CTRL, up, exec, hyprctl dispatch hy3:movefocus u"
-          # "$mod CTRL, down, exec, hyprctl dispatch hy3:movefocus d"
-          #
-          # "SHIFT $modalt, G, exec, hyprctl dispatch hy3:makegroup tab"
-          #
-          # "$mod, left, exec, hyprctl dispatch hy3:movewindow l"
-          # "$mod, right, exec, hyprctl dispatch hy3:movewindow r"
-          # "$mod, up, exec, hyprctl dispatch hy3:movewindow u"
-          # "$mod, down, exec, hyprctl dispatch hy3:movewindow d"
+          "$mod CTRL, left, exec, hyprctl dispatch hy3:movefocus l"
+          "$mod CTRL, right, exec, hyprctl dispatch hy3:movefocus r"
+          "$mod CTRL, up, exec, hyprctl dispatch hy3:movefocus u"
+          "$mod CTRL, down, exec, hyprctl dispatch hy3:movefocus d"
+
+          "SHIFT $modalt, G, exec, hyprctl dispatch hy3:makegroup tab"
+
+          "$mod, left, exec, hyprctl dispatch hy3:movewindow l"
+          "$mod, right, exec, hyprctl dispatch hy3:movewindow r"
+          "$mod, up, exec, hyprctl dispatch hy3:movewindow u"
+          "$mod, down, exec, hyprctl dispatch hy3:movewindow d"
           # end
 
           # Scrolling
-          "$mod CTRL, k, layoutmsg, move -col"
-          "$mod CTRL, l, layoutmsg, move +col"
-
-          "$mod CTRL, left, layoutmsg, focus l"
-          "$mod CTRL, right, layoutmsg, focus r"
-          "$mod CTRL, up, layoutmsg, focus u"
-          "$mod CTRL, down, layoutmsg, focus d"
-
-          "$modalt, a, layoutmsg, fit active"
-          "SHIFT $modalt, a, layoutmsg, fit all"
-
-          "$mod, left, layoutmsg, movewindowto l"
-          "$mod, right, layoutmsg, movewindowto r"
-          "$mod, up, layoutmsg, movewindowto u"
-          "$mod, down, layoutmsg, movewindowto d"
+          # "$mod CTRL, k, layoutmsg, move -col"
+          # "$mod CTRL, l, layoutmsg, move +col"
+          #
+          # "$mod CTRL, left, layoutmsg, focus l"
+          # "$mod CTRL, right, layoutmsg, focus r"
+          # "$mod CTRL, up, layoutmsg, focus u"
+          # "$mod CTRL, down, layoutmsg, focus d"
+          #
+          # "$modalt, a, layoutmsg, fit active"
+          # "SHIFT $modalt, a, layoutmsg, fit all"
+          #
+          # "$mod, left, layoutmsg, movewindowto l"
+          # "$mod, right, layoutmsg, movewindowto r"
+          # "$mod, up, layoutmsg, movewindowto u"
+          # "$mod, down, layoutmsg, movewindowto d"
           # end
 
           "$modalt CTRL, left, resizeactive, -20 0"
@@ -310,13 +309,16 @@ in {
         "float,class:^(Rofi)$"
         "float,title:^(Image Properties)$"
         "float,class:^(nemo),title:.*Properties"
-        "float,class:^(zen|zen-twilight),title:^(Sign In - Google Accounts — Zen Twilight|Sign In - Google Accounts — Zen)"
+        "float,class:^zen$,title:.*Bitwarden.*"
+        "float,title:^(Friends List)"
         "move 40 44%,title:^(iwgtk)$"
         "move 40 58%,title:^(Bluetooth Devices)$"
+        "center,floating:1,class:^(org.quickshell),title:^(Select a wallpaper)"
         "center,floating:1,title:^(Steam|Sign in to Steam)"
         "center,title:^(Volume Control)$"
+        "center,title:^(Friends List)"
         "center,title:^(Starting Apache NetBeans IDE)$"
-        "center,class:^(zen|zen-twilight),title:^(Sign In - Google Accounts — Zen Twilight|Sign In - Google Accounts — Zen)"
+        "center,class:^zen$,title:.*Bitwarden.*"
         "center,title:^(Import Hyprpanel Theme)$"
         "center,title:^(hyprpanel-settings)$"
         "center,title:^(Hyprland Polkit Agent)$"
@@ -327,10 +329,11 @@ in {
         "center,title:^(Enter name of file to save to…)$"
         "center,title:^(vesktop)$"
         "center,class:^(eu.),title:^(Properties|Select icon)"
+        "size 1000 600,class:^(org.quickshell),title:^(Select a wallpaper)"
         "size 360 363,class:^(eu.),title:^(Properties)"
+        "size 300 650,title:^(Friends List)"
         "size 622 652,class:^(clipse)"
-        "size 450 420,class:^(zen|zen-twilight),title:^(Sign In - Google Accounts — Zen Twilight|Sign In - Google Accounts — Zen)"
-        "size 351 113,class:^(zen|zen-twilight),title:^()"
+        "size 380 630,class:^zen$,title:.*Bitwarden.*"
         "size 480 300,title:^(Starting Apache NetBeans IDE)$"
         "size 300 350,title:^(vesktop)$"
         "size 954 641,title:^(Login - Akun Google — Zen Twilight)$"
@@ -549,7 +552,7 @@ in {
 
             # controls how soon a shake is detected
             # lower values mean sooner
-            threshold = 6.0;
+            threshold = 30.0;
 
             # magnification level immediately after shake start
             base = 4.0;

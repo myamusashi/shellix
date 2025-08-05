@@ -22,17 +22,17 @@ in {
       * {
         font: "Roboto 10";
 
-        bg0    : "#${matugen.background}";
-        bg1    : "#${matugen.surface}";
-        bg2    : "#${matugen.surface_container_low}";
-        bg3    : "#${matugen.surface_variant}";
-        fg0    : "#${matugen.on_background}";
-        fg1    : "#${matugen.on_surface_variant}";
-        accent : "#${matugen.primary}";
-        urgent : "#${matugen.error}";
+        bg0    : "${matugen.background}";
+        bg1    : "${matugen.inverse_on_surface}";
+        bg2    : "${matugen.on_primary_container}";
+        bg3    : "${matugen.on_secondary_container}";
+        fg0    : "${matugen.on_background}";
+        fg1    : "${matugen.on_surface_variant}";
+        accent : "${matugen.primary}";
+        urgent : "${matugen.error_container}";
 
         background-color : transparent;
-        text-color       : @fg0;
+        text-color       : @accent;
 
         margin  : 0;
         padding : 0;
@@ -49,7 +49,7 @@ in {
         height   : 600px;
         y-offset : -4px;
 
-        background-color : @bg1;
+        background-color : @bg0;
         border-radius    : 8px;
       }
 
@@ -65,7 +65,7 @@ in {
         border           : 0 0 2px 0 solid;
         border-color     : @accent;
         border-radius    : 2px;
-        background-color : @bg0;
+        background-color : @bg1;
       }
 
       icon-search, entry, element-icon, element-text {
@@ -119,7 +119,7 @@ in {
       }
 
       element selected {
-        background-color: @bg3;
+        background-color: @fg0;
       }
 
       element selected urgent {
