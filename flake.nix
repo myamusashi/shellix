@@ -146,11 +146,6 @@
           ./home/common/services.nix
           ./home/common/packages.nix
           ./home/common/nixConfig.nix
-          {
-            nixpkgs.overlays = [
-              (import ./overlays/default.nix)
-            ];
-          }
         ];
         specialArgs = {
           inherit inputs;

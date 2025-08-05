@@ -1,10 +1,6 @@
-{
-  pkgs,
-  lib,
-  ...
-}: {
+{pkgs, ...}: {
   services.httpd = {
-    enable = true;
+    enable = false;
     enablePHP = true;
     adminAddr = "admin@email.tld";
 
