@@ -132,5 +132,7 @@
     poppler_utils
     # Ends
     mariadb
+    podman-compose
+    qemu
   ];
 }

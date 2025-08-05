@@ -26,7 +26,6 @@
     secrets.gemini_key = {
       path = "/var/lib/gemini/key";
       format = "json";
-      owner = "myamusashi";
       mode = "0400";
     };
 
