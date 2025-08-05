@@ -12,5 +12,6 @@
     ./systemd/stirling-pdf.nix
     ./systemd/forgejo_runner.nix
     ./systemd/cloudflare_tunnel.nix
+    ./systemd/cloudflare_proxy-dns.nix
   ];
 }

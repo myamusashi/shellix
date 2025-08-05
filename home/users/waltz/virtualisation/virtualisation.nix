@@ -1,5 +1,6 @@
-{
+{pkgs-stable, ...}: {
   virtualisation = {
+    libvirtd.enable = true;
     docker = {
       enable = false;
       rootless = {
@@ -16,4 +17,7 @@
       defaultNetwork.settings = {dns_enabled = true;};
     };
   };
+
+  ## UEFI fw support
+  systemd.tmpfiles.rules = ["L+ /var/lib/qemu/firmware - - - - ${pkgs-stable.qemu}/share/qemu/firmware"];
 }

@@ -64,7 +64,7 @@
     dbBackend = "sqlite";
     backupDir = "/var/backup/vaultwarden";
     config = {
-      DOMAIN = "https://vault.myamusashi.space";
+      DOMAIN = "https://vault.myamusashi.com";
       SIGNUPS_ALLOWED = false;
 
       ROCKET_ADDRESS = "127.0.0.1";
@@ -75,7 +75,7 @@
   };
 
   services.matomo = {
-    enable = true;
+    enable = false;
     package = pkgs-stable.matomo;
     hostname = "matomo.myamusashi.org";
     nginx = {
