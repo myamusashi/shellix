@@ -8,6 +8,7 @@
       "networkmanager"
       "wheel"
       "docker"
+      "podman"
       "libvirtd"
       "qemu-libvirtd"
       "kvm"

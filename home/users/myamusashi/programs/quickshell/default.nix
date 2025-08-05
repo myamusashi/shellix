@@ -2,12 +2,11 @@
   config,
   pkgs,
   inputs,
-  lib,
   ...
 }: {
   imports = [
     ./packages.nix # Caelestia scripts and quickshell wrapper derivations
-    # ./config.nix # Configuration files and environment setup
+    ./config.nix # Configuration files and environment setup
   ];
 
   # Main packages
@@ -30,6 +29,12 @@
     grim
     wayfreeze
     wl-screenrec
+    app2unit
+    aubio
+    libqalculate
+    inotify-tools
+    swappy
+    findutils
     inputs.astal.packages.${pkgs.system}.default
 
     # Additional dependencies
@@ -48,15 +53,14 @@
     brightnessctl
   ];
 
-  # Systemd service
-  systemd.user.services.kurukuru-bar = {
+  systemd.user.services.caelestia-shell = {
     Unit = {
-      Description = "kurukuru-bar desktop shell";
+      Description = "Caelestia desktop shell";
       After = ["graphical-session.target"];
     };
     Service = {
       Type = "exec";
-      ExecStart = "${config.programs.quickshell.finalPackage}/bin/qs -c kurukuru";
+      ExecStart = "${config.programs.quickshell.finalPackage}/bin/qs -c caelestia";
       Restart = "on-failure";
       Slice = "app-graphical.slice";
     };

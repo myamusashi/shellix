@@ -1,34 +1,10 @@
 {
   inputs,
   pkgs,
-  config,
   ...
 }: let
-  spotify-adblock = pkgs.rustPlatform.buildRustPackage rec {
-    pname = "spotify-adblock";
-    version = "8e0312d6085a6e4f9afeb7c2457517a75e8b8f9d";
-    src = pkgs.fetchFromGitHub {
-      owner = "abba23";
-      repo = "${pname}";
-      rev = "${version}";
-      hash = "sha256-nwiX2wCZBKRTNPhmrurWQWISQdxgomdNwcIKG2kSQsE=";
-    };
-    cargoLock.lockFile = "${src}/Cargo.lock";
-  };
-
-  cliphist-img-display = pkgs.buildGoModule rec {
-    pname = "cliphist-wofi-img";
-    version = "0.0.3";
-
-    src = pkgs.fetchFromGitHub {
-      owner = "pdf";
-      repo = "${pname}";
-      rev = "v${version}";
-      hash = "sha256-2N7LPetEMRXVWXQ4ls3deEZmT/cxztBIGwAz0IUbnDQ=";
-    };
-
-    vendorHash = null;
-  };
+  matugen = import ./colors/matugen.nix;
+  matugenrgba = import ./colors/matugen_rgba.nix;
 in {
   imports = [./hyprlock.nix ./hypridle.nix];
 
@@ -40,21 +16,16 @@ in {
       "${inputs.hypr-dynamic-cursors.packages.${pkgs.stdenv.hostPlatform.system}.hypr-dynamic-cursors}/lib/libhypr-dynamic-cursors.so"
       # inputs.hyprland-plugins.packages.${pkgs.stdenv.hostPlatform.system}.hyprfocus
       # inputs.hyprland-plugins.packages.${pkgs.stdenv.hostPlatform.system}.hyprscrolling
-      "${inputs.Hyprspace.packages.${pkgs.stdenv.hostPlatform.system}.Hyprspace}/lib/libHyprspace.so"
+      # "${inputs.Hyprspace.packages.${pkgs.stdenv.hostPlatform.system}.Hyprspace}/lib/libHyprspace.so"
     ];
     settings = {
       exec-once = [
-        "bitwarden"
         "/tmp/scripts/start_boot"
         "udiskie --appindicator --menu-update-workaround --file-manager nautilus --tray --notify --automount"
         "${pkgs.kdePackages.polkit-kde-agent-1}/libexec/polkit-kde-authentication-agent-1"
       ];
 
-      monitor = ["eDP-1, 1920x1080@60, 0x0,1.25" "HDMI-A-2, 1920x1080@74.97, 1536x0, 1"];
-
-      # experimental = {
-      # 	new_render_scheduling = true;
-      # };
+      monitor = ["eDP-1, preferred, 0x0,1.25" "HDMI-A-2, preferred, auto, 1"];
 
       input = {
         kb_file = "";
@@ -83,9 +54,9 @@ in {
       general = {
         gaps_in = 2;
         gaps_out = 5;
-        border_size = 2;
-        "col.active_border" = "rgba(C0A36Ee7) rgba(DCD7BAff) 45deg";
-        "col.inactive_border" = "0x3636462E";
+        border_size = 5;
+        "col.active_border" = "0x${matugen.primary} 0x${matugen.primary_container} 45deg";
+        "col.inactive_border" = "0x${matugen.inverse_primary}";
         no_border_on_floating = false;
         layout = "hy3";
         snap = {
@@ -96,30 +67,37 @@ in {
       };
 
       decoration = {
-        rounding = 1;
+        rounding = 5;
+        rounding_power = 4.0;
         active_opacity = 1;
         inactive_opacity = 0.9;
 
         blur = {
           enabled = true;
-          size = 6;
-          passes = 2;
+          size = 4;
+          passes = 3;
           new_optimizations = true;
           input_methods = 1;
-          xray = false;
-          ignore_opacity = false;
+          xray = true;
+          ignore_opacity = true;
+        };
+
+        shadow = {
+          enabled = false;
+          color = "0x${matugen.shadow}";
+          color_inactive = "0x${matugen.surface_dim}";
         };
       };
       misc = {
         disable_hyprland_logo = true;
+        background_color = "0x${matugen.background}";
         disable_splash_rendering = true;
         disable_autoreload = false;
         mouse_move_enables_dpms = true;
         vfr = true;
         font_family = "CaskaydiaMono Nerd Font";
-        vrr = 1;
-        render_ahead_of_time = false;
-        animate_manual_resizes = true;
+        vrr = 2;
+        animate_manual_resizes = false;
         mouse_move_focuses_monitor = true;
         enable_swallow = true;
         animate_mouse_windowdragging = true;
@@ -134,6 +112,7 @@ in {
       };
 
       render = {
+        new_render_scheduling = true;
         cm_fs_passthrough = true;
       };
 
@@ -184,12 +163,11 @@ in {
       "$files" = "footclient --title=yaziFM yazi";
       "$browser" = "zen";
       "$vm" = "vmware";
-      "$launcher" = "rofi -show drun";
-      "$powermenu" = "wlogout";
+      "$launcher" = "qs -c caelestia ipc call drawers toggle launcher";
+      "$powermenu" = "qs -c caelestia ipc call drawers toggle session";
       "$colorpick" = "/tmp/scripts/picker.sh";
-      "$notifhistory" = "${pkgs.astal.io}/bin/astal -i hyprpanel -t notificationsmenu";
-      "$calendar" = "${pkgs.astal.io}/bin/astal -i hyprpanel -t calendarmenu";
-      "$dashboard" = "${pkgs.astal.io}/bin/astal -i hyprpanel -t dashboardmenu";
+      "$dashboard" = "qs -c caelestia ipc call drawers toggle dashboard";
+      "$lockscreen" = "qs -c caelestia ipc call lock lock";
       "$emoji" = "${pkgs.rofimoji}/bin/rofimoji --selector wofi";
       "$spotify" = "spotify";
       "$discord" = "vesktop";
@@ -211,6 +189,7 @@ in {
           "$mod, P, exec, $dashboard"
           "SuperShift, C, exec, $calendar"
           "$modalt, D, exec, $powermenu"
+          "$modalt, L, exec, $lockscreen"
           "$modalt, T, exec, telegram-desktop"
           "SHIFT $modalt, P, exec, $colorpick"
           "$mod, S, exec, $screencapture"
@@ -300,6 +279,10 @@ in {
         ", toggle_numlock, exec, swayosd-client --num-lock"
       ];
 
+      binds = {
+        drag_threshold = 10;
+      };
+
       windowrulev2 = [
         "float,class:^(pavucontrol)$"
         "float,title:^(Media viewer)$"
@@ -326,13 +309,16 @@ in {
         "float,class:^(Rofi)$"
         "float,title:^(Image Properties)$"
         "float,class:^(nemo),title:.*Properties"
-        "float,class:^(zen|zen-twilight),title:^(Sign In - Google Accounts — Zen Twilight|Sign In - Google Accounts — Zen)"
+        "float,class:^zen$,title:.*Bitwarden.*"
+        "float,title:^(Friends List)"
         "move 40 44%,title:^(iwgtk)$"
         "move 40 58%,title:^(Bluetooth Devices)$"
+        "center,floating:1,class:^(org.quickshell),title:^(Select a wallpaper)"
         "center,floating:1,title:^(Steam|Sign in to Steam)"
         "center,title:^(Volume Control)$"
+        "center,title:^(Friends List)"
         "center,title:^(Starting Apache NetBeans IDE)$"
-        "center,class:^(zen|zen-twilight),title:^(Sign In - Google Accounts — Zen Twilight|Sign In - Google Accounts — Zen)"
+        "center,class:^zen$,title:.*Bitwarden.*"
         "center,title:^(Import Hyprpanel Theme)$"
         "center,title:^(hyprpanel-settings)$"
         "center,title:^(Hyprland Polkit Agent)$"
@@ -343,10 +329,11 @@ in {
         "center,title:^(Enter name of file to save to…)$"
         "center,title:^(vesktop)$"
         "center,class:^(eu.),title:^(Properties|Select icon)"
+        "size 1000 600,class:^(org.quickshell),title:^(Select a wallpaper)"
         "size 360 363,class:^(eu.),title:^(Properties)"
+        "size 300 650,title:^(Friends List)"
         "size 622 652,class:^(clipse)"
-        "size 450 420,class:^(zen|zen-twilight),title:^(Sign In - Google Accounts — Zen Twilight|Sign In - Google Accounts — Zen)"
-        "size 351 113,class:^(zen|zen-twilight),title:^()"
+        "size 380 630,class:^zen$,title:.*Bitwarden.*"
         "size 480 300,title:^(Starting Apache NetBeans IDE)$"
         "size 300 350,title:^(vesktop)$"
         "size 954 641,title:^(Login - Akun Google — Zen Twilight)$"
@@ -395,8 +382,8 @@ in {
         overview = {
           # Color workspaces window
           dragAlpha = 0.5;
-          panelColor = "rgba(46, 52, 64, 0.5)";
-          panelBorderColor = "rgb(243, 139, 168)";
+          panelColor = "${matugenrgba.background}";
+          panelBorderColor = "${matugenrgba.primary}";
 
           # Layout
           disableBlur = false;
@@ -465,14 +452,14 @@ in {
             text_height = 5; # default: 8
             text_padding = 1; # default: 3
             col = {
-              active = "0xf38ba8ff";
-              urgent = "0xffff4f4f";
-              inactive = "0x80808080";
+              active = "0x${matugen.background}";
+              urgent = "0x${matugen.on_tertiary}";
+              inactive = "0x${matugen.shadow}";
 
               text = {
-                active = "0xff000000";
-                urgent = "0xff000000";
-                inactive = "0xff000000";
+                active = "0x${matugen.primary}";
+                urgent = "0x${matugen.primary}";
+                inactive = "0x${matugen.primary}";
               };
             };
           };
@@ -557,7 +544,7 @@ in {
           # magnifies the cursor if its is being shaken
           shake = {
             # enables shake to find
-            enabled = false;
+            enabled = true;
 
             # use nearest-neighbour (pixelated) scaling when shaking
             # may look weird when effects are enabled
@@ -565,7 +552,7 @@ in {
 
             # controls how soon a shake is detected
             # lower values mean sooner
-            threshold = 6.0;
+            threshold = 30.0;
 
             # magnification level immediately after shake start
             base = 4.0;
@@ -585,7 +572,6 @@ in {
             effects = false;
 
             # enable ipc events for shake
-            # see the `ipc` section below
             ipc = false;
           };
         };

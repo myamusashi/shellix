@@ -1,11 +1,9 @@
-{
-  lib,
-  pkgs,
-  ...
-}: {
+{lib, ...}: let
+  matugen = import ./themes/matugen.nix;
+in {
   programs.kitty = lib.mkForce {
     enable = true;
-    themeFile = "3024_Night";
+    # themeFile = "3024_Night";
     keybindings = {
       "ctrl+g" = "lazygit";
     };
@@ -14,8 +12,8 @@
 
       font_size = 11.0;
 
-      cursor_trail = 1;
-      cursor_trail_decay = "0.1 0.2";
+      cursor_trail = 2;
+      cursor_trail_decay = "0.1 0.4";
       cursor_shape = "beam";
       cursor_beam_thickness = 1.5;
       cursor_underline_thickness = 2.0;
@@ -76,43 +74,36 @@
       bold_italic_font = "auto";
 
       # Custom theme
-      # foreground = "#D8DEE9";
-      # background = "#0f111a";
-      # selection_foreground = "#000000";
-      # selection_background = "#FFFACD";
-      # url_color = "#FF4151";
-      # cursor = "#FF4151";
-      #
-      # # black
-      # color0 = "#3B4252";
-      # color8 = "#4C566A";
-      #
-      # # red
-      # color1 = "#BF616A";
-      # color9 = "#BF616A";
-      #
-      # # green
-      # color2 = "#A3BE8C";
-      # color10 = "#A3BE8C";
-      #
-      # # yellow
-      # color3 = "#EBCB8B";
-      # color11 = "#EBCB8B";
-      #
-      # # blue
-      # color4 = "#81A1C1";
-      # color12 = "#81A1C1";
-      #
-      # # magenta
-      # color5 = "#B48EAD";
-      # color13 = "#B48EAD";
-      #
-      # # cyan
-      # color6 = "#88C0D0";
-      # color14 = "#8FBCBB";
-      #
-      # color7 = "#E5E9F0";
-      # color15 = "#B48EAD";
+      foreground = matugen.on_background;
+      background = matugen.background;
+      selection_foreground = matugen.surface;
+      selection_background = matugen.primary;
+      url_color = matugen.surface_tint;
+      cursor = matugen.tertiary;
+
+      color0 = "#090200";
+      color8 = "#5b5754";
+
+      color1 = "#da2c20";
+      color9 = "#e8bacf";
+
+      color2 = "#00a152";
+      color10 = "#3a3332";
+
+      color3 = "#fcec02";
+      color11 = "#494542";
+
+      color4 = "#00a0e4";
+      color12 = "#7f7c7b";
+
+      color5 = "#a06994";
+      color13 = "#d6d4d3";
+
+      color6 = "#b5e4f4";
+      color14 = "#ccab53";
+
+      color7 = "#a4a1a1";
+      color15 = "#f7f7f7";
     };
   };
 }
