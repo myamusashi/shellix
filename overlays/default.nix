@@ -3,6 +3,68 @@ final: prev: {
     doCheck = false;
   });
 
+  vmware-workstation = prev.vmware-workstation.overrideAttrs (oldAttrs: {
+    installPhase = ''
+      # Jalankan install phase orisinal terlebih dahulu
+      ${oldAttrs.installPhase}
+
+      # Ganti nama binary asli
+      mv $out/bin/vmware $out/bin/vmware-bin
+
+      # Buat wrapper script yang mengatur GTK_THEME sebelum menjalankan binary asli
+      makeWrapper $out/bin/vmware-bin $out/bin/vmware \
+        --set GTK_THEME "Adwaita-dark"
+
+      # Perbarui file .desktop agar menunjuk ke wrapper script
+      if [ -f $out/share/applications/vmware-workstation.desktop ]; then
+        substituteInPlace $out/share/applications/vmware-workstation.desktop \
+          --replace "Exec=@@BINARY@@" "Exec=$out/bin/vmware"
+
+        substituteInPlace $out/share/applications/vmware-player.desktop \
+          --replace "Exec=@@BINARY@@" "Exec=$out/bin/vmware"
+      fi
+    '';
+  });
+
+  ## Hotfix
+  python3Packages = prev.python3Packages.overrideScope (self: super: {
+    tree-sitter = super.tree-sitter.overrideAttrs (oldAttrs: rec {
+      version = "0.24.0";
+
+      src = final.fetchFromGitHub {
+        owner = "tree-sitter";
+        repo = "py-tree-sitter";
+        tag = "v${version}";
+        hash = "sha256-ZDt/8suteaAjGdk71l8eej7jDkkVpVDBIZS63SA8tsU=";
+        fetchSubmodules = true;
+      };
+
+      meta = {
+        description = "Python bindings to the Tree-sitter parsing library";
+        homepage = "https://github.com/tree-sitter/py-tree-sitter";
+        changelog = "https://github.com/tree-sitter/py-tree-sitter/releases/tag/${src.tag}";
+        license = final.lib.licenses.mit;
+        maintainers = [final.lib.maintainers.fab];
+      };
+    });
+
+    tree-sitter-rust = super.tree-sitter-rust.overrideAttrs (oldAttrs: rec {
+      version = "0.23.2";
+
+      src = final.fetchFromGitHub {
+        owner = "tree-sitter";
+        repo = "tree-sitter-rust";
+        tag = "v${version}";
+        hash = "sha256-aT+tlrEKMgWqTEq/NHh8Vj92h6i1aU6uPikDyaP2vfc=";
+      };
+    });
+
+    textual = super.textual.overrideAttrs (oldAttrs: {
+      meta = oldAttrs.meta // {broken = false;};
+    });
+  });
+  ##
+
   material-symbols = prev.material-symbols.overrideAttrs (oldAttrs: {
     version = "4.0.0-unstable-2025-04-11";
 
