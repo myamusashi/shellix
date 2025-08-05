@@ -8,6 +8,8 @@
     pkgs.brightnessctl
     pkgs.wl-clipboard
     pkgs.wayland-protocols
+    pkgs.mdformat
+    pkgs.mdsf
     pkgs.rich-cli
     pkgs.gh
     pkgs.cloudflared
@@ -19,6 +21,9 @@
     pkgs.hyprshot
     pkgs.ffmpegthumbnailer
     pkgs.swww
+    pkgs.poppler-utils
+    pkgs.libreoffice
+    pkgs.unoconv
     pkgs.playerctl
     pkgs.pavucontrol
     pkgs.libnotify
@@ -45,5 +50,7 @@
     pkgs.bluez
     pkgs.ddcutil
     pkgs.imagemagick
+    pkgs.pywal16
+    pkgs.pywalfox-native
   ];
 }

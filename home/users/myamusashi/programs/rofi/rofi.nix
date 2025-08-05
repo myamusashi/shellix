@@ -1,4 +1,6 @@
-{pkgs, ...}: {
+{pkgs, ...}: let
+  matugen = import ./matugen.nix;
+in {
   home.packages = with pkgs; [roboto];
   programs.rofi = {
     enable = true;
@@ -20,17 +22,17 @@
       * {
         font: "Roboto 10";
 
-        bg0    : #1f1f1f80;
-        bg1    : #202020bf;
-        bg2    : #2c2c2c;
-        bg3    : #393939bf;
-        fg0    : #ffffff;
-        fg1    : #cecece;
-        accent : #FFA066;
-        urgent : @accent;
+        bg0    : "${matugen.background}";
+        bg1    : "${matugen.inverse_on_surface}";
+        bg2    : "${matugen.on_primary_container}";
+        bg3    : "${matugen.on_secondary_container}";
+        fg0    : "${matugen.on_background}";
+        fg1    : "${matugen.on_surface_variant}";
+        accent : "${matugen.primary}";
+        urgent : "${matugen.error_container}";
 
         background-color : transparent;
-        text-color       : @fg0;
+        text-color       : @accent;
 
         margin  : 0;
         padding : 0;
@@ -47,7 +49,7 @@
         height   : 600px;
         y-offset : -4px;
 
-        background-color : @bg1;
+        background-color : @bg0;
         border-radius    : 8px;
       }
 
@@ -63,7 +65,7 @@
         border           : 0 0 2px 0 solid;
         border-color     : @accent;
         border-radius    : 2px;
-        background-color : @bg0;
+        background-color : @bg1;
       }
 
       icon-search, entry, element-icon, element-text {
@@ -117,7 +119,7 @@
       }
 
       element selected {
-        background-color: @bg3;
+        background-color: @fg0;
       }
 
       element selected urgent {

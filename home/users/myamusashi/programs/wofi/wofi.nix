@@ -1,45 +1,47 @@
-{
+let
+  matugen = import ./matugen.nix;
+in {
   programs.wofi = {
     enable = true;
     style = ''
       window {
-      margin: 0px;
-      border: 1px solid #C0A36E;
-      background-color: #0F111A;
+      	margin: 0px;
+      	border: 1px solid ${matugen.primary};
+      	background-color: ${matugen.background};
       }
 
       #input {
-      margin: 5px;
-      border: none;
-      color: #E5E9F0;
-      background-color: #3B4252;
+      	margin: 5px;
+      	border: none;
+      	color: ${matugen.on_primary};
+      	background-color: ${matugen.on_background};
       }
 
       #inner-box {
-      margin: 5px;
-      border: none;
-      background-color: #282828;
+      	margin: 5px;
+      	border: none;
+      	background-color: ${matugen.on_background};
       }
 
       #outer-box {
-      margin: 5px;
-      border: none;
-      background-color: #282828;
+      	margin: 5px;
+      	border: none;
+      	background-color: ${matugen.on_background};
       }
 
       #scroll {
-      margin: 0px;
-      border: none;
+      	margin: 0px;
+      	border: none;
       }
 
       #text {
-      margin: 5px;
-      border: none;
-      color: #E5E9F0;
+      	margin: 5px;
+      	border: none;
+      	color: ${matugen.on_primary};
       }
 
       #entry:selected {
-      background-color: #4C566A;
+      	background-color: ${matugen.inverse_surface};
       }
     '';
     settings = {

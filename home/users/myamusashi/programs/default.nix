@@ -20,5 +20,6 @@
     ./wofi/wofi.nix
     ./foot/foot.nix
     ./spicetify/spicetify.nix
+    ./tofi/default.nix
   ];
 }

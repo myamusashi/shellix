@@ -12,7 +12,7 @@
       RestartSec = "3";
     };
     Install = {
-      WantedBy = ["graphical-session.target"];
+      WantedBy = ["hyprland-session.target"];
     };
   };
 }

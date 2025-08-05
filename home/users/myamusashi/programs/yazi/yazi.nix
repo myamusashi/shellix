@@ -39,7 +39,7 @@ in {
       githead = "${plugin.githead}";
     };
     keymap = {
-      manager = {
+      mgr = {
         show_symlink = true;
         prepend_keymap = [
           {
@@ -133,7 +133,7 @@ in {
       opener = {
         openImage = [
           {
-            run = ''viewnior "$@" '';
+            run = ''lximage-qt "$@" '';
             block = true;
             for = "unix";
           }
