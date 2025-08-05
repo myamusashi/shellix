@@ -26,5 +26,6 @@
     MOZ_DRM_DEVICE = "/dev/dri/card1";
     OZONE_PLATFORM = "wayland";
     LIBVA_DRIVE_NAME = "i915";
+    PULSE_LATENCY_MSEC = 60;
   };
 }
