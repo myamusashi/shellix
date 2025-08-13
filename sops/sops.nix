@@ -26,7 +26,6 @@
     secrets.gemini_key = {
       path = "/var/lib/gemini/key";
       format = "json";
-      mode = "0400";
     };
 
     secrets.nextcloud_admin_pass = {
@@ -35,10 +34,7 @@
     };
 
     secrets.netdata-token = {
-      owner = config.services.netdata.user;
-      inherit (config.services.netdata) group;
       format = "json";
-      mode = "0400";
       path = "/var/lib/netdata-token/netdata-token.yaml";
     };
   };

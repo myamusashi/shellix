@@ -40,6 +40,16 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    caelestia-shell = {
+      url = "github:caelestia-dots/shell";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    caelestia-cli = {
+      url = "github:caelestia-dots/cli";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     hyprlock = {
       url = "github:hyprwm/hyprlock";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -98,12 +108,12 @@
     pkgs-stable = import nixpkgs-stable {
       inherit system;
       config.allowUnfree = true;
+      overlays = [(import ./overlays/default.nix)];
     };
     pkgs = import nixpkgs {
       inherit system;
       config.allowUnfree = true;
       overlays = [
-        inputs.hyprpanel.overlay
         inputs.hyprpicker.overlays.default
         inputs.hyprsunset.overlays.default
         inputs.hypridle.overlays.default
@@ -119,12 +129,8 @@
         inherit system;
 
         modules = [
-          ./home/users/waltz/default.nix
-          ./home/common/programs/htop.nix
-          ./home/common/programs/lazygit.nix
-          ./home/common/services.nix
-          ./home/common/nixConfig.nix
           ./sops/sops.nix
+          ./hosts/waltz/configuration.nix
           chaotic.nixosModules.nyx-cache
           chaotic.nixosModules.nyx-overlay
           chaotic.nixosModules.nyx-registry
@@ -140,12 +146,7 @@
         inherit system;
         modules = [
           chaotic.nixosModules.default
-          ./system/default.nix
-          ./home/common/programs/htop.nix
-          ./home/common/programs/lazygit.nix
-          ./home/common/services.nix
-          ./home/common/packages.nix
-          ./home/common/nixConfig.nix
+          ./hosts/myamusashi/configuration.nix
         ];
         specialArgs = {
           inherit inputs;
@@ -164,10 +165,19 @@
         };
 
         modules = [
-          ./home/common/programs/git.nix
-          ./home/users/myamusashi/default.nix
-          ./scripts/symlinks/symlinks.nix
-          ./home/common/nixConfig.nix
+          ./hosts/myamusashi/home.nix
+        ];
+      };
+      "waltz" = home-manager.lib.homeManagerConfiguration {
+        inherit pkgs-stable;
+
+        extraSpecialArgs = {
+          inherit system;
+          inherit inputs;
+        };
+
+        modules = [
+          ./hosts/waltz/home.nix
         ];
       };
     };

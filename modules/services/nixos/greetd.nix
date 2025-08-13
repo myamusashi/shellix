@@ -1,0 +1,24 @@
+{
+  lib,
+  config,
+  pkgs,
+  ...
+}: {
+  config = lib.mkIf config.shellix.services.nixos.greetd.enable {
+    services.greetd = {
+      enable = true;
+      vt = 3;
+      settings = {
+        initial_session = {
+          command = "Hyprland";
+          user = "myamusashi";
+        };
+        default_session = {
+          command = ''
+            ${pkgs.greetd.tuigreet}/bin/tuigreet tuigreet --remember --remember-user-session --time --asterisks --asterisks-char "+" --greeting "nguwawur cik" --cmd ${pkgs.hyprland}/bin/Hyprland'';
+          user = "greeter";
+        };
+      };
+    };
+  };
+}
