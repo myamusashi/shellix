@@ -80,42 +80,48 @@ final: prev: {
   linuxPackages_cachyos-lto = prev.linuxPackages_cachyos-lto.extend (self: super: {
     vmware = super.vmware.overrideAttrs (oldAttrs: {
       version = "workstation-17.6.3-20250608-${self.kernel.version}";
-
       src = final.fetchFromGitHub {
         owner = "philipl";
         repo = "vmware-host-modules";
         rev = "e08764f84df3bd14407291e02346b7c5c54d0bf6";
         hash = "sha256-RDVKropC+VOv1uJijOGlLt6iqZI8Cm9aWlbmvZj2CSk=";
       };
-
       nativeBuildInputs =
         (oldAttrs.nativeBuildInputs or [])
         ++ [
           final.clang_20
           final.llvm_20
         ];
-
       makeFlags =
         (oldAttrs.makeFlags or [])
         ++ [
           "CC=${final.clang_20}/bin/clang"
           "HOSTCC=${final.clang_20}/bin/clang"
+          "LLVM=1"
         ];
-
       NIX_CFLAGS_COMPILE = toString [
         "-Wno-error=implicit-function-declaration"
         "-Wno-error=implicit-int"
         "-Wno-error=deprecated-declarations"
         "-Wno-error=format-security"
+        "-Wno-unused-command-line-argument"
       ];
-
       preBuild =
         (oldAttrs.preBuild or "")
         + ''
           export CC=${final.clang_20}/bin/clang
           export HOSTCC=${final.clang_20}/bin/clang
           export LLVM=1
-          export KCFLAGS="$KCFLAGS -Wno-unused-command-line-argument"
+          export KCFLAGS="$NIX_CFLAGS_COMPILE"
+
+          # Ensure clang is in PATH and override any gcc references
+          export PATH="${final.clang_20}/bin:$PATH"
+
+          # Some kernel build systems check for gcc specifically, create a symlink
+          mkdir -p $TMPDIR/bin
+          ln -sf ${final.clang_20}/bin/clang $TMPDIR/bin/gcc
+          ln -sf ${final.clang_20}/bin/clang++ $TMPDIR/bin/g++
+          export PATH="$TMPDIR/bin:$PATH"
         '';
     });
   });
