@@ -6,6 +6,7 @@
   VARS = import ../../modules/shared/Variable.nix;
 in {
   imports = [
+		./overlays.nix
     ./hardware/default.nix ## Virtualization here
     ../../modules/shared/Colors.nix
     ../../modules/packages/nixos-packages.nix
@@ -189,6 +190,7 @@ in {
   # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
   system.stateVersion = "24.11"; # Did you read the comment?
 
+  nixpkgs.config.allowUnfree = true;
   nix = {
     package = pkgs-stable.nix;
     settings = {
@@ -228,15 +230,5 @@ in {
         # "cache.myamusashi.space-1:7wJ0GThM/MBLSmvDw8u8Y0XMiXAshFmX1Hz1jJ0PKWg="
       ];
     };
-  };
-  nixpkgs = {
-    config.allowUnfree = true;
-    overlays = [
-      (self: super: {
-        tree-sitter-bundled-vendor = super.tree-sitter-bundled-vendor.override (oldAttrs: {
-          vendorHash = "sha256-ie+/48dVU3r+tx/sQBWRIZEWSNWwMBANCqQLnv96JXs=";
-        });
-      })
-    ];
   };
 }

@@ -18,11 +18,10 @@
     homeDirectory = "/home/myamusashi";
     stateVersion = "24.11";
   };
-  # Let Home Manager install and manage itself.
   programs.home-manager.enable = true;
 
   shellix.matugen.colors.enable = true;
-  shellix.programs.home.enable = true; # If we want override the modules, just do something like programs.stuff = {doing}
+  shellix.programs.home.enable = true;
 
   shellix.services = {
     home-manager = {
@@ -41,7 +40,7 @@
   shellix.packages.home = {
     enable = true;
     gnome = true;
-    customPackages = [];
+    customPackages = [pkgs.statix pkgs.alejandra];
     excludePackages = [];
 
     fonts = {
