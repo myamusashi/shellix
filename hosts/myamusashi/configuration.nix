@@ -1,10 +1,10 @@
 {
+  config,
   lib,
   pkgs,
   ...
 }: {
   imports = [
-    ./overlays.nix
     ./hardware/default.nix ## Virtualization here
     ../../modules/shared/Colors.nix
     ../../modules/packages/nixos-packages.nix
@@ -45,8 +45,10 @@
     };
   };
 
+  sops.secrets.myamusashi-password.neededForUsers = true;
   users.users.myamusashi = {
     isNormalUser = true;
+    hashedPasswordFile = config.sops.secrets.myamusashi-password.path;
     shell = pkgs.fish;
     extraGroups = [
       "networkmanager"
@@ -104,7 +106,7 @@
     wayland = {
       core = true;
     };
-    customPackage = [pkgs.git-credential-manager];
+    customPackages = [pkgs.git-credential-manager pkgs.sops];
   };
 
   programs = {
@@ -207,7 +209,10 @@
     };
   };
 
-  nixpkgs.config.allowUnfree = true;
+  nixpkgs = {
+    config.allowUnfree = true;
+    overlays = [(import ./overlays.nix)];
+  };
   nix = {
     enable = true;
     package = pkgs.nix;

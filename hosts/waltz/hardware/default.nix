@@ -21,4 +21,10 @@
       defaultNetwork.settings = {dns_enabled = true;};
     };
   };
+
+  fileSystems."/opt/backup" = {
+    device = "/dev/disk/by-label/BACKUP";
+    fsType = "ext4";
+    options = ["noatime"];
+  };
 }
