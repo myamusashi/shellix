@@ -137,6 +137,46 @@ in {
     '';
   };
 
+  users.users.waltz = {
+    isNormalUser = true;
+    description = "gilang";
+    shell = pkgs-stable.fish;
+    extraGroups = ["networkmanager" "wheel" "vsftpd" "docker" "podman"];
+  };
+
+  users.groups.cloudflared = {};
+  users.users.cloudflared = {
+    isSystemUser = true;
+    group = "cloudflared";
+    description = "Cloudflare Tunnel service user";
+    extraGroups = ["forgejo"];
+  };
+
+  users.groups.nextcloud = {};
+  users.users.nextcloud = {
+    isSystemUser = true;
+    group = "nextcloud";
+  };
+
+  users.groups.netdata = {};
+  users.users.netdata = {
+    isSystemUser = true;
+    group = "netdata";
+  };
+
+  users.groups.atticd = {};
+  users.users.atticd = {
+    isSystemUser = true;
+    group = "atticd";
+  };
+
+  users.groups.forgejo-runner = {};
+  users.users.forgejo-runner = {
+    isNormalUser = true;
+    group = "forgejo-runner";
+    extraGroups = ["forgejo" "docker" "podman"];
+  };
+
   time.timeZone = "Asia/Jakarta";
   # Select internationalisation properties.
   i18n.defaultLocale = "en_US.UTF-8";
