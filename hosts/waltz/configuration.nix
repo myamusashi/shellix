@@ -36,6 +36,7 @@ in {
     };
     nixos = {
       earlyoom.enable = true;
+      backup.enable = true;
       resolver.enable = true;
     };
   };
@@ -57,6 +58,7 @@ in {
 
     customPackages = with pkgs-stable; [
       sops
+      borgbackup
       cachix
       age
       alejandra
