@@ -13,6 +13,9 @@
     audio = {
       enable = lib.mkEnableOption "Enable audio using pipewire";
     };
+    backup = {
+      enable = lib.mkEnableOption "Enable backup services using Borg";
+    };
     earlyoom = {
       enable = lib.mkEnableOption "Enable kill early OOM scheduler";
     };

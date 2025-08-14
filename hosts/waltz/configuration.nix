@@ -193,8 +193,8 @@ in {
   system.stateVersion = "24.11"; # Did you read the comment?
 
   nixpkgs = {
-    overlays = [(import ./overlays.nix)];
     config.allowUnfree = true;
+    overlays = [(import ./overlays.nix)];
   };
   nix = {
     package = pkgs-stable.nix;
