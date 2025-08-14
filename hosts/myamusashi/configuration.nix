@@ -4,6 +4,7 @@
   ...
 }: {
   imports = [
+    ./overlays.nix
     ./hardware/default.nix ## Virtualization here
     ../../modules/shared/Colors.nix
     ../../modules/packages/nixos-packages.nix
@@ -83,7 +84,9 @@
     scx.enable = true;
   };
 
-  shellix.programs.nixos.enable = true; # If we want override the modules, just do something like programs.stuff = {doing}
+  # If we want override the modules, just do something like *programs.stuff = {doing}*,
+  # and it's same as services
+  shellix.programs.nixos.enable = true;
 
   shellix.packages.nixos = {
     enable = true;
@@ -101,6 +104,7 @@
     wayland = {
       core = true;
     };
+    customPackage = [pkgs.git-credential-manager];
   };
 
   programs = {
@@ -207,134 +211,43 @@
   nix = {
     enable = true;
     package = pkgs.nix;
-    settings.experimental-features = ["nix-command" "flakes"];
+    settings = {
+      experimental-features = [
+        "nix-command"
+        "flakes"
+      ];
+      trusted-users = [
+        "root"
+        "myamusashi"
+      ];
+      substituters = [
+        "https://myamusashi.cachix.org"
+        "https://cache.nixos.org"
+        "https://nix-community.cachix.org"
+        "https://chaotic-nyx.cachix.org"
+        "https://nix-community.cachix.org"
+        "https://ezkea.cachix.org"
+        "https://hyprland.cachix.org"
+      ];
+
+      extra-substituters = [
+        # "https://cache.myamusashi.space"
+      ];
+
+      trusted-public-keys = [
+        "myamusashi.cachix.org-1:ra4PbY6yqM1pSvkGqJ78CZse3WWgjk4rOXBMtjD9YrY="
+        "chaotic-nyx.cachix.org-1:HfnXSw4pj95iI/n17rIDy40agHj12WfF+Gqk6SonIT8="
+        "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
+        "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
+        "chaotic-nyx.cachix.org-1:HfnXSw4pj95iI/n17rIDy40agHj12WfF+Gqk6SonIT8="
+        "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
+        "ezkea.cachix.org-1:ioBmUbJTZIKsHmWWXPe1FSFbeVe+afhfgqgTSNd34eI="
+        "hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc="
+      ];
+
+      extra-trusted-public-keys = [
+        # "cache.myamusashi.space-1:7wJ0GThM/MBLSmvDw8u8Y0XMiXAshFmX1Hz1jJ0PKWg="
+      ];
+    };
   };
-  nixpkgs.overlays = [
-    (final: prev: {
-      upower = prev.upower.overrideAttrs (oldAttrs: {
-        doCheck = false;
-      });
-
-      vmware-workstation = prev.vmware-workstation.overrideAttrs (oldAttrs: {
-        installPhase = ''
-          ${oldAttrs.installPhase}
-
-          mv $out/bin/vmware $out/bin/vmware-bin
-
-          makeWrapper $out/bin/vmware-bin $out/bin/vmware \
-            --set GTK_THEME "Adwaita-dark"
-
-          if [ -f $out/share/applications/vmware-workstation.desktop ]; then
-            substituteInPlace $out/share/applications/vmware-workstation.desktop \
-              --replace "Exec=@@BINARY@@" "Exec=$out/bin/vmware"
-
-            substituteInPlace $out/share/applications/vmware-player.desktop \
-              --replace "Exec=@@BINARY@@" "Exec=$out/bin/vmware"
-          fi
-        '';
-      });
-
-      ## Hotfix
-      python3Packages = prev.python3Packages.overrideScope (self: super: {
-        tree-sitter = super.tree-sitter.overrideAttrs (oldAttrs: rec {
-          version = "0.24.0";
-
-          src = final.fetchFromGitHub {
-            owner = "tree-sitter";
-            repo = "py-tree-sitter";
-            tag = "v${version}";
-            hash = "sha256-ZDt/8suteaAjGdk71l8eej7jDkkVpVDBIZS63SA8tsU=";
-            fetchSubmodules = true;
-          };
-
-          meta = {
-            description = "Python bindings to the Tree-sitter parsing library";
-            homepage = "https://github.com/tree-sitter/py-tree-sitter";
-            changelog = "https://github.com/tree-sitter/py-tree-sitter/releases/tag/${src.tag}";
-            license = final.lib.licenses.mit;
-            maintainers = [final.lib.maintainers.fab];
-          };
-        });
-
-        tree-sitter-rust = super.tree-sitter-rust.overrideAttrs (oldAttrs: rec {
-          version = "0.23.2";
-
-          src = final.fetchFromGitHub {
-            owner = "tree-sitter";
-            repo = "tree-sitter-rust";
-            tag = "v${version}";
-            hash = "sha256-aT+tlrEKMgWqTEq/NHh8Vj92h6i1aU6uPikDyaP2vfc=";
-          };
-        });
-
-        textual = super.textual.overrideAttrs (oldAttrs: {
-          meta = oldAttrs.meta // {broken = false;};
-        });
-      });
-      ## End
-
-      ## Fix outdated packages
-      material-symbols = prev.material-symbols.overrideAttrs (oldAttrs: {
-        version = "4.0.0-unstable-2025-04-11";
-
-        src = final.fetchFromGitHub {
-          owner = "google";
-          repo = "material-design-icons";
-          rev = "941fa95d7f6084a599a54ca71bc565f48e7c6d9e";
-          hash = "sha256-5bcEh7Oetd2JmFEPCcoweDrLGQTpcuaCU8hCjz8ls3M=";
-          sparseCheckout = ["variablefont"];
-        };
-      });
-
-      ## Fix vmware failed buildPhase
-      linuxPackages_cachyos-lto = prev.linuxPackages_cachyos-lto.extend (self: super: {
-        vmware = super.vmware.overrideAttrs (oldAttrs: {
-          version = "workstation-17.6.3-20250608-${self.kernel.version}";
-          src = final.fetchFromGitHub {
-            owner = "philipl";
-            repo = "vmware-host-modules";
-            rev = "e08764f84df3bd14407291e02346b7c5c54d0bf6";
-            hash = "sha256-RDVKropC+VOv1uJijOGlLt6iqZI8Cm9aWlbmvZj2CSk=";
-          };
-          nativeBuildInputs =
-            (oldAttrs.nativeBuildInputs or [])
-            ++ [
-              final.clang_20
-              final.llvm_20
-            ];
-          makeFlags =
-            (oldAttrs.makeFlags or [])
-            ++ [
-              "CC=${final.clang_20}/bin/clang"
-              "HOSTCC=${final.clang_20}/bin/clang"
-              "LLVM=1"
-            ];
-          NIX_CFLAGS_COMPILE = toString [
-            "-Wno-error=implicit-function-declaration"
-            "-Wno-error=implicit-int"
-            "-Wno-error=deprecated-declarations"
-            "-Wno-error=format-security"
-            "-Wno-unused-command-line-argument"
-          ];
-          preBuild =
-            (oldAttrs.preBuild or "")
-            + ''
-              export CC=${final.clang_20}/bin/clang
-              export HOSTCC=${final.clang_20}/bin/clang
-              export LLVM=1
-              export KCFLAGS="$NIX_CFLAGS_COMPILE"
-
-              # Ensure clang is in PATH and override any gcc references
-              export PATH="${final.clang_20}/bin:$PATH"
-
-              # Some kernel build systems check for gcc specifically, create a symlink
-              mkdir -p $TMPDIR/bin
-              ln -sf ${final.clang_20}/bin/clang $TMPDIR/bin/gcc
-              ln -sf ${final.clang_20}/bin/clang++ $TMPDIR/bin/g++
-              export PATH="$TMPDIR/bin:$PATH"
-            '';
-        });
-      });
-    })
-  ];
 }
