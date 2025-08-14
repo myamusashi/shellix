@@ -120,7 +120,6 @@
         inputs.hyprland.overlays.default
         nixgl.overlay
         inputs.neovim-nightly-overlay.overlays.default
-        (import ./overlays/default.nix)
       ];
     };
   in {
@@ -146,6 +145,7 @@
         inherit system;
         modules = [
           chaotic.nixosModules.default
+          ./sops/sops.nix
           ./hosts/myamusashi/configuration.nix
         ];
         specialArgs = {

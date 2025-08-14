@@ -37,5 +37,15 @@
       format = "json";
       path = "/var/lib/netdata-token/netdata-token.yaml";
     };
+
+    secrets.myamusashi-password = {
+      format = "json";
+      mode = "0400";
+    };
+
+    secrets.waltz-password = {
+      format = "json";
+      mode = "0400";
+    };
   };
 }

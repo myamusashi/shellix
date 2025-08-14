@@ -1,4 +1,5 @@
 {
+  config,
   pkgs-stable,
   lib,
   ...
@@ -6,7 +7,6 @@
   VARS = import ../../modules/shared/Variable.nix;
 in {
   imports = [
-		./overlays.nix
     ./hardware/default.nix ## Virtualization here
     ../../modules/shared/Colors.nix
     ../../modules/packages/nixos-packages.nix
@@ -138,8 +138,10 @@ in {
     '';
   };
 
+  sops.secrets.waltz-password.neededForUsers = true;
   users.users.waltz = {
     isNormalUser = true;
+    hashedPasswordFile = config.sops.secrets.waltz-password.path;
     description = "gilang";
     shell = pkgs-stable.fish;
     extraGroups = ["networkmanager" "wheel" "vsftpd" "docker" "podman"];
@@ -190,7 +192,10 @@ in {
   # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
   system.stateVersion = "24.11"; # Did you read the comment?
 
-  nixpkgs.config.allowUnfree = true;
+  nixpkgs = {
+    overlays = [(import ./overlays.nix)];
+    config.allowUnfree = true;
+  };
   nix = {
     package = pkgs-stable.nix;
     settings = {
