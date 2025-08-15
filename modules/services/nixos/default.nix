@@ -6,6 +6,7 @@
     ./geoclue2.nix
     ./resolver.nix
     ./scx.nix
+    ./borg.nix
     ./plasma.nix
   ];
 
