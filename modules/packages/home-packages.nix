@@ -111,36 +111,29 @@ in {
         ++ (optionals cfg.security allPackages.security)
         ++ (optionals cfg.gnome allPackages.gnome)
         ++ (optionals cfg.android allPackages.android)
-        ++
-        (optionals cfg.development.code_editor allPackages.development.code_editor)
+        ++ (optionals cfg.development.code_editor allPackages.development.code_editor)
         ++ (optionals cfg.development.containers allPackages.development.containers)
         ++ (optionals cfg.development.tools allPackages.development.tools)
-        ++
-        (optionals cfg.multimedia.office allPackages.multimedia.office)
+        ++ (optionals cfg.multimedia.office allPackages.multimedia.office)
         ++ (optionals cfg.multimedia.apps allPackages.multimedia.apps)
-        ++
-        (optionals cfg.gaming.platform allPackages.gaming.platform)
+        ++ (optionals cfg.gaming.platform allPackages.gaming.platform)
         ++ (optionals cfg.gaming.utilities allPackages.gaming.utilities)
-        ++
-        (optionals cfg.media.editor allPackages.media.editor)
+        ++ (optionals cfg.media.editor allPackages.media.editor)
         ++ (optionals cfg.media.viewer allPackages.media.viewer)
         ++ (optionals cfg.media.screen_recorder allPackages.media.screen_recorder)
         ++ (optionals cfg.media.misc allPackages.media.misc)
-        ++
-        (optionals cfg.wayland.core allPackages.wayland.core)
+        ++ (optionals cfg.wayland.core allPackages.wayland.core)
         ++ (optionals cfg.wayland.wallpaper allPackages.wayland.wallpaper)
         ++ (optionals cfg.wayland.launcher allPackages.wayland.launcher)
         ++ (optionals cfg.wayland.hyprland allPackages.wayland.hyprland)
-        ++
-        (optionals cfg.theming.colors allPackages.theming.colors)
+        ++ (optionals cfg.theming.colors allPackages.theming.colors)
         ++ (optionals cfg.theming.apps allPackages.theming.apps)
         ++ (optionals cfg.theming.tools allPackages.theming.tools)
         ++ (optionals cfg.theming.cursors allPackages.theming.cursors)
         ++ (optionals cfg.theming.icons allPackages.theming.icons)
         ++ (optionals cfg.theming.qt allPackages.theming.qt)
         ++ (optionals cfg.theming.gtk allPackages.theming.gtk)
-        ++
-        (optionals cfg.fonts.nerd allPackages.fonts.nerd)
+        ++ (optionals cfg.fonts.nerd allPackages.fonts.nerd)
         ++ (optionals cfg.fonts.external allPackages.fonts.external)
         ++ cfg.languages
         ++ cfg.customPackages;
