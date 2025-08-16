@@ -5,12 +5,14 @@
 }: let
   vars = import ./variable.nix {inherit pkgs inputs;};
 in {
-  m = with vars; [
+  bindm = with vars; [
     "${modalt}, mouse:273, resizewindow"
     "${modalt}, mouse:272, movewindow"
   ];
 
-  keybind = with vars;
+  binds = {drag_threshold = 10;};
+
+  bind = with vars;
     [
       "${modalt}, RETURN, exec, ${term}"
       "${modalt}, F, exec, ${browser}"

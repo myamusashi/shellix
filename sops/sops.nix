@@ -13,39 +13,41 @@
     defaultSopsFile = ./secrets.json;
     defaultSopsFormat = "json";
 
-    secrets.cloudflare_creds = {
-      format = "json";
-      mode = "0400";
-    };
+    secrets = {
+      cloudflare_creds = {
+        format = "json";
+        mode = "0400";
+      };
 
-    secrets.nix-serve_secrets = {
-      format = "json";
-      mode = "0400";
-    };
+      nix-serve_secrets = {
+        format = "json";
+        mode = "0400";
+      };
 
-    secrets.gemini_key = {
-      path = "/var/lib/gemini/key";
-      format = "json";
-    };
+      gemini_key = {
+        path = "/var/lib/gemini/key";
+        format = "json";
+      };
 
-    secrets.nextcloud_admin_pass = {
-      format = "json";
-      mode = "0400";
-    };
+      nextcloud_admin_pass = {
+        format = "json";
+        mode = "0400";
+      };
 
-    secrets.netdata-token = {
-      format = "json";
-      path = "/var/lib/netdata-token/netdata-token.yaml";
-    };
+      netdata-token = {
+        format = "json";
+        path = "/var/lib/netdata-token/netdata-token.yaml";
+      };
 
-    secrets.myamusashi-password = {
-      format = "json";
-      mode = "0400";
-    };
+      myamusashi-password = {
+        format = "json";
+        mode = "0400";
+      };
 
-    secrets.waltz-password = {
-      format = "json";
-      mode = "0400";
+      waltz-password = {
+        format = "json";
+        mode = "0400";
+      };
     };
   };
 }

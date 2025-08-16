@@ -24,7 +24,7 @@
 
   fileSystems."/opt/backup" = {
     device = "/dev/disk/by-label/BACKUP";
-    fsType = "ext4";
-    options = ["noatime"];
+    fsType = "ntfs-3g";
+    options = ["noatime" "rw" "uid="];
   };
 }

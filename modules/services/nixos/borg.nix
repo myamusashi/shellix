@@ -25,7 +25,7 @@ in {
         "/tmp/pg_db-dump"
       ];
       encryption.mode = "none";
-      repo = "/opt/backup/backup";
+      repo = "/opt/backup/borg";
       compression = "auto,zstd";
       startAt = "06:00";
       prune.keep = {

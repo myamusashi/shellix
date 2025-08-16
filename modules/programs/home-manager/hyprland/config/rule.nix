@@ -1,5 +1,5 @@
 {
-  rule = [
+  windowrulev2 = [
     "float,class:^(pavucontrol)$"
     "float,title:^(Media viewer)$"
     "float,title:^(Volume Control)$"
@@ -74,5 +74,10 @@
     "noblur,xwayland:1"
     "noborder,initialClass:^(Xdg-desktop-portal-gtk)$"
     "bordersize 0,initialClass:^(Xdg-desktop-portal-gtk)$"
+  ];
+
+  layerrule = [
+    "blur, rofi"
+    "blur, launcher"
   ];
 }
