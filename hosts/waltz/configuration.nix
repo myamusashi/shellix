@@ -16,89 +16,91 @@ in {
     ../../modules/services/systemd/system/default.nix
   ];
 
-  shellix.matugen.colors.enable = true;
+  shellix = {
+    matugen.colors.enable = true;
 
-  shellix.services = {
-    server = {
-      database.enable = true;
-      forgejo.enable = true;
-      monitoring.enable = true;
-      phpmyadmin.enable = false;
-      vaultwarden.enable = true;
-      vsftpd.enable = true;
-      nextcloud.enable = true;
-      nix-serve.enable = false;
-    };
-    systemd.system = {
-      cachix.enable = true;
-      cloudflare-tunnels.enable = true;
-      stirling.enable = true;
-    };
-    nixos = {
-      earlyoom.enable = true;
-      backup.enable = true;
-      resolver.enable = true;
-    };
-  };
-
-  shellix.programs.nixos.enable = true;
-
-  shellix.packages.nixos = {
-    enable = true;
-
-    system = true;
-    network = true;
-    security = true;
-    android = true;
-
-    development = {
-      containers = true;
-      tools = true;
+    services = {
+      server = {
+        database.enable = true;
+        forgejo.enable = true;
+        monitoring.enable = true;
+        phpmyadmin.enable = false;
+        vaultwarden.enable = true;
+        vsftpd.enable = true;
+        nextcloud.enable = true;
+        nix-serve.enable = false;
+      };
+      systemd.system = {
+        cachix.enable = true;
+        cloudflare-tunnels.enable = true;
+        stirling.enable = true;
+      };
+      nixos = {
+        earlyoom.enable = true;
+        backup.enable = true;
+        resolver.enable = true;
+      };
     };
 
-    customPackages = with pkgs-stable; [
-      sops
-      borgbackup
-      cachix
-      age
-      alejandra
-      statix
-      unzip
-      ntfs3g
-      jq
-      btop
-      htop
-      nix-output-monitor
-      lazygit
-      lazyjournal
-      lazysql
-      openssl
-      home-manager
-      podman-compose
-    ];
+    programs.nixos.enable = true;
 
-    excludePackages = [
-      "pinentry-qt"
-      "pinentry-curses"
-      "udisks"
-      "udiskie"
-      "gparted"
-      "libvirt"
-      "rich-cli"
-      "power-profiles-daemon"
-      "bluez"
-      "mediainfo"
-      "ouch"
-      "glow"
-      "hexyl"
-      "antiprism"
-      "wireshark"
-      "nm-tray"
-      "networkmanagerapplet"
-      "bitwarden-desktop"
-      "pass-wayland"
-      "kdiff3"
-    ];
+    packages.nixos = {
+      enable = true;
+
+      system = true;
+      network = true;
+      security = true;
+      android = true;
+
+      development = {
+        containers = true;
+        tools = true;
+      };
+
+      customPackages = with pkgs-stable; [
+        sops
+        borgbackup
+        cachix
+        age
+        alejandra
+        statix
+        unzip
+        ntfs3g
+        jq
+        btop
+        htop
+        nix-output-monitor
+        lazygit
+        lazyjournal
+        lazysql
+        openssl
+        home-manager
+        podman-compose
+      ];
+
+      excludePackages = [
+        "pinentry-qt"
+        "pinentry-curses"
+        "udisks"
+        "udiskie"
+        "gparted"
+        "libvirt"
+        "rich-cli"
+        "power-profiles-daemon"
+        "bluez"
+        "mediainfo"
+        "ouch"
+        "glow"
+        "hexyl"
+        "antiprism"
+        "wireshark"
+        "nm-tray"
+        "networkmanagerapplet"
+        "bitwarden-desktop"
+        "pass-wayland"
+        "kdiff3"
+      ];
+    };
   };
 
   programs = {
