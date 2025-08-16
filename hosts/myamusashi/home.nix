@@ -20,74 +20,76 @@
   };
   programs.home-manager.enable = true;
 
-  shellix.matugen.colors.enable = true;
-  shellix.programs.home.enable = true;
+  shellix = {
+    matugen.colors.enable = true;
+    programs.home.enable = true;
 
-  shellix.services = {
-    home-manager = {
-      clipse.enable = true;
-      easyeffects.enable = true;
-      hypridle.enable = true;
-    };
-    systemd.user = {
-      adzan.enable = true;
-      caelestia.enable = true;
-      nm-applet.enable = true;
-      weather-widget.enable = true;
-    };
-  };
-
-  shellix.packages.home = {
-    enable = true;
-    gnome = true;
-    customPackages = [pkgs.statix pkgs.alejandra];
-    excludePackages = [];
-
-    fonts = {
-      nerd = true;
-      external = true;
+    services = {
+      home-manager = {
+        clipse.enable = true;
+        easyeffects.enable = true;
+        hypridle.enable = true;
+      };
+      systemd.user = {
+        adzan.enable = true;
+        caelestia.enable = true;
+        nm-applet.enable = true;
+        weather-widget.enable = true;
+      };
     };
 
-    theming = {
-      colors = true;
-      apps = true;
-      tools = true;
-      cursors = true;
-      icons = true;
-      qt = true;
-      gtk = true;
+    packages.home = {
+      enable = true;
+      gnome = true;
+      customPackages = [pkgs.statix pkgs.alejandra pkgs.git-credential-manager pkgs.libsixel];
+      excludePackages = [];
 
-      defaultCursor = "Future-Cyan-Hyprcursor-theme";
-      defaultCursorSize = 24;
-    };
+      fonts = {
+        nerd = true;
+        external = true;
+      };
 
-    development = {
-      code_editor = true;
-      containers = true;
-    };
+      theming = {
+        colors = true;
+        apps = true;
+        tools = true;
+        cursors = true;
+        icons = true;
+        qt = true;
+        gtk = true;
 
-    multimedia = {
-      office = true;
-      apps = true;
-    };
+        defaultCursor = "Future-Cyan-Hyprcursor-theme";
+        defaultCursorSize = 24;
+      };
 
-    gaming = {
-      platform = true;
-      utilities = true;
-    };
+      development = {
+        code_editor = true;
+        containers = true;
+      };
 
-    media = {
-      editor = true;
-      viewer = true;
-      screen_recorder = true;
-      misc = true;
-    };
+      multimedia = {
+        office = true;
+        apps = true;
+      };
 
-    wayland = {
-      core = true;
-      wallpaper = true;
-      launcher = true;
-      hyprland = true;
+      gaming = {
+        platform = true;
+        utilities = true;
+      };
+
+      media = {
+        editor = true;
+        viewer = true;
+        screen_recorder = true;
+        misc = true;
+      };
+
+      wayland = {
+        core = true;
+        wallpaper = true;
+        launcher = true;
+        hyprland = true;
+      };
     };
   };
 

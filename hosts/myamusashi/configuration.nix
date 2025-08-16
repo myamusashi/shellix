@@ -75,38 +75,40 @@
     xserver.xkb.layout = "us";
   };
 
-  shellix.matugen.colors.enable = true;
+  shellix = {
+    matugen.colors.enable = true;
 
-  shellix.services.nixos = {
-    audio.enable = true;
-    earlyoom.enable = true;
-    greetd.enable = true;
-    plasma.enable = true;
-    resolver.enable = true;
-    scx.enable = true;
-  };
-
-  # If we want override the modules, just do something like *programs.stuff = {doing}*,
-  # and it's same as services
-  shellix.programs.nixos.enable = true;
-
-  shellix.packages.nixos = {
-    enable = true;
-
-    system = true;
-    network = true;
-    security = true;
-    android = true;
-
-    development = {
-      containers = true;
-      tools = true;
+    services.nixos = {
+      audio.enable = true;
+      earlyoom.enable = true;
+      greetd.enable = true;
+      plasma.enable = true;
+      resolver.enable = true;
+      scx.enable = true;
     };
 
-    wayland = {
-      core = true;
+    # If we want override the modules, just do something like *programs.stuff = {doing}*,
+    # and it's same as services
+    programs.nixos.enable = true;
+
+    packages.nixos = {
+      enable = true;
+
+      system = true;
+      network = true;
+      security = true;
+      android = true;
+
+      development = {
+        containers = true;
+        tools = true;
+      };
+
+      wayland = {
+        core = true;
+      };
+      customPackages = [pkgs.git-credential-manager pkgs.sops pkgs.exfat];
     };
-    customPackages = [pkgs.git-credential-manager pkgs.sops];
   };
 
   programs = {
