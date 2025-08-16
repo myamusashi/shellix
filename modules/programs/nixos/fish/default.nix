@@ -12,6 +12,7 @@ in {
 
       shellAliases = {
         kiss = "${pkgs.kitty}/bin/kitty + kitten ssh";
+        img = "${pkgs.libsixel}/bin/img2sixel";
         icat = "${pkgs.kitty}/bin/kitten icat";
         ls = "${pkgs.eza}/bin/eza --icons";
       };
