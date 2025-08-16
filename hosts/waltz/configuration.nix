@@ -59,6 +59,7 @@ in {
     customPackages = with pkgs-stable; [
       sops
       borgbackup
+ 	lsof
       cachix
       age
       alejandra
