@@ -16,7 +16,7 @@ in {
         material-ocean = "${plugin.material-ocean}";
       };
       theme.flavor = {
-        dark = "material-ocean";
+        dark = "shellix";
       };
       plugins = {
         chmod = "${plugin.official-plugins}/chmod.yazi";

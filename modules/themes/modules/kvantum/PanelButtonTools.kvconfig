@@ -1,0 +1,3 @@
+[PanelButtonTool]
+inherits=PanelButtonCommand
+indicator.size=0
