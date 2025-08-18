@@ -9,6 +9,7 @@
     ../../modules/shared/Colors.nix
     ../../modules/packages/home-packages.nix
     ../../modules/programs/home-manager/default.nix
+    ../../modules/themes/default.nix
     ../../modules/services/systemd/user/default.nix
     ../../modules/services/home-manager/default.nix
   ];
@@ -21,6 +22,13 @@
   programs.home-manager.enable = true;
 
   shellix = {
+    # All this themes use matugen
+    themes = {
+      gtk3.enable = true;
+      gtk4.enable = true;
+      yazi.enable = true;
+      kvantum.enable = true;
+    };
     matugen.colors.enable = true;
     programs.home.enable = true;
 
@@ -41,7 +49,7 @@
     packages.home = {
       enable = true;
       gnome = true;
-      customPackages = [pkgs.statix pkgs.alejandra pkgs.git-credential-manager pkgs.libsixel];
+      customPackages = [pkgs.statix pkgs.alejandra pkgs.git-credential-manager pkgs.libsixel pkgs.ueberzugpp pkgs.fd pkgs._7zz pkgs.zellij pkgs.jq];
       excludePackages = [];
 
       fonts = {

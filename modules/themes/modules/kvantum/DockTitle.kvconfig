@@ -1,0 +1,4 @@
+inherits=PanelButtonCommand
+frame=false
+interior=false
+text.bold=false
