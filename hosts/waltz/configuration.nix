@@ -113,6 +113,7 @@ in {
   services = {
     openssh.enable = true;
     xserver.xkb.layout = "us";
+    logind.lidSwitch = "ignore";
     forgejo.settings.server.HTTP_PORT = lib.mkForce VARS.FORGEJO_PORT;
     prometheus.port = lib.mkForce VARS.PROMETHEUS_PORT;
     prometheus.exporters.node.port = lib.mkForce VARS.PROMETHEUS-EXPORTERS_PORT;

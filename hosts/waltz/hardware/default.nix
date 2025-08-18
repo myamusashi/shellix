@@ -22,9 +22,13 @@
     };
   };
 
-  fileSystems."/opt/backup" = {
+  fileSystems."/home/waltz/external" = {
     device = "/dev/disk/by-label/BACKUP";
     fsType = "ntfs-3g";
-    options = ["noatime" "rw" "uid="];
+    options = ["noatime" "rw" "uid=1000" "gid=100"];
+  };
+  fileSystems."/opt/backup" = {
+    device = "/home/waltz/external";
+    options = ["bind"];
   };
 }
