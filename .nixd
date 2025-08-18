@@ -11,7 +11,6 @@
     "expr": "import <nixpkgs> { }"
   },
   "formatting": {
-    // Which command you would like to do formatting
     "command": [ "nixfmt" ]
   },
   // Tell the language server your desired option set, for completion
@@ -25,7 +24,7 @@
       // the expression directly.
       //
       "nixos": {
-          "expr": "(builtins.getFlake (builtins.toString ./.)).nixosConfigurations.myamusashi.options"
+          "expr": "(builtins.getFlake (builtins.toString ./.)).nixosConfigurations.nixos.options"
       },
 
     // Before configuring Home Manager options, consider your setup:
@@ -38,9 +37,6 @@
     "home-manager": {
       // A:
       "expr": "(builtins.getFlake (builtins.toString ./.)).homeConfigurations.myamusashi.options"
-
-      // B:
-      "expr": "(builtins.getFlake (builtins.toString ./.)).nixosConfigurations.myamusashi.options.home-manager.users.type.getSubOptions []"
     }
   },
   // Control the diagnostic system

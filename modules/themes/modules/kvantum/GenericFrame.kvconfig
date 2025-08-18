@@ -1,0 +1,10 @@
+[GenericFrame]
+inherits=PanelButtonCommand
+frame=true
+interior=false
+frame.element=common
+interior.element=common
+frame.top=2
+frame.bottom=2
+frame.left=2
+frame.right=2
