@@ -1,0 +1,9 @@
+inherits=PanelButtonCommand
+interior.element=tbutton
+frame=true
+frame.element=tbutton
+frame.top=10
+frame.bottom=10
+frame.left=10
+frame.right=10
+indicator.element=arrow

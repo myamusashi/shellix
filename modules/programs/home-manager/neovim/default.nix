@@ -43,7 +43,6 @@ in {
         alejandra
         vimPlugins.nvim-treesitter-parsers.kconfig
         lemminx
-        nil # nix lsp
         svelte-language-server
         gopls
         pnpm_10
