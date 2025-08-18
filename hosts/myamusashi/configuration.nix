@@ -107,7 +107,7 @@
       wayland = {
         core = true;
       };
-      customPackages = [pkgs.git-credential-manager pkgs.sops pkgs.exfat];
+      customPackages = [pkgs.git-credential-manager pkgs.sops pkgs.exfat pkgs.pwvucontrol];
     };
   };
 
