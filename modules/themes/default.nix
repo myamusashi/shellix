@@ -19,6 +19,9 @@ in {
     kvantum = {
       enable = lib.mkEnableOption "Enable kvantum themes using matugen colors and WhiteSur templates";
     };
+    zellij = {
+      enable = lib.mkEnableOption "Enable zellij themes using matugen";
+    };
   };
 
   config = {
@@ -62,17 +65,24 @@ in {
       @define-color sidebar_backdrop_color @window_bg_color;
     '';
 
-    home.file.".config/yazi/flavors/shellix.yazi/flavor.toml" = lib.mkIf cfg.yazi.enable {
-      enable = true;
-      text = (import ./modules/yazi.nix {inherit config;}).flavors;
-    };
-    home.file.".config/Kvantum/Shellix/Shellix.kvconfig" = lib.mkIf cfg.kvantum.enable {
-      enable = true;
-      text = (import ./modules/kvantum/default.nix {inherit config;}).kvantum;
-    };
-    home.file.".config/Kvantum/Shellix/Shellix.svg" = lib.mkIf cfg.kvantum.enable {
-      enable = true;
-      text = (import ./modules/kvantum/default.nix {inherit config;}).svg;
+    home.file = {
+      ".config/zellij/themes/shellix.kdl" = lib.mkIf cfg.zellij.enable {
+        enable = true;
+        text = (import ./modules/zellij.nix {inherit config;}).zellij;
+      };
+
+      ".config/yazi/flavors/shellix.yazi/flavor.toml" = lib.mkIf cfg.yazi.enable {
+        enable = true;
+        text = (import ./modules/yazi.nix {inherit config;}).flavors;
+      };
+      ".config/Kvantum/Shellix/Shellix.kvconfig" = lib.mkIf cfg.kvantum.enable {
+        enable = true;
+        text = (import ./modules/kvantum/default.nix {inherit config;}).kvantum;
+      };
+      ".config/Kvantum/Shellix/Shellix.svg" = lib.mkIf cfg.kvantum.enable {
+        enable = true;
+        text = (import ./modules/kvantum/default.nix {inherit config;}).svg;
+      };
     };
   };
 }

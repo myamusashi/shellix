@@ -1,7 +1,4 @@
-{
-  config,
-  ...
-}: let
+{config, ...}: let
   color = config.shellix.matugen.colors.palette;
 in {
   flavors = ''

@@ -28,6 +28,7 @@
       gtk4.enable = true;
       yazi.enable = true;
       kvantum.enable = true;
+      zellij.enable = true;
     };
     matugen.colors.enable = true;
     programs.home.enable = true;
