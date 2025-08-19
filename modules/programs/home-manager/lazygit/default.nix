@@ -23,12 +23,12 @@ in {
             searchingActiveBorderColor = [colors.primary.hex "bold"];
             optionsTextColor = [colors.secondary_fixed_dim.hex];
             selectedLineBgColor = [colors.surface_bright.hex];
-            inactiveViewSelectedLineBgColor = ["bold"];
+            inactiveViewSelectedLineBgColor = [colors.error.hex "bold"];
             cherryPickedCommitFgColor = [colors.secondary_fixed_dim.hex];
             cherryPickedCommitBgColor = [colors.secondary_fixed.hex];
             markedBaseCommitFgColor = [colors.secondary_fixed_dim.hex];
             markedBaseCommitBgColor = [colors.tertiary.hex];
-            unstagedChangesColor = [colors.on_error.hex];
+            unstagedChangesColor = [colors.error_container.hex];
             defaultFgColor = ["default"];
             commitLength = {
               show = true;
