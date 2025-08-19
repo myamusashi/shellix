@@ -50,7 +50,7 @@
     packages.home = {
       enable = true;
       gnome = true;
-      customPackages = [pkgs.statix pkgs.alejandra pkgs.git-credential-manager pkgs.libsixel pkgs.ueberzugpp pkgs.fd pkgs._7zz pkgs.zellij pkgs.jq];
+      customPackages = [pkgs.statix pkgs.alejandra pkgs.git-credential-manager pkgs.libsixel pkgs.ueberzugpp pkgs.fd pkgs._7zz pkgs.zellij pkgs.jq pkgs.nil];
       excludePackages = [];
 
       fonts = {
