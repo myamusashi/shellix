@@ -69,7 +69,6 @@ in {
         jq
         btop
         htop
-        nix-output-monitor
         lazygit
         lazyjournal
         lazysql

@@ -32,6 +32,26 @@ with pkgs; {
     fzf
   ];
 
+  nix-tools = {
+    standard = [
+      nixd
+      alejandra
+      statix
+    ];
+    full = [
+      nixd
+      alejandra
+      statix
+      nix-diff
+      nix-tree
+      nix-output-monitor
+      nix-du
+      vulnix
+      deadnix
+      nix-update
+    ];
+  };
+
   fonts = {
     nerd = with nerd-fonts; [
       caskaydia-mono
