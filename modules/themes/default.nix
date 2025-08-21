@@ -7,6 +7,9 @@
   color = config.shellix.matugen.colors.palette;
 in {
   options.shellix.themes = {
+    btop = {
+      enable = lib.mkEnableOption "Enable btop themes using matugen colors";
+    };
     gtk3 = {
       enable = lib.mkEnableOption "Enable GTK3 extra CSS using matugen";
     };
@@ -66,6 +69,11 @@ in {
     '';
 
     home.file = {
+      ".config/btop/themes/shellix.themes" = lib.mkIf cfg.btop.enable {
+        enable = true;
+        inherit (import ./modules/btop.nix {inherit config;}) text;
+      };
+
       ".config/zellij/themes/shellix.kdl" = lib.mkIf cfg.zellij.enable {
         enable = true;
         text = (import ./modules/zellij.nix {inherit config;}).zellij;

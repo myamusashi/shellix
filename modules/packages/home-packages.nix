@@ -26,26 +26,27 @@ in {
     };
 
     development = {
-      enable = mkEnableOption "Development tools category";
       code_editor = mkEnableOption "Code editors";
       containers = mkEnableOption "Container tools";
       tools = mkEnableOption "Core development tools";
     };
 
+    nix-tools = {
+      standard = mkEnableOption "Install nix tools (nixd, alejandra, statix)";
+      full = mkEnableOption "Install nix tools (nixd, alejandra, statix, deadnix, vulnix, nix-du, nix-output-monitor, nix-tree, nix-diff, nix-update)";
+    };
+
     multimedia = {
-      enable = mkEnableOption "Multimedia category";
       office = mkEnableOption "Office suites";
       apps = mkEnableOption "Desktop communication apps";
     };
 
     gaming = {
-      enable = mkEnableOption "Gaming category";
       platform = mkEnableOption "Gaming platforms";
       utilities = mkEnableOption "Gaming utilities";
     };
 
     media = {
-      enable = mkEnableOption "Media category";
       editor = mkEnableOption "Media editors";
       viewer = mkEnableOption "Media viewers";
       screen_recorder = mkEnableOption "Screen recording tools";
@@ -53,7 +54,6 @@ in {
     };
 
     wayland = {
-      enable = mkEnableOption "Wayland category";
       core = mkEnableOption "Core Wayland tools";
       wallpaper = mkEnableOption "Wallpaper managers";
       launcher = mkEnableOption "Application launchers";
@@ -61,7 +61,6 @@ in {
     };
 
     theming = {
-      enable = mkEnableOption "Theming category";
       colors = mkEnableOption "Color generation tools";
       apps = mkEnableOption "Theming for specific apps";
       tools = mkEnableOption "Core theming engines";
@@ -106,26 +105,26 @@ in {
   config = mkIf cfg.enable (
     let
       enabledPackages =
-        (optionals cfg.system allPackages.system)
-        ++ (optionals cfg.network allPackages.network)
-        ++ (optionals cfg.security allPackages.security)
-        ++ (optionals cfg.gnome allPackages.gnome)
-        ++ (optionals cfg.android allPackages.android)
+        (optionals cfg.android allPackages.android)
         ++ (optionals cfg.development.code_editor allPackages.development.code_editor)
         ++ (optionals cfg.development.containers allPackages.development.containers)
         ++ (optionals cfg.development.tools allPackages.development.tools)
-        ++ (optionals cfg.multimedia.office allPackages.multimedia.office)
-        ++ (optionals cfg.multimedia.apps allPackages.multimedia.apps)
+        ++ (optionals cfg.fonts.nerd allPackages.fonts.nerd)
+        ++ (optionals cfg.fonts.external allPackages.fonts.external)
+        ++ (optionals cfg.gnome allPackages.gnome)
         ++ (optionals cfg.gaming.platform allPackages.gaming.platform)
         ++ (optionals cfg.gaming.utilities allPackages.gaming.utilities)
         ++ (optionals cfg.media.editor allPackages.media.editor)
         ++ (optionals cfg.media.viewer allPackages.media.viewer)
         ++ (optionals cfg.media.screen_recorder allPackages.media.screen_recorder)
         ++ (optionals cfg.media.misc allPackages.media.misc)
-        ++ (optionals cfg.wayland.core allPackages.wayland.core)
-        ++ (optionals cfg.wayland.wallpaper allPackages.wayland.wallpaper)
-        ++ (optionals cfg.wayland.launcher allPackages.wayland.launcher)
-        ++ (optionals cfg.wayland.hyprland allPackages.wayland.hyprland)
+        ++ (optionals cfg.multimedia.office allPackages.multimedia.office)
+        ++ (optionals cfg.multimedia.apps allPackages.multimedia.apps)
+        ++ (optionals cfg.network allPackages.network)
+        ++ (optionals cfg.nix-tools.standard allPackages.nix-tools.standard)
+        ++ (optionals cfg.nix-tools.full allPackages.nix-tools.full)
+        ++ (optionals cfg.security allPackages.security)
+        ++ (optionals cfg.system allPackages.system)
         ++ (optionals cfg.theming.colors allPackages.theming.colors)
         ++ (optionals cfg.theming.apps allPackages.theming.apps)
         ++ (optionals cfg.theming.tools allPackages.theming.tools)
@@ -133,8 +132,10 @@ in {
         ++ (optionals cfg.theming.icons allPackages.theming.icons)
         ++ (optionals cfg.theming.qt allPackages.theming.qt)
         ++ (optionals cfg.theming.gtk allPackages.theming.gtk)
-        ++ (optionals cfg.fonts.nerd allPackages.fonts.nerd)
-        ++ (optionals cfg.fonts.external allPackages.fonts.external)
+        ++ (optionals cfg.wayland.core allPackages.wayland.core)
+        ++ (optionals cfg.wayland.wallpaper allPackages.wayland.wallpaper)
+        ++ (optionals cfg.wayland.launcher allPackages.wayland.launcher)
+        ++ (optionals cfg.wayland.hyprland allPackages.wayland.hyprland)
         ++ cfg.languages
         ++ cfg.customPackages;
 

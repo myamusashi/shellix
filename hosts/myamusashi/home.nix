@@ -14,6 +14,8 @@
     ../../modules/services/home-manager/default.nix
   ];
 
+  sops.age.keyFile = lib.mkForce "/home/myamusashi/.config/sops/age/keys.txt";
+
   home = {
     username = "myamusashi";
     homeDirectory = "/home/myamusashi";
@@ -24,6 +26,7 @@
   shellix = {
     # All this themes use matugen
     themes = {
+      btop.enable = true;
       gtk3.enable = true;
       gtk4.enable = true;
       yazi.enable = true;
@@ -50,12 +53,24 @@
     packages.home = {
       enable = true;
       gnome = true;
-      customPackages = [pkgs.statix pkgs.alejandra pkgs.git-credential-manager pkgs.libsixel pkgs.ueberzugpp pkgs.fd pkgs._7zz pkgs.zellij pkgs.jq pkgs.nil];
+      customPackages = [
+        pkgs.git-credential-manager
+        pkgs.libsixel
+        pkgs.ueberzugpp
+        pkgs.fd
+        pkgs.p7zip
+        pkgs.zellij
+        pkgs.jq
+      ];
       excludePackages = [];
 
       fonts = {
         nerd = true;
         external = true;
+      };
+
+      nix-tools = {
+        full = true;
       };
 
       theming = {
