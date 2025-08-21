@@ -11,29 +11,16 @@
   ];
 
   options.shellix.services.nixos = {
-    audio = {
-      enable = lib.mkEnableOption "Enable audio using pipewire";
-    };
+    audio.enable = lib.mkEnableOption "Enable audio using pipewire";
     backup = {
-      enable = lib.mkEnableOption "Enable backup services using Borg";
+      waltz.enable = lib.mkEnableOption "Enable waltz backup services using Borg";
+      myamusashi.enable = lib.mkEnableOption "Enable myamusashi backup services using Borg";
     };
-    earlyoom = {
-      enable = lib.mkEnableOption "Enable kill early OOM scheduler";
-    };
-    greetd = {
-      enable = lib.mkEnableOption "Enable session manager";
-    };
-    geoclue2 = {
-      enable = lib.mkEnableOption "Enable locations";
-    };
-    resolver = {
-      enable = lib.mkEnableOption "Enable resolver using Cloudflare";
-    };
-    scx = {
-      enable = lib.mkEnableOption "Enable scx framework scheduler";
-    };
-    plasma = {
-      enable = lib.mkEnableOption "Enable plasma GUI";
-    };
+    earlyoom.enable = lib.mkEnableOption "Enable kill early OOM scheduler";
+    greetd.enable = lib.mkEnableOption "Enable session manager";
+    geoclue2.enable = lib.mkEnableOption "Enable locations";
+    resolver.enable = lib.mkEnableOption "Enable resolver using Cloudflare";
+    scx.enable = lib.mkEnableOption "Enable scx framework scheduler";
+    plasma.enable = lib.mkEnableOption "Enable plasma GUI";
   };
 }
