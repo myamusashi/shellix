@@ -75,6 +75,9 @@ in {
         openssl
         home-manager
         podman-compose
+        nil
+        nixd
+        nixdoc
       ];
 
       excludePackages = [
