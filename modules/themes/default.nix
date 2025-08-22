@@ -69,7 +69,7 @@ in {
     '';
 
     home.file = {
-      ".config/btop/themes/shellix.themes" = lib.mkIf cfg.btop.enable {
+      ".config/btop/themes/shellix.theme" = lib.mkIf cfg.btop.enable {
         enable = true;
         inherit (import ./modules/btop.nix {inherit config;}) text;
       };

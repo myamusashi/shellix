@@ -13,6 +13,7 @@ in {
       settings = {
         palette = "colors";
         palettes.colors = {
+          error = colors.error.hex;
           color1 = colors.primary_fixed_dim.hex;
           color2 = colors.on_primary.hex;
           color3 = colors.on_surface_variant.hex;
@@ -24,7 +25,9 @@ in {
           color9 = colors.tertiary.hex;
         };
         character = {
-          success_symbol = "[🞈](color9 bold)";
+          success_symbol = "[](color9 bold)";
+          error_symbol = "[](error bold)";
+          vicmd_symbol = "[](color9 bold)";
         };
         os = {
           style = "bold ${colors.primary.hex}";
@@ -39,8 +42,14 @@ in {
           ssh_only = true;
           style = "bold ${colors.tertiary.hex}";
         };
+        time = {
+          format = "[](fg:color8 bg:color4)[ ](bg:color8 fg:color5)[](fg:color8 bg:color4)[(bg:color8 fg:color5) $time](fg:color3 bg:color4)[](fg:color4) ";
+          disabled = false;
+          time_format = "%R";
+        };
         directory = {
           style = "bold ${colors.primary.hex}";
+          format = "[](fg:color1 bg:color4)[󰉋](bg:color1 fg:color2)[ ](fg:color1 bg:color4)[$path ](fg:color3 bg:color4)[ ](fg:color4) ";
           truncation_length = 9;
           truncation_symbol = "";
           read_only = "🔐";
@@ -59,6 +68,7 @@ in {
         };
         git_branch = {
           style = "bold ${colors.secondary.hex}";
+          format = "[](fg:color8 bg:color4)[ ](bg:color8 fg:color5)[](fg:color8 bg:color4)[(bg:color8 fg:color5) $branch](fg:color3 bg:color4)[](fg:color4) ";
         };
         git_status = {
           style = colors.tertiary.hex;

@@ -146,6 +146,7 @@ in {
   };
 
   sops.secrets.waltz-password.neededForUsers = true;
+  sops.secrets.waltz-password.owner = config.users.users.waltz.name;
   users.users.waltz = {
     isNormalUser = true;
     hashedPasswordFile = config.sops.secrets.waltz-password.path;

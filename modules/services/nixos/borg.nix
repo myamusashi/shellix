@@ -29,11 +29,14 @@
   ];
 in {
   config = {
+    sops.secrets.myamusashi-borg.owner = lib.mkIf cfg.myamusashi.enable "root";
+    sops.secrets.waltz-borg.owner = lib.mkIf cfg.waltz.enable "root";
+
     services.borgbackup.jobs = {
       myamusashi = lib.mkIf cfg.myamusashi.enable {
-        repo = "ssh://waltz@192.168.18.14:/opt/backup/Stations/myamusashi";
+        repo = "waltz@192.168.18.14:/opt/backup/Stations/myamusashi";
         encryption = {
-          passCommand = "${pkgs-stable.coreutils}/bin/cat ${config.sops.secrets.myamusashi-borg.path}";
+          passCommand = "${pkgs-stable.coreutils}/bin/cat /var/lib/myamusashi/borg-secret";
           mode = "repokey-blake2";
         };
         compression = "auto,zstd";
@@ -50,9 +53,6 @@ in {
           "/etc"
         ];
         exclude = common-excludes ++ [];
-        environment = {
-          BORG_RSH = "ssh -i /home/myamusashi/.ssh/id_rsa";
-        };
       };
       waltz-server = lib.mkIf cfg.waltz.enable {
         encryption.mode = "repokey-blake2";
