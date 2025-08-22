@@ -1,7 +1,9 @@
 keys:
   - &waltz_server age1h5522ps2vuddyk0rwvtw77rvxtpnzkgsgl7ekv3cw2a0wy9ymsrs57r060
+  - &myamusashi age17fhhmer06w0z4v5720fu280r5xttz0najkzznnde3r7dlw8xccesh00n4k
 creation_rules:
   - path_regex: sops/secrets.json$
     key_groups:
       - age:
         - *waltz_server
+        - *myamusashi
