@@ -5,6 +5,18 @@
 }: {
   config = lib.mkIf config.shellix.services.server.monitoring.enable {
     services = {
+      grafana = {
+        enable = true;
+        settings = {
+          server = {
+            http_addr = "127.0.0.1";
+            http_port = config.services.grafana.settings.server.http_port;
+            domain = "dash.myamusashi.com";
+            root_url = "http://dash.myamusashi.com";
+          };
+        };
+      };
+
       prometheus = {
         enable = true;
         port = 9090;
