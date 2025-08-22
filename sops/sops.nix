@@ -1,52 +1,34 @@
 {
-  inputs,
-  config,
-  ...
-}: {
-  imports = [
-    inputs.sops-nix.nixosModules.sops
-  ];
-
   sops = {
-    age.keyFile = "/home/waltz/.config/sops/age/keys.txt";
-
     defaultSopsFile = ./secrets.json;
     defaultSopsFormat = "json";
 
     secrets = {
-      cloudflare_creds = {
-        format = "json";
-        mode = "0400";
-      };
+      cloudflare_creds.mode = "0440";
+      nix-serve_secrets.mode = "0440";
+      nextcloud_admin_pass.mode = "0440";
 
-      nix-serve_secrets = {
-        format = "json";
-        mode = "0400";
+      weatherapi = {
+        path = "/home/myamusashi/.config/sops-nix/secrets/weatherapi";
       };
-
-      gemini_key = {
-        path = "/var/lib/gemini/key";
-        format = "json";
+      latitude = {
+        path = "/home/myamusashi/.config/sops-nix/secrets/latitude";
       };
-
-      nextcloud_admin_pass = {
-        format = "json";
-        mode = "0400";
-      };
-
-      netdata-token = {
-        format = "json";
-        path = "/var/lib/netdata-token/netdata-token.yaml";
+      longitude = {
+        path = "/home/myamusashi/.config/sops-nix/secrets/longitude";
       };
 
       myamusashi-password = {
-        format = "json";
-        mode = "0400";
+        path = "/var/lib/myamusashi/pass";
       };
-
       waltz-password = {
-        format = "json";
-        mode = "0400";
+        path = "/var/lib/waltz/pass";
+      };
+      myamusashi-borg = {
+        path = "/var/lib/myamusashi/borg-secret";
+      };
+      waltz-borg = {
+        path = "/var/lib/waltz/borg-secret";
       };
     };
   };

@@ -156,6 +156,9 @@
     };
 
     homeConfigurations = {
+      home-manager.sharedModules = [
+        inputs.sops-nix.homeManagerModules.sops
+      ];
       "myamusashi" = home-manager.lib.homeManagerConfiguration {
         inherit pkgs;
 
@@ -166,6 +169,7 @@
 
         modules = [
           ./hosts/myamusashi/home.nix
+          ./sops/sops.nix
         ];
       };
       "waltz" = home-manager.lib.homeManagerConfiguration {

@@ -34,13 +34,8 @@
 
           {
             timeout = 2000;
-            on-timeout = "hyprctl dispatch dpms off";
+            on-timeout = "pkill wl-gammactl && hyprctl dispatch dpms off";
             on-resume = "hyprctl dispatch dpms on && brightnessctl -r";
-          }
-
-          {
-            timeout = 3000;
-            on-timeout = "hyprctl dispatch dpms on && pkill wl-gammactl && sleep 3 && systemctl suspend";
           }
         ];
       };
