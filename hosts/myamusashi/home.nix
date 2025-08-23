@@ -13,9 +13,6 @@
     ../../modules/services/systemd/user/default.nix
     ../../modules/services/home-manager/default.nix
   ];
-
-  sops.age.keyFile = lib.mkForce "/home/myamusashi/.config/sops/age/keys.txt";
-
   home = {
     username = "myamusashi";
     homeDirectory = "/home/myamusashi";
@@ -61,6 +58,8 @@
         pkgs.p7zip
         pkgs.zellij
         pkgs.jq
+        pkgs.eza
+        pkgs.pcsx2
       ];
       excludePackages = [];
 

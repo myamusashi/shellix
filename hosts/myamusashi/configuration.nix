@@ -1,16 +1,22 @@
 {
   config,
+  inputs,
   lib,
   pkgs,
   ...
 }: {
   imports = [
+    inputs.sops-nix.nixosModules.sops
     ./hardware/default.nix ## Virtualization here
     ../../modules/shared/Colors.nix
     ../../modules/packages/nixos-packages.nix
     ../../modules/programs/nixos/default.nix
     ../../modules/services/nixos/default.nix
   ];
+  sops.age.keyFile = lib.mkForce "/home/myamusashi/.config/sops/age/keys1.txt";
+  sops.secrets.weatherapi.owner = "myamusashi";
+  sops.secrets.latitude.owner = "myamusashi";
+  sops.secrets.longitude.owner = "myamusashi";
 
   i18n.defaultLocale = "en_US.UTF-8";
   time.timeZone = "Asia/Jakarta";
@@ -80,6 +86,7 @@
 
     services.nixos = {
       audio.enable = true;
+      backup.myamusashi.enable = true;
       earlyoom.enable = true;
       greetd.enable = true;
       plasma.enable = true;
