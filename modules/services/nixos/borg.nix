@@ -40,7 +40,7 @@ in {
           mode = "repokey-blake2";
         };
         compression = "auto,zstd";
-        startAt = "Mon *-*-* 05:00:00";
+        startAt = "Mon *-*-* 23:00:00";
         prune.keep = {
           within = "1d"; # Keep all archives from the last day
           daily = 7; # Keep for one week
@@ -48,16 +48,21 @@ in {
           monthly = 6; # Keep monthly backup for half-year
         };
         paths = [
+          "/etc/ssh"
+          "/etc/NetworkManager/system-connections"
           "/home/myamusashi"
           "/var/lib"
-          "/etc"
         ];
-        exclude = common-excludes ++ [];
+        exclude =
+          common-excludes
+          ++ [
+            "*/Steam"
+          ];
       };
       waltz-server = lib.mkIf cfg.waltz.enable {
         encryption.mode = "repokey-blake2";
         compression = "auto,zstd";
-        startAt = "Mon *-*-* 05:00:00";
+        startAt = "01:00";
         prune.keep = {
           within = "1d"; # Keep all archives from the last day
           daily = 7; # Keep for one week
@@ -78,7 +83,9 @@ in {
           "/var/lib/redis-nextcloud"
           "/var/lib/systemd"
           "/var/lib/vaultwarden"
-          "/home/forgejo-runner"
+          "/opt/Stirling-PDF"
+          "/opt/containerd"
+          "/home"
           "/tmp/pg_db-dump"
         ];
         encryption.passCommand = "${pkgs-stable.coreutils}/bin/cat ${config.sops.secrets.waltz-borg.path}";

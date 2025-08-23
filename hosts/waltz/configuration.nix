@@ -1,5 +1,6 @@
 {
   config,
+  inputs,
   pkgs-stable,
   lib,
   ...
@@ -7,6 +8,7 @@
   VARS = import ../../modules/shared/Variable.nix;
 in {
   imports = [
+    inputs.sops-nix.nixosModules.sops
     ./hardware/default.nix ## Virtualization here
     ../../modules/shared/Colors.nix
     ../../modules/packages/nixos-packages.nix
@@ -37,7 +39,7 @@ in {
       };
       nixos = {
         earlyoom.enable = true;
-        backup.enable = true;
+        backup.waltz.enable = true;
         resolver.enable = true;
       };
     };

@@ -27,9 +27,9 @@ in {
               WorkingDirectory = "/home/myamusashi/Documents/Project/weather";
               Environment = ["UNITS=metric"];
               EnvironmentFile = [
-                "${config.sops.secrets.weatherapi.path}"
-                "${config.sops.secrets.latitude.path}"
-                "${config.sops.secrets.longitude.path}"
+                "${config.home.homeDirectory}/.config/sops-nix/secrets/weatherapi"
+                "${config.home.homeDirectory}/.config/sops-nix/secrets/latitude"
+                "${config.home.homeDirectory}/.config/sops-nix/secrets/longitude"
               ];
               ExecStart = "${pkgs.writeShellScript "get-weather-data" ''
                 ${pkgs.bun}/bin/bun ./weather.js

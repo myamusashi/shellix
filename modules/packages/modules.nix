@@ -40,7 +40,7 @@ with pkgs; {
     ];
     full = [
       nixd
-			nil
+      nil
       alejandra
       statix
       nix-diff
