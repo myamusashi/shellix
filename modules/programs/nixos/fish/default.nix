@@ -15,6 +15,7 @@ in {
         img = "${pkgs.libsixel}/bin/img2sixel";
         icat = "${pkgs.kitty}/bin/kitten icat";
         ls = "${pkgs.eza}/bin/eza --icons";
+        lla = "${pkgs.eza}/bin/eza ls -a --icons";
       };
 
       shellInit = ''
@@ -23,9 +24,9 @@ in {
         set -gx EDITOR 'nvim -u $HOME/.config/nvim/init.lua'
         set -g fish_greeting
 
-        	${pkgs.any-nix-shell}/bin/any-nix-shell fish --info-right | source
+        ${pkgs.any-nix-shell}/bin/any-nix-shell fish --info-right | source
         function imgcp
-        	wl-copy < $argv[1]
+            wl-copy <$argv[1]
         end
       '';
     };
