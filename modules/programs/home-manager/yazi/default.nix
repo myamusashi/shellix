@@ -23,7 +23,7 @@ in {
         diff = "${plugin.official-plugins}/diff.yazi";
         full-border = "${plugin.official-plugins}/full-border.yazi";
         git = "${plugin.official-plugins}/git.yazi";
-        hide-preview = "${plugin.official-plugins}/hide-preview.yazi";
+        toggle-pane = "${plugin.official-plugins}/toggle-pane.yazi";
         mount = "${plugin.official-plugins}/mount.yazi";
         office = "${plugin.office}";
         rich-preview = "${plugin.rich-preview}";
@@ -79,7 +79,7 @@ in {
 
             {
               on = ["T"];
-              run = "plugin hide-preview";
+              run = "plugin toggle-pane min-preview";
               desc = "Hide or show preview";
             }
 
