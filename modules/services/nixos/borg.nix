@@ -70,6 +70,12 @@ in {
           monthly = 6; # Keep monthly backup for half-year
         };
         repo = "/opt/backup/Stations/waltz";
+        exclude =
+          common-excludes
+          ++ [
+            "*/external"
+          ];
+
         paths = [
           "/var/lib/containers"
           "/var/lib/docker"
@@ -84,8 +90,9 @@ in {
           "/var/lib/systemd"
           "/var/lib/vaultwarden"
           "/opt/Stirling-PDF"
-          "/opt/containerd"
-          "/home"
+          "/etc/ssh"
+          "/etc/NetworkManager/system-connections"
+          "/home/forgejo-runner"
           "/tmp/pg_db-dump"
         ];
         encryption.passCommand = "${pkgs-stable.coreutils}/bin/cat ${config.sops.secrets.waltz-borg.path}";

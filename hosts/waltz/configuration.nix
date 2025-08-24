@@ -8,7 +8,6 @@
   VARS = import ../../modules/shared/Variable.nix;
 in {
   imports = [
-    inputs.sops-nix.nixosModules.sops
     ./hardware/default.nix ## Virtualization here
     ../../modules/shared/Colors.nix
     ../../modules/packages/nixos-packages.nix
@@ -147,11 +146,11 @@ in {
     '';
   };
 
-  sops.secrets.waltz-password.neededForUsers = true;
-  sops.secrets.waltz-password.owner = config.users.users.waltz.name;
+  sops.secrets.waltz-password.neededForUsers = false;
+  sops.age.keyFile = lib.mkForce "/home/waltz/.config/sops/age/keys.txt";
   users.users.waltz = {
     isNormalUser = true;
-    hashedPasswordFile = config.sops.secrets.waltz-password.path;
+    # hashedPasswordFile = config.sops.secrets.waltz-password.path;
     description = "gilang";
     shell = pkgs-stable.fish;
     extraGroups = ["networkmanager" "wheel" "vsftpd" "docker" "podman"];
