@@ -24,6 +24,20 @@ in {
       server = {
         database.enable = true;
         forgejo.enable = true;
+        wireguard = {
+          enable = true;
+          pathPrivateKeyFile = "/etc/wireguard-keys/private";
+          peers = [
+            {
+              publicKey = "My+EFlMSCYOOWFZp7nFHxx9rdnOAXAByStWzV0FmAj0=";
+              allowedIPs = ["10.100.0.2/32"];
+            }
+            {
+              publicKey = "m9i0sYNEi/y3mX0LQP+Q6DuJbgzHyIIhbDw7vZbRRx4=";
+              allowedIPs = ["10.100.0.3/32"];
+            }
+          ];
+        };
         monitoring.enable = true;
         phpmyadmin.enable = false;
         vaultwarden.enable = true;
