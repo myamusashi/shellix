@@ -50,28 +50,50 @@ in {
   };
 
   config = lib.mkIf cfg.enable {
+    boot.kernel.sysctl."net.ipv4.ip_forward" = 1;
+    boot.kernel.sysctl."net.ipv6.conf.all.forwarding" = 1; # Add IPv6 forwarding
+    boot.kernel.sysctl."net.ipv4.conf.all.forwarding" = lib.mkOverride 98 true;
+    boot.kernel.sysctl."net.ipv4.conf.default.forwarding" = lib.mkOverride 98 true;
+
+    services.dnsmasq = {
+      enable = true; # Enable this for DNS to work
+      settings = {
+        interface = cfg.wireguardInterfaces;
+        bind-interfaces = true;
+        listen-address = "127.0.0.1,10.0.0.1";
+      };
+    };
+
     networking = {
       nat = {
         enable = true;
+        enableIPv6 = true;
         externalInterface = cfg.externalInterfaces;
         internalInterfaces = [cfg.wireguardInterfaces];
       };
-      firewall.allowedUDPPorts = [cfg.allowedUDPPorts];
+      firewall.allowedTCPPorts = [53];
+      firewall.allowedUDPPorts = [53 cfg.allowedUDPPorts];
 
-      wireguard.interfaces = {
+      wg-quick.interfaces = {
         ${cfg.wireguardInterfaces} = {
-          ips = ["10.100.0.1/24"];
+          address = ["10.0.0.1/24" "fdc9:281f:04d7:9ee9::1/64"];
           listenPort = cfg.allowedUDPPorts;
-          postSetup = ''
-            ${pkgs-stable.iptables}/bin/iptables -t nat -A POSTROUTING -s 10.100.0.0/24 -o ${cfg.externalInterfaces} -j MASQUERADE
-          '';
-
-          # This undoes the above command
-          postShutdown = ''
-            ${pkgs-stable.iptables}/bin/iptables -t nat -D POSTROUTING -s 10.100.0.0/24 -o ${cfg.externalInterfaces} -j MASQUERADE
-          '';
-
           privateKeyFile = cfg.pathPrivateKeyFile;
+
+          postUp = ''
+            ${pkgs-stable.iptables}/bin/iptables -A FORWARD -i ${cfg.wireguardInterfaces} -j ACCEPT
+            ${pkgs-stable.iptables}/bin/iptables -t nat -A POSTROUTING -s 10.0.0.0/24 -o ${cfg.externalInterfaces} -j MASQUERADE
+            ${pkgs-stable.iptables}/bin/ip6tables -A FORWARD -i ${cfg.wireguardInterfaces} -j ACCEPT
+            ${pkgs-stable.iptables}/bin/ip6tables -t nat -A POSTROUTING -s fdc9:281f:04d7:9ee9::/64 -o ${cfg.externalInterfaces} -j MASQUERADE
+          '';
+
+          preDown = ''
+            ${pkgs-stable.iptables}/bin/iptables -D FORWARD -i ${cfg.wireguardInterfaces} -j ACCEPT
+            ${pkgs-stable.iptables}/bin/iptables -t nat -D POSTROUTING -s 10.0.0.0/24 -o ${cfg.externalInterfaces} -j MASQUERADE
+            ${pkgs-stable.iptables}/bin/ip6tables -D FORWARD -i ${cfg.wireguardInterfaces} -j ACCEPT
+            ${pkgs-stable.iptables}/bin/ip6tables -t nat -D POSTROUTING -s fdc9:281f:04d7:9ee9::/64 -o ${cfg.externalInterfaces} -j MASQUERADE
+          '';
+
           inherit (cfg) peers;
         };
       };
