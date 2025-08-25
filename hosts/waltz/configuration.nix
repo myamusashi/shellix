@@ -26,15 +26,17 @@ in {
         forgejo.enable = true;
         wireguard = {
           enable = true;
-          pathPrivateKeyFile = "/etc/wireguard-keys/private";
+          externalInterfaces = "enp1s0";
+          wireguardInterfaces = "wg0";
+          pathPrivateKeyFile = "/etc/wireguard-keys/private.key";
           peers = [
             {
-              publicKey = "My+EFlMSCYOOWFZp7nFHxx9rdnOAXAByStWzV0FmAj0=";
-              allowedIPs = ["10.100.0.2/32"];
+              publicKey = "3L+JrgPH148OutyQBGcdhwF3/dIbuPsZOcN58zfuUTo=";
+              allowedIPs = ["10.0.0.2/32" "fdc9:281f:04d7:9ee9::2/64"];
             }
             {
-              publicKey = "m9i0sYNEi/y3mX0LQP+Q6DuJbgzHyIIhbDw7vZbRRx4=";
-              allowedIPs = ["10.100.0.3/32"];
+              publicKey = "kOtgGRiJuuS+CwUF6Ur5ca4wr5V819hA4UjwppzqamU=";
+              allowedIPs = ["10.0.0.3/32" "fdc9:281f:04d7:9ee9::3/64"];
             }
           ];
         };
@@ -53,7 +55,7 @@ in {
       nixos = {
         earlyoom.enable = true;
         backup.waltz.enable = true;
-        resolver.enable = true;
+        resolver.enable = false;
       };
     };
 
