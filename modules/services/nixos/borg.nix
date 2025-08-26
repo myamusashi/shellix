@@ -29,14 +29,11 @@
   ];
 in {
   config = {
-    sops.secrets.myamusashi-borg.owner = lib.mkIf cfg.myamusashi.enable "root";
-    sops.secrets.waltz-borg.owner = lib.mkIf cfg.waltz.enable "root";
-
     services.borgbackup.jobs = {
       myamusashi = lib.mkIf cfg.myamusashi.enable {
         repo = "waltz@192.168.18.14:/opt/backup/Stations/myamusashi";
         encryption = {
-          passCommand = "${pkgs-stable.coreutils}/bin/cat /var/lib/myamusashi/borg-secret";
+          passCommand = "${pkgs-stable.coreutils}/bin/cat ${config.sops.secrets.myamusashi-borg.path}";
           mode = "repokey-blake2";
         };
         compression = "auto,zstd";
@@ -49,6 +46,7 @@ in {
         };
         paths = [
           "/etc/ssh"
+          "/etc/wireguard-keys"
           "/etc/NetworkManager/system-connections"
           "/home/myamusashi/apps"
           "/home/myamusashi/Desktop"
@@ -109,6 +107,7 @@ in {
           "/var/lib/docker"
           "/var/lib/forgejo"
           "/var/lib/grafana"
+          "/etc/wireguard-keys"
           "/var/lib/mysql"
           "/var/lib/nextcloud"
           "/var/lib/postgresql"
