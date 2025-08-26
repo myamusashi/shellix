@@ -23,6 +23,7 @@ in {
     services = {
       server = {
         database.enable = true;
+        mailserver.enable = true;
         forgejo.enable = true;
         wireguard = {
           enable = true;
@@ -154,7 +155,6 @@ in {
       allowedUDPPorts = [];
     };
     extraHosts = ''
-      192.168.18.14 myamusashi.com
       127.0.0.1:${toString VARS.NEXTCLOUD_PORT} cloud.myamusashi.com
       127.0.0.1:${toString VARS.PHPMYADMIN_PORT} pma.myamusashi.com
       127.0.0.1:${toString VARS.GRAFANA_PORT} dash.myamusashi.com

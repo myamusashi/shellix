@@ -2,6 +2,7 @@
   imports = [
     ./database.nix
     ./forgejo.nix
+    ./mailserver.nix
     ./wireguard.nix
     ./nextcloud.nix
     ./nix-serve.nix
@@ -29,6 +30,9 @@
     };
     vaultwarden = {
       enable = lib.mkEnableOption "Enable vaultwarden for password management";
+    };
+    mailserver = {
+      enable = lib.mkEnableOption "Enable nix mailserver";
     };
     vsftpd = {
       enable = lib.mkEnableOption "Enable vsftpd for transfer file (ssh)";
