@@ -1,5 +1,6 @@
 {
   config,
+  inputs,
   pkgs-stable,
   lib,
   ...
@@ -23,6 +24,22 @@ in {
       server = {
         database.enable = true;
         forgejo.enable = true;
+        wireguard = {
+          enable = true;
+          externalInterfaces = "enp1s0";
+          wireguardInterfaces = "wg0";
+          pathPrivateKeyFile = "/etc/wireguard-keys/private.key";
+          peers = [
+            {
+              publicKey = "3L+JrgPH148OutyQBGcdhwF3/dIbuPsZOcN58zfuUTo=";
+              allowedIPs = ["10.0.0.2/32" "fdc9:281f:04d7:9ee9::2/64"];
+            }
+            {
+              publicKey = "kOtgGRiJuuS+CwUF6Ur5ca4wr5V819hA4UjwppzqamU=";
+              allowedIPs = ["10.0.0.3/32" "fdc9:281f:04d7:9ee9::3/64"];
+            }
+          ];
+        };
         monitoring.enable = true;
         phpmyadmin.enable = false;
         vaultwarden.enable = true;
@@ -37,8 +54,8 @@ in {
       };
       nixos = {
         earlyoom.enable = true;
-        backup.enable = true;
-        resolver.enable = true;
+        backup.waltz.enable = true;
+        resolver.enable = false;
       };
     };
 
@@ -145,11 +162,11 @@ in {
     '';
   };
 
-  sops.secrets.waltz-password.neededForUsers = true;
-  sops.secrets.waltz-password.owner = config.users.users.waltz.name;
+  sops.secrets.waltz-password.neededForUsers = false;
+  sops.age.keyFile = lib.mkForce "/home/waltz/.config/sops/age/keys.txt";
   users.users.waltz = {
     isNormalUser = true;
-    hashedPasswordFile = config.sops.secrets.waltz-password.path;
+    # hashedPasswordFile = config.sops.secrets.waltz-password.path;
     description = "gilang";
     shell = pkgs-stable.fish;
     extraGroups = ["networkmanager" "wheel" "vsftpd" "docker" "podman"];

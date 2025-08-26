@@ -3,7 +3,7 @@
   config,
   ...
 }: let
-  cfg = config.shellix.programs.home;
+  cfg = config.shellix.programs.home.mpv;
 in {
   config = lib.mkIf cfg.enable {
     programs.mpv = {

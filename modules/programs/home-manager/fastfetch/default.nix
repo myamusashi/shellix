@@ -3,7 +3,7 @@
   lib,
   ...
 }: let
-  cfg = config.shellix.programs.home;
+  cfg = config.shellix.programs.home.fastfetch;
 in {
   config = lib.mkIf cfg.enable {
     programs.fastfetch = {
