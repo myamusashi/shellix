@@ -51,7 +51,6 @@ in {
 
   config = lib.mkIf cfg.enable {
     boot.kernel.sysctl."net.ipv4.ip_forward" = 1;
-    boot.kernel.sysctl."net.ipv6.conf.all.forwarding" = 1; # Add IPv6 forwarding
     boot.kernel.sysctl."net.ipv4.conf.all.forwarding" = lib.mkOverride 98 true;
     boot.kernel.sysctl."net.ipv4.conf.default.forwarding" = lib.mkOverride 98 true;
 

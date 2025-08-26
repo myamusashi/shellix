@@ -30,6 +30,10 @@
       waltz-borg = {
         path = "/var/lib/waltz/borg-secret";
       };
+
+      user1-mail = {
+        mode = "0440";
+      };
     };
   };
 }
