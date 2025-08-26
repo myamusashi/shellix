@@ -117,7 +117,7 @@
       scx.enable = true;
     };
 
-    # If we want override the modules, just do something like *programs.stuff = {doing}*,
+    # If we want override the modules, just do something like *programs.stuff = lib.mkForce {doing}*,
     # and it's same as services
     programs.nixos.enable = true;
 
@@ -137,7 +137,7 @@
       wayland = {
         core = true;
       };
-      customPackages = [pkgs.git-credential-manager pkgs.sops pkgs.exfat pkgs.pwvucontrol pkgs.libnotify];
+      customPackages = [pkgs.git-credential-manager pkgs.sops pkgs.exfat pkgs.pwvucontrol pkgs.libnotify pkgs.nh];
     };
   };
 
@@ -229,7 +229,7 @@
       "application/xhtml+xml" = ["zen-browser.desktop" "zen-alpha.desktop" "zen-beta.desktop" "userapp-Zen-X27G02.desktop"];
       "application/x-extension-xhtml" = ["zen-browser.desktop" "zen-alpha.desktop" "zen-beta.desktop" "userapp-Zen-X27G02.desktop"];
       "application/x-extension-xht" = ["zen-browser.desktop" "zen-alpha.desktop" "zen-beta.desktop" "userapp-Zen-X27G02.desktop"];
-      "text/plain" = ["neovide.desktop" "dev.zed.Zed.desktop" "zen-browser.desktop" "userapp-lvim-DQMET2.desktop" "lvim.desktop" "vim.desktop"];
+      "text/plain" = ["dev.zed.Zed.desktop" "zen-browser.desktop" "userapp-lvim-DQMET2.desktop" "lvim.desktop" "vim.desktop"];
       "application/vnd.openxmlformats-officedocument.wordprocessingml.document" = ["onlyoffice-desktopeditors.desktop"];
       "application/vnd.openxmlformats-officedocument.presentationml.presentation" = ["onlyoffice-desktopeditors.desktop"];
       "image/png" = ["lximage-qt.desktop.in" "yazi.desktop"];
