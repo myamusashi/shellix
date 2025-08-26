@@ -33,6 +33,6 @@
     fastfetch.enable = lib.mkEnableOption "Enable Fastfetch system information";
     spicetify.enable = lib.mkEnableOption "Enable Spicetify spotify mod applications";
     quickshell.enable = lib.mkEnableOption "Enable Quickshell qt widget and shell applications";
-		nushell.enable = lib.mkEnableOption "Enable Nushell shell applications";
+    nushell.enable = lib.mkEnableOption "Enable Nushell shell applications";
   };
 }
