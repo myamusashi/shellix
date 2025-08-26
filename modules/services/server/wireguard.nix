@@ -67,7 +67,7 @@ in {
     networking = {
       nat = {
         enable = true;
-        enableIPv6 = true;
+        enableIPv6 = lib.mkForce false;
         externalInterface = cfg.externalInterfaces;
         internalInterfaces = [cfg.wireguardInterfaces];
       };
@@ -76,22 +76,18 @@ in {
 
       wg-quick.interfaces = {
         ${cfg.wireguardInterfaces} = {
-          address = ["10.0.0.1/24" "fdc9:281f:04d7:9ee9::1/64"];
+          address = ["10.0.0.1/24"];
           listenPort = cfg.allowedUDPPorts;
           privateKeyFile = cfg.pathPrivateKeyFile;
 
           postUp = ''
             ${pkgs-stable.iptables}/bin/iptables -A FORWARD -i ${cfg.wireguardInterfaces} -j ACCEPT
             ${pkgs-stable.iptables}/bin/iptables -t nat -A POSTROUTING -s 10.0.0.0/24 -o ${cfg.externalInterfaces} -j MASQUERADE
-            ${pkgs-stable.iptables}/bin/ip6tables -A FORWARD -i ${cfg.wireguardInterfaces} -j ACCEPT
-            ${pkgs-stable.iptables}/bin/ip6tables -t nat -A POSTROUTING -s fdc9:281f:04d7:9ee9::/64 -o ${cfg.externalInterfaces} -j MASQUERADE
           '';
 
           preDown = ''
             ${pkgs-stable.iptables}/bin/iptables -D FORWARD -i ${cfg.wireguardInterfaces} -j ACCEPT
             ${pkgs-stable.iptables}/bin/iptables -t nat -D POSTROUTING -s 10.0.0.0/24 -o ${cfg.externalInterfaces} -j MASQUERADE
-            ${pkgs-stable.iptables}/bin/ip6tables -D FORWARD -i ${cfg.wireguardInterfaces} -j ACCEPT
-            ${pkgs-stable.iptables}/bin/ip6tables -t nat -D POSTROUTING -s fdc9:281f:04d7:9ee9::/64 -o ${cfg.externalInterfaces} -j MASQUERADE
           '';
 
           inherit (cfg) peers;
