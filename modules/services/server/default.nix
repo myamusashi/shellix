@@ -2,6 +2,7 @@
   imports = [
     ./database.nix
     ./forgejo.nix
+    ./wireguard.nix
     ./nextcloud.nix
     ./nix-serve.nix
     ./monitoring.nix
@@ -19,6 +20,9 @@
     };
     monitoring = {
       enable = lib.mkEnableOption "Enable monitoring using grafana and prometheus";
+    };
+    wireguard = {
+      enable = lib.mkEnableOption "Enable WireGuard fast, modern, secure VPN tunnel";
     };
     phpmyadmin = {
       enable = lib.mkEnableOption "Enable database management using phpmyadmin";
