@@ -25,9 +25,9 @@ in {
           color9 = colors.tertiary.hex;
         };
         character = {
-          success_symbol = "[](color9 bold)";
-          error_symbol = "[](error bold)";
-          vicmd_symbol = "[](color9 bold)";
+          success_symbol = "[ ](color9 bold)";
+          error_symbol = "[ ](error bold)";
+          vicmd_symbol = "[ ](color9 bold)";
         };
         os = {
           style = "bold ${colors.primary.hex}";
@@ -49,21 +49,21 @@ in {
         };
         directory = {
           style = "bold ${colors.primary.hex}";
-          format = "[](fg:color1 bg:color4)[󰉋](bg:color1 fg:color2)[ ](fg:color1 bg:color4)[$path ](fg:color3 bg:color4)[ ](fg:color4) ";
+          format = "[](fg:color1 bg:color4)[󰉋 ](bg:color1 fg:color2)[ ](fg:color1 bg:color4)[$path ](fg:color3 bg:color4)[ ](fg:color4) ";
           truncation_length = 9;
           truncation_symbol = "";
           read_only = "🔐";
 
           substitutions = {
-            "Documents" = "󰂺";
-            "Downloads" = "󰉍";
-            "Music" = "󱍙";
-            "Pictures" = "󰉏";
-            ".dots" = "";
-            ".config" = "";
-            "external_drive" = "󰉗";
-            "Videos" = "󰃽";
-            "Public" = "󰨷";
+            "Documents" = "󰂺 ";
+            "Downloads" = "󰉍 ";
+            "Music" = "󱍙 ";
+            "Pictures" = "󰉏 ";
+            ".dots" = " ";
+            ".config" = " ";
+            "external_drive" = "󰉗 ";
+            "Videos" = "󰃽 ";
+            "Public" = "󰨷 ";
           };
         };
         git_branch = {

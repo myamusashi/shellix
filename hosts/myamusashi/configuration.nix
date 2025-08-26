@@ -28,14 +28,19 @@
     hostName = "nixos";
     networkmanager = {
       enable = true;
+      dns = "systemd-resolved";
       insertNameservers = [
         "1.1.1.1#one.one.one.one"
         "1.0.0.1#one.one.one.one"
+        "94.140.14.14" # adGuard
+        "94.140.15.15"
       ];
     };
     nameservers = [
       "1.1.1.1#one.one.one.one"
       "1.0.0.1#one.one.one.one"
+      "94.140.14.14"
+      "94.140.15.15"
     ];
     extraHosts = ''
       127.0.0.1 pmo.com
@@ -47,11 +52,27 @@
       ];
       allowedUDPPorts = [
         22
+        51820
       ];
     };
+    # wg-quick.interfaces = {
+    #   wg0 = {
+    #     address = lib.mkDefault ["10.0.0.3/32"];
+    #     listenPort = 51820;
+    #     dns = ["10.0.0.1" "1.1.1.1"];
+    #     privateKeyFile = lib.mkDefault "/etc/wireguard-keys/private.key";
+    #     peers = [
+    #       {
+    #         publicKey = "IzirsljupeFXLusg6CooDzjSfc/xGVehBuJetADkaEU=";
+    #         allowedIPs = ["0.0.0.0/0"];
+    #         endpoint = "192.168.18.14:51820";
+    #       }
+    #     ];
+    #   };
+    # };
   };
 
-  sops.secrets.myamusashi-password.neededForUsers = false;
+  sops.secrets.myamusashi-password.neededForUsers = true;
   sops.secrets.myamusashi-password.owner = config.users.users.myamusashi.name;
   users.users.myamusashi = {
     isNormalUser = true;
@@ -77,6 +98,7 @@
       dnssec = "true";
       dnsovertls = "true";
     };
+    cloudflare-warp.enable = true;
     openssh.enable = true;
     preload.enable = true;
     xserver.xkb.layout = "us";

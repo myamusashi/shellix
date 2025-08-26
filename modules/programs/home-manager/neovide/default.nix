@@ -4,7 +4,7 @@
   config,
   ...
 }: let
-  cfg = config.shellix.programs.home;
+  cfg = config.shellix.programs.home.neovide;
 in {
   config = lib.mkIf cfg.enable {
     programs.neovide = {
