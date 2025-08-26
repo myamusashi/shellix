@@ -74,6 +74,7 @@ in {
         texlab
         kdePackages.qtdeclarative # Qml ls
         ripgrep
+        vscode-json-languageserver
         qt6.qttools
         php
         phpactor

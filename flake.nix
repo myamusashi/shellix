@@ -171,7 +171,6 @@
 
         modules = [
           ./hosts/myamusashi/home.nix
-          ./sops/sops.nix
         ];
       };
       "waltz" = home-manager.lib.homeManagerConfiguration {

@@ -42,6 +42,7 @@
       lazygit.enable = true;
       yazi.enable = true;
       mpv.enable = true;
+      neovim.enable = true;
       neovide.enable = false;
       nushell.enable = false;
       quickshell.enable = true;
@@ -78,8 +79,9 @@
         pkgs.pcsx2
         pkgs.ripgrep
         pkgs.ripgrep-all
+        pkgs.vscode-json-languageserver
       ];
-      excludePackages = [];
+      excludePackages = ["neovide"];
 
       fonts = {
         nerd = true;
