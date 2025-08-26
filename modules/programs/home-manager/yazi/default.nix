@@ -4,7 +4,7 @@
   pkgs,
   ...
 }: let
-  cfg = config.shellix.programs.home;
+  cfg = config.shellix.programs.home.yazi;
   plugin = import ./plugins/package.nix {inherit pkgs;};
 in {
   config = lib.mkIf cfg.enable {

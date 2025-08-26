@@ -5,7 +5,7 @@
   inputs,
   ...
 }: let
-  cfg = config.shellix.programs.home;
+  cfg = config.shellix.programs.home.quickshell;
 
   quickshell-wrapped =
     pkgs.runCommand "quickshell-wrapped" {
