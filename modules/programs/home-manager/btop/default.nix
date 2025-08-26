@@ -4,7 +4,7 @@
   ...
 }:
 with lib; let
-  cfg = config.shellix.programs.home;
+  cfg = config.shellix.programs.home.btop;
 in {
   config = mkIf cfg.enable {
     programs.btop = {

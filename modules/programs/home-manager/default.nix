@@ -18,6 +18,21 @@
   ];
 
   options.shellix.programs.home = {
-    enable = lib.mkEnableOption "Programs management module";
+    mpv.enable = lib.mkEnableOption "Enable MPV applications";
+    btop.enable = lib.mkEnableOption "Enable BTOP monitoring";
+    foot.enable = lib.mkEnableOption "Enable Foot terminal applications";
+    htop.enable = lib.mkEnableOption "Enable HTOP monitoring";
+    wofi.enable = lib.mkEnableOption "Enable Wofi drun applications";
+    yazi.enable = lib.mkEnableOption "Enable Yazi TUI file manager applications";
+    kitty.enable = lib.mkEnableOption "Enable Kitty terminal applications";
+    fuzzel.enable = lib.mkEnableOption "Enable Fuzzel drun applications";
+    neovim.enable = lib.mkEnableOption "Enable Neovim code editor applications";
+    lazygit.enable = lib.mkEnableOption "Enable Lazygit TUI applications";
+    neovide.enable = lib.mkEnableOption "Enable Neovim wrapper written in rust";
+    hyprland.enable = lib.mkEnableOption "Enable Hyprland wayland compositor";
+    fastfetch.enable = lib.mkEnableOption "Enable Fastfetch system information";
+    spicetify.enable = lib.mkEnableOption "Enable Spicetify spotify mod applications";
+    quickshell.enable = lib.mkEnableOption "Enable Quickshell qt widget and shell applications";
+		nushell.enable = lib.mkEnableOption "Enable Nushell shell applications";
   };
 }

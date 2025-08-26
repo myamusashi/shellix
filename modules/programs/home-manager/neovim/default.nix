@@ -4,7 +4,7 @@
   pkgs,
   ...
 }: let
-  cfg = config.shellix.programs.home;
+  cfg = config.shellix.programs.home.neovim;
 in {
   config = lib.mkIf cfg.enable {
     programs.neovim = {

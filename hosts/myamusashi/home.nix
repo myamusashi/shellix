@@ -21,6 +21,7 @@
   programs.home-manager.enable = true;
 
   shellix = {
+    matugen.colors.enable = true;
     # All this themes use matugen
     themes = {
       btop.enable = true;
@@ -30,8 +31,23 @@
       kvantum.enable = true;
       zellij.enable = true;
     };
-    matugen.colors.enable = true;
-    programs.home.enable = true;
+    programs.home = {
+      btop.enable = true;
+      fastfetch.enable = true;
+      foot.enable = true;
+      fuzzel.enable = true;
+      htop.enable = true;
+      hyprland.enable = true;
+      kitty.enable = true;
+      lazygit.enable = true;
+      yazi.enable = true;
+      mpv.enable = true;
+      neovide.enable = false;
+      nushell.enable = false;
+      quickshell.enable = true;
+      spicetify.enable = true;
+      wofi.enable = true;
+    };
 
     services = {
       home-manager = {
@@ -60,6 +76,8 @@
         pkgs.jq
         pkgs.eza
         pkgs.pcsx2
+        pkgs.ripgrep
+        pkgs.ripgrep-all
       ];
       excludePackages = [];
 
@@ -194,6 +212,8 @@
       gtk.default = "gtk";
     };
   };
+
+  nixGL.vulkan.enable = true;
 
   home.activation.discordCSS = lib.hm.dag.entryAfter ["writeBoundary"] ''
     ln -sf $HOME/.dots/scripts/discord_theme.css $HOME/.config/vesktop/settings/quickCss.css
