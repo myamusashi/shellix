@@ -5,7 +5,7 @@
   inputs,
   ...
 }: let
-  cfg = config.shellix.programs.home;
+  cfg = config.shellix.programs.home.spicetify;
   spicePkgs = inputs.spicetify-nix.legacyPackages.${pkgs.stdenv.system};
 in {
   imports = [inputs.spicetify-nix.homeManagerModules.spicetify];

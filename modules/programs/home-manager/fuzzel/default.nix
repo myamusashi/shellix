@@ -4,7 +4,7 @@
   config,
   ...
 }: let
-  cfg = config.shellix.programs.home;
+  cfg = config.shellix.programs.home.fuzzel;
   colors = config.shellix.matugen.colors.palette;
 in {
   config = lib.mkIf cfg.enable {
