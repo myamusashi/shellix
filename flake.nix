@@ -102,6 +102,7 @@
     chaotic,
     nixgl,
     home-manager,
+    sops-nix,
     ...
   } @ inputs: let
     system = "x86_64-linux";
@@ -128,6 +129,7 @@
         inherit system;
 
         modules = [
+          sops-nix.nixosModules.sops
           ./sops/sops.nix
           ./hosts/waltz/configuration.nix
           chaotic.nixosModules.nyx-cache
@@ -156,6 +158,9 @@
     };
 
     homeConfigurations = {
+      home-manager.sharedModules = [
+        inputs.sops-nix.homeManagerModules.sops
+      ];
       "myamusashi" = home-manager.lib.homeManagerConfiguration {
         inherit pkgs;
 
