@@ -6,7 +6,7 @@
   imports = [
     "${builtins.fetchGit {
       url = "https://github.com/NixOS/nixos-hardware.git";
-      rev = "master";
+      rev = "7d9552ef6b02da7b8fafe426c0db5358ab8c4009";
     }}/lenovo/thinkpad/x270"
     ./hardware-configuration.nix
   ];
