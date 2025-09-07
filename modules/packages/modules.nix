@@ -65,6 +65,7 @@ with pkgs; {
       (callPackage ./custom/avenir-font.nix {})
       (callPackage ./custom/feather-font.nix {})
       (callPackage ./custom/volte-rounded.nix {})
+      (callPackage ./custom/_14_segment_led_font.nix {})
       noto-fonts
     ];
   };
@@ -120,8 +121,6 @@ with pkgs; {
       hyprpicker
       hyprland
       hyprsunset
-      inputs.caelestia-shell.packages.${pkgs.system}.default
-      inputs.caelestia-cli.packages.${pkgs.system}.default
     ];
   };
 
