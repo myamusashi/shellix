@@ -7,24 +7,13 @@
   color = config.shellix.matugen.colors.palette;
 in {
   options.shellix.themes = {
-    btop = {
-      enable = lib.mkEnableOption "Enable btop themes using matugen colors";
-    };
-    gtk3 = {
-      enable = lib.mkEnableOption "Enable GTK3 extra CSS using matugen";
-    };
-    gtk4 = {
-      enable = lib.mkEnableOption "Enable GTK3 extra CSS using matugen";
-    };
-    yazi = {
-      enable = lib.mkEnableOption "Enable yazi flavors using matugen";
-    };
-    kvantum = {
-      enable = lib.mkEnableOption "Enable kvantum themes using matugen colors and WhiteSur templates";
-    };
-    zellij = {
-      enable = lib.mkEnableOption "Enable zellij themes using matugen";
-    };
+    btop.enable = lib.mkEnableOption "Enable btop themes using matugen colors";
+    gtk3.enable = lib.mkEnableOption "Enable GTK3 extra CSS using matugen";
+    gtk4.enable = lib.mkEnableOption "Enable GTK3 extra CSS using matugen";
+    yazi.enable = lib.mkEnableOption "Enable yazi flavors using matugen";
+    kvantum.enable = lib.mkEnableOption "Enable kvantum themes using matugen colors and WhiteSur templates";
+    hyprqt6engine.enable = lib.mkEnableOption "Enable hyprqt6engine for hyprland ecosystem";
+    zellij.enable = lib.mkEnableOption "Enable zellij themes using matugen";
   };
 
   config = {
@@ -70,26 +59,26 @@ in {
 
     home.file = {
       ".config/btop/themes/shellix.theme" = lib.mkIf cfg.btop.enable {
-        enable = true;
-        inherit (import ./modules/btop.nix {inherit config;}) text;
+        inherit (import ./modules/btop.nix {inherit config;}) enable text;
+      };
+
+      ".config/hypr/hyprqt6engine.conf" = lib.mkIf cfg.hyprqt6engine.enable {
+        inherit (import ./modules/hyprqt6engine.nix {inherit config;}) enable text;
       };
 
       ".config/zellij/themes/shellix.kdl" = lib.mkIf cfg.zellij.enable {
-        enable = true;
-        text = (import ./modules/zellij.nix {inherit config;}).zellij;
+        inherit (import ./modules/zellij.nix {inherit config;}) enable text;
       };
 
       ".config/yazi/flavors/shellix.yazi/flavor.toml" = lib.mkIf cfg.yazi.enable {
-        enable = true;
-        text = (import ./modules/yazi.nix {inherit config;}).flavors;
+        inherit (import ./modules/yazi.nix {inherit config;}) enable text;
       };
       ".config/Kvantum/Shellix/Shellix.kvconfig" = lib.mkIf cfg.kvantum.enable {
-        enable = true;
-        text = (import ./modules/kvantum/default.nix {inherit config;}).kvantum;
+        inherit (import ./modules/kvantum/default.nix {inherit config;}) enable text;
       };
       ".config/Kvantum/Shellix/Shellix.svg" = lib.mkIf cfg.kvantum.enable {
         enable = true;
-        text = (import ./modules/kvantum/default.nix {inherit config;}).svg;
+        text = builtins.readFile ./modules/kvantum/Shellix.svg;
       };
     };
   };

@@ -1,7 +1,8 @@
 {config, ...}: let
   color = config.shellix.matugen.colors.palette;
 in {
-  zellij = ''
+  enable = true;
+  text = ''
     themes {
       	shellix {
       		text_unselected {

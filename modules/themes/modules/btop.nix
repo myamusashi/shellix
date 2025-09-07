@@ -1,6 +1,7 @@
 {config}: let
   color = config.shellix.matugen.colors.palette;
 in {
+  enable = true;
   text = ''
     theme[main_bg]=${color.background.hex}
     theme[main_fg]=${color.on_background.hex}
