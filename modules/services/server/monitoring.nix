@@ -3,8 +3,10 @@
   lib,
   ...
 }: let
-  VARS = import ../../shared/Variable.nix;
 in {
+  imports = [
+    ../../shared/Variable.nix
+  ];
   config = lib.mkIf config.shellix.services.server.monitoring.enable {
     services = {
       grafana = {
@@ -12,7 +14,7 @@ in {
         settings = {
           server = {
             http_addr = "127.0.0.1";
-            http_port = VARS.GRAFANA_PORT;
+            http_port = config.shellix.variables.port.GRAFANA;
             domain = "dash.myamusashi.com";
           };
         };
@@ -27,7 +29,7 @@ in {
             job_name = "node";
             static_configs = [
               {
-                targets = ["localhost:${toString VARS.PROMETHEUS_PORT}"];
+                targets = ["localhost:${toString config.shellix.variables.port.PROMETHEUS}"];
               }
             ];
           }
@@ -36,14 +38,14 @@ in {
 
       prometheus.exporters.node = {
         enable = true;
-        port = VARS.PROMETHEUS-EXPORTERS_PORT;
+        port = config.shellix.variables.port.PROMETHEUS-EXPORTERS;
         enabledCollectors = ["systemd"];
         extraFlags = ["--collector.ethtool" "--collector.softirqs" "--collector.tcpstat" "--collector.wifi"];
       };
 
       nginx.virtualHosts."dash.myamusashi.com" = {
         locations."/" = {
-          proxyPass = "http://127.0.0.1:${toString VARS.GRAFANA_PORT}";
+          proxyPass = "http://127.0.0.1:${toString config.shellix.variables.port.GRAFANA}";
           proxyWebsockets = true;
           recommendedProxySettings = true;
         };
