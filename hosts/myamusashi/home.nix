@@ -35,7 +35,7 @@
       btop.enable = true;
       fastfetch.enable = true;
       foot.enable = true;
-      fuzzel.enable = true;
+      fuzzel.enable = false;
       htop.enable = true;
       hyprland.enable = true;
       kitty.enable = true;
@@ -45,9 +45,12 @@
       neovim.enable = true;
       neovide.enable = false;
       nushell.enable = false;
+      walker.enable = false;
+      tofi.enable = false;
       quickshell.enable = true;
-      spicetify.enable = true;
-      wofi.enable = true;
+      spicetify.enable = false;
+      wofi.enable = false;
+      vscode.enable = true;
     };
 
     services = {
@@ -58,15 +61,16 @@
       };
       systemd.user = {
         adzan.enable = true;
-        caelestia.enable = true;
+        shell.enable = true;
+        caelestia.enable = false;
         nm-applet.enable = true;
-        weather-widget.enable = true;
+        weather-widget.enable = false;
       };
     };
 
     packages.home = {
       enable = true;
-      gnome = true;
+      gnome = false;
       customPackages = [
         pkgs.git-credential-manager
         pkgs.libsixel
@@ -80,8 +84,14 @@
         pkgs.ripgrep
         pkgs.ripgrep-all
         pkgs.vscode-json-languageserver
+        pkgs.libsForQt5.qt5.qtgraphicaleffects
+        pkgs.qtcreator
+        pkgs.rubik
+        # inputs.caelestia-shell.packages.${pkgs.system}.default
+        # inputs.caelestia-cli.packages.${pkgs.system}.default
+        (pkgs.callPackage ./extra/app2unit.nix {})
       ];
-      excludePackages = ["neovide"];
+      excludePackages = ["neovide" "zed-editor-fhs"];
 
       fonts = {
         nerd = true;
@@ -194,9 +204,9 @@
   fonts.fontconfig = {
     enable = true;
     defaultFonts = {
-      serif = ["Hack"];
+      serif = ["DejaVu Serif"];
       monospace = ["Hack"];
-      sansSerif = ["Inconsolata LGC Nerd Font"];
+      sansSerif = ["Montserrat"];
     };
   };
 
@@ -206,12 +216,11 @@
       xdg-desktop-portal
       kdePackages.xdg-desktop-portal-kde
       xdg-desktop-portal-hyprland
-      xdg-desktop-portal-gtk
     ];
     config = {
-      common.default = "hyprland;gtk";
+      common.default = "hyprland;kde";
       pantheon.default = "kde";
-      gtk.default = "gtk";
+      gtk.default = "";
     };
   };
 
