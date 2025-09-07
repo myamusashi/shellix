@@ -5,11 +5,15 @@
     ./nm-applet.nix
     ./getAdzanData.nix
     ./weather-widget.nix
+    ./shell.nix
   ];
 
   options.shellix.services.systemd.user = {
     adzan = {
       enable = lib.mkEnableOption "Enable adzan services";
+    };
+    shell = {
+      enable = lib.mkEnableOption "Enable shell widget services";
     };
     caelestia = {
       enable = lib.mkEnableOption "Enable caelestia shell services";
