@@ -79,6 +79,7 @@
     "idleinhibit fullscreen,class:^(firefox)$"
     "opacity 0.90,title:^(Spotify)$"
     "opacity 1 override,class:^(zen|zen-twilight|zen-beta)$"
+    "opacity 1 override,class:^(vesktop|discord)$"
     "opacity 0.95,class:^(nemo)$"
     "noblur,xwayland:1"
     "noborder,initialClass:^(Xdg-desktop-portal-gtk)$"
@@ -88,5 +89,7 @@
   layerrule = [
     "blur, rofi"
     "blur, launcher"
+    "blur, quickshell"
+    "blur, shell"
   ];
 }
