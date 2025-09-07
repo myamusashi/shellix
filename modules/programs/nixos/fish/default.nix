@@ -15,7 +15,8 @@ in {
         img = "${pkgs.libsixel}/bin/img2sixel";
         icat = "${pkgs.kitty}/bin/kitten icat";
         ls = "${pkgs.eza}/bin/eza --icons";
-        lla = "${pkgs.eza}/bin/eza ls -a --icons";
+        lla = "${pkgs.eza}/bin/eza -a --icons";
+        setWal = "${pkgs.quickshell}/bin/qs -c lock ipc call img set $argv[1]";
       };
 
       shellInit = ''
