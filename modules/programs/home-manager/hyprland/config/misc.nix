@@ -9,11 +9,11 @@ in {
     mouse_move_enables_dpms = true;
     vfr = true;
     font_family = "CaskaydiaMono Nerd Font";
-    vrr = 2;
+    vrr = 0;
     animate_manual_resizes = false;
     mouse_move_focuses_monitor = true;
     enable_swallow = true;
-    animate_mouse_windowdragging = true;
+    animate_mouse_windowdragging = false;
     middle_click_paste = false;
   };
 }
