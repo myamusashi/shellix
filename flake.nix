@@ -21,12 +21,12 @@
     };
 
     hy3 = {
-      url = "github:outfoxxed/hy3";
+      url = "github:myamusashi/hy3";
       inputs.hyprland.follows = "hyprland";
     };
 
     hypr-dynamic-cursors = {
-      url = "github:VirtCode/hypr-dynamic-cursors";
+      url = "github:myamusashi/hypr-dynamic-cursors";
       inputs.hyprland.follows = "hyprland";
     };
 
@@ -87,6 +87,11 @@
 
     astal = {
       url = "github:aylur/astal";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    walker = {
+      url = "github:abenz1267/walker";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
