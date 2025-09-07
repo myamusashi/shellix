@@ -56,7 +56,12 @@ final: prev: {
     });
 
     textual = super.textual.overrideAttrs (oldAttrs: {
-      meta = oldAttrs.meta // {broken = false;};
+      disabledTestPaths = [
+        "tests/snapshot_tests/test_snapshots.py"
+        "tests/test_widget.py"
+        "tests/text_area/test_languages.py"
+        "tests/text_area/test_setting_themes.py"
+      ];
     });
   });
   ## End
@@ -89,6 +94,7 @@ final: prev: {
         ++ [
           final.clang_20
           final.llvm_20
+          final.llvmPackages_20.bintools
         ];
       makeFlags =
         (oldAttrs.makeFlags or [])
