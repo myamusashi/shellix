@@ -1,8 +1,8 @@
 {config, ...}: let
   color = config.shellix.matugen.colors.palette;
 in {
-  svg = builtins.readFile ./Shellix.svg;
-  kvantum = ''
+  enable = true;
+  text = ''
     ${builtins.readFile ./General.kvconfig}
 
     [GeneralColors]
