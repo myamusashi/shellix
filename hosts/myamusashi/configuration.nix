@@ -172,6 +172,7 @@
 
   programs = {
     fish.enable = true;
+    dconf.enable = true;
     mtr.enable = true;
     gnupg.agent = {
       enable = true;
@@ -194,6 +195,7 @@
     QT_QPA_PLATFORMTHEME = "qt6ct";
 
     # Wayland and Graphics
+    GTK_USE_PORTAL = 0;
     GDK_BACKEND = "wayland,x11";
     QT_QPA_PLATFORM = "wayland;xcb";
     SDL_VIDEODRIVER = "wayland";
@@ -228,16 +230,6 @@
     enable = true;
     defaultApplications = {
       "x-scheme-handler/tonsite" = "org.telegram.desktop.desktop";
-      "x-scheme-handler/http" = "zen.desktop";
-      "x-scheme-handler/https" = "zen.desktop";
-      "x-scheme-handler/chrome" = "zen.desktop";
-      "text/html" = "zen.desktop";
-      "application/x-extension-htm" = "zen.desktop";
-      "application/x-extension-html" = "zen.desktop";
-      "application/x-extension-shtml" = "zen.desktop";
-      "application/xhtml+xml" = "zen.desktop";
-      "application/x-extension-xhtml" = "zen.desktop";
-      "application/x-extension-xht" = "zen.desktop";
       "text/plain" = "zen-browser.desktop";
       "inode/directory" = "org.kde.dolphin.desktop";
       "application/x-gnome-saved-search" = "org.kde.dolphin.desktop";
@@ -247,18 +239,6 @@
     };
 
     addedAssociations = {
-      "x-scheme-handler/tonsite" = ["org.telegram.desktop.desktop"];
-      "x-scheme-handler/http" = ["zen.desktop" "zen-browser.desktop" "zen-alpha.desktop" "zen-beta.desktop" "userapp-Zen-X27G02.desktop"];
-      "x-scheme-handler/https" = ["zen.desktop" "zen-browser.desktop" "zen-alpha.desktop" "zen-beta.desktop" "userapp-Zen-X27G02.desktop"];
-      "x-scheme-handler/chrome" = ["zen.desktop" "zen-browser.desktop" "zen-alpha.desktop" "zen-beta.desktop" "userapp-Zen-X27G02.desktop"];
-      "text/html" = ["zen-browser.desktop" "zen-alpha.desktop" "zen-beta.desktop" "userapp-Zen-X27G02.desktop"];
-      "application/x-extension-htm" = ["zen-browser.desktop" "zen-alpha.desktop" "zen-beta.desktop" "userapp-Zen-X27G02.desktop"];
-      "application/x-extension-html" = ["zen-browser.desktop" "zen-alpha.desktop" "zen-beta.desktop" "userapp-Zen-X27G02.desktop"];
-      "application/x-extension-shtml" = ["zen-browser.desktop" "zen-alpha.desktop" "zen-beta.desktop" "userapp-Zen-X27G02.desktop"];
-      "application/xhtml+xml" = ["zen-browser.desktop" "zen-alpha.desktop" "zen-beta.desktop" "userapp-Zen-X27G02.desktop"];
-      "application/x-extension-xhtml" = ["zen-browser.desktop" "zen-alpha.desktop" "zen-beta.desktop" "userapp-Zen-X27G02.desktop"];
-      "application/x-extension-xht" = ["zen-browser.desktop" "zen-alpha.desktop" "zen-beta.desktop" "userapp-Zen-X27G02.desktop"];
-      "text/plain" = ["dev.zed.Zed.desktop" "zen-browser.desktop" "userapp-lvim-DQMET2.desktop" "lvim.desktop" "vim.desktop"];
       "application/vnd.openxmlformats-officedocument.wordprocessingml.document" = ["onlyoffice-desktopeditors.desktop"];
       "application/vnd.openxmlformats-officedocument.presentationml.presentation" = ["onlyoffice-desktopeditors.desktop"];
       "image/png" = ["lximage-qt.desktop.in" "yazi.desktop"];
@@ -294,6 +274,8 @@
         "https://nix-community.cachix.org"
         "https://ezkea.cachix.org"
         "https://hyprland.cachix.org"
+        "https://walker.cachix.org"
+        "https://walker-git.cachix.org"
       ];
 
       extra-substituters = [
@@ -309,6 +291,8 @@
         "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
         "ezkea.cachix.org-1:ioBmUbJTZIKsHmWWXPe1FSFbeVe+afhfgqgTSNd34eI="
         "hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc="
+        "walker.cachix.org-1:fG8q+uAaMqhsMxWjwvk0IMb4mFPFLqHjuvfwQxE4oJM="
+        "walker-git.cachix.org-1:vmC0ocfPWh0S/vRAQGtChuiZBTAe4wiKDeyyXM0/7pM="
       ];
 
       extra-trusted-public-keys = [
