@@ -15,6 +15,9 @@
     ./fastfetch/default.nix
     ./spicetify/default.nix
     ./quickshell/default.nix
+    ./tofi/default.nix
+    ./walker/default.nix
+    ./vscode/default.nix
   ];
 
   options.shellix.programs.home = {
@@ -31,8 +34,11 @@
     neovide.enable = lib.mkEnableOption "Enable Neovim wrapper written in rust";
     hyprland.enable = lib.mkEnableOption "Enable Hyprland wayland compositor";
     fastfetch.enable = lib.mkEnableOption "Enable Fastfetch system information";
+    walker.enable = lib.mkEnableOption "Enable Walker launcher for everything";
     spicetify.enable = lib.mkEnableOption "Enable Spicetify spotify mod applications";
     quickshell.enable = lib.mkEnableOption "Enable Quickshell qt widget and shell applications";
     nushell.enable = lib.mkEnableOption "Enable Nushell shell applications";
+    vscode.enable = lib.mkEnableOption "Enable VSCode code editor";
+    tofi.enable = lib.mkEnableOption "Enable Tofi apps launcher";
   };
 }
