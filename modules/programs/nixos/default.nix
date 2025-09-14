@@ -6,6 +6,7 @@
     ./starship/default.nix
     ./wireshark/default.nix
     ./virt-manager/default.nix
+    ./kde-connect/default.nix
   ];
 
   options.shellix.programs.nixos = {

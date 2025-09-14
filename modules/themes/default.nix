@@ -11,6 +11,7 @@ in {
     gtk3.enable = lib.mkEnableOption "Enable GTK3 extra CSS using matugen";
     gtk4.enable = lib.mkEnableOption "Enable GTK3 extra CSS using matugen";
     yazi.enable = lib.mkEnableOption "Enable yazi flavors using matugen";
+    vesktop.enable = lib.mkEnableOption "Enable Discord css using matugen";
     kvantum.enable = lib.mkEnableOption "Enable kvantum themes using matugen colors and WhiteSur templates";
     hyprqt6engine.enable = lib.mkEnableOption "Enable hyprqt6engine for hyprland ecosystem";
     zellij.enable = lib.mkEnableOption "Enable zellij themes using matugen";
@@ -60,6 +61,10 @@ in {
     home.file = {
       ".config/btop/themes/shellix.theme" = lib.mkIf cfg.btop.enable {
         inherit (import ./modules/btop.nix {inherit config;}) enable text;
+      };
+
+      ".config/vesktop/themes/shellix.theme.css" = lib.mkIf cfg.vesktop.enable {
+        inherit (import ./modules/vesktop.nix {inherit config;}) enable text;
       };
 
       ".config/hypr/hyprqt6engine.conf" = lib.mkIf cfg.hyprqt6engine.enable {
