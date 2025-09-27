@@ -82,6 +82,18 @@
         22
         51820
       ];
+      allowedUDPPortRanges = [
+        {
+          from = 1714;
+          to = 1764;
+        }
+      ];
+      allowedTCPPortRanges = [
+        {
+          from = 1714;
+          to = 1764;
+        }
+      ];
     };
     wg-quick.interfaces = {
       wg0 = {
@@ -140,15 +152,34 @@
       audio.enable = true;
       backup.myamusashi.enable = true;
       earlyoom.enable = true;
-      greetd.enable = true;
       plasma.enable = true;
       resolver.enable = true;
       scx.enable = true;
+      display-manager = {
+        sddm = {
+          enable = true;
+          wayland = {
+            enable = true;
+            compositor = "weston";
+          };
+          theme = "sddm-astronaut-theme";
+          auto-login = {
+            enable = true;
+            user = "myamusashi";
+            session = "hyprland.desktop";
+          };
+        };
+      };
     };
 
-    # If we want override the modules, just do something like *programs.stuff = lib.mkForce {doing}*,
-    # and it's same as services
-    programs.nixos.enable = true;
+    programs.nixos = {
+      fish.enable = true;
+      starship.enable = true;
+      steam.enable = true;
+      virt-manager.enable = false;
+      wireshark.enable = false;
+      xonsh.enable = false;
+    };
 
     packages.nixos = {
       enable = true;
@@ -166,7 +197,22 @@
       wayland = {
         core = true;
       };
-      customPackages = [pkgs.git-credential-manager pkgs.sops pkgs.exfat pkgs.pwvucontrol pkgs.libnotify pkgs.nh];
+
+      winapps = true;
+
+      customPackages = with pkgs; [
+        sddm-astronaut
+        kdePackages.qtmultimedia
+        git-credential-manager
+        sops
+        lxqt.pcmanfm-qt
+        lxqt.pavucontrol-qt
+        gvfs
+        iptables
+      ];
+      excludePackages = [
+        "libvirt"
+      ];
     };
   };
 
@@ -185,6 +231,8 @@
       package = pkgs.jdk23;
     };
   };
+
+  services.gvfs.enable = true;
 
   environment.sessionVariables = {
     # Theming
@@ -239,8 +287,8 @@
     };
 
     addedAssociations = {
-      "application/vnd.openxmlformats-officedocument.wordprocessingml.document" = ["onlyoffice-desktopeditors.desktop"];
-      "application/vnd.openxmlformats-officedocument.presentationml.presentation" = ["onlyoffice-desktopeditors.desktop"];
+      "application/vnd.openxmlformats-officedocument.wordprocessingml.document" = ["draw.desktop"];
+      "application/vnd.openxmlformats-officedocument.presentationml.presentation" = ["impress.desktop"];
       "image/png" = ["lximage-qt.desktop.in" "yazi.desktop"];
       "text/x-log" = ["lvim.desktop"];
       "image/svg+xml" = ["lximage-qt.desktop.in"];

@@ -15,6 +15,7 @@ in {
     kvantum.enable = lib.mkEnableOption "Enable kvantum themes using matugen colors and WhiteSur templates";
     hyprqt6engine.enable = lib.mkEnableOption "Enable hyprqt6engine for hyprland ecosystem";
     zellij.enable = lib.mkEnableOption "Enable zellij themes using matugen";
+    qt6ct.enable = lib.mkEnableOption "Enable qt6ct for KDE and QT ecosystem";
   };
 
   config = {
@@ -58,6 +59,7 @@ in {
       @define-color sidebar_backdrop_color @window_bg_color;
     '';
 
+    # I can make it better but nahhhh to lazy
     home.file = {
       ".config/btop/themes/shellix.theme" = lib.mkIf cfg.btop.enable {
         inherit (import ./modules/btop.nix {inherit config;}) enable text;
@@ -67,8 +69,11 @@ in {
         inherit (import ./modules/vesktop.nix {inherit config;}) enable text;
       };
 
+      ".config/hypr/colors/shellix.colors" = lib.mkIf cfg.hyprqt6engine.enable {
+        inherit (import ./modules/hyprqt6engine_theme.nix {inherit config;}) enable text;
+      };
       ".config/hypr/hyprqt6engine.conf" = lib.mkIf cfg.hyprqt6engine.enable {
-        inherit (import ./modules/hyprqt6engine.nix {inherit config;}) enable text;
+        inherit (import ./modules/hyprqt6engine.nix {inherit lib config;}) enable text;
       };
 
       ".config/zellij/themes/shellix.kdl" = lib.mkIf cfg.zellij.enable {
@@ -81,10 +86,16 @@ in {
       ".config/Kvantum/Shellix/Shellix.kvconfig" = lib.mkIf cfg.kvantum.enable {
         inherit (import ./modules/kvantum/default.nix {inherit config;}) enable text;
       };
+      ".config/qt6ct/colors/shellix.conf" = lib.mkIf cfg.qt6ct.enable {
+        inherit (import ./modules/qt6ct.nix {inherit config;}) enable text;
+      };
       ".config/Kvantum/Shellix/Shellix.svg" = lib.mkIf cfg.kvantum.enable {
         enable = true;
         text = builtins.readFile ./modules/kvantum/Shellix.svg;
       };
+    };
+    home.sessionVariables = {
+      QT_QPA_PLATFORMTHEME = lib.mkIf cfg.hyprqt6engine.enable (lib.mkForce "hyprqt6engine");
     };
   };
 }
