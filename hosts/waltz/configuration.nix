@@ -114,7 +114,6 @@ in {
         "hexyl"
         "antiprism"
         "wireshark"
-        "nm-tray"
         "networkmanagerapplet"
         "bitwarden-desktop"
         "pass-wayland"

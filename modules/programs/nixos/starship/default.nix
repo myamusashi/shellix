@@ -3,7 +3,7 @@
   lib,
   ...
 }: let
-  cfg = config.shellix.programs.nixos;
+  cfg = config.shellix.programs.nixos.starship;
   colors = config.shellix.matugen.colors.palette;
 in {
   config = lib.mkIf cfg.enable {

@@ -1,7 +1,7 @@
 {
   lib,
   stdenvNoCC,
-	unzip,
+  unzip,
 }:
 stdenvNoCC.mkDerivation {
   pname = "audiowide";
@@ -9,9 +9,9 @@ stdenvNoCC.mkDerivation {
 
   src = ./files/Audiowide.zip;
 
-	buildInputs = [
-		unzip
-	];
+  buildInputs = [
+    unzip
+  ];
 
   unpackPhase = ''
     unzip $src

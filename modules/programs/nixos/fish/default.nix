@@ -4,7 +4,7 @@
   pkgs,
   ...
 }: let
-  cfg = config.shellix.programs.nixos;
+  cfg = config.shellix.programs.nixos.fish;
 in {
   config = lib.mkIf cfg.enable {
     programs.fish = {

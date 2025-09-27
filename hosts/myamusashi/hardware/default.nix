@@ -19,13 +19,11 @@
 
     graphics = {
       enable = true;
-      enable32Bit = true;
+      enable32Bit = lib.mkDefault false;
       extraPackages = with pkgs; [
-        intel-media-driver # LIBVA_DRIVER_NAME=iHD
         vaapiIntel # LIBVA_DRIVER_NAME=i965 (older but works better for Firefox/Chromium)
       ];
       extraPackages32 = with pkgs.pkgsi686Linux; [
-        intel-media-driver
         intel-vaapi-driver
       ];
     };
@@ -35,7 +33,7 @@
 
   virtualisation = {
     docker.enable = false;
-    libvirtd.enable = true;
+    libvirtd.enable = false;
     podman = {
       enable = true;
       dockerCompat = true;
@@ -82,12 +80,12 @@
 
     supportedFilesystems = ["ntfs"];
     kernelModules = [
-      "kvm-intel"
+      # "kvm-intel"
       "uas"
       "usbhid"
       "hid"
       "usb_storage"
-      "zram"
+      # "zram"
     ];
     kernelParams = [
       "quiet"
@@ -107,7 +105,7 @@
       "nospec_store_bypass_disable"
       "no_stf_barrier"
       "mds=off"
-      "mitigations=off"
+      "mitigations=off" # Kinda risky tbh
     ];
 
     kernel.sysctl = {
@@ -136,7 +134,7 @@
   };
 
   zramSwap = {
-    enable = true;
+    enable = false;
     priority = 1;
     algorithm = "lz4";
     memoryPercent = 50;

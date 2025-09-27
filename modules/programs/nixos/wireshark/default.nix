@@ -3,7 +3,7 @@
   lib,
   ...
 }: let
-  cfg = config.shellix.programs.nixos;
+  cfg = config.shellix.programs.nixos.wireshark;
 in {
   config = lib.mkIf cfg.enable {
     programs.wireshark = {
