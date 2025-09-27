@@ -1,9 +1,5 @@
-{
-  inputs,
-  pkgs,
-  ...
-}: let
-  vars = import ./variable.nix {inherit pkgs inputs;};
+{config, ...}: let
+  vars = import ./variable.nix {inherit config;};
 in {
   bindm = with vars; [
     "${modalt}, mouse:273, resizewindow"
@@ -14,19 +10,17 @@ in {
 
   bind = with vars;
     [
-      "${modalt}, RETURN, exec, ${term}"
-      "${modalt}, F, exec, ${browser}"
-      "${modalt}, E, exec, ${files}"
-      "SHIFT ${modalt}, C, exec, ${clipmanager}"
-      "${modalt}, C, exec, ${emoji}"
-      "SHIFT ${modalt}, E, exec, /tmp/scripts/ags_connect"
-      "SHIFT ${modalt}, D, exec, ${discord}"
-      "${modalt}, SPACE, exec, ${launcher}"
+      "${modalt}, RETURN, exec, ${term}" # foot need
+      "${modalt}, F, exec, ${browser}" # zen need
+      "${modalt}, E, exec, ${files}" # yazi need
+      "SHIFT ${modalt}, C, exec, ${clipmanager}" # cliphist need
+      "SHIFT ${modalt}, D, exec, ${discord}" # vesktop need
+      "${modalt}, SPACE, exec, ${launcher}" # quickshell need
       "${modalt}, S, exec, ${spotify}"
-      "${mod}, P, exec, ${dashboard}"
-      "${modalt}, B, exec, ${bar}"
-      "${modalt}, D, exec, ${powermenu}"
-      "${modalt}, L, exec, ${lockscreen}"
+      "${mod}, P, exec, ${dashboard}" # quickshell need
+      "${modalt}, B, exec, ${bar}" # quickshell need
+      "${modalt}, D, exec, ${powermenu}" # quickshell need
+      "${modalt}, L, exec, ${lockscreen}" # quickshell need
       "${modalt}, T, exec, telegram-desktop"
       "SHIFT ${modalt}, P, exec, ${colorpick}"
       "${mod}, S, exec, ${screencapture}"

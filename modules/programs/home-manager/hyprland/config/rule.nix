@@ -1,5 +1,6 @@
 {
   windowrulev2 = [
+    # Float rules
     "float,class:^(pavucontrol)$"
     "float,title:^(Media viewer)$"
     "float,title:^(Volume Control)$"
@@ -13,9 +14,8 @@
     "float,class:^(error)$"
     "float,class:^(confirmreset)$"
     "float,title:^(Open File)$"
-    "float,class:^(zen-twilight|zen|zen-beta),title:^()"
     "float,title:^(branchdialog)$"
-    "float,title:^(Login - Akun Google — Zen Twilight)$"
+    "float,title:^(*Akun Google*)$"
     "float,title:^(Confirm to replace files)"
     "float,title:^(File Operation Progress)"
     "float,class:^(org.twosheds.iwgtk)$"
@@ -25,25 +25,24 @@
     "float,class:^(Rofi)$"
     "float,title:^(Image Properties)$"
     "float,class:^(nemo),title:.*Properties"
-    "float,class:^(zen-twilight|zen|zen-beta)$,title:.*Bitwarden.*"
+    "float,title:.*Bitwarden.*"
     "float,class:^(xdg-desktop-portal-gtk),title:^(Open Folder)"
-    "float,class:^(org.kde.dolphin)$,title:.*Dolphin*"
     "float,title:^(Friends List)"
+    "float,title:^(WhatsApp — KDE Connect Daemon)"
+
+    # Move position rules
     "move 40 44%,title:^(iwgtk)$"
     "move 40 58%,title:^(Bluetooth Devices)$"
-    "center,class:^(org.kde.dolphin)$,title:.*Dolphin*"
-    "float,class:^(org.kde.dolphin)$,title:.*Dolphin*"
-    "float,title:^(Friends List)"
-    "move 40 44%,title:^(iwgtk)$"
-    "move 40 58%,title:^(Bluetooth Devices)$"
-    "center,class:^(org.kde.dolphin)$,title:.*Dolphin*"
+
+    # Center rules
+    "center,title:^(WhatsApp — KDE Connect Daemon)"
     "center,class:^(xdg-desktop-portal-gtk),title:^(Open Folder)"
     "center,floating:1,class:^(org.quickshell),title:^(Select a wallpaper)"
     "center,floating:1,title:^(Steam|Sign in to Steam)"
     "center,title:^(Volume Control)$"
     "center,title:^(Friends List)"
     "center,title:^(Starting Apache NetBeans IDE)$"
-    "center,class:^(zen-twilight|zen|zen-beta)$,title:.*Bitwarden.*"
+    "center,title:.*Bitwarden.*"
     "center,title:^(Import Hyprpanel Theme)$"
     "center,title:^(hyprpanel-settings)$"
     "center,title:^(Hyprland Polkit Agent)$"
@@ -54,14 +53,15 @@
     "center,title:^(Enter name of file to save to…)$"
     "center,title:^(vesktop)$"
     "center,class:^(eu.),title:^(Properties|Select icon)"
-    "size 498 186,class:^(org.kde.dolphin)$,title:.*Dolphin*"
-    "size 498 186,class:^(org.kde.dolphin)$,title:.*Dolphin*"
-    "size 885 443,class:^(xdg-desktop-portal-gtk),title:^(Open Folder)"
+
+    # Size rules
+    "size 885 443,class:^(xdg-desktop-portal-kde),title:^(Open Folder)"
     "size 1000 600,class:^(org.quickshell),title:^(Select a wallpaper)"
+    "size 400 300,title:^(WhatsApp — KDE Connect Daemon)"
     "size 360 363,class:^(eu.),title:^(Properties)"
     "size 300 650,title:^(Friends List)"
     "size 622 652,class:^(clipse)"
-    "size 380 630,class:^(zen-twilight|zen|zen-beta)$,title:.*Bitwarden.*"
+    "size 380 630,title:.*Bitwarden.*"
     "size 480 300,title:^(Starting Apache NetBeans IDE)$"
     "size 300 350,title:^(vesktop)$"
     "size 954 641,title:^*.Akun Google.*"
@@ -74,22 +74,55 @@
     "size 505 600,title:^(iwgtk)$"
     "size 885 463,title:^(Enter name of file to save to…)$"
     "size 652 310,title:^(Bluetooth Devices)$"
+
+    # Misc rules
     "stayfocused,class:^(clipse)"
+
     "idleinhibit focus,class:^(mpv)$"
     "idleinhibit fullscreen,class:^(firefox)$"
+
     "opacity 0.90,title:^(Spotify)$"
     "opacity 1 override,class:^(zen|zen-twilight|zen-beta)$"
     "opacity 1 override,class:^(vesktop|discord)$"
     "opacity 0.95,class:^(nemo)$"
-    "noblur,xwayland:1"
+
+    # "noblur,xwayland:1"
+
     "noborder,initialClass:^(Xdg-desktop-portal-gtk)$"
+    "noborder,initialClass:^(Xdg-desktop-portal-kde)$"
+
     "bordersize 0,initialClass:^(Xdg-desktop-portal-gtk)$"
+    "bordersize 0,initialClass:^(Xdg-desktop-portal-kde)$"
   ];
 
   layerrule = [
+    # Layer blur
     "blur, rofi"
     "blur, launcher"
     "blur, quickshell"
-    "blur, shell"
+    "blur, shell:dashboard"
+    "blur, shell:bigclock"
+    "blur, shell:app"
+    "blur, shell:bar"
+    "blur, shell:capture"
+    "blur, shell:session"
+
+    # Layer animation
+    "animation popup 30%, quickshell"
+    "animation popup 30%, shell:dashboard"
+    "animation popup 30%, shell:bigclock"
+    "animation slide, shell:app"
+    "animation slide, shell:bar"
+    "animation slide, shell:capture"
+    "animation slide, shell:session"
+
+    # Layer ignoring zero alpha
+    "ignorezero, quickshell"
+    "ignorezero, shell:dashboard"
+    "ignorezero, shell:bigclock"
+    "ignorezero, shell:app"
+    "ignorezero, shell:bar"
+    "ignorezero, shell:capture"
+    "ignorezero, shell:session"
   ];
 }

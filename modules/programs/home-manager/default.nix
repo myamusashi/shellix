@@ -18,6 +18,7 @@
     ./tofi/default.nix
     ./walker/default.nix
     ./vscode/default.nix
+    ./winapps/default.nix
   ];
 
   options.shellix.programs.home = {
@@ -40,5 +41,6 @@
     nushell.enable = lib.mkEnableOption "Enable Nushell shell applications";
     vscode.enable = lib.mkEnableOption "Enable VSCode code editor";
     tofi.enable = lib.mkEnableOption "Enable Tofi apps launcher";
+    winapps.enable = lib.mkEnableOption "Enable Winapps";
   };
 }

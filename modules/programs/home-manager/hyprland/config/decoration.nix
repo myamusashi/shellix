@@ -4,24 +4,24 @@ in {
   decoration = {
     rounding = 5;
     rounding_power = 4.0;
-    active_opacity = 0.85;
-    inactive_opacity = 0.79;
+    active_opacity = 1;
+    inactive_opacity = 0.95;
 
     blur = {
       enabled = true;
-      size = 2;
+      size = 7;
       special = false;
-      passes = 1;
-      brightness = 1;
-      noise = 0.01;
-      contrast = 1;
+      passes = 3;
+      brightness = 0.8;
+      noise = 0.017;
+      contrast = 0.8;
       popups = true;
       popups_ignorealpha = 0.6;
       new_optimizations = true;
       input_methods = true;
       input_methods_ignorealpha = 0.8;
-      xray = false;
-      ignore_opacity = false;
+      xray = true;
+      ignore_opacity = true;
     };
 
     shadow = {
