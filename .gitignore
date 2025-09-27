@@ -3,4 +3,3 @@ result
 nohup.out
 log
 *.log
-modules/shared/Palette/*

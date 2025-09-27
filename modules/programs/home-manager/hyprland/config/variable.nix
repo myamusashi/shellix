@@ -1,21 +1,18 @@
-{
-  inputs,
-  pkgs,
-  ...
-}: {
+{config, ...}: let
+  shell = "qs -c lock ipc call";
+in {
   term = "foot";
-  screencapture = "qs -c lock ipc call screencapture toggle";
-  gamemode = "/home/myamusashi/.dots/modules/programs/home-manager/hyprland/config/scripts/gamemode.sh";
+  screencapture = "${shell} screencapture toggle";
+  gamemode = "${config.home.homeDirectory}/.dots/modules/programs/home-manager/hyprland/config/scripts/gamemode.sh";
   files = "footclient --title=yaziFM yazi";
   browser = "zen";
   vm = "vmware";
-  launcher = "qs -c lock ipc call launcher toggle";
-  powermenu = "qs -c lock ipc call session toggle";
-  bar = "qs -c lock ipc call layerShell toggle";
-  colorpick = "/home/myamusashi/.dots/modules/programs/home-manager/hyprland/config/scripts/picker.sh";
-  dashboard = "${inputs.caelestia-cli.packages.${pkgs.system}.default}/bin/caelestia shell drawers toggle dashboard";
-  lockscreen = "qs -c lock ipc call lock lock";
-  emoji = "${pkgs.rofimoji}/bin/rofimoji --selector wofi";
+  launcher = "${shell} launcher toggle";
+  powermenu = "${shell} session toggle";
+  bar = "${shell} layerShell toggle";
+  colorpick = "${config.home.homeDirectory}/.dots/modules/programs/home-manager/hyprland/config/scripts/picker.sh";
+  dashboard = "${shell} dashboard toggle";
+  lockscreen = "${shell} lock lock";
   spotify = "spotify";
   discord = "vesktop";
   clipmanager = "kitty --class clipse -e clipse";

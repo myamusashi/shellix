@@ -65,6 +65,11 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    hyprqt6engine = {
+      url = "github:hyprwm/hyprqt6engine";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     hyprpicker = {
       url = "github:hyprwm/hyprpicker";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -85,8 +90,8 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    astal = {
-      url = "github:aylur/astal";
+    winapps = {
+      url = "github:winapps-org/winapps";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
@@ -124,6 +129,7 @@
         inputs.hyprsunset.overlays.default
         inputs.hypridle.overlays.default
         inputs.hyprland.overlays.default
+        inputs.hyprqt6engine.overlays.default
         nixgl.overlay
         inputs.neovim-nightly-overlay.overlays.default
       ];

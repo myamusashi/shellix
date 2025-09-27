@@ -4,6 +4,7 @@ in {
   misc = {
     disable_hyprland_logo = true;
     background_color = "0x${colors.background.hex16bit}";
+    session_lock_xray = true;
     disable_splash_rendering = true;
     disable_autoreload = false;
     mouse_move_enables_dpms = true;

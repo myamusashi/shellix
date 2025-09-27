@@ -1,8 +1,6 @@
 {
-  inputs,
   pkgs,
   lib,
-  config,
   ...
 }: {
   imports = [
@@ -18,6 +16,33 @@
     homeDirectory = "/home/myamusashi";
     stateVersion = "24.11";
   };
+
+  nixpkgs.overlays = [
+    (self: super: {
+      vesktop = super.vesktop.overrideAttrs (oldAttrs: {
+        desktopItems = lib.optional super.stdenv.hostPlatform.isLinux (super.makeDesktopItem {
+          name = "vesktop";
+          desktopName = "Vesktop";
+          exec = "vesktop --enable-features=UseOzonePlatform --ozone-platform=wayland %U";
+          icon = "vesktop";
+          startupWMClass = "Vesktop";
+          genericName = "Internet Messenger";
+          keywords = [
+            "discord"
+            "vencord"
+            "electron"
+            "chat"
+          ];
+          categories = [
+            "Network"
+            "InstantMessaging"
+            "Chat"
+          ];
+        });
+      });
+    })
+  ];
+
   programs.home-manager.enable = true;
 
   shellix = {
@@ -28,9 +53,11 @@
       gtk3.enable = true;
       gtk4.enable = true;
       yazi.enable = true;
+      hyprqt6engine.enable = true;
       kvantum.enable = true;
       zellij.enable = true;
       vesktop.enable = true;
+      qt6ct.enable = true;
     };
     programs.home = {
       btop.enable = true;
@@ -51,6 +78,7 @@
       quickshell.enable = true;
       spicetify.enable = false;
       wofi.enable = false;
+      winapps.enable = true;
       vscode.enable = true;
     };
 
@@ -59,6 +87,7 @@
         clipse.enable = true;
         easyeffects.enable = true;
         hypridle.enable = true;
+        kdeconnect.enable = true;
       };
       systemd.user = {
         adzan.enable = true;
@@ -71,7 +100,7 @@
 
     packages.home = {
       enable = true;
-      gnome = false;
+
       customPackages = [
         pkgs.git-credential-manager
         pkgs.libsixel
@@ -81,20 +110,34 @@
         pkgs.zellij
         pkgs.jq
         pkgs.eza
-        pkgs.pcsx2
         pkgs.ripgrep
-        pkgs.ripgrep-all
-        pkgs.vscode-json-languageserver
-        pkgs.libsForQt5.qt5.qtgraphicaleffects
         pkgs.qtcreator
-        pkgs.rubik
+        pkgs.cachix
         # inputs.caelestia-shell.packages.${pkgs.system}.default
         # inputs.caelestia-cli.packages.${pkgs.system}.default
         pkgs.inter
         (pkgs.callPackage ./extra/fonts-audiowide.nix {})
         (pkgs.callPackage ./extra/app2unit.nix {})
       ];
-      excludePackages = ["neovide" "zed-editor-fhs"];
+      excludePackages = [
+        "neovide"
+        "zed-editor-fhs"
+        "rofi"
+        "comic-shanns-mono"
+        "jetbrains-mono"
+        "nix-du"
+        "nix-diff"
+        "vulnix"
+        "deadnix"
+        "nix-update"
+        "zed-editor-fhs"
+        "onlyoffice-desktopeditors"
+        "proton-qt"
+        "kanagawa-icon-theme"
+        "vimix-icon-theme"
+        "morewaita-icon-theme"
+        "whitesur-kde"
+      ];
 
       fonts = {
         nerd = true;
@@ -102,7 +145,7 @@
       };
 
       nix-tools = {
-        full = true;
+        standard = true;
       };
 
       theming = {
@@ -142,8 +185,6 @@
 
       wayland = {
         core = true;
-        wallpaper = true;
-        launcher = true;
         hyprland = true;
       };
     };
@@ -166,7 +207,7 @@
 
   qt = {
     enable = true;
-    style = {name = "kvantum";};
+    style = {name = "qt6ct";};
   };
 
   gtk = {
@@ -209,7 +250,7 @@
     defaultFonts = {
       serif = ["DejaVu Serif"];
       monospace = ["Hack"];
-      sansSerif = ["Montserrat"];
+      sansSerif = ["Inter"];
     };
   };
 

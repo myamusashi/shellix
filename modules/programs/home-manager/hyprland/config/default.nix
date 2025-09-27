@@ -2,7 +2,7 @@
   pkgs,
   config,
   lib,
-  inputs,
+  ...
 }: {
   inherit (import ./exec.nix {inherit pkgs;}) exec-once;
   inherit (import ./input.nix) input;
@@ -14,7 +14,7 @@
   inherit (import ./xwayland.nix) xwayland;
   inherit (import ./animation.nix {inherit lib;}) animations;
   inherit (import ./dwindle.nix) dwindle;
-  inherit (import ./keybinds.nix {inherit pkgs inputs;}) bind bindm binds;
+  inherit (import ./keybinds.nix {inherit config;}) bind bindm binds;
   inherit (import ./rule.nix) windowrulev2 layerrule;
   inherit (import ./permission.nix {inherit pkgs;}) permission;
   inherit (import ./plugin.nix {inherit config;}) plugin;
