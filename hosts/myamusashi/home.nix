@@ -30,6 +30,7 @@
       yazi.enable = true;
       kvantum.enable = true;
       zellij.enable = true;
+      vesktop.enable = true;
     };
     programs.home = {
       btop.enable = true;
@@ -64,7 +65,7 @@
         shell.enable = true;
         caelestia.enable = false;
         nm-applet.enable = true;
-        weather-widget.enable = false;
+        weather-widget.enable = true;
       };
     };
 
@@ -89,6 +90,8 @@
         pkgs.rubik
         # inputs.caelestia-shell.packages.${pkgs.system}.default
         # inputs.caelestia-cli.packages.${pkgs.system}.default
+        pkgs.inter
+        (pkgs.callPackage ./extra/fonts-audiowide.nix {})
         (pkgs.callPackage ./extra/app2unit.nix {})
       ];
       excludePackages = ["neovide" "zed-editor-fhs"];

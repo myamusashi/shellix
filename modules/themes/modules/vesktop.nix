@@ -52,9 +52,9 @@ in {
       --dms-background-image-size: cover; /* size of the background image (css background-size) */
       --dms-background-color: linear-gradient(
           70deg,
-          var(--blue-2),
-          var(--purple-2),
-          var(--red-2)
+          var(--accent-1),
+          var(--accent-5),
+          var(--accent-2)
       ); /* fixed color/gradient (css background) */
       /* background image options */
       --background-image: off; /* turn on to use a background image */
@@ -82,13 +82,13 @@ in {
     	--corner-text: 'Midnight';
 
     	/* color of status indicators and window controls */
-        --online-indicator: ${colors.inverse_primary.hex};     /* change to #23a55a for default green */
+      --online-indicator: ${colors.inverse_primary.hex};     /* change to #23a55a for default green */
     	--dnd-indicator: ${colors.error.hex};          /* change to #f13f43 for default red */
     	--idle-indicator: ${colors.tertiary_container.hex};    /* change to #f0b232 for default yellow */
     	--streaming-indicator: ${colors.on_primary.hex};       /* change to #593695 for default purple */
 
     	/* accent colors */
-        --accent-1: ${colors.tertiary.hex};        /* links */
+      --accent-1: ${colors.tertiary.hex};        /* links */
     	--accent-2: ${colors.primary.hex};         /* general unread/mention elements, some icons when active */
     	--accent-3: ${colors.primary.hex};         /* accent buttons */
     	--accent-4: ${colors.surface_bright.hex};      /* accent buttons when hovered */
@@ -145,16 +145,16 @@ in {
     	--blurple-to-accent-3-filter: hue-rotate(304deg) saturate(0.84) brightness(1.2); /* add friend page school icon */
     }
 
-        /* Selected chat/friend text */
-        .selected_f5eb4b,
-        .selected_f6f816 .link_d8bfb3 {
-          color: var(--text-0) !important;
-          background: var(--accent-3) !important;
-        }
+    /* Selected chat/friend text */
+    .selected_f5eb4b,
+    .selected_f6f816 .link_d8bfb3 {
+      color: var(--text-0) !important;
+      background: var(--accent-3) !important;
+    }
 
-        .selected_f6f816 .link_d8bfb3 * {
-          color: var(--text-0) !important;
-          fill: var(--text-0) !important;
-        }
+    .selected_f6f816 .link_d8bfb3 * {
+      color: var(--text-0) !important;
+      fill: var(--text-0) !important;
+    }
   '';
 }
