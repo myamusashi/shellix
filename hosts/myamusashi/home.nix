@@ -1,13 +1,13 @@
 {
   pkgs,
   lib,
+  inputs,
   ...
 }: {
   imports = [
     ../../modules/shared/Colors.nix
     ../../modules/packages/home-packages.nix
     ../../modules/programs/home-manager/default.nix
-    ../../modules/themes/default.nix
     ../../modules/services/systemd/user/default.nix
     ../../modules/services/home-manager/default.nix
   ];
@@ -48,17 +48,6 @@
   shellix = {
     matugen.colors.enable = true;
     # All this themes use matugen
-    themes = {
-      btop.enable = true;
-      gtk3.enable = true;
-      gtk4.enable = true;
-      yazi.enable = true;
-      hyprqt6engine.enable = true;
-      kvantum.enable = true;
-      zellij.enable = true;
-      vesktop.enable = true;
-      qt6ct.enable = true;
-    };
     programs.home = {
       btop.enable = true;
       fastfetch.enable = true;
@@ -80,6 +69,7 @@
       wofi.enable = false;
       winapps.enable = true;
       vscode.enable = true;
+      matugen.enable = true;
     };
 
     services = {
@@ -112,10 +102,13 @@
         pkgs.eza
         pkgs.ripgrep
         pkgs.qtcreator
+        pkgs.darkly
         pkgs.cachix
         # inputs.caelestia-shell.packages.${pkgs.system}.default
         # inputs.caelestia-cli.packages.${pkgs.system}.default
         pkgs.inter
+        inputs.apple-fonts.packages.${pkgs.system}.sf-pro
+        inputs.apple-fonts.packages.${pkgs.system}.sf-pro-nerd
         (pkgs.callPackage ./extra/fonts-audiowide.nix {})
         (pkgs.callPackage ./extra/app2unit.nix {})
       ];
@@ -207,7 +200,12 @@
 
   qt = {
     enable = true;
-    style = {name = "qt6ct";};
+    platformTheme.name = "qtct";
+    style = {
+      package = with pkgs; [
+        darkly
+      ];
+    };
   };
 
   gtk = {
