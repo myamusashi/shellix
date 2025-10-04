@@ -136,7 +136,7 @@ with pkgs; {
   };
 
   theming = with pkgs; {
-    colors = [matugen pywal16];
+    colors = [pywal16];
     apps = [pywalfox-native];
     tools = [gtk-engine-murrine gnome-themes-extra kdePackages.qtstyleplugin-kvantum gtk3 gtk4];
     cursors = [
@@ -144,7 +144,6 @@ with pkgs; {
       (callPackage ./custom/future-cyan-hyprcursor.nix {})
     ];
     icons = [
-      papirus-icon-theme
       kanagawa-icon-theme
       vimix-icon-theme
       material-symbols
