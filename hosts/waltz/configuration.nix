@@ -5,11 +5,11 @@
   lib,
   ...
 }: let
-  VARS = import ../../modules/shared/Variable.nix;
 in {
   imports = [
     ./hardware/default.nix ## Virtualization here
     ../../modules/shared/Colors.nix
+    ../../modules/shared/Variable.nix
     ../../modules/packages/nixos-packages.nix
     ../../modules/programs/nixos/default.nix
     ../../modules/services/nixos/default.nix
@@ -116,7 +116,6 @@ in {
         "hexyl"
         "antiprism"
         "wireshark"
-        "nm-tray"
         "networkmanagerapplet"
         "bitwarden-desktop"
         "pass-wayland"
@@ -136,17 +135,17 @@ in {
     openssh.enable = true;
     xserver.xkb.layout = "us";
     logind.lidSwitch = "ignore";
-    forgejo.settings.server.HTTP_PORT = lib.mkForce VARS.FORGEJO_PORT;
-    prometheus.port = lib.mkForce VARS.PROMETHEUS_PORT;
-    prometheus.exporters.node.port = lib.mkForce VARS.PROMETHEUS-EXPORTERS_PORT;
-    nginx.virtualHosts."dash.myamusashi.com".locations."/".proxyPass = lib.mkForce "http://127.0.0.1:${toString VARS.GRAFANA_PORT}";
+    forgejo.settings.server.HTTP_PORT = lib.mkForce config.shellix.variables.port.FORGEJO;
+    prometheus.port = lib.mkForce config.shellix.variables.port.PROMETHEUS;
+    prometheus.exporters.node.port = lib.mkForce config.shellix.variables.port.PROMETHEUS-EXPORTERS;
+    nginx.virtualHosts."dash.myamusashi.com".locations."/".proxyPass = lib.mkForce "http://127.0.0.1:${toString config.shellix.variables.port.GRAFANA}";
     nginx.virtualHosts."cloud.myamusashi.com".listen = [
       {
         addr = "127.0.0.1";
-        port = lib.mkForce VARS.NEXTCLOUD_PORT;
+        port = lib.mkForce config.shellix.variables.port.NEXTCLOUD;
       }
     ];
-    vaultwarden.config.ROCKET_PORT = lib.mkForce VARS.VAULTWARDEN_PORT;
+    vaultwarden.config.ROCKET_PORT = lib.mkForce config.shellix.variables.port.VAULTWARDEN;
   };
 
   networking = {
@@ -157,10 +156,10 @@ in {
       allowedUDPPorts = [];
     };
     extraHosts = ''
-      127.0.0.1:${toString VARS.NEXTCLOUD_PORT} cloud.myamusashi.com
-      127.0.0.1:${toString VARS.PHPMYADMIN_PORT} pma.myamusashi.com
-      127.0.0.1:${toString VARS.GRAFANA_PORT} dash.myamusashi.com
-      127.0.0.1:${toString VARS.VAULTWARDEN_PORT} vault.myamusashi.com
+      127.0.0.1:${toString config.shellix.variables.port.NEXTCLOUD} cloud.myamusashi.com
+      127.0.0.1:${toString config.shellix.variables.port.PHPMYADMIN} pma.myamusashi.com
+      127.0.0.1:${toString config.shellix.variables.port.GRAFANA} dash.myamusashi.com
+      127.0.0.1:${toString config.shellix.variables.port.VAULTWARDEN} vault.myamusashi.com
     '';
   };
 

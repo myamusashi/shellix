@@ -1,82 +1,104 @@
 #!/usr/bin/env bash
 
-RGB=$(matugen image "$(caelestia wallpaper)" -t scheme-tonal-spot -j rgb | jq '.colors.dark')
-RGBA=$(matugen image "$(caelestia wallpaper)" -t scheme-tonal-spot -j rgba | jq '.colors.dark')
-HEX=$(matugen image "$(caelestia wallpaper)" -t scheme-tonal-spot -j hex | jq '.colors.dark')
-STRIP=$(matugen image "$(caelestia wallpaper)" -t scheme-tonal-spot -j strip | jq '.colors.dark')
+set -euo pipefail
 
-parseRGBToNix() {
-	echo "{"
-	echo "$RGB" | jq -r 'to_entries[] | "\(.key) \(.value)"' | while read -r key rgb_value; do
-		clean=$(echo "$rgb_value" | awk -F'[(),]' '{
-            r = int($2 + 0.5)
-            g = int($3 + 0.5)
-            b = int($4 + 0.5)
-            printf "rgb(%d, %d, %d)", r, g, b
-        }')
-		printf "  %s = \"%s\";\n" "$key" "$clean"
-	done
-	echo "}"
+readonly WALLPAPER_CMD="qs -c lock ipc call img get "
+readonly MATUGEN_ARGS="scheme-tonal-spot"
+readonly OUTPUT_DIR="."
 
+get_color_data() {
+	local format="$1"
+	matugen image "$($WALLPAPER_CMD)" -t "$MATUGEN_ARGS" -j "$format" | jq '.colors.dark'
 }
 
-parseRGBAToNix() {
-	echo "{"
-	echo "$RGB" | jq -r 'to_entries[] | "\(.key) \(.value)"' | while read -r key rgb_value; do
-		converted_rgb=$(echo "$rgb_value" | awk -F'[(),]' '{
-            r = int($2 + 0.5)
-            g = int($3 + 0.5)
-            b = int($4 + 0.5)
-            printf "rgba(%d, %d, %d, 0.7)", r, g, b
-        }')
+RGB_DATA=$(get_color_data "rgb")
+RGBA_DATA=$(get_color_data "rgba")
+HEX_DATA=$(get_color_data "hex")
+STRIP_DATA=$(get_color_data "strip")
 
-		# Format as Nix attribute
-		printf "  %s = \"%s\";\n" "$key" "$converted_rgb"
+readonly RGB_DATA
+readonly RGBA_DATA
+readonly HEX_DATA
+readonly STRIP_DATA
+
+output_nix_format() {
+	local data="$1"
+	local transform_func="$2"
+	echo "{"
+	echo "$data" | jq -r 'to_entries[] | "\(.key) \(.value)"' | while IFS=' ' read -r key value; do
+		local transformed_value
+		transformed_value=$($transform_func "$value")
+		printf '  %s = "%s";\n' "$key" "$transformed_value"
 	done
 	echo "}"
 }
 
-parseHexToNix() {
-	echo "{"
-	echo "$HEX" | jq -r 'to_entries[] | "\(.key) \(.value)"' | while read -r key hex_value; do
-		printf "  %s = \"%s\";\n" "$key" "$hex_value"
-	done
-	echo "}"
+transform_rgb() {
+	echo "$1" | awk -F'[(),]' '{
+        r = int($2 + 0.5)
+        g = int($3 + 0.5) 
+        b = int($4 + 0.5)
+        printf "rgb(%d, %d, %d)", r, g, b
+    }'
 }
 
-parseHex16BitToNix() {
-	echo "{"
-	echo "$RGBA" | jq -r 'to_entries[] | "\(.key) \(.value)"' | while read -r key rgba_value; do
-		r_val=$(echo "$rgba_value" | awk -F'[(), ]+' '{print int($2)}')
-		g_val=$(echo "$rgba_value" | awk -F'[(), ]+' '{print int($3)}')
-		b_val=$(echo "$rgba_value" | awk -F'[(), ]+' '{print int($4)}')
-		a_val=$(echo "$rgba_value" | awk -F'[(), ]+' '{print int($5)}')
-
-		printf -v hex_a "%02x" "$a_val"
-		printf -v hex_r "%02x" "$r_val"
-		printf -v hex_g "%02x" "$g_val"
-		printf -v hex_b "%02x" "$b_val"
-
-		color_32bit="${hex_a}${hex_r}${hex_g}${hex_b}"
-
-		# Format for Nix output
-		printf "%s = \"%s\";" "$key" "$color_32bit"
-	done
-	echo "}"
+transform_rgb-strip() {
+	echo "$1" | awk -F'[(),]' '{
+        r = int($2 + 0.5)
+        g = int($3 + 0.5) 
+        b = int($4 + 0.5)
+        printf "%d, %d, %d", r, g, b
+    }'
 }
 
-parseStripToNix() {
-	echo "{"
-	echo "$STRIP" | jq -r 'to_entries[] | "\(.key) \(.value)"' | while read -r key strip_value; do
-		printf "  %s = \"%s\";\n" "$key" "$strip_value"
-	done
-	echo "}"
+transform_rgba() {
+	echo "$1" | awk -F'[(),]' '{
+        r = int($2 + 0.5)
+        g = int($3 + 0.5)
+        b = int($4 + 0.5) 
+        printf "rgba(%d, %d, %d, 0.85)", r, g, b
+    }'
 }
 
-parseRGBToNix >rgb.nix
-parseRGBAToNix >rgba.nix
-parseHexToNix >hex.nix
-parseHex16BitToNix >hex16bit.nix
-parseStripToNix >strip.nix
+transform_hex() {
+	echo "$1"
+}
 
-alejandra *.nix 2>/dev/null
+transform_hex16bit() {
+	echo "$1" | awk -F'[(), ]+' '{
+        r = int($2); g = int($3); b = int($4); a = int($5)
+        printf "%02x%02x%02x%02x", a, r, g, b
+    }'
+}
+
+transform_strip() {
+	echo "$1"
+}
+
+main() {
+	echo "Generating rgb-strip.nix..."
+	output_nix_format "$RGB_DATA" "transform_rgb-strip" > "$OUTPUT_DIR/rgb-strip.nix"
+
+	echo "Generating rgb.nix..."
+	output_nix_format "$RGB_DATA" "transform_rgb" >"$OUTPUT_DIR/rgb.nix"
+
+	echo "Generating rgba.nix..."
+	output_nix_format "$RGB_DATA" "transform_rgba" >"$OUTPUT_DIR/rgba.nix"
+
+	echo "Generating hex.nix..."
+	output_nix_format "$HEX_DATA" "transform_hex" >"$OUTPUT_DIR/hex.nix"
+
+	echo "Generating hex16bit.nix..."
+	output_nix_format "$RGBA_DATA" "transform_hex16bit" >"$OUTPUT_DIR/hex16bit.nix"
+
+	echo "Generating strip.nix..."
+	output_nix_format "$STRIP_DATA" "transform_strip" >"$OUTPUT_DIR/strip.nix"
+
+	if command -v alejandra >/dev/null 2>&1; then
+		alejandra "$OUTPUT_DIR"/*.nix 2>/dev/null || true
+	fi
+
+	echo "Color extraction complete!"
+}
+
+main "$@"

@@ -29,7 +29,7 @@
 
           {
             timeout = 1800;
-            on-timeout = "caelestia shell lock lock";
+            on-timeout = "qs -c lock ipc call lock lock";
           }
 
           {

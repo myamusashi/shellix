@@ -18,6 +18,7 @@ in {
     security = mkEnableOption "Security applications";
     gnome = mkEnableOption "GNOME specific packages";
     android = mkEnableOption "Android Debug Bridge";
+    winapps = mkEnableOption "Enable winapps";
 
     fonts = {
       nerd = mkEnableOption "Install nerd-fonts";
@@ -111,6 +112,7 @@ in {
         ++ (optionals cfg.fonts.nerd allPackages.fonts.nerd)
         ++ (optionals cfg.fonts.external allPackages.fonts.external)
         ++ (optionals cfg.gnome allPackages.gnome)
+        ++ (optionals cfg.winapps allPackages.winapps)
         ++ (optionals cfg.gaming.platform allPackages.gaming.platform)
         ++ (optionals cfg.gaming.utilities allPackages.gaming.utilities)
         ++ (optionals cfg.media.editor allPackages.media.editor)

@@ -32,12 +32,24 @@ with pkgs; {
     fzf
   ];
 
+  winapps = [
+    dialog
+    freerdp3
+    inputs.winapps.packages.${system}.winapps
+    inputs.winapps.packages.${system}.winapps-launcher
+    libnotify
+    netavark
+    iptables
+  ];
+
   nix-tools = {
     standard = [
       nixd
       alejandra
       statix
+      nh
     ];
+
     full = [
       nixd
       nil
@@ -65,6 +77,7 @@ with pkgs; {
       (callPackage ./custom/avenir-font.nix {})
       (callPackage ./custom/feather-font.nix {})
       (callPackage ./custom/volte-rounded.nix {})
+      (callPackage ./custom/_14_segment_led_font.nix {})
       noto-fonts
     ];
   };
@@ -72,7 +85,6 @@ with pkgs; {
   network = [
     inetutils
     wireshark
-    nm-tray
     networkmanagerapplet
     cloudflared
   ];
@@ -87,7 +99,7 @@ with pkgs; {
 
   multimedia = {
     office = [onlyoffice-desktopeditors libreoffice unoconv];
-    apps = [telegram-desktop vesktop (config.lib.nixGL.wrap pkgs.brave) (config.lib.nixGL.wrap inputs.zen-browser.packages.${pkgs.system}.default)];
+    apps = [telegram-desktop vesktop (config.lib.nixGL.wrap pkgs.vivaldi) vivaldi-ffmpeg-codecs (config.lib.nixGL.wrap inputs.zen-browser.packages.${pkgs.system}.default)];
   };
 
   gnome = [gnome-keyring];
@@ -115,18 +127,16 @@ with pkgs; {
   wayland = {
     core = [wayland-protocols wl-clipboard];
     wallpaper = [swww waypaper hyprpaper];
-    launcher = [rofi-wayland tofi wofi];
+    launcher = [rofi tofi wofi];
     hyprland = [
       hyprpicker
       hyprland
       hyprsunset
-      inputs.caelestia-shell.packages.${pkgs.system}.default
-      inputs.caelestia-cli.packages.${pkgs.system}.default
     ];
   };
 
   theming = with pkgs; {
-    colors = [matugen pywal16];
+    colors = [pywal16];
     apps = [pywalfox-native];
     tools = [gtk-engine-murrine gnome-themes-extra kdePackages.qtstyleplugin-kvantum gtk3 gtk4];
     cursors = [
@@ -134,14 +144,13 @@ with pkgs; {
       (callPackage ./custom/future-cyan-hyprcursor.nix {})
     ];
     icons = [
-      papirus-icon-theme
       kanagawa-icon-theme
       vimix-icon-theme
       material-symbols
       morewaita-icon-theme
       (whitesur-icon-theme.override {themeVariants = ["default"];})
     ];
-    qt = [whitesur-kde qt6ct];
+    qt = [whitesur-kde qt6ct hyprqt6engine];
     gtk = [
       (whitesur-gtk-theme.override {
         themeVariants = ["blue"];

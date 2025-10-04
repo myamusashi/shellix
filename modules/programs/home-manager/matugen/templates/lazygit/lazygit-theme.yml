@@ -1,0 +1,35 @@
+gui:
+  theme:
+    activeBorderColor:
+    - '{{colors.on_background.default.hex}}'
+    - bold
+    animateExplosion: true
+    border: rounded
+    cherryPickedCommitBgColor:
+    - '{{colors.secondary_fixed.default.hex}}'
+    cherryPickedCommitFgColor:
+    - '{{colors.secondary_fixed_dim.default.hex}}'
+    defaultFgColor:
+    - default
+    filterMode: substring
+    inactiveBorderColor:
+    - '{{colors.on_surface_variant.default.hex}}'
+    inactiveViewSelectedLineBgColor:
+    - '{{colors.error.default.hex}}'
+    - bold
+    markedBaseCommitBgColor:
+    - '{{colors.tertiary.default.hex}}'
+    markedBaseCommitFgColor:
+    - '{{colors.secondary_fixed_dim.default.hex}}'
+    nerdFontsVersion: ''
+    optionsTextColor:
+    - '{{colors.secondary_fixed_dim.default.hex}}'
+    portraitMode: auto
+    screenMode: normal
+    searchingActiveBorderColor:
+    - '{{colors.primary.default.hex}}'
+    - bold
+    selectedLineBgColor:
+    - '{{colors.surface_bright.default.hex}}'
+    unstagedChangesColor:
+    - '{{colors.error_container.default.hex}}'

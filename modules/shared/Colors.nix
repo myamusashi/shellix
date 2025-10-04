@@ -14,6 +14,10 @@ with lib; let
         type = types.str;
         description = "RGB color value, example: rgb(255,255,255)";
       };
+      rgb-strip = mkOption {
+        type = types.str;
+        description = "RGB color value but strip, example: 255,255,255";
+      };
       strip = mkOption {
         type = types.str;
         description = "Same as hex without #, example: 000000";
@@ -39,6 +43,12 @@ in {
     };
 
     rgb = mkOption {
+      type = types.attrsOf types.str;
+      readOnly = true;
+      description = "Palet warna lengkap dalam format rgb.";
+    };
+
+    rgb-strip = mkOption {
       type = types.attrsOf types.str;
       readOnly = true;
       description = "Palet warna lengkap dalam format rgb.";
@@ -76,12 +86,14 @@ in {
 
       hexColors = import (colorDataPath + "/hex.nix");
       rgbColors = import (colorDataPath + "/rgb.nix");
+      rgbStripColors = import (colorDataPath + "/rgb-strip.nix");
       rgbaColors = import (colorDataPath + "/rgba.nix");
       stripColors = import (colorDataPath + "/strip.nix");
       hex16bitColors = import (colorDataPath + "/hex16bit.nix");
     in {
       hex = hexColors;
       rgb = rgbColors;
+      rgb-strip = rgbStripColors;
       rgba = rgbaColors;
       strip = stripColors;
       hex16bit = hex16bitColors;
@@ -90,6 +102,7 @@ in {
         mapAttrs (name: value: {
           hex = hexColors."${name}";
           rgb = rgbColors."${name}";
+          rgb-strip = rgbStripColors."${name}";
           rgba = rgbaColors."${name}";
           strip = stripColors."${name}";
           hex16bit = hex16bitColors."${name}";

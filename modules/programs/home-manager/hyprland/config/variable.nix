@@ -1,21 +1,18 @@
-{
-  inputs,
-  pkgs,
-  ...
-}: {
-  term = "foot";
-  screencapture = "/home/myamusashi/.dots/modules/programs/home-manager/hyprland/config/scripts/screen-capture.sh";
-  gamemode = "/home/myamusashi/.dots/modules/programs/home-manager/hyprland/config/scripts/gamemode.sh";
+{config, ...}: let
+  shell = "qs -c lock ipc call";
+in {
+  term = "kitty";
+  screencapture = "${shell} screencapture toggle";
+  gamemode = "${config.home.homeDirectory}/.dots/modules/programs/home-manager/hyprland/config/scripts/gamemode.sh";
   files = "footclient --title=yaziFM yazi";
   browser = "zen";
   vm = "vmware";
-  launcher = "${inputs.caelestia-cli.packages.${pkgs.system}.default}/bin/caelestia shell drawers toggle launcher";
-  powermenu = "${inputs.caelestia-cli.packages.${pkgs.system}.default}/bin/caelestia shell drawers toggle session";
-  bar = "${inputs.caelestia-cli.packages.${pkgs.system}.default}/bin/caelestia shell drawers toggle bar";
-  colorpick = "/home/myamusashi/.dots/modules/programs/home-manager/hyprland/config/scripts/picker.sh";
-  dashboard = "${inputs.caelestia-cli.packages.${pkgs.system}.default}/bin/caelestia shell drawers toggle dashboard";
-  lockscreen = "${inputs.caelestia-cli.packages.${pkgs.system}.default}/bin/caelestia shell lock lock";
-  emoji = "${pkgs.rofimoji}/bin/rofimoji --selector wofi";
+  launcher = "${shell} launcher toggle";
+  powermenu = "${shell} session toggle";
+  bar = "${shell} layerShell toggle";
+  colorpick = "${config.home.homeDirectory}/.dots/modules/programs/home-manager/hyprland/config/scripts/picker.sh";
+  dashboard = "${shell} dashboard toggle";
+  lockscreen = "${shell} lock lock";
   spotify = "spotify";
   discord = "vesktop";
   clipmanager = "kitty --class clipse -e clipse";

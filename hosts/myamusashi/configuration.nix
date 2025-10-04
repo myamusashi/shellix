@@ -7,7 +7,7 @@
 }: {
   imports = [
     inputs.sops-nix.nixosModules.sops
-    ./hardware/default.nix ## Virtualization here
+    ./hardware/default.nix
     ../../modules/shared/Colors.nix
     ../../modules/packages/nixos-packages.nix
     ../../modules/programs/nixos/default.nix
@@ -82,6 +82,18 @@
         22
         51820
       ];
+      allowedUDPPortRanges = [
+        {
+          from = 1714;
+          to = 1764;
+        }
+      ];
+      allowedTCPPortRanges = [
+        {
+          from = 1714;
+          to = 1764;
+        }
+      ];
     };
     wg-quick.interfaces = {
       wg0 = {
@@ -140,15 +152,34 @@
       audio.enable = true;
       backup.myamusashi.enable = true;
       earlyoom.enable = true;
-      greetd.enable = true;
       plasma.enable = true;
       resolver.enable = true;
       scx.enable = true;
+      display-manager = {
+        sddm = {
+          enable = true;
+          wayland = {
+            enable = true;
+            compositor = "weston";
+          };
+          theme = "sddm-astronaut-theme";
+          auto-login = {
+            enable = true;
+            user = "myamusashi";
+            session = "hyprland.desktop";
+          };
+        };
+      };
     };
 
-    # If we want override the modules, just do something like *programs.stuff = lib.mkForce {doing}*,
-    # and it's same as services
-    programs.nixos.enable = true;
+    programs.nixos = {
+      fish.enable = true;
+      starship.enable = true;
+      steam.enable = true;
+      virt-manager.enable = false;
+      wireshark.enable = false;
+      xonsh.enable = false;
+    };
 
     packages.nixos = {
       enable = true;
@@ -166,12 +197,28 @@
       wayland = {
         core = true;
       };
-      customPackages = [pkgs.git-credential-manager pkgs.sops pkgs.exfat pkgs.pwvucontrol pkgs.libnotify pkgs.nh];
+
+      winapps = true;
+
+      customPackages = with pkgs; [
+        sddm-astronaut
+        kdePackages.qtmultimedia
+        git-credential-manager
+        sops
+        lxqt.pcmanfm-qt
+        lxqt.pavucontrol-qt
+        gvfs
+        iptables
+      ];
+      excludePackages = [
+        "libvirt"
+      ];
     };
   };
 
   programs = {
     fish.enable = true;
+    dconf.enable = true;
     mtr.enable = true;
     gnupg.agent = {
       enable = true;
@@ -185,6 +232,8 @@
     };
   };
 
+  services.gvfs.enable = true;
+
   environment.sessionVariables = {
     # Theming
     GTK_THEME = "WhiteSur-Dark-blue";
@@ -194,6 +243,7 @@
     QT_QPA_PLATFORMTHEME = "qt6ct";
 
     # Wayland and Graphics
+    GTK_USE_PORTAL = 0;
     GDK_BACKEND = "wayland,x11";
     QT_QPA_PLATFORM = "wayland;xcb";
     SDL_VIDEODRIVER = "wayland";
@@ -228,39 +278,17 @@
     enable = true;
     defaultApplications = {
       "x-scheme-handler/tonsite" = "org.telegram.desktop.desktop";
-      "x-scheme-handler/http" = "zen.desktop";
-      "x-scheme-handler/https" = "zen.desktop";
-      "x-scheme-handler/chrome" = "zen.desktop";
-      "text/html" = "zen.desktop";
-      "application/x-extension-htm" = "zen.desktop";
-      "application/x-extension-html" = "zen.desktop";
-      "application/x-extension-shtml" = "zen.desktop";
-      "application/xhtml+xml" = "zen.desktop";
-      "application/x-extension-xhtml" = "zen.desktop";
-      "application/x-extension-xht" = "zen.desktop";
       "text/plain" = "zen-browser.desktop";
-      "inode/directory" = "org.kde.dolphin.desktop";
-      "application/x-gnome-saved-search" = "org.kde.dolphin.desktop";
+      "inode/directory" = "pcmanfm-qt.desktop";
+      "application/x-gnome-saved-search" = "pcmanfm-qt.desktop";
       "image/png" = "lximage-qt.desktop.in";
       "x-scheme-handler/tg" = "org.telegram.desktop.desktop";
       "image/jpeg" = "lximage-qt.desktop.in";
     };
 
     addedAssociations = {
-      "x-scheme-handler/tonsite" = ["org.telegram.desktop.desktop"];
-      "x-scheme-handler/http" = ["zen.desktop" "zen-browser.desktop" "zen-alpha.desktop" "zen-beta.desktop" "userapp-Zen-X27G02.desktop"];
-      "x-scheme-handler/https" = ["zen.desktop" "zen-browser.desktop" "zen-alpha.desktop" "zen-beta.desktop" "userapp-Zen-X27G02.desktop"];
-      "x-scheme-handler/chrome" = ["zen.desktop" "zen-browser.desktop" "zen-alpha.desktop" "zen-beta.desktop" "userapp-Zen-X27G02.desktop"];
-      "text/html" = ["zen-browser.desktop" "zen-alpha.desktop" "zen-beta.desktop" "userapp-Zen-X27G02.desktop"];
-      "application/x-extension-htm" = ["zen-browser.desktop" "zen-alpha.desktop" "zen-beta.desktop" "userapp-Zen-X27G02.desktop"];
-      "application/x-extension-html" = ["zen-browser.desktop" "zen-alpha.desktop" "zen-beta.desktop" "userapp-Zen-X27G02.desktop"];
-      "application/x-extension-shtml" = ["zen-browser.desktop" "zen-alpha.desktop" "zen-beta.desktop" "userapp-Zen-X27G02.desktop"];
-      "application/xhtml+xml" = ["zen-browser.desktop" "zen-alpha.desktop" "zen-beta.desktop" "userapp-Zen-X27G02.desktop"];
-      "application/x-extension-xhtml" = ["zen-browser.desktop" "zen-alpha.desktop" "zen-beta.desktop" "userapp-Zen-X27G02.desktop"];
-      "application/x-extension-xht" = ["zen-browser.desktop" "zen-alpha.desktop" "zen-beta.desktop" "userapp-Zen-X27G02.desktop"];
-      "text/plain" = ["dev.zed.Zed.desktop" "zen-browser.desktop" "userapp-lvim-DQMET2.desktop" "lvim.desktop" "vim.desktop"];
-      "application/vnd.openxmlformats-officedocument.wordprocessingml.document" = ["onlyoffice-desktopeditors.desktop"];
-      "application/vnd.openxmlformats-officedocument.presentationml.presentation" = ["onlyoffice-desktopeditors.desktop"];
+      "application/vnd.openxmlformats-officedocument.wordprocessingml.document" = ["draw.desktop"];
+      "application/vnd.openxmlformats-officedocument.presentationml.presentation" = ["impress.desktop"];
       "image/png" = ["lximage-qt.desktop.in" "yazi.desktop"];
       "text/x-log" = ["lvim.desktop"];
       "image/svg+xml" = ["lximage-qt.desktop.in"];
@@ -294,6 +322,9 @@
         "https://nix-community.cachix.org"
         "https://ezkea.cachix.org"
         "https://hyprland.cachix.org"
+        "https://walker.cachix.org"
+        "https://walker-git.cachix.org"
+        "https://cache.flox.dev"
       ];
 
       extra-substituters = [
@@ -308,7 +339,10 @@
         "chaotic-nyx.cachix.org-1:HfnXSw4pj95iI/n17rIDy40agHj12WfF+Gqk6SonIT8="
         "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
         "ezkea.cachix.org-1:ioBmUbJTZIKsHmWWXPe1FSFbeVe+afhfgqgTSNd34eI="
+        "flox-cache-public-1:7F4OyH7ZCnFhcze3fJdfyXYLQw/aV7GEed86nQ7IsOs="
         "hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc="
+        "walker.cachix.org-1:fG8q+uAaMqhsMxWjwvk0IMb4mFPFLqHjuvfwQxE4oJM="
+        "walker-git.cachix.org-1:vmC0ocfPWh0S/vRAQGtChuiZBTAe4wiKDeyyXM0/7pM="
       ];
 
       extra-trusted-public-keys = [
