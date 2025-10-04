@@ -1,12 +1,10 @@
-{config, ...}: let
-  colors = config.shellix.matugen.colors.palette;
-in {
+{
   general = {
     gaps_in = 2;
     gaps_out = 5;
     border_size = 5;
-    "col.active_border" = "0x${colors.primary.hex16bit} 0x${colors.primary_container.hex16bit} 45deg";
-    "col.inactive_border" = "0x${colors.inverse_primary.hex16bit}";
+    "col.active_border" = "$primary";
+    "col.inactive_border" = "$inverse_primary";
     no_border_on_floating = false;
     layout = "hy3";
     snap = {

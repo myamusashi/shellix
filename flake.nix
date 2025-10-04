@@ -21,12 +21,12 @@
     };
 
     hy3 = {
-      url = "github:outfoxxed/hy3";
+      url = "github:myamusashi/hy3";
       inputs.hyprland.follows = "hyprland";
     };
 
     hypr-dynamic-cursors = {
-      url = "github:VirtCode/hypr-dynamic-cursors";
+      url = "github:myamusashi/hypr-dynamic-cursors";
       inputs.hyprland.follows = "hyprland";
     };
 
@@ -65,6 +65,11 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    hyprqt6engine = {
+      url = "github:hyprwm/hyprqt6engine";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     hyprpicker = {
       url = "github:hyprwm/hyprpicker";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -85,12 +90,19 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    astal = {
-      url = "github:aylur/astal";
+    winapps = {
+      url = "github:winapps-org/winapps";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    walker = {
+      url = "github:abenz1267/walker";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
     neovim-nightly-overlay.url = "github:nix-community/neovim-nightly-overlay";
+    flox.url = "github:flox/flox/v1.7.4";
+    apple-fonts.url = "github:Lyndeno/apple-fonts.nix";
     spicetify-nix.url = "github:Gerg-L/spicetify-nix";
     matugen.url = "github:/InioX/Matugen/v2.4.1";
     nixgl.url = "github:nix-community/nixGL";
@@ -119,6 +131,7 @@
         inputs.hyprsunset.overlays.default
         inputs.hypridle.overlays.default
         inputs.hyprland.overlays.default
+        inputs.hyprqt6engine.overlays.default
         nixgl.overlay
         inputs.neovim-nightly-overlay.overlays.default
       ];

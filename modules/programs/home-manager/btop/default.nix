@@ -11,10 +11,7 @@ in {
       enable = mkDefault true;
 
       settings = {
-        color_theme =
-          if config.shellix.themes.btop.enable
-          then "shellix"
-          else "";
+        color_theme = "shellix";
         theme_background = false;
         truecolor = false;
         force_tty = false;

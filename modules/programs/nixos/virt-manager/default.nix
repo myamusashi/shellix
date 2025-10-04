@@ -4,7 +4,7 @@
   pkgs,
   ...
 }: let
-  cfg = config.shellix.programs.nixos;
+  cfg = config.shellix.programs.nixos.virt-manager;
 in {
   config = lib.mkIf cfg.enable {
     programs.virt-manager = {

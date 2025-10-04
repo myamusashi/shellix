@@ -1,9 +1,0 @@
-[HeaderSection]
-inherits=PanelButtonCommand
-interior=true
-interior.element=header
-frame.element=header
-frame.top=0
-frame.bottom=1
-frame.left=1
-frame.right=1

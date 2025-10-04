@@ -1,13 +1,11 @@
-{config, ...}: let
-  colors = config.shellix.matugen.colors.palette;
-in {
+{
   plugin = {
     hyprscrolling = {fullscreen_on_one_column = true;};
     overview = {
       # Color workspaces window
       dragAlpha = 0.5;
-      panelColor = "${colors.background.rgba}";
-      panelBorderColor = "${colors.primary.rgba}";
+      panelColor = "$background";
+      panelBorderColor = "$primary";
 
       # Layout
       disableBlur = false;
@@ -68,14 +66,14 @@ in {
         text_height = 5; # default: 8
         text_padding = 1; # default: 3
         col = {
-          active = "0x${colors.background.hex16bit}";
-          urgent = "0x${colors.on_tertiary.hex16bit}";
-          inactive = "0x${colors.shadow.hex16bit}";
+          active = "$background";
+          urgent = "$on_tertiary";
+          inactive = "$shadow";
 
           text = {
-            active = "0x${colors.primary.hex16bit}";
-            urgent = "0x${colors.primary.hex16bit}";
-            inactive = "0x${colors.primary.hex16bit}";
+            active = "$primary";
+            urgent = "$primary";
+            inactive = "$primary";
           };
         };
       };

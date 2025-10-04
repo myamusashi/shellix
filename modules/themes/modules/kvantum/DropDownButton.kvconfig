@@ -1,3 +1,0 @@
-[DropDownButton]
-inherits=PanelButtonCommand
-indicator.element=arrow-down

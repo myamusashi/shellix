@@ -1,7 +1,7 @@
 {
-  inputs,
   pkgs,
   lib,
+  inputs,
   config,
   ...
 }: {
@@ -9,7 +9,6 @@
     ../../modules/shared/Colors.nix
     ../../modules/packages/home-packages.nix
     ../../modules/programs/home-manager/default.nix
-    ../../modules/themes/default.nix
     ../../modules/services/systemd/user/default.nix
     ../../modules/services/home-manager/default.nix
   ];
@@ -17,25 +16,59 @@
     username = "myamusashi";
     homeDirectory = "/home/myamusashi";
     stateVersion = "24.11";
+
+    file.".config/hypr/hyprqt6engine.conf" = {
+      enable = true;
+      text = ''
+        theme {
+        	color = ${config.home.homeDirectory}/.local/share/color-schemes/Shellix.colors
+        	icon_theme = la-capitaine-icon-theme
+        	style = Darkly
+        	font_fixed = SFProText Nerd Font
+        	font_fixed_size = 12
+        	font = SF Pro Display
+        	font_size = 12
+        }
+      '';
+    };
   };
+
+  nixpkgs.overlays = [
+    (self: super: {
+      vesktop = super.vesktop.overrideAttrs (oldAttrs: {
+        desktopItems = lib.optional super.stdenv.hostPlatform.isLinux (super.makeDesktopItem {
+          name = "vesktop";
+          desktopName = "Vesktop";
+          exec = "vesktop --enable-features=UseOzonePlatform --ozone-platform=wayland %U";
+          icon = "vesktop";
+          startupWMClass = "Vesktop";
+          genericName = "Internet Messenger";
+          keywords = [
+            "discord"
+            "vencord"
+            "electron"
+            "chat"
+          ];
+          categories = [
+            "Network"
+            "InstantMessaging"
+            "Chat"
+          ];
+        });
+      });
+    })
+  ];
+
   programs.home-manager.enable = true;
 
   shellix = {
     matugen.colors.enable = true;
     # All this themes use matugen
-    themes = {
-      btop.enable = true;
-      gtk3.enable = true;
-      gtk4.enable = true;
-      yazi.enable = true;
-      kvantum.enable = true;
-      zellij.enable = true;
-    };
     programs.home = {
       btop.enable = true;
       fastfetch.enable = true;
       foot.enable = true;
-      fuzzel.enable = true;
+      fuzzel.enable = false;
       htop.enable = true;
       hyprland.enable = true;
       kitty.enable = true;
@@ -45,9 +78,14 @@
       neovim.enable = true;
       neovide.enable = false;
       nushell.enable = false;
+      walker.enable = false;
+      tofi.enable = false;
       quickshell.enable = true;
-      spicetify.enable = true;
-      wofi.enable = true;
+      spicetify.enable = false;
+      wofi.enable = false;
+      winapps.enable = true;
+      vscode.enable = true;
+      matugen.enable = true;
     };
 
     services = {
@@ -55,10 +93,12 @@
         clipse.enable = true;
         easyeffects.enable = true;
         hypridle.enable = true;
+        kdeconnect.enable = true;
       };
       systemd.user = {
         adzan.enable = true;
-        caelestia.enable = true;
+        shell.enable = true;
+        caelestia.enable = false;
         nm-applet.enable = true;
         weather-widget.enable = true;
       };
@@ -66,7 +106,7 @@
 
     packages.home = {
       enable = true;
-      gnome = true;
+
       customPackages = [
         pkgs.git-credential-manager
         pkgs.libsixel
@@ -76,12 +116,39 @@
         pkgs.zellij
         pkgs.jq
         pkgs.eza
-        pkgs.pcsx2
         pkgs.ripgrep
-        pkgs.ripgrep-all
-        pkgs.vscode-json-languageserver
+        pkgs.qtcreator
+        pkgs.darkly
+        pkgs.cachix
+        pkgs.inter
+        pkgs.asciinema
+        (pkgs.la-capitaine-icon-theme.overrideAttrs {dontCheckForBrokenSymlinks = true;})
+        inputs.apple-fonts.packages.${pkgs.system}.sf-pro
+        inputs.apple-fonts.packages.${pkgs.system}.sf-pro-nerd
+        inputs.flox.packages.${pkgs.system}.default
+        (pkgs.callPackage ./extra/yet-another-monochrome-icon-set.nix {})
+        (pkgs.callPackage ./extra/fonts-audiowide.nix {})
+        (pkgs.callPackage ./extra/app2unit.nix {})
       ];
-      excludePackages = ["neovide"];
+      excludePackages = [
+        "neovide"
+        "zed-editor-fhs"
+        "rofi"
+        "comic-shanns-mono"
+        "jetbrains-mono"
+        "nix-du"
+        "nix-diff"
+        "vulnix"
+        "deadnix"
+        "nix-update"
+        "zed-editor-fhs"
+        "onlyoffice-desktopeditors"
+        "proton-qt"
+        "kanagawa-icon-theme"
+        "vimix-icon-theme"
+        "morewaita-icon-theme"
+        "whitesur-kde"
+      ];
 
       fonts = {
         nerd = true;
@@ -89,7 +156,7 @@
       };
 
       nix-tools = {
-        full = true;
+        standard = true;
       };
 
       theming = {
@@ -129,8 +196,6 @@
 
       wayland = {
         core = true;
-        wallpaper = true;
-        launcher = true;
         hyprland = true;
       };
     };
@@ -153,7 +218,12 @@
 
   qt = {
     enable = true;
-    style = {name = "kvantum";};
+    platformTheme.name = "qtct";
+    style = {
+      package = with pkgs; [
+        darkly
+      ];
+    };
   };
 
   gtk = {
@@ -194,9 +264,9 @@
   fonts.fontconfig = {
     enable = true;
     defaultFonts = {
-      serif = ["Hack"];
+      serif = ["DejaVu Serif"];
       monospace = ["Hack"];
-      sansSerif = ["Inconsolata LGC Nerd Font"];
+      sansSerif = ["Inter"];
     };
   };
 
@@ -206,12 +276,11 @@
       xdg-desktop-portal
       kdePackages.xdg-desktop-portal-kde
       xdg-desktop-portal-hyprland
-      xdg-desktop-portal-gtk
     ];
     config = {
-      common.default = "hyprland;gtk";
+      common.default = "hyprland;kde";
       pantheon.default = "kde";
-      gtk.default = "gtk";
+      gtk.default = "";
     };
   };
 

@@ -4,7 +4,7 @@
   pkgs,
   ...
 }: let
-  cfg = config.shellix.programs.nixos;
+  cfg = config.shellix.programs.nixos.xonsh;
 in {
   config = lib.mkIf cfg.enable {
     programs.xonsh = {
