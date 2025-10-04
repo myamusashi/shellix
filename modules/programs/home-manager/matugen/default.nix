@@ -58,6 +58,11 @@ in {
         mode = "Dark"
         output_path = "${HOME}/.config/Kvantum/Shellix-matugen/Shellix-matugen.kvconfig"
 
+        [templates.color_scheme]
+        input_path = "${toString ./templates/color-scheme/Shellix.colors}"
+        mode = "Dark"
+        output_path = "${HOME}/.local/share/color-schemes/Shellix.colors"
+
         [templates.lazygit]
         input_path = "${toString ./templates/lazygit/lazygit-theme.yml}"
         mode = "Dark"
