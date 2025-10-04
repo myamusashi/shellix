@@ -19,6 +19,7 @@
     ./walker/default.nix
     ./vscode/default.nix
     ./winapps/default.nix
+    ./matugen/default.nix
   ];
 
   options.shellix.programs.home = {
@@ -42,5 +43,6 @@
     vscode.enable = lib.mkEnableOption "Enable VSCode code editor";
     tofi.enable = lib.mkEnableOption "Enable Tofi apps launcher";
     winapps.enable = lib.mkEnableOption "Enable Winapps";
+    matugen.enable = lib.mkEnableOption "Enable matugen color generation";
   };
 }

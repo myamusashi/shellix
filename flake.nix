@@ -101,6 +101,8 @@
     };
 
     neovim-nightly-overlay.url = "github:nix-community/neovim-nightly-overlay";
+    flox.url = "github:flox/flox/v1.7.4";
+    apple-fonts.url = "github:Lyndeno/apple-fonts.nix";
     spicetify-nix.url = "github:Gerg-L/spicetify-nix";
     matugen.url = "github:/InioX/Matugen/v2.4.1";
     nixgl.url = "github:nix-community/nixGL";
