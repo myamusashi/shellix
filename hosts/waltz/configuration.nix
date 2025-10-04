@@ -32,7 +32,7 @@ in {
           pathPrivateKeyFile = "/etc/wireguard-keys/private.key";
           peers = [
             {
-              publicKey = "3L+JrgPH148OutyQBGcdhwF3/dIbuPsZOcN58zfuUTo=";
+              publicKey = "HH3I3svgajInBHYpH7OfTOfWzQpAYQjpDkMr/b1chU0=";
               allowedIPs = ["10.0.0.2/32"];
             }
             {
@@ -96,6 +96,8 @@ in {
         nil
         nixd
         nixdoc
+        nethogs
+        zellij
       ];
 
       excludePackages = [
