@@ -49,6 +49,7 @@ in {
         yarn
         bun
         nixd
+        nil
         gnumake
         mesonlsp
         sassc
