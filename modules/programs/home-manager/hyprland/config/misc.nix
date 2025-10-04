@@ -1,9 +1,7 @@
-{config, ...}: let
-  colors = config.shellix.matugen.colors.palette;
-in {
+{
   misc = {
     disable_hyprland_logo = true;
-    background_color = "0x${colors.background.hex16bit}";
+    background_color = "$background";
     session_lock_xray = true;
     disable_splash_rendering = true;
     disable_autoreload = false;

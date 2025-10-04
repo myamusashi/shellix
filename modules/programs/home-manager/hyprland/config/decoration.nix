@@ -1,6 +1,4 @@
-{config, ...}: let
-  colors = config.shellix.matugen.colors.palette;
-in {
+{
   decoration = {
     rounding = 5;
     rounding_power = 4.0;
@@ -8,7 +6,7 @@ in {
     inactive_opacity = 0.95;
 
     blur = {
-      enabled = true;
+      enabled = false;
       size = 7;
       special = false;
       passes = 3;
@@ -30,7 +28,7 @@ in {
       range = 30;
       offset = "0 2";
       render_power = 4;
-      color = "0x${colors.shadow.hex16bit}";
+      color = "$shadow";
     };
   };
 }
