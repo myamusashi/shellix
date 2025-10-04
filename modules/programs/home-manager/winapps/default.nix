@@ -45,7 +45,7 @@ in {
         # - You can try adding /network:lan to these flags in order to increase performance, however, some users have faced issues with this.
         # DEFAULT VALUE: '/cert:tofu /sound /microphone +home-drive'
         # VALID VALUES: See https://github.com/awakecoding/FreeRDP-Manuals/blob/master/User/FreeRDP-User-Manual.markdown
-        RDP_FLAGS="/cert:tofi /sound +home-drive"
+        RDP_FLAGS="/cert:tofi /multimon /w:100% /h:100%  /sound +home-drive"
 
         # [DEBUG WINAPPS]
         DEBUG="true"
