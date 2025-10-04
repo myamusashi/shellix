@@ -17,11 +17,12 @@ in {
       "SHIFT ${modalt}, D, exec, ${discord}" # vesktop need
       "${modalt}, SPACE, exec, ${launcher}" # quickshell need
       "${modalt}, S, exec, ${spotify}"
-      "${mod}, P, exec, ${dashboard}" # quickshell need
+      "${mod}, W, exec, ${dashboard}" # quickshell need
       "${modalt}, B, exec, ${bar}" # quickshell need
       "${modalt}, D, exec, ${powermenu}" # quickshell need
       "${modalt}, L, exec, ${lockscreen}" # quickshell need
       "${modalt}, T, exec, telegram-desktop"
+      "${modalt}, TAB, global, quickshell:overview"
       "SHIFT ${modalt}, P, exec, ${colorpick}"
       "${mod}, S, exec, ${screencapture}"
       "SHIFT ${modalt}, TAB, togglefloating"

@@ -4,11 +4,14 @@
   lib,
   ...
 }: {
+  source = [
+    "${config.home.homeDirectory}/.config/hypr/colors.conf"
+  ];
   inherit (import ./exec.nix {inherit pkgs;}) exec-once;
   inherit (import ./input.nix) input;
-  inherit (import ./general.nix {inherit config;}) general;
-  inherit (import ./decoration.nix {inherit config;}) decoration;
-  inherit (import ./misc.nix {inherit config;}) misc;
+  inherit (import ./general.nix) general;
+  inherit (import ./decoration.nix) decoration;
+  inherit (import ./misc.nix) misc;
   inherit (import ./cursor.nix) cursor;
   inherit (import ./render.nix) render;
   inherit (import ./xwayland.nix) xwayland;
@@ -17,6 +20,6 @@
   inherit (import ./keybinds.nix {inherit config;}) bind bindm binds;
   inherit (import ./rule.nix) windowrulev2 layerrule;
   inherit (import ./permission.nix {inherit pkgs;}) permission;
-  inherit (import ./plugin.nix {inherit config;}) plugin;
+  inherit (import ./plugin.nix) plugin;
   inherit (import ./monitors.nix) monitorv2;
 }

@@ -115,6 +115,7 @@
     "animation slide, shell:bar"
     "animation slide, shell:capture"
     "animation slide, shell:session"
+    "animation slide, shell:overview"
 
     # Layer ignoring zero alpha
     "ignorezero, quickshell"

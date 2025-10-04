@@ -19,10 +19,10 @@ in {
 
       importantPrefixes = [
         "$"
+        "source"
         "output"
         "bezier"
         "name"
-        "source"
       ];
 
       settings = import ./config {inherit pkgs config inputs lib;};

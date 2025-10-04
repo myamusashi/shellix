@@ -1,7 +1,7 @@
 {config, ...}: let
   shell = "qs -c lock ipc call";
 in {
-  term = "foot";
+  term = "kitty";
   screencapture = "${shell} screencapture toggle";
   gamemode = "${config.home.homeDirectory}/.dots/modules/programs/home-manager/hyprland/config/scripts/gamemode.sh";
   files = "footclient --title=yaziFM yazi";
