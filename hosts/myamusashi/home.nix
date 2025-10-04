@@ -2,6 +2,7 @@
   pkgs,
   lib,
   inputs,
+  config,
   ...
 }: {
   imports = [
@@ -15,6 +16,21 @@
     username = "myamusashi";
     homeDirectory = "/home/myamusashi";
     stateVersion = "24.11";
+
+    file.".config/hypr/hyprqt6engine.conf" = {
+      enable = true;
+      text = ''
+        theme {
+        	color = ${config.home.homeDirectory}/.local/share/color-schemes/Shellix.colors
+        	icon_theme = la-capitaine-icon-theme
+        	style = Darkly
+        	font_fixed = SFProText Nerd Font
+        	font_fixed_size = 12
+        	font = SF Pro Display
+        	font_size = 12
+        }
+      '';
+    };
   };
 
   nixpkgs.overlays = [
@@ -104,11 +120,13 @@
         pkgs.qtcreator
         pkgs.darkly
         pkgs.cachix
-        # inputs.caelestia-shell.packages.${pkgs.system}.default
-        # inputs.caelestia-cli.packages.${pkgs.system}.default
         pkgs.inter
+        pkgs.asciinema
+        (pkgs.la-capitaine-icon-theme.overrideAttrs {dontCheckForBrokenSymlinks = true;})
         inputs.apple-fonts.packages.${pkgs.system}.sf-pro
         inputs.apple-fonts.packages.${pkgs.system}.sf-pro-nerd
+        inputs.flox.packages.${pkgs.system}.default
+        (pkgs.callPackage ./extra/yet-another-monochrome-icon-set.nix {})
         (pkgs.callPackage ./extra/fonts-audiowide.nix {})
         (pkgs.callPackage ./extra/app2unit.nix {})
       ];
