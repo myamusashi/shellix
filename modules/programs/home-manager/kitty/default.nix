@@ -4,7 +4,6 @@
   ...
 }: let
   cfg = config.shellix.programs.home.kitty;
-  colors = config.shellix.matugen.colors.palette;
 in {
   config = lib.mkIf cfg.enable {
     programs.kitty = {
@@ -26,7 +25,7 @@ in {
         cursor_trail_start_threshold = 0;
         shell_integration = "no-cursor";
 
-        disable_ligatures = "never";
+        disable_ligatures = "cursor";
 
         scrollback_lines = 1000;
 
@@ -71,7 +70,7 @@ in {
         background_tint = 1;
         dim_opacity = 1;
 
-        font_family = "SFProText Nerd Font";
+        font_family = "Liga SFMono Nerd Font";
         bold_font = "auto";
         italic_font = "auto";
         bold_italic_font = "auto";
