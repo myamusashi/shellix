@@ -5,17 +5,13 @@ final: prev: {
 
   vmware-workstation = prev.vmware-workstation.overrideAttrs (oldAttrs: {
     installPhase = ''
-      # Jalankan install phase orisinal terlebih dahulu
       ${oldAttrs.installPhase}
 
-      # Ganti nama binary asli
       mv $out/bin/vmware $out/bin/vmware-bin
 
-      # Buat wrapper script yang mengatur GTK_THEME sebelum menjalankan binary asli
       makeWrapper $out/bin/vmware-bin $out/bin/vmware \
         --set GTK_THEME "Adwaita-dark"
 
-      # Perbarui file .desktop agar menunjuk ke wrapper script
       if [ -f $out/share/applications/vmware-workstation.desktop ]; then
         substituteInPlace $out/share/applications/vmware-workstation.desktop \
           --replace "Exec=@@BINARY@@" "Exec=$out/bin/vmware"

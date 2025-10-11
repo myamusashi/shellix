@@ -1,4 +1,16 @@
 {
+  nixConfig = {
+    extra-substituters = [
+      "https://hyprland.cachix.org"
+      "https://nix-community.cachix.org"
+      "https://cache.nixos.org"
+    ];
+    extra-trusted-public-keys = [
+      "hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc="
+      "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
+      "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
+    ];
+  };
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
     nixpkgs-stable.url = "github:NixOS/nixpkgs/release-25.05";
@@ -21,12 +33,12 @@
     };
 
     hy3 = {
-      url = "github:myamusashi/hy3";
+      url = "github:outfoxxed/hy3";
       inputs.hyprland.follows = "hyprland";
     };
 
     hypr-dynamic-cursors = {
-      url = "github:myamusashi/hypr-dynamic-cursors";
+      url = "github:VirtCode/hypr-dynamic-cursors";
       inputs.hyprland.follows = "hyprland";
     };
 
@@ -95,14 +107,34 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    winboat = {
+      url = "github:TibixDev/winboat";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     walker = {
       url = "github:abenz1267/walker";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    vermilion = {
+      url = "github:vaxerski/Vermilion";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    hyprwire = {
+      url = "github:hyprwm/hyprwire";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
     neovim-nightly-overlay.url = "github:nix-community/neovim-nightly-overlay";
     flox.url = "github:flox/flox/v1.7.4";
     apple-fonts.url = "github:Lyndeno/apple-fonts.nix";
+    # We only use this for ligatures support
+    sf-mono-liga-src = {
+      url = "github:shaunsingh/SFMono-Nerd-Font-Ligaturized";
+      flake = false;
+    };
     spicetify-nix.url = "github:Gerg-L/spicetify-nix";
     matugen.url = "github:/InioX/Matugen/v2.4.1";
     nixgl.url = "github:nix-community/nixGL";
@@ -131,9 +163,17 @@
         inputs.hyprsunset.overlays.default
         inputs.hypridle.overlays.default
         inputs.hyprland.overlays.default
-        inputs.hyprqt6engine.overlays.default
         nixgl.overlay
         inputs.neovim-nightly-overlay.overlays.default
+        (final: prev: {
+          hyprland = prev.hyprland.overrideAttrs (oldAttrs: {
+            patches =
+              (oldAttrs.patches or [])
+              ++ [
+                ./lto_support.patch
+              ];
+          });
+        })
       ];
     };
   in {
@@ -155,7 +195,6 @@
         };
       };
 
-      # NOTE: nixos dan myamusashi sama saja
       nixos = nixpkgs.lib.nixosSystem {
         inherit system;
         modules = [
@@ -186,18 +225,23 @@
           ./hosts/myamusashi/home.nix
         ];
       };
-      "waltz" = home-manager.lib.homeManagerConfiguration {
-        inherit pkgs-stable;
+    };
 
-        extraSpecialArgs = {
-          inherit system;
-          inherit inputs;
-        };
+    devShells.${system}.default = pkgs.mkShell {
+      buildInputs = with pkgs; [
+        alejandra
+        nil
+        git
+        statix
+        nix-diff
+      ];
 
-        modules = [
-          ./hosts/waltz/home.nix
-        ];
-      };
+      shellHook = ''
+        echo "NixOS configuration development environment"
+        echo "Available commands:"
+        echo "  - nixos-rebuild"
+        echo "  - home-manager"
+      '';
     };
   };
 }
