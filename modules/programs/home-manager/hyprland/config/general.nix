@@ -1,4 +1,12 @@
-{
+{config, ...}: let
+  cfg = config.shellix.programs.home.hyprland;
+  layoutHypr =
+    if cfg.plugins.hy3.keybind
+    then "hy3"
+    else if cfg.plugins.scrolling.keybind
+    then "scrolling"
+    else "dwindle";
+in {
   general = {
     gaps_in = 2;
     gaps_out = 5;
@@ -6,7 +14,7 @@
     "col.active_border" = "$primary";
     "col.inactive_border" = "$inverse_primary";
     no_border_on_floating = false;
-    layout = "hy3";
+    layout = layoutHypr;
     snap = {
       enabled = true;
       window_gap = 35;
