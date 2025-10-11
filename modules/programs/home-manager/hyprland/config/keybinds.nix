@@ -1,5 +1,60 @@
-{config, ...}: let
+{
+  config,
+  ...
+}: let
+  cfg = config.shellix.programs.home.hyprland;
   vars = import ./variable.nix {inherit config;};
+  hy3_bind = with vars; [
+    "${modalt}, left, exec, hyprctl dispatch hy3:movefocus l"
+    "${modalt}, right, exec, hyprctl dispatch hy3:movefocus r"
+    "${modalt}, up, exec, hyprctl dispatch hy3:movefocus u"
+    "${modalt}, down, exec, hyprctl dispatch hy3:movefocus d"
+
+    "SHIFT ${modalt}, G, exec, hyprctl dispatch hy3:makegroup tab"
+
+    "${mod}, left, exec, hyprctl dispatch hy3:movewindow l"
+    "${mod}, right, exec, hyprctl dispatch hy3:movewindow r"
+    "${mod}, up, exec, hyprctl dispatch hy3:movewindow u"
+    "${mod}, down, exec, hyprctl dispatch hy3:movewindow d"
+  ];
+  hyprscrolling_bind = with vars; [
+    "${modalt} CTRL, left, layoutmsg, movewindowto l"
+    "${modalt} CTRL, right, layoutmsg, movewindowto r"
+    "${modalt} CTRL, up, layoutmsg, movewindowto u"
+    "${modalt} CTRL, down, layoutmsg, movewindowto d"
+
+    "SHIFT ${mod}, left, layoutmsg, swapcol l"
+    "SHIFT ${mod}, right, layoutmsg, swapcol r"
+
+    "${mod} CTRL, right, layoutmsg, move +col"
+    "${mod} CTRL, left, layoutmsg, move -col"
+
+    "${modalt}, A, layoutmsg, fit active"
+    "SHIFT ${modalt}, A, layoutmsg, fit all"
+
+    "${modalt}, left, movefocus, l"
+    "${modalt}, right, movefocus, r"
+    "${modalt}, up, movefocus, u"
+    "${modalt}, down, movefocus, d"
+  ];
+  default_bind = with vars; [
+    "${mod}, left, movewindow, l"
+    "${mod}, right, movewindow, r"
+    "${mod}, up, movewindow, u"
+    "${mod}, down, movewindow, d"
+
+    "${modalt}, left, movefocus, l"
+    "${modalt}, right, movefocus, r"
+    "${modalt}, up, movefocus, u"
+    "${modalt}, down, movefocus, d"
+  ];
+
+  finalKeybinds =
+    if cfg.plugins.hy3.keybind
+    then hy3_bind
+    else if cfg.plugins.scrolling.keybind
+    then hyprscrolling_bind
+    else default_bind;
 in {
   bindm = with vars; [
     "${modalt}, mouse:273, resizewindow"
@@ -15,6 +70,8 @@ in {
       "${modalt}, E, exec, ${files}" # yazi need
       "SHIFT ${modalt}, C, exec, ${clipmanager}" # cliphist need
       "SHIFT ${modalt}, D, exec, ${discord}" # vesktop need
+      "${modalt}, S, exec, hyprctl keyword monitorv2[eDP-1]:disabled 1"
+      "${modalt}, W, exec, ${wallpaper-switcher}"
       "${modalt}, SPACE, exec, ${launcher}" # quickshell need
       "${modalt}, S, exec, ${spotify}"
       "${mod}, W, exec, ${dashboard}" # quickshell need
@@ -35,20 +92,6 @@ in {
       "SuperShift, P, workspaceopt, allpseudo"
       "${mod}, Tab, cyclenext"
       "${mod}, Tab, bringactivetotop"
-      "${modalt}, left, movefocus, l"
-      "${modalt}, right, movefocus, r"
-      "${modalt}, up, movefocus, u"
-      "${modalt}, down, movefocus, d"
-      # hy3
-      "${mod} CTRL, left, exec, hyprctl dispatch hy3:movefocus l"
-      "${mod} CTRL, right, exec, hyprctl dispatch hy3:movefocus r"
-      "${mod} CTRL, up, exec, hyprctl dispatch hy3:movefocus u"
-      "${mod} CTRL, down, exec, hyprctl dispatch hy3:movefocus d"
-      "SHIFT ${modalt}, G, exec, hyprctl dispatch hy3:makegroup tab"
-      "${mod}, left, exec, hyprctl dispatch hy3:movewindow l"
-      "${mod}, right, exec, hyprctl dispatch hy3:movewindow r"
-      "${mod}, up, exec, hyprctl dispatch hy3:movewindow u"
-      "${mod}, down, exec, hyprctl dispatch hy3:movewindow d"
       # Resize
       "${modalt} CTRL, left, resizeactive, -20 0"
       "${modalt} CTRL, right, resizeactive, 20 0"
@@ -70,6 +113,7 @@ in {
       ", XF86AudioMute, exec, wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle"
       "${modalt}, TAB, exec, hyprctl dispatch overview:toggle"
     ]
+    ++ finalKeybinds
     ++ (
       # workspaces - bind $mod + [shift +] {1..9} to [move to] workspace {1..9}
       builtins.concatLists (builtins.genList
