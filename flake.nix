@@ -234,13 +234,11 @@
         git
         statix
         nix-diff
+        nixd
       ];
 
       shellHook = ''
         echo "NixOS configuration development environment"
-        echo "Available commands:"
-        echo "  - nixos-rebuild"
-        echo "  - home-manager"
       '';
     };
   };
