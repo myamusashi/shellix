@@ -20,6 +20,7 @@
     ./vscode/default.nix
     ./winapps/default.nix
     ./matugen/default.nix
+    ./winboat/default.nix
   ];
 
   options.shellix.programs.home = {
@@ -44,5 +45,6 @@
     tofi.enable = lib.mkEnableOption "Enable Tofi apps launcher";
     winapps.enable = lib.mkEnableOption "Enable Winapps";
     matugen.enable = lib.mkEnableOption "Enable matugen color generation";
+    winboat.enable = lib.mkEnableOption "Enable winboat seamless integration with windows";
   };
 }

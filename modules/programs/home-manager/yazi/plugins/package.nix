@@ -99,4 +99,18 @@
     rev = "main";
     hash = "sha256-pFljxXAyUfu680+MhbLrI07RcukrPXgmIvtp3f6ZVvY=";
   };
+  # https://github.com/Deepak22903/kdeconnect-send.yazi
+  kdeconnect-send = pkgs.fetchFromGitHub {
+    owner = "Deepak22903";
+    repo = "kdeconnect-send.yazi";
+    rev = "main";
+    hash = "sha256-xza+TXFGEqkPDVT2er5iisVd9QdGwJNKiUcu7Mjpeug=";
+  };
+  # https://github.com/AnirudhG07/custom-shell.yazi
+  custom-shell = pkgs.fetchFromGitHub {
+    owner = "AnirudhG07";
+    repo = "custom-shell.yazi";
+    rev = "main";
+    hash = "sha256-hJVFZvcHgcjmcwUUGs1Q668KjeLSCEVuAhAD1A8ZM90=";
+  };
 }
