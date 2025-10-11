@@ -133,6 +133,13 @@
     ];
   };
 
+  # For winboat
+  users.users.docker = {
+    isSystemUser = true;
+    group = "docker";
+  };
+  users.groups.docker = {};
+
   services = {
     resolved = {
       enable = true;
@@ -175,7 +182,7 @@
     programs.nixos = {
       fish.enable = true;
       starship.enable = true;
-      steam.enable = true;
+      steam.enable = false;
       virt-manager.enable = false;
       wireshark.enable = false;
       xonsh.enable = false;
@@ -300,7 +307,9 @@
 
   nixpkgs = {
     config.allowUnfree = true;
-    overlays = [(import ./overlays.nix)];
+    overlays = [
+      (import ./overlays.nix)
+    ];
   };
   nix = {
     enable = true;
