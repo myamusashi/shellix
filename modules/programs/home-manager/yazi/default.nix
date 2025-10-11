@@ -36,11 +36,23 @@ in {
         yatline = "${plugin.yatline}";
         lazygit = "${plugin.lazygit}";
         githead = "${plugin.githead}";
+        kdeconnect-send = "${plugin.kdeconnect-send}";
+        custom-shell = "${plugin.custom-shell}";
       };
       keymap = {
         mgr = {
           show_symlink = true;
           prepend_keymap = [
+            {
+              on = ["'" ";"];
+              run = "plugin custom-shell -- fish --interactive";
+            }
+            {
+              on = ["<C-s>"];
+              run = "plugin kdeconnect-send";
+              desc = "Send selected files via KDE Connect";
+            }
+
             {
               on = ["E"];
               run = "plugin eza-preview";
