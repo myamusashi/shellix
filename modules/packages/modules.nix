@@ -130,7 +130,6 @@ with pkgs; {
     launcher = [rofi tofi wofi];
     hyprland = [
       hyprpicker
-      hyprland
       hyprsunset
     ];
   };
@@ -150,7 +149,7 @@ with pkgs; {
       morewaita-icon-theme
       (whitesur-icon-theme.override {themeVariants = ["default"];})
     ];
-    qt = [whitesur-kde qt6ct hyprqt6engine];
+    qt = [whitesur-kde qt6ct];
     gtk = [
       (whitesur-gtk-theme.override {
         themeVariants = ["blue"];
