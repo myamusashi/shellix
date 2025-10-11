@@ -1,7 +1,4 @@
-{
-  config,
-  ...
-}: let
+{config, ...}: let
   cfg = config.shellix.programs.home.hyprland;
   vars = import ./variable.nix {inherit config;};
   hy3_bind = with vars; [
