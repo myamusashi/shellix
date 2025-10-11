@@ -9,39 +9,11 @@ in {
   config = lib.mkIf cfg.enable {
     programs.neovim = {
       enable = true;
-      plugins = with pkgs.vimPlugins; [
-        (nvim-treesitter.withPlugins (plugins: pkgs.tree-sitter.allGrammars))
-        (nvim-treesitter.withPlugins (
-          plugins:
-            with plugins; [
-              tree-sitter-c
-              tree-sitter-cpp
-              tree-sitter-dockerfile
-              tree-sitter-fish
-              tree-sitter-go
-              tree-sitter-html
-              tree-sitter-svelte
-              tree-sitter-json
-              tree-sitter-typescript
-              tree-sitter-lua
-              tree-sitter-nix
-              tree-sitter-sql
-              tree-sitter-python
-              tree-sitter-r
-              tree-sitter-dockerfile
-              tree-sitter-java
-              tree-sitter-regex
-              tree-sitter-rust
-              tree-sitter-toml
-              tree-sitter-vim
-              tree-sitter-yaml
-              tree-sitter-toml
-            ]
-        ))
+      plugins = with pkgs; [
+        (tree-sitter.withPlugins (plugins: pkgs.tree-sitter.allGrammars))
       ];
       extraPackages = with pkgs; [
         alejandra
-        vimPlugins.nvim-treesitter-parsers.kconfig
         lemminx
         svelte-language-server
         gopls
@@ -53,7 +25,6 @@ in {
         gnumake
         mesonlsp
         sassc
-        ccls
         sqls
         dockerfile-language-server-nodejs
         jdt-language-server
@@ -79,6 +50,7 @@ in {
         qt6.qttools
         php
         phpactor
+        tree-sitter
         texliveFull
         markdownlint-cli
         markdownlint-cli2
