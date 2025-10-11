@@ -188,4 +188,12 @@ final: prev: {
         '';
     });
   });
+
+  intel-graphics-compiler = prev.intel-graphics-compiler.overrideAttrs (oldAttrs: {
+    patches =
+      (oldAttrs.patches or [])
+      ++ [
+        ./bump-cmake.patch
+      ];
+  });
 }
