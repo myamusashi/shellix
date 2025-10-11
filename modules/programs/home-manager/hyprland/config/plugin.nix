@@ -1,42 +1,16 @@
 {
-  plugin = {
-    hyprscrolling = {fullscreen_on_one_column = true;};
-    overview = {
-      # Color workspaces window
-      dragAlpha = 0.5;
-      panelColor = "$background";
-      panelBorderColor = "$primary";
-
-      # Layout
-      disableBlur = false;
-      workspaceMargin = 20;
-      panelHeight = 250;
-      panelBorderWidth = 5;
-      workspaceBorderSize = 5;
-      hideBackgroundLayers = false;
-      hideTopLayers = true;
-      hideOverlayLayers = false;
-      hideRealLayers = false;
-      onBottom = true;
-      overrideGaps = true;
-      adaptiveHeight = true;
-      centerAligned = true;
-
-      # Event
-      affectStrut = true;
-      autoDrag = true;
-      autoScroll = false;
-      drawActiveWorkspace = true;
-      showNewWorkspace = true;
-      showEmptyWorkspace = true;
-      showSpecialWorkspace = false;
-      exitOnClick = false;
-
-      # Animation
-      overrideAnimSpeed = 0;
+  config,
+  lib,
+  ...
+}: let
+  cfg = config.shellix.programs.home.hyprland.plugins;
+in {
+  plugin = lib.mkIf cfg.enable {
+    hyprscrolling = lib.mkIf cfg.scrolling.enable {
+      fullscreen_on_one_column = true;
     };
 
-    hy3 = {
+    hy3 = lib.mkIf cfg.hy3.enable {
       # 0 - always show gaps
       # 1 - hide gaps with a single window onscreen
       # 2 - 1 but also show the window border
@@ -103,7 +77,7 @@
       };
     };
 
-    dynamic-cursors = {
+    dynamic-cursors = lib.mkIf cfg.hypr-dynamic-cursors.enable {
       # enables the plugin
       enabled = true;
 
