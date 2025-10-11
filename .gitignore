@@ -3,3 +3,4 @@ result
 nohup.out
 log
 *.log
+.direnv
