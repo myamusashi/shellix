@@ -15,7 +15,7 @@
     "float,class:^(confirmreset)$"
     "float,title:^(Open File)$"
     "float,title:^(branchdialog)$"
-    "float,title:^(*Akun Google*)$"
+    "float,title:^*.Akun Google.*"
     "float,title:^(Confirm to replace files)"
     "float,title:^(File Operation Progress)"
     "float,class:^(org.twosheds.iwgtk)$"
@@ -29,12 +29,14 @@
     "float,class:^(xdg-desktop-portal-gtk),title:^(Open Folder)"
     "float,title:^(Friends List)"
     "float,title:^(WhatsApp — KDE Connect Daemon)"
+    "float,initialTitle:^(yaziWS)"
 
     # Move position rules
     "move 40 44%,title:^(iwgtk)$"
     "move 40 58%,title:^(Bluetooth Devices)$"
 
     # Center rules
+    "center,initialTitle:^(yaziWS)"
     "center,title:^(WhatsApp — KDE Connect Daemon)"
     "center,class:^(xdg-desktop-portal-gtk),title:^(Open Folder)"
     "center,floating:1,class:^(org.quickshell),title:^(Select a wallpaper)"
@@ -55,6 +57,7 @@
     "center,class:^(eu.),title:^(Properties|Select icon)"
 
     # Size rules
+    "size 919 437,initialTitle:^(yaziWS)"
     "size 885 443,class:^(xdg-desktop-portal-kde),title:^(Open Folder)"
     "size 1000 600,class:^(org.quickshell),title:^(Select a wallpaper)"
     "size 400 300,title:^(WhatsApp — KDE Connect Daemon)"
@@ -77,6 +80,7 @@
 
     # Misc rules
     "stayfocused,class:^(clipse)"
+    "stayfocused,initialTitle:^(yaziWS)"
 
     "idleinhibit focus,class:^(mpv)$"
     "idleinhibit fullscreen,class:^(firefox)$"
