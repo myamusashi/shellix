@@ -11,7 +11,7 @@ stdenvNoCC.mkDerivation rec {
     owner = "Pummelfisch";
     repo = "future-cyan-hyprcursor";
     rev = "${version}";
-    sha256 = "sha256-Pi8+efEohVfH1iJ3oLcWLQuAOAZfR4iUOPmo4oyvrLE=";
+    sha256 = "sha256-a7LdP2VH0UlMPwW9vbBolOuPQMJa0WNpmJfLLv3JZ4g=";
   };
 
   installPhase = ''
