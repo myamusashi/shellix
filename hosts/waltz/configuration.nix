@@ -4,8 +4,7 @@
   pkgs-stable,
   lib,
   ...
-}: let
-in {
+}: {
   imports = [
     ./hardware/default.nix ## Virtualization here
     ../../modules/shared/Colors.nix
