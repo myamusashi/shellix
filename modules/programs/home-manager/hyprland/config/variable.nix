@@ -1,8 +1,10 @@
 {config, ...}: let
   shell = "qs -c lock ipc call";
+  GETWALLPAPERPATH = "${shell} img get";
 in {
   term = "kitty";
   screencapture = "${shell} screencapture toggle";
+  wallpaper-switcher = "footclient --title=yaziWS yazi $(${GETWALLPAPERPATH})";
   gamemode = "${config.home.homeDirectory}/.dots/modules/programs/home-manager/hyprland/config/scripts/gamemode.sh";
   files = "footclient --title=yaziFM yazi";
   browser = "zen";
