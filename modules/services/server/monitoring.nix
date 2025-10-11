@@ -2,8 +2,7 @@
   config,
   lib,
   ...
-}: let
-in {
+}: {
   imports = [
     ../../shared/Variable.nix
   ];

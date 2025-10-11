@@ -96,12 +96,12 @@ in {
     (lib.mkIf cfg.greetd.enable {
       services.greetd = {
         enable = true;
-        package = cfg.greetd.package;
+        inherit (cfg.greetd) package;
         vt = cfg.greetd.virtual-console;
         settings = {
           initial_session = lib.mkIf cfg.greetd.auto-login.enable {
             command = cfg.greetd.auto-login.runner;
-            user = cfg.greetd.auto-login.user;
+            inherit (cfg.greetd.auto-login) user;
           };
           default_session = {
             command = let
@@ -120,7 +120,7 @@ in {
         enable = true;
         wayland = lib.mkIf cfg.sddm.wayland.enable {
           enable = true;
-          compositor = cfg.sddm.wayland.compositor;
+          inherit (cfg.sddm.wayland) compositor;
         };
         theme = lib.mkIf (cfg.sddm.theme != "") cfg.sddm.theme;
         settings = {
