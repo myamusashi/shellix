@@ -24,7 +24,8 @@
         	color = ${config.home.homeDirectory}/.local/share/color-schemes/Shellix.colors
         	icon_theme = la-capitaine-icon-theme
         	style = Darkly
-        	font_fixed = SFProText Nerd Font
+        	font_fixed = Liga SFMono Nerd Font
+
         	font_fixed_size = 12
         	font = SF Pro Display
         	font_size = 12
@@ -56,21 +57,61 @@
           ];
         });
       });
+      allegro = super.allegro.overrideAttrs (oldAttrs: {
+        cmakeFlags =
+          (oldAttrs.cmakeFlags or [])
+          ++ [
+            "-DCMAKE_POLICY_VERSION_MINIMUM=3.5"
+          ];
+      });
+      sf-mono-liga-bin = super.stdenvNoCC.mkDerivation {
+        pname = "sf-mono-liga-bin";
+        version = "dev";
+        src = inputs.sf-mono-liga-src;
+        dontConfigure = true;
+        installPhase = ''
+          mkdir -p $out/share/fonts/opentype
+          cp -R $src/*.otf $out/share/fonts/opentype/
+        '';
+      };
     })
   ];
 
   programs.home-manager.enable = true;
+  programs.direnv = {
+    enable = true;
+    nix-direnv.enable = true;
+
+    config.global = {
+      hide_env_diff = true;
+    };
+  };
 
   shellix = {
     matugen.colors.enable = true;
-    # All this themes use matugen
     programs.home = {
       btop.enable = true;
       fastfetch.enable = true;
       foot.enable = true;
       fuzzel.enable = false;
       htop.enable = true;
-      hyprland.enable = true;
+      hyprland = {
+        enable = true;
+        plugins = {
+          enable = true;
+          hy3 = {
+            enable = false;
+            keybind = false;
+          };
+          scrolling = {
+            enable = true;
+            keybind = true;
+          };
+          hypr-dynamic-cursors = {
+            enable = true;
+          };
+        };
+      };
       kitty.enable = true;
       lazygit.enable = true;
       yazi.enable = true;
@@ -83,7 +124,8 @@
       quickshell.enable = true;
       spicetify.enable = false;
       wofi.enable = false;
-      winapps.enable = true;
+      winapps.enable = false;
+      winboat.enable = true;
       vscode.enable = true;
       matugen.enable = true;
     };
@@ -121,10 +163,18 @@
         pkgs.darkly
         pkgs.cachix
         pkgs.inter
+        (inputs.vermilion.packages.${pkgs.system}.vermilion.overrideAttrs (oldAttrs: {
+          pnpmDeps = pkgs.pnpm_10.fetchDeps {
+            inherit (oldAttrs) pname src;
+            hash = "sha256-nD55aAdaSfvU111rWvRm2uWQC1SFKVN+F4FaRHSVPVk=";
+            fetcherVersion = 2;
+          };
+        }))
         pkgs.asciinema
         (pkgs.la-capitaine-icon-theme.overrideAttrs {dontCheckForBrokenSymlinks = true;})
         inputs.apple-fonts.packages.${pkgs.system}.sf-pro
         inputs.apple-fonts.packages.${pkgs.system}.sf-pro-nerd
+        pkgs.sf-mono-liga-bin
         inputs.flox.packages.${pkgs.system}.default
         (pkgs.callPackage ./extra/yet-another-monochrome-icon-set.nix {})
         (pkgs.callPackage ./extra/fonts-audiowide.nix {})
@@ -236,7 +286,8 @@
       enable = true;
       theme.name = "WhiteSur-Dark-blue";
       font = {
-        name = "Hack";
+        name = "Liga SFMono Nerd Font";
+
         size = 11;
       };
 
@@ -255,7 +306,8 @@
       enable = true;
       theme.name = "WhiteSur-Dark-blue";
       font = {
-        name = "Hack";
+        name = "Liga SFMono Nerd Font";
+
         size = 11;
       };
     };
@@ -264,9 +316,9 @@
   fonts.fontconfig = {
     enable = true;
     defaultFonts = {
-      serif = ["DejaVu Serif"];
-      monospace = ["Hack"];
-      sansSerif = ["Inter"];
+      serif = ["SF Pro"];
+      monospace = ["Liga SFMono Nerd Font"];
+      sansSerif = ["SF Pro Display"];
     };
   };
 
@@ -285,8 +337,4 @@
   };
 
   nixGL.vulkan.enable = true;
-
-  home.activation.discordCSS = lib.hm.dag.entryAfter ["writeBoundary"] ''
-    ln -sf $HOME/.dots/scripts/discord_theme.css $HOME/.config/vesktop/settings/quickCss.css
-  '';
 }
