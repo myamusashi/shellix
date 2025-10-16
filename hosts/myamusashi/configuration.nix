@@ -248,6 +248,8 @@
     HYPRCURSOR_SIZE = "50";
     QS_ICON_THEME = "Papirus";
     QT_QPA_PLATFORMTHEME = "qt6ct";
+    XCURSOR_THEME = "Future-Cyan-Hyprcursor_Theme";
+    XCURSOR_SIZE = "35";
 
     # Wayland and Graphics
     GTK_USE_PORTAL = 0;
@@ -279,6 +281,7 @@
     _JAVA_AWT_WM_NONREPARENTING = 1;
     QT_WAYLAND_DISABLE_WINDOWDECORATION = 0;
     QT_AUTO_SCREEN_SCALE_FACTOR = 1;
+    ELECTRON_OZONE_PLATFORM_HINT = "wayland";
   };
 
   xdg.mime = {
