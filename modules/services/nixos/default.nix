@@ -8,6 +8,7 @@
     ./borg.nix
     ./plasma.nix
     ./display-manager.nix
+    ./minidlna.nix
   ];
 
   options.shellix.services.nixos = {
@@ -25,5 +26,6 @@
       greetd.enable = lib.mkEnableOption "Enable greetd display manager";
       sddm.enable = lib.mkEnableOption "Enable SDDM display manager";
     };
+    minidlna.enable = lib.mkEnableOption "Enable MiniDLNA";
   };
 }
