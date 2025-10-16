@@ -5,7 +5,6 @@
       mode = "preferred";
       position = "0x0";
       scale = "1.25";
-      disabled = 1;
       min_luminance = 0.0;
       max_luminance = 250;
       max_avg_luminance = 200;
