@@ -29,6 +29,10 @@ in {
         bash-language-server
         shfmt
         prettierd
+        stylua
+        vscode-langservers-extracted
+        lua-language-server
+        kdePackages.qtdeclarative
       ];
     };
   };
