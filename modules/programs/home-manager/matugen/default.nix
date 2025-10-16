@@ -33,6 +33,11 @@ in {
         mode = "Dark"
         output_path = "${HOME}/.config/foot/foot.ini"
 
+        [templates.vicinae]
+        input_path = "${toString ./templates/vicinae/shellix.json}"
+        mode = "Dark"
+        output_path = "${HOME}/.config/vicinae/themes/shellix.json"
+
         [templates.gtk3]
         input_path = "${toString ./templates/gtk/gtk-colors.css}"
         mode = "Dark"
