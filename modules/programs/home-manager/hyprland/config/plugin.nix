@@ -7,6 +7,7 @@
 in {
   plugin = lib.mkIf cfg.enable {
     hyprscrolling = lib.mkIf cfg.scrolling.enable {
+      follow_focus = false;
       fullscreen_on_one_column = true;
     };
 

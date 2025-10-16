@@ -22,4 +22,5 @@
   inherit (import ./permission.nix {inherit pkgs;}) permission;
   inherit (import ./plugin.nix {inherit lib config;}) plugin;
   inherit (import ./monitors.nix) monitorv2;
+  inherit (import ./workspaces.nix) workspace;
 }
