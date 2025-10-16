@@ -1,0 +1,20 @@
+{
+	"version": "1.0.0",
+	"appearance": "dark",
+	"icon": "./md3.png",
+	"name": "Shellix matugen",
+	"description": "Using matugen color generation",
+	"palette": {
+	  "background": "{{colors.background.default.hex}}",
+	  "foreground": "{{colors.on_background.default.hex}}",
+	  "blue": "#A4C9FE",
+	  "green": "#9DD49E",
+	  "magenta": "#E2B7F4",
+	  "orange": "#FFB4AB",
+	  "purple": "#633664",
+	  "red": "#BA1A1A",
+	  "yellow": "#D7C770",
+	  "cyan": "#A1C9FD"
+	}
+}
+
