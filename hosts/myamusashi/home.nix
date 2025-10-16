@@ -136,6 +136,7 @@
         easyeffects.enable = true;
         hypridle.enable = true;
         kdeconnect.enable = true;
+        vicinae.enable = true;
       };
       systemd.user = {
         adzan.enable = true;
@@ -143,6 +144,7 @@
         caelestia.enable = false;
         nm-applet.enable = true;
         weather-widget.enable = true;
+        matugen-watcher.enable = true;
       };
     };
 
