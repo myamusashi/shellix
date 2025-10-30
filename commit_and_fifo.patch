@@ -1,0 +1,323 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index b1c78478..15cbcf41 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -95,9 +95,6 @@ add_compile_options(
+   -Wno-clobbered
+   -fmacro-prefix-map=${CMAKE_SOURCE_DIR}/=)
+ 
+-# disable lto as it may break plugins
+-add_compile_options(-fno-lto)
+-
+ set(CMAKE_EXECUTABLE_ENABLE_EXPORTS TRUE)
+ set(CMAKE_EXPORT_COMPILE_COMMANDS TRUE)
+ 
+@@ -390,6 +387,8 @@ protocolnew("staging/xdg-system-bell" "xdg-system-bell-v1" false)
+ protocolnew("staging/ext-workspace" "ext-workspace-v1" false)
+ protocolnew("staging/ext-data-control" "ext-data-control-v1" false)
+ protocolnew("staging/pointer-warp" "pointer-warp-v1" false)
++protocolnew("staging/fifo" "fifo-v1" false)
++protocolnew("staging/commit-timing" "commit-timing-v1" false)
+ 
+ protocolwayland()
+ 
+diff --git a/meson.build b/meson.build
+index 4f910bfe..8735dccc 100644
+--- a/meson.build
++++ b/meson.build
+@@ -9,7 +9,7 @@ project(
+     'optimization=3',
+     'buildtype=release',
+     'debug=false',
+-    'b_lto=false',
++    'b_lto=true',
+     'cpp_std=c++26',
+   ],
+   meson_version: '>= 1.1.0',
+diff --git a/protocols/meson.build b/protocols/meson.build
+index dc23eaa1..6b5b9397 100644
+--- a/protocols/meson.build
++++ b/protocols/meson.build
+@@ -78,6 +78,8 @@ protocols = [
+ 	wayland_protocol_dir / 'staging/ext-workspace/ext-workspace-v1.xml',
+ 	wayland_protocol_dir / 'staging/ext-data-control/ext-data-control-v1.xml',
+ 	wayland_protocol_dir / 'staging/pointer-warp/pointer-warp-v1.xml',
++    wayland_protocol_dir / 'staging/fifo/fifo-v1.xml',
++	wayland_protocol_dir / 'staging/commit-timing/commit-timing-v1.xml',
+ ]
+ 
+ wl_protocols = []
+diff --git a/src/helpers/Monitor.cpp b/src/helpers/Monitor.cpp
+index 273bc1c7..cd459ad6 100644
+--- a/src/helpers/Monitor.cpp
++++ b/src/helpers/Monitor.cpp
+@@ -139,6 +139,8 @@ void CMonitor::onConnect(bool noRule) {
+         }
+ 
+         m_frameScheduler->onPresented();
++
++		m_events.presented.emit();
+     });
+ 
+     m_listeners.destroy = m_output->events.destroy.listen([this] {
+diff --git a/src/helpers/Monitor.hpp b/src/helpers/Monitor.hpp
+index d112f747..77462da0 100644
+--- a/src/helpers/Monitor.hpp
++++ b/src/helpers/Monitor.hpp
+@@ -214,6 +214,7 @@ class CMonitor {
+         CSignalT<> disconnect;
+         CSignalT<> dpmsChanged;
+         CSignalT<> modeChanged;
++		CSignalT<> presented;
+     } m_events;
+ 
+     std::array<std::vector<PHLLSREF>, 4> m_layerSurfaceLayers;
+diff --git a/src/managers/ProtocolManager.cpp b/src/managers/ProtocolManager.cpp
+index c9690aba..568bdd81 100644
+--- a/src/managers/ProtocolManager.cpp
++++ b/src/managers/ProtocolManager.cpp
+@@ -65,6 +65,8 @@
+ #include "../protocols/ExtWorkspace.hpp"
+ #include "../protocols/ExtDataDevice.hpp"
+ #include "../protocols/PointerWarp.hpp"
++#include "../protocols/Fifo.hpp"
++#include "../protocols/CommitTiming.hpp"
+ 
+ #include "../helpers/Monitor.hpp"
+ #include "../render/Renderer.hpp"
+@@ -194,6 +196,8 @@ CProtocolManager::CProtocolManager() {
+     PROTO::extWorkspace        = makeUnique<CExtWorkspaceProtocol>(&ext_workspace_manager_v1_interface, 1, "ExtWorkspace");
+     PROTO::extDataDevice       = makeUnique<CExtDataDeviceProtocol>(&ext_data_control_manager_v1_interface, 1, "ExtDataDevice");
+     PROTO::pointerWarp         = makeUnique<CPointerWarpProtocol>(&wp_pointer_warp_v1_interface, 1, "PointerWarp");
++	PROTO::fifo                = makeUnique<CFifoProtocol>(&wp_fifo_manager_v1_interface, 1, "Fifo");
++    PROTO::commitTiming        = makeUnique<CCommitTimingProtocol>(&wp_commit_timing_manager_v1_interface, 1, "CommitTiming");
+ 
+     if (*PENABLECM)
+         PROTO::colorManagement = makeUnique<CColorManagementProtocol>(&wp_color_manager_v1_interface, 1, "ColorManagement", *PDEBUGCM);
+@@ -298,6 +302,8 @@ CProtocolManager::~CProtocolManager() {
+     PROTO::extWorkspace.reset();
+     PROTO::extDataDevice.reset();
+     PROTO::pointerWarp.reset();
++	PROTO::fifo.reset();
++    PROTO::commitTiming.reset();
+ 
+     for (auto& [_, lease] : PROTO::lease) {
+         lease.reset();
+@@ -353,6 +359,8 @@ bool CProtocolManager::isGlobalPrivileged(const wl_global* global) {
+ 		PROTO::hyprlandSurface->getGlobal(),
+ 		PROTO::xdgTag->getGlobal(),
+ 		PROTO::xdgBell->getGlobal(),
++		PROTO::fifo->getGlobal(),
++		PROTO::commitTiming->getGlobal(),
+         PROTO::sync     ? PROTO::sync->getGlobal()      : nullptr,
+         PROTO::mesaDRM  ? PROTO::mesaDRM->getGlobal()   : nullptr,
+         PROTO::linuxDma ? PROTO::linuxDma->getGlobal()  : nullptr,
+diff --git a/src/protocols/core/Compositor.cpp b/src/protocols/core/Compositor.cpp
+index 8ad2a373..b92811b0 100644
+--- a/src/protocols/core/Compositor.cpp
++++ b/src/protocols/core/Compositor.cpp
+@@ -129,28 +129,19 @@ CWLSurfaceResource::CWLSurfaceResource(SP<CWlSurface> resource_) : m_resource(re
+             return;
+         }
+ 
+-        // null buffer attached
+-        if (!m_pending.buffer && m_pending.updated.bits.buffer) {
+-            commitState(m_pending);
+-
+-            // remove any pending states.
+-            while (!m_pendingStates.empty()) {
+-                m_pendingStates.pop();
+-            }
+-
+-            m_pendingWaiting = false;
+-            m_pending.reset();
+-            return;
+-        }
+-
+         // save state while we wait for buffer to become ready to read
+         const auto& state = m_pendingStates.emplace(makeUnique<SSurfaceState>(m_pending));
+         m_pending.reset();
+ 
+-        if (!m_pendingWaiting) {
+-            m_pendingWaiting = true;
+-            scheduleState(state);
++		state->lock->lock();
++
++        // null buffer attached
++        if (!state->buffer && state->updated.bits.buffer) {
++            state->lock->unlock();
++            return;
+         }
++
++        scheduleState(state);
+     });
+ 
+     m_resource->setDamage([this](CWlSurface* r, int32_t x, int32_t y, int32_t w, int32_t h) {
+@@ -255,6 +246,13 @@ bool CWLSurfaceResource::good() {
+     return m_resource->resource();
+ }
+ 
++void CWLSurfaceResource::progressStates() {
++    while (!m_pendingStates.empty() && !m_pendingStates.front()->lock->locked()) {
++        commitState(*m_pendingStates.front());
++        m_pendingStates.pop();
++    }
++}
++
+ wl_client* CWLSurfaceResource::client() {
+     return m_client;
+ }
+@@ -483,20 +481,9 @@ void CWLSurfaceResource::scheduleState(WP<SSurfaceState> state) {
+         if (!surf || state.expired() || m_pendingStates.empty())
+             return;
+ 
+-        while (!m_pendingStates.empty() && m_pendingStates.front() != state) {
+-            commitState(*m_pendingStates.front());
+-            m_pendingStates.pop();
+-        }
+-
+-        commitState(*m_pendingStates.front());
+-        m_pendingStates.pop();
++        state->lock->unlock();
+ 
+-        // If more states are queued, schedule next state
+-        if (!m_pendingStates.empty()) {
+-            scheduleState(m_pendingStates.front());
+-        } else {
+-            m_pendingWaiting = false;
+-        }
++        progressStates();
+     };
+ 
+     if (state->updated.bits.acquire) {
+@@ -652,6 +639,11 @@ void CWLSurfaceResource::presentFeedback(const Time::steady_tp& when, PHLMONITOR
+     PROTO::presentation->queueData(std::move(FEEDBACK));
+ }
+ 
++void CWLSurfaceResource::init() {
++    m_pending.lock = makeShared<CSurfaceStateLock>(m_self.lock());
++    m_current.lock = makeShared<CSurfaceStateLock>(m_self.lock());
++}
++
+ CWLCompositorResource::CWLCompositorResource(SP<CWlCompositor> resource_) : m_resource(resource_) {
+     if UNLIKELY (!good())
+         return;
+@@ -668,6 +660,7 @@ CWLCompositorResource::CWLCompositorResource(SP<CWlCompositor> resource_) : m_re
+         }
+ 
+         RESOURCE->m_self = RESOURCE;
++		RESOURCE->init();
+ 
+         LOGM(LOG, "New wl_surface with id {} at {:x}", id, (uintptr_t)RESOURCE.get());
+ 
+diff --git a/src/protocols/core/Compositor.hpp b/src/protocols/core/Compositor.hpp
+index dc61917d..1f0dccf9 100644
+--- a/src/protocols/core/Compositor.hpp
++++ b/src/protocols/core/Compositor.hpp
+@@ -87,6 +87,7 @@ class CWLSurfaceResource {
+     SP<CWlSurface>                getResource();
+     CBox                          extends();
+     void                          resetRole();
++	void						  init();
+ 
+     struct {
+         CSignalT<>                          precommit; // before commit
+@@ -102,7 +103,7 @@ class CWLSurfaceResource {
+     SSurfaceState                          m_current;
+     SSurfaceState                          m_pending;
+     std::queue<UP<SSurfaceState>>          m_pendingStates;
+-    bool                                   m_pendingWaiting = false;
++    void								   progressStates();
+ 
+     WP<CWLSurfaceResource>                 m_self;
+     WP<CWLSurface>                         m_hlSurface;
+diff --git a/src/protocols/types/SurfaceState.cpp b/src/protocols/types/SurfaceState.cpp
+index 248ce835..42c81266 100644
+--- a/src/protocols/types/SurfaceState.cpp
++++ b/src/protocols/types/SurfaceState.cpp
+@@ -2,6 +2,40 @@
+ #include "helpers/Format.hpp"
+ #include "protocols/types/Buffer.hpp"
+ #include "render/Texture.hpp"
++#include "../core/Compositor.hpp"
++
++CSurfaceStateLock::CSurfaceStateLock(SP<CWLSurfaceResource> surf) : m_surface(surf) {
++    ;
++}
++
++void CSurfaceStateLock::lock() {
++    m_locks++;
++}
++
++void CSurfaceStateLock::unlock() {
++    RASSERT(m_locks, "Tried to unlock an unlocked surface state");
++
++    m_locks--;
++
++    if (!m_locks)
++        m_surface->progressStates();
++}
++
++bool CSurfaceStateLock::locked() {
++    return m_locks;
++}
++
++SP<CSurfaceScopeLock> CSurfaceScopeLock::create(SP<CSurfaceStateLock> lock) {
++    return makeShared<CSurfaceScopeLock>(lock);
++}
++
++CSurfaceScopeLock::CSurfaceScopeLock(SP<CSurfaceStateLock> lock) : m_lock(lock) {
++    m_lock->lock();
++}
++
++CSurfaceScopeLock::~CSurfaceScopeLock() {
++    m_lock->unlock();
++}
+ 
+ Vector2D SSurfaceState::sourceSize() {
+     if UNLIKELY (!texture)
+diff --git a/src/protocols/types/SurfaceState.hpp b/src/protocols/types/SurfaceState.hpp
+index e6764eda..3a77123b 100644
+--- a/src/protocols/types/SurfaceState.hpp
++++ b/src/protocols/types/SurfaceState.hpp
+@@ -8,6 +8,32 @@ class CTexture;
+ class CDRMSyncPointState;
+ class CWLCallbackResource;
+ 
++class CSurfaceStateLock {
++  public:
++    CSurfaceStateLock(SP<CWLSurfaceResource> surf);
++    ~CSurfaceStateLock() = default;
++
++    void lock();
++    void unlock();
++
++    bool locked();
++
++  private:
++    size_t                 m_locks = 0;
++    WP<CWLSurfaceResource> m_surface;
++};
++
++class CSurfaceScopeLock {
++  public:
++    static SP<CSurfaceScopeLock> create(SP<CSurfaceStateLock> lock);
++
++    CSurfaceScopeLock(SP<CSurfaceStateLock> lock);
++    ~CSurfaceScopeLock();
++
++  private:
++    SP<CSurfaceStateLock> m_lock;
++};
++
+ struct SSurfaceState {
+     union {
+         uint16_t all = 0;
+@@ -66,4 +92,7 @@ struct SSurfaceState {
+     CRegion accumulateBufferDamage();       // transforms state.damage and merges it into state.bufferDamage
+     void    updateFrom(SSurfaceState& ref); // updates this state based on a reference state.
+     void    reset();                        // resets pending state after commit
++	
++	SP<CSurfaceStateLock>  lock;
++    WP<CWLSurfaceResource> surface;
+ };

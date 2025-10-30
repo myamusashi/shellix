@@ -6,7 +6,7 @@
   imports = [
     "${builtins.fetchGit {
       url = "https://github.com/NixOS/nixos-hardware.git";
-      rev = "7d9552ef6b02da7b8fafe426c0db5358ab8c4009";
+      rev = "2379bc40992ec29feb1933bb4acd224fa055f3f8";
     }}/lenovo/thinkpad/x270"
     ./hardware-configuration.nix
   ];
@@ -21,10 +21,12 @@
       enable = true;
       enable32Bit = true;
       extraPackages = with pkgs; [
-        vaapiIntel # LIBVA_DRIVER_NAME=i965 (older but works better for Firefox/Chromium)
+        intel-media-driver
+        libva-vdpau-driver
+        libvdpau-va-gl
       ];
       extraPackages32 = with pkgs.pkgsi686Linux; [
-        intel-vaapi-driver
+        intel-media-driver
       ];
     };
   };
@@ -52,7 +54,7 @@
   fileSystems."/".options = ["discard"];
 
   boot = {
-    kernelPackages = pkgs.linuxPackages_cachyos-lto;
+    kernelPackages = pkgs.linuxPackages_6_17;
     initrd.verbose = false;
     consoleLogLevel = 0;
     initrd.availableKernelModules = [
@@ -79,14 +81,17 @@
     };
 
     supportedFilesystems = ["ntfs"];
+
     kernelModules = [
-      # "kvm-intel"
+      "kvm-intel"
+      "i915"
       "uas"
       "usbhid"
       "hid"
       "usb_storage"
-      # "zram"
+      "zram"
     ];
+
     kernelParams = [
       "quiet"
       "splash"
@@ -96,6 +101,17 @@
       "rd.udev.log_level=3"
       "udev.log_priority=3"
       "console=tty1"
+
+      # Intel GPU optimizations
+      "i915.enable_fbc=1"
+      "i915.enable_psr=2"
+      "i915.fastboot=1"
+
+      # Performance tweaks
+      "intel_pstate=active"
+      "nmi_watchdog=0"
+
+      # Disable mitigations (kinda risky tbh)
       "noibrs"
       "noibpb"
       "nopti"
@@ -105,7 +121,7 @@
       "nospec_store_bypass_disable"
       "no_stf_barrier"
       "mds=off"
-      "mitigations=off" # Kinda risky tbh
+      "mitigations=off"
     ];
 
     kernel.sysctl = {
@@ -128,17 +144,47 @@
       "net.ipv4.tcp_keepalive_probes" = 6;
 
       "vm.vfs_cache_pressure" = 50;
-      "vm.dirty_ratio" = 10;
-      "vm.swappiness" = 0;
+      "vm.dirty_ratio" = 6;
+      "vm.dirty_background_ratio" = 3;
+      "vm.dirty_writeback_centisecs" = 1500;
+      "vm.swappiness" = 10;
+      "vm.page-cluster" = 0;
+
+      "fs.inotify.max_user_watches" = 524288;
+      "fs.file-max" = 2097152;
+
+      "kernel.sched_migration_cost_ns" = 5000000;
+      "kernel.sched_autogroup_enabled" = 0;
     };
   };
 
+  services = {
+    fstrim = {
+      enable = true;
+      interval = "weekly";
+    };
+
+    irqbalance.enable = true;
+  };
+
+  services.journald.extraConfig = ''
+    SystemMaxUse=100M
+    MaxRetentionSec=7day
+  '';
+
+  security.wrappers.gsr-kms-server = {
+    source = "${pkgs.gpu-screen-recorder}/bin/gsr-kms-server";
+    capabilities = "cap_sys_admin+ep";
+    owner = "root";
+    group = "root";
+  };
+
   zramSwap = {
-    enable = false;
+    enable = true;
     priority = 1;
     algorithm = "lz4";
     memoryPercent = 50;
     memoryMax = null;
   };
-  swapDevices = lib.mkForce [];
+  # swapDevices = lib.mkForce [];
 }
