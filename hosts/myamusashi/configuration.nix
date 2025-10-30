@@ -117,7 +117,7 @@
   sops.secrets.myamusashi-password.owner = config.users.users.myamusashi.name;
   users.users.myamusashi = {
     isNormalUser = true;
-    # hashedPasswordFile = config.sops.secrets.myamusashi-password.path;
+    hashedPasswordFile = config.sops.secrets.myamusashi-password.path;
     shell = pkgs.fish;
     extraGroups = [
       "networkmanager"
@@ -128,6 +128,7 @@
       "qemu-libvirtd"
       "kvm"
       "video"
+      "render"
       "input"
       "wireshark"
     ];
@@ -205,6 +206,10 @@
         core = true;
       };
 
+      media = {
+        screen_recorder = true;
+      };
+
       winapps = true;
 
       customPackages = with pkgs; [
@@ -212,6 +217,7 @@
         kdePackages.qtmultimedia
         git-credential-manager
         sops
+        libva-utils
         lxqt.pcmanfm-qt
         lxqt.pavucontrol-qt
         gvfs
@@ -219,6 +225,7 @@
       ];
       excludePackages = [
         "libvirt"
+        "kdePackages.dolphin"
       ];
     };
   };
@@ -257,7 +264,7 @@
     QT_QPA_PLATFORM = "wayland;xcb";
     SDL_VIDEODRIVER = "wayland";
     CLUTTER_BACKEND = "wayland";
-    LIBVA_DRIVE_NAME = "i915";
+    LIBVA_DRIVER_NAME = "iHD";
     OZONE_PLATFORM = "wayland";
     WLR_NO_HARDWARE_CURSORS = 0;
 
