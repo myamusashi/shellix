@@ -4,7 +4,7 @@
     owner = "yazi-rs";
     repo = "plugins";
     rev = "main";
-    hash = "sha256-29K8PmBoqAMcQhDIfOVnbJt2FU4BR6k23Es9CqyEloo=";
+    hash = "sha256-7vsqHvdNimH/YVWegfAo7DfJ+InDr3a1aNU0f+gjcdw=";
   };
 
   # https://github.com/boydaihungst/mediainfo.yazi
@@ -12,7 +12,7 @@
     owner = "boydaihungst";
     repo = "mediainfo.yazi";
     rev = "master";
-    hash = "sha256-CTynpmB101ylCiHKbwX5nVrt5OMhgAu48GVxXsNqd9s=";
+    hash = "sha256-GObz6kpBTT1HuWgsAWlbbzCw2GxZGKLTWaUKKztiTaw=";
   };
 
   # https://github.com/macydnah/office.yazi
@@ -20,7 +20,7 @@
     owner = "macydnah";
     repo = "office.yazi";
     rev = "main";
-    hash = "sha256-XE+EfVPsO09zG8qYEhN6O95mS9NJlTdOd4Gsem2KtPI=";
+    hash = "sha256-QFto48D+Z8qHl7LHoDDprvr5mIJY8E7j37cUpRjKdNk=";
   };
   # https://github.com/ahkohd/eza-preview.yazi
   eza-preview = pkgs.fetchFromGitHub {
@@ -48,7 +48,7 @@
     owner = "ndtoan96";
     repo = "ouch.yazi";
     rev = "main";
-    hash = "sha256-g/ZHArXksRo49k9UBHap0CXzIdycQigjbdCzDK1VaLY=";
+    hash = "sha256-C0wG8NQ+zjAMfd+J39Uvs3K4U6e3Qpo1yLPm2xcsAaI=";
   };
   # https://github.com/AnirudhG07/rich-preview.yazi
   rich-preview = pkgs.fetchFromGitHub {
@@ -83,7 +83,7 @@
     owner = "dangooddd";
     repo = "kanagawa.yazi";
     rev = "main";
-    hash = "sha256-phwGd1i/n0mZH/7Ukf1FXwVgYRbXQEWlNRPCrmR5uNk=";
+    hash = "sha256-nGFiAgVWfq7RkuGGCt07zm3z7ZTGiIPIR319ojPfdUk=";
   };
   # https://github.com/myamusashi/material-ocean.yazi
   material-ocean = pkgs.fetchFromGitHub {
@@ -97,7 +97,7 @@
     owner = "DreamMaoMao";
     repo = "fg.yazi";
     rev = "main";
-    hash = "sha256-pFljxXAyUfu680+MhbLrI07RcukrPXgmIvtp3f6ZVvY=";
+    hash = "sha256-PNZngyiWuzw2bmJ4v66er9HEAcD5z0Dr6iKYwcxJwf0=";
   };
   # https://github.com/Deepak22903/kdeconnect-send.yazi
   kdeconnect-send = pkgs.fetchFromGitHub {
