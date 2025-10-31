@@ -174,13 +174,6 @@
         inputs.neovim-nightly-overlay.overlays.default
         inputs.vicinae.overlays.default
         (final: prev: {
-          hyprland = prev.hyprland.overrideAttrs (oldAttrs: {
-            patches =
-              (oldAttrs.patches or [])
-              ++ [
-                ./lto_support.patch
-              ];
-          });
           vicinae = prev.vicinae.overrideAttrs (oldAttrs: {
             cmakeFlags = [
               "-DCMAKE_POLICY_VERSION_MINIMUM=3.5"
