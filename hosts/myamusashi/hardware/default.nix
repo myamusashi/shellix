@@ -22,7 +22,9 @@
       enable32Bit = true;
       extraPackages = with pkgs; [
         intel-media-driver
+        intel-vaapi-driver
         libva-vdpau-driver
+        libva
         libvdpau-va-gl
       ];
       extraPackages32 = with pkgs.pkgsi686Linux; [
@@ -31,7 +33,7 @@
     };
   };
 
-  chaotic.mesa-git.enable = true;
+  chaotic.mesa-git.enable = false;
 
   virtualisation = {
     docker.enable = false;
@@ -54,7 +56,7 @@
   fileSystems."/".options = ["discard"];
 
   boot = {
-    kernelPackages = pkgs.linuxPackages_6_17;
+    kernelPackages = pkgs.linuxPackages_cachyos-lto;
     initrd.verbose = false;
     consoleLogLevel = 0;
     initrd.availableKernelModules = [
