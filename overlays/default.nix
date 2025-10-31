@@ -85,14 +85,14 @@ final: prev: {
       nativeBuildInputs =
         (oldAttrs.nativeBuildInputs or [])
         ++ [
-          final.clang_20
-          final.llvm_20
+          final.clang_21
+          final.llvm_21
         ];
       makeFlags =
         (oldAttrs.makeFlags or [])
         ++ [
-          "CC=${final.clang_20}/bin/clang"
-          "HOSTCC=${final.clang_20}/bin/clang"
+          "CC=${final.clang_21}/bin/clang"
+          "HOSTCC=${final.clang_21}/bin/clang"
           "LLVM=1"
         ];
       NIX_CFLAGS_COMPILE = toString [
@@ -105,18 +105,18 @@ final: prev: {
       preBuild =
         (oldAttrs.preBuild or "")
         + ''
-          export CC=${final.clang_20}/bin/clang
-          export HOSTCC=${final.clang_20}/bin/clang
+          export CC=${final.clang_21}/bin/clang
+          export HOSTCC=${final.clang_21}/bin/clang
           export LLVM=1
           export KCFLAGS="$NIX_CFLAGS_COMPILE"
 
           # Ensure clang is in PATH and override any gcc references
-          export PATH="${final.clang_20}/bin:$PATH"
+          export PATH="${final.clang_21}/bin:$PATH"
 
           # Some kernel build systems check for gcc specifically, create a symlink
           mkdir -p $TMPDIR/bin
-          ln -sf ${final.clang_20}/bin/clang $TMPDIR/bin/gcc
-          ln -sf ${final.clang_20}/bin/clang++ $TMPDIR/bin/g++
+          ln -sf ${final.clang_21}/bin/clang $TMPDIR/bin/gcc
+          ln -sf ${final.clang_21}/bin/clang++ $TMPDIR/bin/g++
           export PATH="$TMPDIR/bin:$PATH"
         '';
     });
