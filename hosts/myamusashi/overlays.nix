@@ -3,6 +3,12 @@ final: prev: {
     doCheck = false;
   });
 
+  libvdpau-va-gl = prev.libvdpau-va-gl.overrideAttrs (oldAttrs: {
+    cmakeFlags = [
+      "-DCMAKE_POLICY_VERSION_MINIMUM=3.5"
+    ];
+  });
+
   # Make vesktop running natively on wayland
   vesktop = prev.vesktop.overrideAttrs (oldAttrs: {
     desktopItem =
@@ -33,26 +39,6 @@ final: prev: {
 
   ## Hotfix
   python3Packages = prev.python3Packages.overrideScope (self: super: {
-    tree-sitter = super.tree-sitter.overrideAttrs (oldAttrs: rec {
-      version = "0.24.0";
-
-      src = final.fetchFromGitHub {
-        owner = "tree-sitter";
-        repo = "py-tree-sitter";
-        tag = "v${version}";
-        hash = "sha256-ZDt/8suteaAjGdk71l8eej7jDkkVpVDBIZS63SA8tsU=";
-        fetchSubmodules = true;
-      };
-
-      meta = {
-        description = "Python bindings to the Tree-sitter parsing library";
-        homepage = "https://github.com/tree-sitter/py-tree-sitter";
-        changelog = "https://github.com/tree-sitter/py-tree-sitter/releases/tag/${src.tag}";
-        license = final.lib.licenses.mit;
-        maintainers = [final.lib.maintainers.fab];
-      };
-    });
-
     tree-sitter-rust = super.tree-sitter-rust.overrideAttrs (oldAttrs: rec {
       version = "0.23.2";
 
@@ -101,15 +87,15 @@ final: prev: {
       nativeBuildInputs =
         (oldAttrs.nativeBuildInputs or [])
         ++ [
-          final.clang_20
-          final.llvm_20
-          final.llvmPackages_20.bintools
+          final.clang_21
+          final.llvm_21
+          final.llvmPackages_21.bintools
         ];
       makeFlags =
         (oldAttrs.makeFlags or [])
         ++ [
-          "CC=${final.clang_20}/bin/clang"
-          "HOSTCC=${final.clang_20}/bin/clang"
+          "CC=${final.clang_21}/bin/clang"
+          "HOSTCC=${final.clang_21}/bin/clang"
           "LLVM=1"
         ];
       NIX_CFLAGS_COMPILE = toString [
@@ -122,18 +108,18 @@ final: prev: {
       preBuild =
         (oldAttrs.preBuild or "")
         + ''
-          export CC=${final.clang_20}/bin/clang
-          export HOSTCC=${final.clang_20}/bin/clang
+          export CC=${final.clang_21}/bin/clang
+          export HOSTCC=${final.clang_21}/bin/clang
           export LLVM=1
           export KCFLAGS="$NIX_CFLAGS_COMPILE"
 
           # Ensure clang is in PATH and override any gcc references
-          export PATH="${final.clang_20}/bin:$PATH"
+          export PATH="${final.clang_21}/bin:$PATH"
 
           # Some kernel build systems check for gcc specifically, create a symlink
           mkdir -p $TMPDIR/bin
-          ln -sf ${final.clang_20}/bin/clang $TMPDIR/bin/gcc
-          ln -sf ${final.clang_20}/bin/clang++ $TMPDIR/bin/g++
+          ln -sf ${final.clang_21}/bin/clang $TMPDIR/bin/gcc
+          ln -sf ${final.clang_21}/bin/clang++ $TMPDIR/bin/g++
           export PATH="$TMPDIR/bin:$PATH"
         '';
     });
@@ -151,15 +137,15 @@ final: prev: {
       nativeBuildInputs =
         (oldAttrs.nativeBuildInputs or [])
         ++ [
-          final.clang_20
-          final.llvm_20
-          final.llvmPackages_20.bintools
+          final.clang_21
+          final.llvm_21
+          final.llvmPackages_21.bintools
         ];
       makeFlags =
         (oldAttrs.makeFlags or [])
         ++ [
-          "CC=${final.clang_20}/bin/clang"
-          "HOSTCC=${final.clang_20}/bin/clang"
+          "CC=${final.clang_21}/bin/clang"
+          "HOSTCC=${final.clang_21}/bin/clang"
           "LLVM=1"
         ];
       NIX_CFLAGS_COMPILE = toString [
@@ -172,28 +158,20 @@ final: prev: {
       preBuild =
         (oldAttrs.preBuild or "")
         + ''
-          export CC=${final.clang_20}/bin/clang
-          export HOSTCC=${final.clang_20}/bin/clang
+          export CC=${final.clang_21}/bin/clang
+          export HOSTCC=${final.clang_21}/bin/clang
           export LLVM=1
           export KCFLAGS="$NIX_CFLAGS_COMPILE"
 
           # Ensure clang is in PATH and override any gcc references
-          export PATH="${final.clang_20}/bin:$PATH"
+          export PATH="${final.clang_21}/bin:$PATH"
 
           # Some kernel build systems check for gcc specifically, create a symlink
           mkdir -p $TMPDIR/bin
-          ln -sf ${final.clang_20}/bin/clang $TMPDIR/bin/gcc
+          ln -sf ${final.clang_21}/bin/clang $TMPDIR/bin/gcc
           ln -sf ${final.clang_20}/bin/clang++ $TMPDIR/bin/g++
           export PATH="$TMPDIR/bin:$PATH"
         '';
     });
-  });
-
-  intel-graphics-compiler = prev.intel-graphics-compiler.overrideAttrs (oldAttrs: {
-    patches =
-      (oldAttrs.patches or [])
-      ++ [
-        ./bump-cmake.patch
-      ];
   });
 }
