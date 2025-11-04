@@ -9,8 +9,6 @@ require("fg"):setup({
 	default_action = "menu", -- nvim, jump
 })
 
-require("githead"):setup()
-
 require("git"):setup()
 
 require("yatline"):setup({

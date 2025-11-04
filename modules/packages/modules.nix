@@ -11,7 +11,6 @@ with pkgs; {
     libgdiplus
     polkit
     vulkan-tools
-    pinentry
     pinentry-qt
     pinentry-curses
     pinentry-tty
@@ -34,7 +33,7 @@ with pkgs; {
 
   winapps = [
     dialog
-    freerdp3
+    freerdp
     inputs.winapps.packages.${system}.winapps
     inputs.winapps.packages.${system}.winapps-launcher
     libnotify
@@ -95,7 +94,7 @@ with pkgs; {
     tools = [git gh curl kdiff3];
   };
 
-  security = [pass-wayland bws bitwarden-desktop];
+  security = [pass-wayland bitwarden-cli bitwarden-desktop];
 
   multimedia = {
     office = [onlyoffice-desktopeditors libreoffice unoconv];
@@ -110,7 +109,6 @@ with pkgs; {
       wine-wayland
       winetricks
       wineWowPackages.waylandFull
-      protonup
       protonup-qt
     ];
   };
@@ -120,7 +118,7 @@ with pkgs; {
   media = {
     editor = [ffmpeg imagemagick];
     viewer = [ffmpegthumbnailer poppler-utils mpv lxqt.lximage-qt zathura];
-    screen_recorder = [obs-studio grim slurp hyprshot wf-recorder];
+    screen_recorder = [grim slurp hyprshot wl-screenrec];
     misc = [playerctl cava zathura mpg123];
   };
 
@@ -149,7 +147,7 @@ with pkgs; {
       morewaita-icon-theme
       (whitesur-icon-theme.override {themeVariants = ["default"];})
     ];
-    qt = [whitesur-kde qt6ct];
+    qt = [whitesur-kde qt6Packages.qt6ct];
     gtk = [
       (whitesur-gtk-theme.override {
         themeVariants = ["blue"];

@@ -30,6 +30,10 @@
     "float,title:^(Friends List)"
     "float,title:^(WhatsApp — KDE Connect Daemon)"
     "float,initialTitle:^(yaziWS)"
+    "float,class:^(org.freedesktop.impl.portal.desktop.kde)"
+    "float,title:^(Select what to share)"
+    "float,class:^(org.kde.kdeconnect.daemon),title:^(Receiving files)"
+	"float,class:^(zen),title:^(Login - Akun Google - Zen Browser)"
 
     # Move position rules
     "move 40 44%,title:^(iwgtk)$"
@@ -37,6 +41,10 @@
 
     # Center rules
     "center,initialTitle:^(yaziWS)"
+	"center,class:^(zen),title:^(Login - Akun Google — Zen Browser)"
+    "center,class:^(org.freedesktop.impl.portal.desktop.kde)"
+    "center,class:^(org.kde.kdeconnect.daemon),title:^(Receiving files)"
+    "center,title:^(Select what to share)"
     "center,title:^(WhatsApp — KDE Connect Daemon)"
     "center,class:^(xdg-desktop-portal-gtk),title:^(Open Folder)"
     "center,floating:1,class:^(org.quickshell),title:^(Select a wallpaper)"
@@ -58,6 +66,9 @@
 
     # Size rules
     "size 919 437,initialTitle:^(yaziWS)"
+	"size 900 710, class:^(zen),title:^(Login - Akun Google - Zen Browser)"
+    "size 500 500,class:^(org.freedesktop.impl.portal.desktop.kde)"
+    "size 943 800,title:^(Select what to share)"
     "size 885 443,class:^(xdg-desktop-portal-kde),title:^(Open Folder)"
     "size 1000 600,class:^(org.quickshell),title:^(Select a wallpaper)"
     "size 400 300,title:^(WhatsApp — KDE Connect Daemon)"
@@ -77,9 +88,11 @@
     "size 505 600,title:^(iwgtk)$"
     "size 885 463,title:^(Enter name of file to save to…)$"
     "size 652 310,title:^(Bluetooth Devices)$"
+    "size 370 300,class:^(org.kde.kdeconnect.daemon),title:^(Receiving files)"
 
     # Misc rules
     "stayfocused,class:^(clipse)"
+    "stayfocused,class:^(org.quickshell),title:^(Authentication Required)"
     "stayfocused,initialTitle:^(yaziWS)"
 
     "idleinhibit focus,class:^(mpv)$"
@@ -97,6 +110,24 @@
 
     "bordersize 0,initialClass:^(Xdg-desktop-portal-gtk)$"
     "bordersize 0,initialClass:^(Xdg-desktop-portal-kde)$"
+
+    # Quickshell window
+    "float,class:^(org.quickshell),title:^(Authentication Required)"
+    "float,class:^(org.quickshell),title:^(Recording Widgets)"
+
+    # Bottom-right position
+    "move 100%-w-20 100%-w-20,class:^(org.quickshell),title:^(Recording Widgets)"
+
+    "center,class:^(org.quickshell),title:^(Authentication Required)"
+
+    "size 530 520,class:^(org.quickshell),title:^(Authentication Required)"
+    "size 300 230,class:^(org.quickshell),title:^(Recording Widgets)"
+
+    "noborder,class:^(org.quickshell),title:^(Authentication Required)"
+    "noborder,class:^(org.quickshell),title:^(Recording Widgets)"
+
+    "rounding 26,class:^(org.quickshell),title:^(Authentication Required)"
+    "rounding 26,class:^(org.quickshell),title:^(Recording Widgets)"
   ];
 
   layerrule = [
@@ -115,6 +146,7 @@
     "animation popup 30%, quickshell"
     "animation popup 30%, shell:dashboard"
     "animation popup 30%, shell:bigclock"
+    "animation popup 90%, selection"
     "animation slide, shell:app"
     "animation slide, shell:bar"
     "animation slide, shell:capture"

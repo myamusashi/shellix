@@ -67,7 +67,7 @@ final: prev: {
     src = final.fetchFromGitHub {
       owner = "google";
       repo = "material-design-icons";
-      rev = "941fa95d7f6084a599a54ca71bc565f48e7c6d9e";
+      rev = "bb04090f930e272697f2a1f0d7b352d92dfeee43";
       hash = "sha256-5bcEh7Oetd2JmFEPCcoweDrLGQTpcuaCU8hCjz8ls3M=";
       sparseCheckout = ["variablefont"];
     };

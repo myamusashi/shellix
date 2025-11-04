@@ -49,7 +49,6 @@ stdenvNoCC.mkDerivation rec {
     cp app2unit $out/bin/
     chmod +x $out/bin/app2unit
 
-    # Wrap the script to ensure dependencies are in PATH
     wrapProgram $out/bin/app2unit \
       --prefix PATH : ${lib.makeBinPath [
       bash
