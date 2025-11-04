@@ -11,7 +11,7 @@
 in {
   config = lib.mkIf cfg.enable {
     home.packages = [
-      inputs.matugen.packages.${pkgs.system}.default
+      pkgs.matugen
     ];
 
     home.file = {

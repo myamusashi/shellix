@@ -15,6 +15,7 @@
     ./fastfetch/default.nix
     ./spicetify/default.nix
     ./quickshell/default.nix
+	./shell/defaults.nix
     ./tofi/default.nix
     ./walker/default.nix
     ./vscode/default.nix
@@ -44,6 +45,7 @@
     vscode.enable = lib.mkEnableOption "Enable VSCode code editor";
     tofi.enable = lib.mkEnableOption "Enable Tofi apps launcher";
     winapps.enable = lib.mkEnableOption "Enable Winapps";
+    shell.enable = lib.mkEnableOption "Enable shell widgets";
     matugen.enable = lib.mkEnableOption "Enable matugen color generation";
     winboat.enable = lib.mkEnableOption "Enable winboat seamless integration with windows";
   };

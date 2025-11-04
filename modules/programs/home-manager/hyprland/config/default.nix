@@ -7,7 +7,7 @@
   source = [
     "${config.home.homeDirectory}/.config/hypr/colors.conf"
   ];
-  inherit (import ./exec.nix {inherit pkgs;}) exec-once;
+  inherit (import ./exec.nix) exec-once;
   inherit (import ./input.nix) input;
   inherit (import ./general.nix {inherit config;}) general;
   inherit (import ./decoration.nix) decoration;

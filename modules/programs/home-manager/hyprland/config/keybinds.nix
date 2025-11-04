@@ -27,7 +27,7 @@
     "${mod} CTRL, left, layoutmsg, move -col"
 
     "${modalt}, A, layoutmsg, fit active"
-    "SHIFT ${modalt}, A, layoutmsg, fit all"
+    "SHIFT ${modalt}, A, layoutmsg, fit toend"
 
     "${modalt}, left, movefocus, l"
     "${modalt}, right, movefocus, r"

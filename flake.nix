@@ -142,6 +142,12 @@
       url = "github:shaunsingh/SFMono-Nerd-Font-Ligaturized";
       flake = false;
     };
+
+    shell = {
+      url = "git+https://git.myamusashi.space/myamusashi/shell";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     spicetify-nix.url = "github:Gerg-L/spicetify-nix";
     matugen.url = "github:/InioX/Matugen/v2.4.1";
     nixgl.url = "github:nix-community/nixGL";

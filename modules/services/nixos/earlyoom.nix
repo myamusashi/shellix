@@ -7,8 +7,8 @@
     services.earlyoom = {
       enable = true;
       enableNotifications = true;
-      freeMemKillThreshold = 2;
-      freeSwapKillThreshold = 3;
+      freeMemKillThreshold = 6; # Kill at 6% free (~1GB)
+      freeSwapKillThreshold = 6; # Kill at 6% free (~500MB)
     };
   };
 }

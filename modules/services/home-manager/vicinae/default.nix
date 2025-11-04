@@ -13,10 +13,12 @@ in {
     services.vicinae = {
       enable = true;
       autoStart = true;
+      useLayerShell = false;
 
       settings = {
         popToRootOnClose = false;
         rootSearch.searchFiles = false;
+        theme.name = "shellix";
       };
     };
   };

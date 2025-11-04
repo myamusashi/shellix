@@ -6,7 +6,6 @@
     ./getAdzanData.nix
     ./weather-widget.nix
     ./shell.nix
-    ./matugen-watcher.nix
   ];
 
   options.shellix.services.systemd.user = {
@@ -15,6 +14,5 @@
     nm-applet.enable = lib.mkEnableOption "Enable network-managers tray";
     shell.enable = lib.mkEnableOption "Enable shell widget services";
     weather-widget.enable = lib.mkEnableOption "Enable weather-widget using quickshell";
-    matugen-watcher.enable = lib.mkEnableOption "Enable matugen watcher";
   };
 }

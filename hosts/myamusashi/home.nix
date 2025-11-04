@@ -24,7 +24,7 @@
         	color = ${config.home.homeDirectory}/.local/share/color-schemes/Shellix.colors
         	icon_theme = la-capitaine-icon-theme
         	style = Darkly
-        	font_fixed = Liga SFMono Nerd Font
+        	font_fixed = SFMono Nerd Font
 
         	font_fixed_size = 12
         	font = SF Pro Display
@@ -93,16 +93,11 @@
       btop.enable = true;
       fastfetch.enable = true;
       foot.enable = true;
-      fuzzel.enable = false;
       htop.enable = true;
       hyprland = {
         enable = true;
         plugins = {
           enable = true;
-          hy3 = {
-            enable = false;
-            keybind = false;
-          };
           scrolling = {
             enable = true;
             keybind = true;
@@ -114,18 +109,11 @@
       };
       kitty.enable = true;
       lazygit.enable = true;
+      shell.enable = true;
       yazi.enable = true;
       mpv.enable = true;
       neovim.enable = true;
-      neovide.enable = false;
-      nushell.enable = false;
-      walker.enable = false;
-      tofi.enable = false;
       quickshell.enable = true;
-      spicetify.enable = false;
-      wofi.enable = false;
-      winapps.enable = false;
-      winboat.enable = true;
       vscode.enable = true;
       matugen.enable = true;
     };
@@ -133,18 +121,14 @@
     services = {
       home-manager = {
         clipse.enable = true;
-        easyeffects.enable = true;
+        easyeffects.enable = false;
         hypridle.enable = true;
         kdeconnect.enable = true;
-        vicinae.enable = true;
       };
       systemd.user = {
         adzan.enable = true;
-        shell.enable = true;
-        caelestia.enable = false;
         nm-applet.enable = true;
         weather-widget.enable = true;
-        matugen-watcher.enable = true;
       };
     };
 
@@ -176,15 +160,16 @@
         (pkgs.la-capitaine-icon-theme.overrideAttrs {dontCheckForBrokenSymlinks = true;})
         inputs.apple-fonts.packages.${pkgs.system}.sf-pro
         inputs.apple-fonts.packages.${pkgs.system}.sf-pro-nerd
+        inputs.apple-fonts.packages.${pkgs.system}.sf-mono
+        inputs.apple-fonts.packages.${pkgs.system}.sf-mono-nerd
+        pkgs.pulseaudio
+        pkgs.wl-screenrec
         pkgs.sf-mono-liga-bin
-        inputs.flox.packages.${pkgs.system}.default
         (pkgs.callPackage ./extra/yet-another-monochrome-icon-set.nix {})
         (pkgs.callPackage ./extra/fonts-audiowide.nix {})
-        (pkgs.callPackage ./extra/app2unit.nix {})
       ];
       excludePackages = [
         "neovide"
-        "zed-editor-fhs"
         "rofi"
         "comic-shanns-mono"
         "jetbrains-mono"
@@ -193,7 +178,6 @@
         "vulnix"
         "deadnix"
         "nix-update"
-        "zed-editor-fhs"
         "onlyoffice-desktopeditors"
         "proton-qt"
         "kanagawa-icon-theme"
@@ -242,7 +226,6 @@
       media = {
         editor = true;
         viewer = true;
-        screen_recorder = true;
         misc = true;
       };
 
@@ -255,15 +238,16 @@
 
   programs.git = {
     enable = true;
-    userName = "myamusashi";
-    userEmail = "myamusashi@users.noreply.github.com";
-    aliases = {
-      ci = "commit";
-      sw = "checkout";
-      s = "status";
-    };
-    extraConfig = {
+    settings = {
       credential.helper = "${pkgs.git-credential-manager}/bin/git-credential-manager";
+
+      user.name = "myamusashi";
+      user.mail = "myamusashi@users.noreply.github.com";
+      alias = {
+        ci = "commit";
+        sw = "checkout";
+        s = "status";
+      };
     };
     lfs.enable = true;
   };
@@ -288,7 +272,7 @@
       enable = true;
       theme.name = "WhiteSur-Dark-blue";
       font = {
-        name = "Liga SFMono Nerd Font";
+        name = "SFMono Nerd Font";
 
         size = 11;
       };
@@ -308,7 +292,7 @@
       enable = true;
       theme.name = "WhiteSur-Dark-blue";
       font = {
-        name = "Liga SFMono Nerd Font";
+        name = "SFMono Nerd Font";
 
         size = 11;
       };
@@ -319,8 +303,8 @@
     enable = true;
     defaultFonts = {
       serif = ["SF Pro"];
-      monospace = ["Liga SFMono Nerd Font"];
-      sansSerif = ["SF Pro Display"];
+      monospace = ["SFMono Nerd Font"];
+      sansSerif = ["SF Pro"];
     };
   };
 

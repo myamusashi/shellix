@@ -70,7 +70,7 @@ in {
         background_tint = 1;
         dim_opacity = 1;
 
-        font_family = "Liga SFMono Nerd Font";
+        font_family = "SFMono Nerd Font";
         bold_font = "auto";
         italic_font = "auto";
         bold_italic_font = "auto";

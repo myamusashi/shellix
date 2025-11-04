@@ -35,7 +35,7 @@ in {
         ouch = "${plugin.ouch}";
         yatline = "${plugin.yatline}";
         lazygit = "${plugin.lazygit}";
-        githead = "${plugin.githead}";
+        # githead = "${plugin.githead}";
         kdeconnect-send = "${plugin.kdeconnect-send}";
         custom-shell = "${plugin.custom-shell}";
       };
