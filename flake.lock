@@ -2346,11 +2346,11 @@
         "quickshell": "quickshell_4"
       },
       "locked": {
-        "lastModified": 1762423504,
-        "narHash": "sha256-TQ7zxziwR+1r4GSjoYcHBiFmhiJw8WuhY3pvPhP5TvI=",
+        "lastModified": 1762428854,
+        "narHash": "sha256-oAfK+yofQC5vCfR8BfrjLBcHZhdYd+zQEp18GVHwvEE=",
         "ref": "refs/heads/master",
-        "rev": "c3e77fae5c6fdd95d8e26a56eccf61a97fe7d99a",
-        "revCount": 170,
+        "rev": "7d749bd91b777bab81e759315139d8ec31339671",
+        "revCount": 172,
         "type": "git",
         "url": "https://git.myamusashi.space/myamusashi/shell"
       },
