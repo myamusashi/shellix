@@ -12,6 +12,6 @@ in {
 
   programs.quickshell-shell = lib.mkIf cfg.enable {
     enable = true;
-		installFonts = false;
+    installFonts = false;
   };
 }

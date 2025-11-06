@@ -221,6 +221,7 @@
         lxqt.pcmanfm-qt
         lxqt.pavucontrol-qt
         gvfs
+        wget2
         iptables
       ];
       excludePackages = [
