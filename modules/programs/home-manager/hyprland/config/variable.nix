@@ -13,7 +13,7 @@ in {
   bar = "${shell}:bar";
   colorpick = "${config.home.homeDirectory}/.dots/modules/programs/home-manager/hyprland/config/scripts/picker.sh";
   dashboard = "${shell}:dashboard";
-  lockscreen = "qs -c lock ipc call lock lock";
+  lockscreen = "shell ipc call lock lock";
   spotify = "spotify";
   discord = "vesktop";
   clipmanager = "kitty --class clipse -e clipse";
