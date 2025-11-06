@@ -33,7 +33,7 @@
     "float,class:^(org.freedesktop.impl.portal.desktop.kde)"
     "float,title:^(Select what to share)"
     "float,class:^(org.kde.kdeconnect.daemon),title:^(Receiving files)"
-	"float,class:^(zen),title:^(Login - Akun Google - Zen Browser)"
+    "float,class:^(zen),title:^(Login - Akun Google - Zen Browser)"
 
     # Move position rules
     "move 40 44%,title:^(iwgtk)$"
@@ -41,7 +41,7 @@
 
     # Center rules
     "center,initialTitle:^(yaziWS)"
-	"center,class:^(zen),title:^(Login - Akun Google — Zen Browser)"
+    "center,class:^(zen),title:^(Login - Akun Google — Zen Browser)"
     "center,class:^(org.freedesktop.impl.portal.desktop.kde)"
     "center,class:^(org.kde.kdeconnect.daemon),title:^(Receiving files)"
     "center,title:^(Select what to share)"
@@ -66,7 +66,7 @@
 
     # Size rules
     "size 919 437,initialTitle:^(yaziWS)"
-	"size 900 710, class:^(zen),title:^(Login - Akun Google - Zen Browser)"
+    "size 900 710, class:^(zen),title:^(Login - Akun Google - Zen Browser)"
     "size 500 500,class:^(org.freedesktop.impl.portal.desktop.kde)"
     "size 943 800,title:^(Select what to share)"
     "size 885 443,class:^(xdg-desktop-portal-kde),title:^(Open Folder)"

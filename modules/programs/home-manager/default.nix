@@ -15,7 +15,7 @@
     ./fastfetch/default.nix
     ./spicetify/default.nix
     ./quickshell/default.nix
-	./shell/defaults.nix
+    ./shell/defaults.nix
     ./tofi/default.nix
     ./walker/default.nix
     ./vscode/default.nix
