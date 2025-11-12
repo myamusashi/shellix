@@ -166,8 +166,8 @@
         pkgs.wl-screenrec
         pkgs.sf-mono-liga-bin
         pkgs.winboat
-		pkgs.wl-gammactl
-		pkgs.brightnessctl
+        pkgs.wl-gammactl
+        pkgs.brightnessctl
         (pkgs.callPackage ./extra/yet-another-monochrome-icon-set.nix {})
         (pkgs.callPackage ./extra/fonts-audiowide.nix {})
       ];
