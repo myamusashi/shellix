@@ -31,7 +31,7 @@
           pathPrivateKeyFile = "/etc/wireguard-keys/private.key";
           peers = [
             {
-              publicKey = "HH3I3svgajInBHYpH7OfTOfWzQpAYQjpDkMr/b1chU0=";
+              publicKey = "z9vwz2freR66r1sAybDlDz35ElSJhs1D5hMQKSJzlVw=";
               allowedIPs = ["10.0.0.2/32"];
             }
             {
@@ -59,7 +59,14 @@
       };
     };
 
-    programs.nixos.enable = true;
+    programs.nixos = {
+      fish.enable = true;
+      starship.enable = true;
+      steam.enable = false;
+      virt-manager.enable = false;
+      wireshark.enable = false;
+      xonsh.enable = false;
+    };
 
     packages.nixos = {
       enable = true;
@@ -124,6 +131,7 @@
   };
 
   programs = {
+    kdeconnect.enable = true;
     wireshark.enable = lib.mkForce false;
     xonsh.enable = lib.mkForce false;
     steam.enable = lib.mkForce false;

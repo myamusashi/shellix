@@ -14,10 +14,10 @@ stdenvNoCC.mkDerivation {
     repo = "material-design-icons";
     rev = "bb04090f930e272697f2a1f0d7b352d92dfeee43";
     hash = "sha256-5bcEh7Oetd2JmFEPCcoweDrLGQTpcuaCU8hCjz8ls3M=";
-    sparseCheckout = [ "variablefont" ];
+    sparseCheckout = ["variablefont"];
   };
 
-  nativeBuildInputs = [ rename ];
+  nativeBuildInputs = [rename];
 
   installPhase = ''
     runHook preInstall
@@ -29,7 +29,7 @@ stdenvNoCC.mkDerivation {
     runHook postInstall
   '';
 
-  passthru.updateScript = unstableGitUpdater { };
+  passthru.updateScript = unstableGitUpdater {};
 
   meta = {
     description = "Material Symbols icons by Google";
