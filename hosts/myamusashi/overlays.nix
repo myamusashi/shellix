@@ -63,7 +63,7 @@ final: prev: {
 
   ## Fix outdated packages
   material-symbols = prev.material-symbols.overrideAttrs (oldAttrs: {
-    version = "4.0.0-unstable-2025-09-11";
+    version = "4.0.0-unstable-2025-09-19";
 
     src = final.fetchFromGitHub {
       owner = "google";

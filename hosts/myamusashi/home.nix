@@ -165,6 +165,9 @@
         pkgs.pulseaudio
         pkgs.wl-screenrec
         pkgs.sf-mono-liga-bin
+        pkgs.winboat
+		pkgs.wl-gammactl
+		pkgs.brightnessctl
         (pkgs.callPackage ./extra/yet-another-monochrome-icon-set.nix {})
         (pkgs.callPackage ./extra/fonts-audiowide.nix {})
       ];
@@ -239,7 +242,7 @@
   programs.git = {
     enable = true;
     settings = {
-      credential.helper = "${pkgs.git-credential-manager}/bin/git-credential-manager";
+      credential.helper = "store";
 
       user.name = "myamusashi";
       user.mail = "myamusashi@users.noreply.github.com";
