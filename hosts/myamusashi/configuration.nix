@@ -7,16 +7,21 @@
 }: {
   imports = [
     inputs.sops-nix.nixosModules.sops
+    inputs.mango.nixosModules.mango
     ./hardware/default.nix
     ../../modules/shared/Colors.nix
     ../../modules/packages/nixos-packages.nix
     ../../modules/programs/nixos/default.nix
     ../../modules/services/nixos/default.nix
   ];
-  sops.age.keyFile = lib.mkForce "/home/myamusashi/.config/sops/age/keys1.txt";
-  sops.secrets.weatherapi.owner = "myamusashi";
-  sops.secrets.latitude.owner = "myamusashi";
-  sops.secrets.longitude.owner = "myamusashi";
+  sops = {
+    age.keyFile = lib.mkForce "/home/myamusashi/.config/sops/age/keys1.txt";
+    secrets = {
+      weatherapi.owner = "myamusashi";
+      latitude.owner = "myamusashi";
+      longitude.owner = "myamusashi";
+    };
+  };
 
   i18n.defaultLocale = "en_US.UTF-8";
   time.timeZone = "Asia/Jakarta";
@@ -115,31 +120,34 @@
 
   sops.secrets.myamusashi-password.neededForUsers = true;
   sops.secrets.myamusashi-password.owner = config.users.users.myamusashi.name;
-  users.users.myamusashi = {
-    isNormalUser = true;
-    hashedPasswordFile = config.sops.secrets.myamusashi-password.path;
-    shell = pkgs.fish;
-    extraGroups = [
-      "networkmanager"
-      "wheel"
-      "docker"
-      "podman"
-      "libvirtd"
-      "qemu-libvirtd"
-      "kvm"
-      "video"
-      "render"
-      "input"
-      "wireshark"
-    ];
-  };
+  users = {
+    users = {
+      myamusashi = {
+        isNormalUser = true;
+        hashedPasswordFile = config.sops.secrets.myamusashi-password.path;
+        shell = pkgs.fish;
+        extraGroups = [
+          "networkmanager"
+          "wheel"
+          "docker"
+          "podman"
+          "libvirtd"
+          "qemu-libvirtd"
+          "kvm"
+          "video"
+          "render"
+          "input"
+          "wireshark"
+        ];
+      };
 
-  # For winboat
-  users.users.docker = {
-    isSystemUser = true;
-    group = "docker";
+      docker = {
+        isSystemUser = true;
+        group = "docker";
+      };
+    };
+    groups.docker = {};
   };
-  users.groups.docker = {};
 
   services = {
     resolved = {
@@ -240,6 +248,7 @@
       enableSSHSupport = true;
     };
     hyprland.enable = true;
+    mango.enable = true;
     ccache.enable = true;
     java = {
       enable = true;
@@ -269,7 +278,7 @@
     OZONE_PLATFORM = "wayland";
     WLR_NO_HARDWARE_CURSORS = 0;
 
-    # Multi-GPU support
+    # Multi-GPU support (Lmao i don't even have Multi-GPU)
     AQ_DRM_DEVICES = "/dev/dri/card1:/dev/dri/card0";
     AQ_WLR_DEVICES = "/dev/dri/card1:/dev/dri/card0";
     AQ_MGPU_NO_EXPLICIT = 0;
