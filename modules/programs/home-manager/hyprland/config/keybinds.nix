@@ -82,6 +82,8 @@ in {
       "SHIFT ${modalt}, TAB, togglefloating"
       "${modalt}, Q, killactive"
       "${modalt}, P, pseudo"
+      "${modalt} CTRL, W, exec, hyprctl keyword cursor:zoom_factor 1.0"
+      "${modalt} CTRL, S, exec, hyprctl keyword cursor:zoom_factor 2.5"
       "SHIFT ${modalt}, RETURN, fullscreen"
       "SuperShift, S, layoutmsg, togglesplit"
       # Change Workspace Mode
