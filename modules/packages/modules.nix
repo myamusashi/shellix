@@ -143,7 +143,7 @@ with pkgs; {
     icons = [
       kanagawa-icon-theme
       vimix-icon-theme
-      material-symbols
+      (callPackage ./custom/material-symbols.nix {})
       morewaita-icon-theme
       (whitesur-icon-theme.override {themeVariants = ["default"];})
     ];
