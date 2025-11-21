@@ -159,7 +159,7 @@ in {
 
       # menu and terminal
       bind=Alt,space,spawn,rofi -show drun
-      bind=Alt,Return,spawn,foot
+      bind=Alt,Return,spawn,kitty
 
       # exit
       bind=SUPER,m,quit

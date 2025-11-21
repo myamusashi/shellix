@@ -7,7 +7,7 @@
 }: {
   imports = [
     inputs.sops-nix.nixosModules.sops
-    inputs.mango.nixosModules.mango
+    inputs.mangowc.nixosModules.mango
     ./hardware/default.nix
     ../../modules/shared/Colors.nix
     ../../modules/packages/nixos-packages.nix
@@ -167,20 +167,20 @@
     services.nixos = {
       audio.enable = true;
       backup.myamusashi.enable = true;
-      earlyoom.enable = true;
+      earlyoom.enable = false;
       plasma.enable = true;
       resolver.enable = true;
       scx.enable = true;
       display-manager = {
         sddm = {
-          enable = true;
+          enable = false;
           wayland = {
             enable = true;
             compositor = "weston";
           };
           theme = "sddm-astronaut-theme";
           auto-login = {
-            enable = true;
+            enable = false;
             user = "myamusashi";
             session = "hyprland.desktop";
           };
@@ -291,6 +291,7 @@
     XDG_MENU_PREFIX = "plasma-";
 
     # Application specific settings
+    FREETYPE_PROPERTIES = "cff:no-stem-darkening=0 autofitter:no-stem-darkening=O";
     EDITOR = "nvim";
     MOZ_DISABLE_RDD_SANDBOX = 1;
     MOZ_ENABLE_WAYLAND = "1 zen";
@@ -298,6 +299,9 @@
     _JAVA_AWT_WM_NONREPARENTING = 1;
     QT_WAYLAND_DISABLE_WINDOWDECORATION = 0;
     QT_AUTO_SCREEN_SCALE_FACTOR = 1;
+    QT_ENABLE_HIGHDPI_SCALING = 1;
+    QT_QUICK_CONTROLS_STYLE = "Material";
+    QT_WAYLAND_FORCE_DPI = "physical";
     ELECTRON_OZONE_PLATFORM_HINT = "wayland";
   };
 

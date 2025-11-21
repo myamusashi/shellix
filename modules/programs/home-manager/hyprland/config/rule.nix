@@ -143,13 +143,17 @@
     "blur, shell:session"
 
     # Layer animation
-    "animation popup 30%, quickshell"
-    "animation popup 30%, shell:dashboard"
     "animation popup 30%, shell:bigclock"
-    "animation popup 90%, selection"
-    "animation slide, shell:app"
+    "animation popup 95%, selection"
+    "animation popup 90%, shell:app"
+    "animation popup 90%, shell:capture"
+    "animation popup 90%, shell:topExclusionZone"
+    "animation popup 90%, shell:bottomExclusionZone"
+    "animation popup 90%, shell:rightExclusionZone"
+    "animation popup 90%, shell:leftExclusionZone"
+    "animation popup 90%, quickshell"
     "animation slide, shell:bar"
-    "animation slide, shell:capture"
+    "animation slide, shell:dashboard"
     "animation slide, shell:session"
     "animation slide, shell:overview"
 

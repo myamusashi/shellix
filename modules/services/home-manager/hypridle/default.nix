@@ -29,7 +29,7 @@
 
           {
             timeout = 1800;
-            on-timeout = "qs -c lock ipc call lock lock";
+            on-timeout = "shell ipc call lock lock";
           }
 
           {
