@@ -167,7 +167,7 @@
         pkgs.pulseaudio
         pkgs.wl-screenrec
         # pkgs.sf-mono-liga-bin
-        # pkgs.winboat
+        (pkgs.winboat.overrideAttrs {npmFlags = ["--legacy-peer-deps"];})
         pkgs.kdePackages.qtcharts
         pkgs.wl-gammactl
         pkgs.brightnessctl
