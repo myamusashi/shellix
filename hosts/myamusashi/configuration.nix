@@ -252,7 +252,6 @@
     ccache.enable = true;
     java = {
       enable = true;
-      package = pkgs.jdk23;
     };
   };
 

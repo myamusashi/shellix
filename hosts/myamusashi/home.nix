@@ -167,7 +167,7 @@
         pkgs.pulseaudio
         pkgs.wl-screenrec
         # pkgs.sf-mono-liga-bin
-        pkgs.winboat
+        # pkgs.winboat
         pkgs.kdePackages.qtcharts
         pkgs.wl-gammactl
         pkgs.brightnessctl
@@ -331,5 +331,5 @@
     };
   };
 
-  nixGL.vulkan.enable = true;
+  targets.genericLinux.nixGL.vulkan.enable = true;
 }
