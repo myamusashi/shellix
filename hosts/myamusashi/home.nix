@@ -24,10 +24,10 @@
         	color = ${config.home.homeDirectory}/.local/share/color-schemes/Shellix.colors
         	icon_theme = la-capitaine-icon-theme
         	style = Darkly
-        	font_fixed = SFMono Nerd Font
+        	font_fixed = Google Sans Flex
 
         	font_fixed_size = 12
-        	font = SF Pro Display
+        	font = Hack
         	font_size = 12
         }
       '';
@@ -158,16 +158,22 @@
         }))
         pkgs.asciinema
         (pkgs.la-capitaine-icon-theme.overrideAttrs {dontCheckForBrokenSymlinks = true;})
-        inputs.apple-fonts.packages.${pkgs.system}.sf-pro
-        inputs.apple-fonts.packages.${pkgs.system}.sf-pro-nerd
-        inputs.apple-fonts.packages.${pkgs.system}.sf-mono
-        inputs.apple-fonts.packages.${pkgs.system}.sf-mono-nerd
+        pkgs.roboto-mono
+        pkgs.roboto-flex
+        # inputs.apple-fonts.packages.${pkgs.system}.sf-pro
+        # inputs.apple-fonts.packages.${pkgs.system}.sf-pro-nerd
+        # inputs.apple-fonts.packages.${pkgs.system}.sf-mono
+        # inputs.apple-fonts.packages.${pkgs.system}.sf-mono-nerd
         pkgs.pulseaudio
         pkgs.wl-screenrec
-        pkgs.sf-mono-liga-bin
+        # pkgs.sf-mono-liga-bin
         pkgs.winboat
+        pkgs.kdePackages.qtcharts
         pkgs.wl-gammactl
         pkgs.brightnessctl
+        (pkgs.callPackage ./extra/customfetch.nix {})
+        (pkgs.callPackage ./extra/google-sans-flex.nix {})
+        (pkgs.callPackage ./extra/qmlfmt.nix {})
         (pkgs.callPackage ./extra/yet-another-monochrome-icon-set.nix {})
         (pkgs.callPackage ./extra/fonts-audiowide.nix {})
       ];
@@ -275,7 +281,7 @@
       enable = true;
       theme.name = "WhiteSur-Dark-blue";
       font = {
-        name = "SFMono Nerd Font";
+        name = "Hack";
 
         size = 11;
       };
@@ -295,7 +301,7 @@
       enable = true;
       theme.name = "WhiteSur-Dark-blue";
       font = {
-        name = "SFMono Nerd Font";
+        name = "Hack";
 
         size = 11;
       };
@@ -305,9 +311,9 @@
   fonts.fontconfig = {
     enable = true;
     defaultFonts = {
-      serif = ["SF Pro"];
-      monospace = ["SFMono Nerd Font"];
-      sansSerif = ["SF Pro"];
+      serif = ["Google Sans Flex"];
+      monospace = ["Hack"];
+      sansSerif = ["Google Sans Flex"];
     };
   };
 
