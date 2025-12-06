@@ -92,6 +92,17 @@ in {
         input_path = "${toString ./templates/zellij/zellij-colors.kdl}"
         mode = "Dark"
         output_path = "${HOME}/.config/zellij/themes/shellix.kdl"
+
+        [templates.shell]
+        input_path = "${toString ./templates/shell/colors-dark.json}"
+        mode = "Dark"
+        output_path = "${HOME}/.config/shell/colors-dark.json"
+
+		[templates.shell_light]
+        input_path = "${toString ./templates/shell/colors-light.json}"
+        mode = "Light"
+        output_path = "${HOME}/.config/shell/colors-light.json"
+
       '';
     };
 
