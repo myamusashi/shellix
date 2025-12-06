@@ -1,0 +1,6 @@
+{
+	"colors": {
+		<* for name, value in colors *>"{{name | camel_case}}": "{{value.dark.hex}}"<* if not loop.last *><* endif *>,a
+		<* endfor *>
+	}
+}
