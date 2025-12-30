@@ -13,11 +13,11 @@
 
   environment.systemPackages = with pkgs; [
     intel-gpu-tools
-	iio-sensor-proxy
+    iio-sensor-proxy
   ];
 
   hardware = {
-	sensor.iio.enable = true;
+    sensor.iio.enable = true;
     bluetooth = {
       enable = true;
       powerOnBoot = true;
