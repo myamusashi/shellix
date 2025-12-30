@@ -1,6 +1,8 @@
 {
 	"colors": {
-		<* for name, value in colors *>"{{name | camel_case}}": "{{value.light.hex}}"<* if not loop.last *><* endif *>,
+		<* for name, value in colors *>
+		"{{name | camel_case}}": "{{value.light.hex}}",
 		<* endfor *>
+		"end": "end"
 	}
 }

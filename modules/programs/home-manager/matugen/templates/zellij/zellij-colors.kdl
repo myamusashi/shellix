@@ -1,120 +1,120 @@
 themes {
   	shellix {
   		text_unselected {
-  			base {{colors.on_background.default.hex}}
-  			background {{colors.background.default.hex}}
-  			emphasis_0 {{colors.primary.default.hex}}
-  			emphasis_1 {{colors.secondary.default.hex}}
-  			emphasis_2 {{colors.tertiary.default.hex}}
-  			emphasis_3 {{colors.on_surface_variant.default.hex}}
+  			base "{{colors.on_background.default.hex}}"
+  			background "{{colors.background.default.hex}}"
+  			emphasis_0 "{{colors.primary.default.hex}}"
+  			emphasis_1 "{{colors.secondary.default.hex}}"
+  			emphasis_2 "{{colors.tertiary.default.hex}}"
+  			emphasis_3 "{{colors.on_surface_variant.default.hex}}"
   		}
   		text_selected {
-  			base {{colors.background.default.hex}}
-  			background {{colors.tertiary.default.hex}}
-  			emphasis_0 {{colors.primary.default.hex}}
-  			emphasis_1 {{colors.secondary.default.hex}}
-  			emphasis_2 {{colors.tertiary.default.hex}}
-  			emphasis_3 {{colors.on_surface_variant.default.hex}}
+  			base "{{colors.background.default.hex}}"
+  			background "{{colors.tertiary.default.hex}}"
+  			emphasis_0 "{{colors.primary.default.hex}}"
+  			emphasis_1 "{{colors.secondary.default.hex}}"
+  			emphasis_2 "{{colors.tertiary.default.hex}}"
+  			emphasis_3 "{{colors.on_surface_variant.default.hex}}"
   		}
   		ribbon_selected {
-  			base {{colors.background.default.hex}}
-  			background {{colors.tertiary.default.hex}}
-  			emphasis_0 {{colors.error.default.hex}}
-  			emphasis_1 {{colors.primary.default.hex}}
-  			emphasis_2 {{colors.on_surface_variant.default.hex}}
-  			emphasis_3 {{colors.secondary.default.hex}}
+  			base "{{colors.background.default.hex}}"
+  			background "{{colors.tertiary.default.hex}}"
+  			emphasis_0 "{{colors.error.default.hex}}"
+  			emphasis_1 "{{colors.primary.default.hex}}"
+  			emphasis_2 "{{colors.on_surface_variant.default.hex}}"
+  			emphasis_3 "{{colors.secondary.default.hex}}"
   		}
   		ribbon_unselected {
-  			base {{colors.background.default.hex}}
-  			background {{colors.on_background.default.hex}}
-  			emphasis_0 {{colors.error.default.hex}}
-  			emphasis_1 {{colors.on_background.default.hex}}
-  			emphasis_2 {{colors.secondary.default.hex}}
-  			emphasis_3 {{colors.on_surface_variant.default.hex}}
+  			base "{{colors.background.default.hex}}"
+  			background "{{colors.on_background.default.hex}}"
+  			emphasis_0 "{{colors.error.default.hex}}"
+  			emphasis_1 "{{colors.on_background.default.hex}}"
+  			emphasis_2 "{{colors.secondary.default.hex}}"
+  			emphasis_3 "{{colors.on_surface_variant.default.hex}}"
   		}
   		table_title {
-  			base {{colors.tertiary.default.hex}}
+  			base "{{colors.tertiary.default.hex}}"
   			background 0
-  			emphasis_0 {{colors.primary.default.hex}}
-  			emphasis_1 {{colors.secondary.default.hex}}
-  			emphasis_2 {{colors.tertiary.default.hex}}
-  			emphasis_3 {{colors.on_surface_variant.default.hex}}
+  			emphasis_0 "{{colors.primary.default.hex}}"
+  			emphasis_1 "{{colors.secondary.default.hex}}"
+  			emphasis_2 "{{colors.tertiary.default.hex}}"
+  			emphasis_3 "{{colors.on_surface_variant.default.hex}}"
   		}
   		table_cell_selected {
-  			base {{colors.background.default.hex}}
-  			background {{colors.tertiary.default.hex}}
-  			emphasis_0 {{colors.primary.default.hex}}
-  			emphasis_1 {{colors.secondary.default.hex}}
-  			emphasis_2 {{colors.tertiary.default.hex}}
-  			emphasis_3 {{colors.on_surface_variant.default.hex}}
+  			base "{{colors.background.default.hex}}"
+  			background "{{colors.tertiary.default.hex}}"
+  			emphasis_0 "{{colors.primary.default.hex}}"
+  			emphasis_1 "{{colors.secondary.default.hex}}"
+  			emphasis_2 "{{colors.tertiary.default.hex}}"
+  			emphasis_3 "{{colors.on_surface_variant.default.hex}}"
   		}
   		table_cell_unselected {
-  			base {{colors.on_background.default.hex}}
-  			background {{colors.background.default.hex}}
-  			emphasis_0 {{colors.primary.default.hex}}
-  			emphasis_1 {{colors.secondary.default.hex}}
-  			emphasis_2 {{colors.tertiary.default.hex}}
-  			emphasis_3 {{colors.on_surface_variant.default.hex}}
+  			base "{{colors.on_background.default.hex}}"
+  			background "{{colors.background.default.hex}}"
+  			emphasis_0 "{{colors.primary.default.hex}}"
+  			emphasis_1 "{{colors.secondary.default.hex}}"
+  			emphasis_2 "{{colors.tertiary.default.hex}}"
+  			emphasis_3 "{{colors.on_surface_variant.default.hex}}"
   		}
   		list_selected {
-  			base {{colors.background.default.hex}}
-  			background {{colors.tertiary.default.hex}}
-  			emphasis_0 {{colors.primary.default.hex}}
-  			emphasis_1 {{colors.secondary.default.hex}}
-  			emphasis_2 {{colors.tertiary.default.hex}}
-  			emphasis_3 {{colors.on_surface_variant.default.hex}}
+  			base "{{colors.background.default.hex}}"
+  			background "{{colors.tertiary.default.hex}}"
+  			emphasis_0 "{{colors.primary.default.hex}}"
+  			emphasis_1 "{{colors.secondary.default.hex}}"
+  			emphasis_2 "{{colors.tertiary.default.hex}}"
+  			emphasis_3 "{{colors.on_surface_variant.default.hex}}"
   		}
   		list_unselected {
-  			base {{colors.on_background.default.hex}}
-  			background {{colors.background.default.hex}}
-  			emphasis_0 {{colors.primary.default.hex}}
-  			emphasis_1 {{colors.secondary.default.hex}}
-  			emphasis_2 {{colors.tertiary.default.hex}}
-  			emphasis_3 {{colors.on_surface_variant.default.hex}}
+  			base "{{colors.on_background.default.hex}}"
+  			background "{{colors.background.default.hex}}"
+  			emphasis_0 "{{colors.primary.default.hex}}"
+  			emphasis_1 "{{colors.secondary.default.hex}}"
+  			emphasis_2 "{{colors.tertiary.default.hex}}"
+  			emphasis_3 "{{colors.on_surface_variant.default.hex}}"
   		}
   		frame_selected {
-  			base {{colors.tertiary.default.hex}}
+  			base "{{colors.tertiary.default.hex}}"
   			background 0
-  			emphasis_0 {{colors.primary.default.hex}}
-  			emphasis_1 {{colors.secondary.default.hex}}
-  			emphasis_2 {{colors.on_surface_variant.default.hex}}
+  			emphasis_0 "{{colors.primary.default.hex}}"
+  			emphasis_1 "{{colors.secondary.default.hex}}"
+  			emphasis_2 "{{colors.on_surface_variant.default.hex}}"
   			emphasis_3 0
   		}
   		frame_highlight {
-  			base {{colors.primary.default.hex}}
+  			base "{{colors.primary.default.hex}}"
   			background 0
-  			emphasis_0 {{colors.on_surface_variant.default.hex}}
-  			emphasis_1 {{colors.primary.default.hex}}
-  			emphasis_2 {{colors.primary.default.hex}}
-  			emphasis_3 {{colors.primary.default.hex}}
+  			emphasis_0 "{{colors.on_surface_variant.default.hex}}"
+  			emphasis_1 "{{colors.primary.default.hex}}"
+  			emphasis_2 "{{colors.primary.default.hex}}"
+  			emphasis_3 "{{colors.primary.default.hex}}"
   		}
   		exit_code_success {
-  			base {{colors.tertiary.default.hex}}
+  			base "{{colors.tertiary.default.hex}}"
   			background 0
-  			emphasis_0 {{colors.secondary.default.hex}}
-  			emphasis_1 {{colors.background.default.hex}}
-  			emphasis_2 {{colors.on_surface_variant.default.hex}}
-  			emphasis_3 {{colors.primary.default.hex}}
+  			emphasis_0 "{{colors.secondary.default.hex}}"
+  			emphasis_1 "{{colors.background.default.hex}}"
+  			emphasis_2 "{{colors.on_surface_variant.default.hex}}"
+  			emphasis_3 "{{colors.primary.default.hex}}"
   		}
   		exit_code_error {
-  			base {{colors.error.default.hex}}
+  			base "{{colors.error.default.hex}}"
   			background 0
-  			emphasis_0 {{colors.primary.default.hex}}
+  			emphasis_0 "{{colors.primary.default.hex}}"
   			emphasis_1 0
   			emphasis_2 0
   			emphasis_3 0
   		}
   		multiplayer_user_colors {
-  			player_1 {{colors.on_surface_variant.default.hex}}
-  			player_2 {{colors.primary.default.hex}}
+  			player_1 "{{colors.on_surface_variant.default.hex}}"
+  			player_2 "{{colors.primary.default.hex}}"
   			player_3 0
-  			player_4 {{colors.tertiary.default.hex}}
-  			player_5 {{colors.secondary.default.hex}}
+  			player_4 "{{colors.tertiary.default.hex}}"
+  			player_5 "{{colors.secondary.default.hex}}"
   			player_6 0
-  			player_7 {{colors.error.default.hex}}
+  			player_7 "{{colors.error.default.hex}}"
   			player_8 0
   			player_9 0
   			player_10 0
   		}
-  	}
-  }
+    }
+}

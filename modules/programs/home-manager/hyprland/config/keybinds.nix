@@ -68,7 +68,7 @@ in {
       "SHIFT $modalt, D, exec, $record-panel"
       "$modalt, S, exec, hyprctl keyword monitorv2[eDP-1]:disabled 1"
       "$modalt, W, exec, $wallpaper-switcher"
-	  "$modalt CTRL, W, exec, $weather-panel"
+      "$modalt CTRL, W, exec, $weather-panel"
       "$modalt, SPACE, exec, $launcher" # quickshell need
       "$mod, W, exec, $dashboard" # quickshell need
       "$modalt, B, exec, $bar" # quickshell need
