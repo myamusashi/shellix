@@ -61,7 +61,10 @@ in {
   config = {
     services.borgbackup.jobs = {
       myamusashi = lib.mkIf cfg.myamusashi.enable {
-        repo = "waltz@192.168.18.14:/opt/backup/Stations/myamusashi";
+        repo = "waltz@10.0.0.1:/opt/backup/Stations/myamusashi";
+        environment = {
+          BORG_RSH = "ssh -i /root/.ssh/id_ed25519 -o StrictHostKeyChecking=accept-new";
+        };
         encryption = {
           passCommand = "${pkgs-stable.coreutils}/bin/cat ${config.sops.secrets.myamusashi-borg.path}";
           mode = "repokey-blake2";
