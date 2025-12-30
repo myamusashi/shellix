@@ -11,7 +11,13 @@
     ./hardware-configuration.nix
   ];
 
+  environment.systemPackages = with pkgs; [
+    intel-gpu-tools
+	iio-sensor-proxy
+  ];
+
   hardware = {
+	sensor.iio.enable = true;
     bluetooth = {
       enable = true;
       powerOnBoot = true;
@@ -37,7 +43,7 @@
 
   virtualisation = {
     docker.enable = false;
-    libvirtd.enable = false;
+    libvirtd.enable = true;
     podman = {
       enable = true;
       dockerCompat = true;
@@ -98,6 +104,7 @@
       "quiet"
       "splash"
       "loglevel=3"
+      "acpi_backlight=video"
       "boot.shell_on_fail"
       "rd.systemd.show_status=false"
       "rd.udev.log_level=3"
@@ -157,6 +164,7 @@
 
       "kernel.sched_migration_cost_ns" = 5000000;
       "kernel.sched_autogroup_enabled" = 0;
+      "kernel.perf_event_paranoid" = 2; # Need this because intel-gpu-tools
     };
   };
 
@@ -174,17 +182,26 @@
     MaxRetentionSec=7day
   '';
 
-  security.wrappers.gsr-kms-server = {
-    source = "${pkgs.gpu-screen-recorder}/bin/gsr-kms-server";
-    capabilities = "cap_sys_admin+ep";
-    owner = "root";
-    group = "root";
+  security = {
+    wrappers.gsr-kms-server = {
+      source = "${pkgs.gpu-screen-recorder}/bin/gsr-kms-server";
+      capabilities = "cap_sys_admin+ep";
+      owner = "root";
+      group = "root";
+    };
+
+    wrappers.intel_gpu_top = {
+      source = "${pkgs.intel-gpu-tools}/bin/intel_gpu_top";
+      capabilities = "cap_perfmon+ep";
+      owner = "root";
+      group = "root";
+    };
   };
 
   zramSwap = {
     enable = true;
     priority = 1;
-    algorithm = "lz4";
+    algorithm = "zstd";
     memoryPercent = 50;
     memoryMax = null;
   };
