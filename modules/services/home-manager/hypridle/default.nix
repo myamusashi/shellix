@@ -31,12 +31,6 @@
             timeout = 1800;
             on-timeout = "shell ipc call lock lock";
           }
-
-          {
-            timeout = 2000;
-            on-timeout = "pkill wl-gammactl && hyprctl dispatch dpms off";
-            on-resume = "hyprctl dispatch dpms on && brightnessctl -r";
-          }
         ];
       };
     };
