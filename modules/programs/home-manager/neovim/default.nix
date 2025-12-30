@@ -21,11 +21,12 @@ in {
         ripgrep
         vscode-json-languageserver
         tree-sitter
-        texlab
-        texliveFull
         markdownlint-cli2
         live-server
         marksman
+        arduino-language-server
+        arduino-cli
+        llvm
         bash-language-server
         shfmt
         prettierd
