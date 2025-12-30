@@ -4,7 +4,23 @@
   lib,
   pkgs,
   ...
-}: {
+}: let
+  qsPackages = inputs.quickshell.packages.${pkgs.stdenv.hostPlatform.system}.default;
+  shellPackages = inputs.shell.packages.${pkgs.stdenv.hostPlatform.system}.default;
+  mangoCfg = pkgs.writeText "mango-greeter.conf" ''
+    exec-once = ${qsPackages}/bin/quickshell -p ${shellPackages}/share/quickshell/Greeter.qml && pkill mango
+  '';
+  hyprCfg = pkgs.writeText "hyprland-greeter.conf" ''
+    monitor = ,preferred, auto, auto
+
+    exec-once = ${qsPackages}/bin/quickshell -p ${shellPackages}/share/quickshell/Greeter.qml && pkill Hyprland
+
+    misc {
+      force_default_wallpaper = 0
+      disable_hyprland_logo = true
+    }
+  '';
+in {
   imports = [
     inputs.sops-nix.nixosModules.sops
     inputs.mangowc.nixosModules.mango
@@ -134,11 +150,17 @@
           "libvirtd"
           "qemu-libvirtd"
           "kvm"
+          "adbusers"
           "video"
           "render"
           "input"
           "wireshark"
         ];
+      };
+
+      greeter = {
+        isSystemUser = true;
+        group = "greeter";
       };
 
       docker = {
@@ -147,6 +169,7 @@
       };
     };
     groups.docker = {};
+    groups.greeter = {};
   };
 
   services = {
@@ -157,9 +180,29 @@
     };
     cloudflare-warp.enable = true;
     openssh.enable = true;
-    preload.enable = true;
     xserver.xkb.layout = "us";
+
+    greetd = {
+      enable = true;
+      settings = {
+        default_session = {
+          command = "${inputs.mangowc.packages.${pkgs.stdenv.hostPlatform.system}.default}/bin/mango -c ${mangoCfg}";
+          user = "greeter";
+        };
+        # initial_session = {
+        #   command = "${pkgs.hyprland}/bin/hyprland -c ${hyprCfg}";
+        #   user = "myamusashi";
+        # };
+      };
+    };
   };
+
+  security.pam.services.greetd.text = ''
+    auth      substack      login
+    account   include       login
+    password  substack      login
+    session   include       login
+  '';
 
   shellix = {
     matugen.colors.enable = true;
@@ -191,7 +234,7 @@
     programs.nixos = {
       fish.enable = true;
       starship.enable = true;
-      steam.enable = false;
+      steam.enable = true;
       virt-manager.enable = false;
       wireshark.enable = false;
       xonsh.enable = false;
@@ -218,6 +261,10 @@
         screen_recorder = true;
       };
 
+      theming = {
+        icons = true;
+      };
+
       winapps = true;
 
       customPackages = with pkgs; [
@@ -231,9 +278,13 @@
         gvfs
         wget2
         iptables
+        greetd
+        arduino
+        spotify
+        android-studio
+        sdkmanager
       ];
       excludePackages = [
-        "libvirt"
         "kdePackages.dolphin"
       ];
     };
@@ -248,6 +299,7 @@
       enableSSHSupport = true;
     };
     hyprland.enable = true;
+    adb.enable = true;
     mango.enable = true;
     ccache.enable = true;
     java = {
@@ -329,7 +381,10 @@
   };
 
   nixpkgs = {
-    config.allowUnfree = true;
+    config = {
+      allowUnfree = true;
+      android_sdk.accept_license = true;
+    };
     overlays = [
       (import ./overlays.nix)
     ];
