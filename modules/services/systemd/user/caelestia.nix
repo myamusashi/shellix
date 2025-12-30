@@ -13,7 +13,7 @@
       };
       Service = {
         Type = "exec";
-        ExecStart = "${inputs.caelestia-shell.packages.${pkgs.system}.default}/bin/caelestia-shell";
+        ExecStart = "${inputs.caelestia-shell.packages.${pkgs.stdenv.hostPlatform.system}.default}/bin/caelestia-shell";
         Restart = "on-failure";
         Slice = "app-graphical.slice";
       };
