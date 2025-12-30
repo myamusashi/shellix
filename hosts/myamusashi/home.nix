@@ -4,7 +4,63 @@
   inputs,
   config,
   ...
-}: {
+}: let
+  rstd = pkgs.fetchFromGitHub {
+    owner = "hypengw";
+    repo = "rstd";
+    rev = "7eb8b411258b4a886231b8b87f7b5a472b6712e1";
+    hash = "sha256-AAAAAAAAAAAAAAAAAAAAAAArstdAAAAAAAAAAAAAAAA=";
+  };
+
+  asio = pkgs.fetchFromGitHub {
+    owner = "chriskohlhoff";
+    repo = "asio";
+    rev = "asio-1-29-0";
+    hash = "sha256-7Q2/9avCA/3jG7XvV5Yk9s//x8zCd3Km5m2bZHhL1yw=";
+  };
+
+  pegtl = pkgs.fetchFromGitHub {
+    owner = "taocpp";
+    repo = "PEGTL";
+    rev = "3.2.8";
+    hash = "sha256-jq/iJ3QCnGj3nE1NHVSKbr5zJqmXv2bQf1yWn0Vkud8=";
+  };
+
+  ncrequest = pkgs.fetchFromGitHub {
+    owner = "hypengw";
+    repo = "ncrequest";
+    rev = "b919f0ad9a85dc006392ebf8802eb4c7df7584a2";
+    hash = "sha256-ncrequestAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=";
+  };
+
+  kstore = pkgs.fetchFromGitHub {
+    owner = "hypengw";
+    repo = "kstore";
+    rev = "d6f32d1a04be01328e1e528c0539e37b359c87e3";
+    hash = "sha256-kstoreAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=";
+  };
+
+  qml_material = pkgs.fetchFromGitHub {
+    owner = "hypengw";
+    repo = "qml-material";
+    rev = "872085dd6ffbb66b1e09549b12f8dc862d8619d7";
+    hash = "sha256-qml_materialAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=";
+  };
+
+  random = pkgs.fetchFromGitHub {
+    owner = "effolkronium";
+    repo = "random";
+    rev = "v1.5.0";
+    hash = "sha256-z5yFmprOqMR38LWgqhDNknGTbVJ0sLO+nFNDgz1t8XE=";
+  };
+
+  kdsingleapplication = pkgs.fetchFromGitHub {
+    owner = "KDAB";
+    repo = "KDSingleApplication";
+    rev = "v1.1.0";
+    hash = "sha256-y3TMPyFgWCGcZnSkXfOQVt9Cf8WkOyWJKbQX8RfQMRY=";
+  };
+in {
   imports = [
     ../../modules/shared/Colors.nix
     ../../modules/packages/home-packages.nix
@@ -56,6 +112,61 @@
             "Chat"
           ];
         });
+      });
+      qcm = super.qcm.overrideAttrs (oldAttrs: rec {
+        version = "1.3.3";
+        src = pkgs.fetchFromGitHub {
+          owner = "hypengw";
+          repo = "Qcm";
+          rev = "v${version}";
+          hash = "sha256-b9LKiRgD0V4zo639Rs15RmhHvqc7iYNo4/2sm1H+UhA=";
+          fetchSubmodules = true;
+        };
+
+        nativeBuildInputs =
+          oldAttrs.nativeBuildInputs
+          ++ [
+            pkgs.git
+          ];
+
+        buildInputs =
+          oldAttrs.buildInputs
+          ++ [
+            pkgs.protobuf
+            pkgs.qt6.qtgrpc
+          ];
+
+        cmakeFlags =
+          (oldAttrs.cmakeFlags or [])
+          ++ [
+            "-DCMAKE_THREAD_LIBS_INIT=-lpthread"
+            "-DCMAKE_HAVE_THREADS_LIBRARY=1"
+            "-DCMAKE_USE_PTHREADS_INIT=1"
+            "-DFETCHCONTENT_FULLY_DISCONNECTED=ON"
+
+            "-DFETCHCONTENT_SOURCE_DIR_RSTD=${rstd}"
+            "-DFETCHCONTENT_SOURCE_DIR_ASIO=${asio}"
+            "-DFETCHCONTENT_SOURCE_DIR_PEGTL=${pegtl}"
+            "-DFETCHCONTENT_SOURCE_DIR_NCREQUEST=${ncrequest}"
+            "-DFETCHCONTENT_SOURCE_DIR_KSTORE=${kstore}"
+            "-DFETCHCONTENT_SOURCE_DIR_QML_MATERIAL=${qml_material}"
+            "-DFETCHCONTENT_SOURCE_DIR_RANDOM=${random}"
+            "-DFETCHCONTENT_SOURCE_DIR_KDSINGLEAPPLICATION=${kdsingleapplication}"
+          ];
+
+        patches = [];
+
+        postPatch = ''
+          substituteInPlace player/CMakeLists.txt \
+            --replace-fail "PRIVATE cubeb::cubeb" "PRIVATE cubeb"
+
+          substituteInPlace third_party/CMakeLists.txt \
+            --replace-fail "add_library(cubeb::cubeb ALIAS cubeb)"
+
+          substituteInPlace third_party/CMakeLists.txt \
+            --replace-fail 'add_library(random ALIAS effolkronium_random)' \
+                           'add_library(random ALIAS effolkronium_random)'
+        '';
       });
       allegro = super.allegro.overrideAttrs (oldAttrs: {
         cmakeFlags =
@@ -109,8 +220,10 @@
       };
       kitty.enable = true;
       lazygit.enable = true;
+      mango.enable = true;
       shell.enable = true;
       yazi.enable = true;
+      spicetify.enable = true;
       mpv.enable = true;
       neovim.enable = true;
       quickshell.enable = true;
@@ -149,10 +262,10 @@
         pkgs.darkly
         pkgs.cachix
         pkgs.inter
-        (inputs.vermilion.packages.${pkgs.system}.vermilion.overrideAttrs (oldAttrs: {
+        (inputs.vermilion.packages.${pkgs.stdenv.hostPlatform.system}.vermilion.overrideAttrs (oldAttrs: {
           pnpmDeps = pkgs.pnpm_10.fetchDeps {
             inherit (oldAttrs) pname src;
-            hash = "sha256-nD55aAdaSfvU111rWvRm2uWQC1SFKVN+F4FaRHSVPVk=";
+            hash = "sha256-pCMwbE7eYbaOOLhWfSQtjblVctOu7nCGnUal4SID+DQ=";
             fetcherVersion = 2;
           };
         }))
@@ -166,11 +279,17 @@
         # inputs.apple-fonts.packages.${pkgs.system}.sf-mono-nerd
         pkgs.pulseaudio
         pkgs.wl-screenrec
+        pkgs.qt6.qtgraphs
+        pkgs.arduino-cli
+        pkgs.arduino-language-server
+        pkgs.clang-tools
         # pkgs.sf-mono-liga-bin
-        (pkgs.winboat.overrideAttrs {npmFlags = ["--legacy-peer-deps"];})
+        pkgs.winboat
         pkgs.kdePackages.qtcharts
         pkgs.wl-gammactl
         pkgs.brightnessctl
+        pkgs.weather-icons
+        pkgs.wlr-randr
         (pkgs.callPackage ./extra/customfetch.nix {})
         (pkgs.callPackage ./extra/google-sans-flex.nix {})
         (pkgs.callPackage ./extra/qmlfmt.nix {})
