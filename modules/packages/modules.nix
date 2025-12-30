@@ -98,7 +98,13 @@ with pkgs; {
 
   multimedia = {
     office = [onlyoffice-desktopeditors libreoffice unoconv];
-    apps = [telegram-desktop vesktop (config.lib.nixGL.wrap pkgs.vivaldi) vivaldi-ffmpeg-codecs (config.lib.nixGL.wrap inputs.zen-browser.packages.${pkgs.system}.default)];
+    apps = [
+      telegram-desktop
+      vesktop
+      (config.lib.nixGL.wrap pkgs.vivaldi)
+      vivaldi-ffmpeg-codecs
+      (config.lib.nixGL.wrap inputs.zen-browser.packages.${pkgs.stdenv.hostPlatform.system}.twilight)
+    ];
   };
 
   gnome = [gnome-keyring];
