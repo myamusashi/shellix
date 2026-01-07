@@ -31,21 +31,12 @@ with pkgs; {
     fzf
   ];
 
-  winapps = [
-    dialog
-    freerdp
-    inputs.winapps.packages.${system}.winapps
-    inputs.winapps.packages.${system}.winapps-launcher
-    libnotify
-    netavark
-    iptables
-  ];
-
   nix-tools = {
     standard = [
       nixd
       alejandra
       statix
+      nix-output-monitor
       nh
     ];
 
@@ -66,17 +57,15 @@ with pkgs; {
 
   fonts = {
     nerd = with nerd-fonts; [
-      caskaydia-mono
-      comic-shanns-mono
-      proggy-clean-tt
+      hack-font
       jetbrains-mono
       inconsolata-lgc
     ];
     external = [
-      (callPackage ./custom/avenir-font.nix {})
+      # (callPackage ./custom/avenir-font.nix {})
       (callPackage ./custom/feather-font.nix {})
-      (callPackage ./custom/volte-rounded.nix {})
-      (callPackage ./custom/_14_segment_led_font.nix {})
+      # (callPackage ./custom/volte-rounded.nix {})
+      # (callPackage ./custom/_14_segment_led_font.nix {})
       noto-fonts
     ];
   };
@@ -125,7 +114,7 @@ with pkgs; {
     editor = [ffmpeg imagemagick];
     viewer = [ffmpegthumbnailer poppler-utils mpv lxqt.lximage-qt zathura];
     screen_recorder = [grim slurp hyprshot wl-screenrec];
-    misc = [playerctl cava zathura mpg123];
+    misc = [playerctl cava mpg123];
   };
 
   wayland = {

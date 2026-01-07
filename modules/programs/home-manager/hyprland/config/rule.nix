@@ -96,6 +96,12 @@ in {
       "match:title" = "^(Login - Akun Google - Zen Browser)";
     })
 
+    # yazi image preview (foot)
+    (mkFloat "float_yazi_image_preview" {
+      "match:class" = "^(ueberzugpp*)";
+    })
+    (mkWindowRule "resize_yazi_image_preview" {"match:class" = "^(ueberzugpp*)";} {size = "295 199";})
+
     # Yazi file manager
     (mkFloat "float_yaziws" {"match:initial_title" = "^(yaziWS)";})
 
@@ -228,11 +234,13 @@ in {
     (mkLayerRule "shell_bar_blur" "shell:bar" {blur = true;})
     (mkLayerRule "shell_capture_blur" "shell:capture" {blur = true;})
     (mkLayerRule "shell_session_blur" "shell:session" {blur = true;})
+    (mkLayerRule "shell_drawers_blur" "shell:drawers" {blur = false;})
 
     # Popup animations (30%)
     (mkLayerRule "shell_bigclock_animation" "shell:bigclock" {animation = "popup 30%";})
 
     # Popup animations (90%)
+    (mkLayerRule "shell_drawers_animation" "shell:drawers" {animation = "popup 90%";})
     (mkLayerRule "shell_app_animation" "shell:app" {animation = "popup 90%";})
     (mkLayerRule "shell_capture_animation" "shell:capture" {animation = "popup 90%";})
     (mkLayerRule "shell_topExclusionZone_animation" "shell:topExclusionZone" {animation = "popup 90%";})
