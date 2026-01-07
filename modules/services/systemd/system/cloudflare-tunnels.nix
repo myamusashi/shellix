@@ -51,7 +51,6 @@
           "bind"
         ];
 
-        ExecStartPre = "${pkgs.coreutils}/bin/mkdir -p /var/lib/cloudflared";
         ExecStart = "/bin/sh -c '${pkgs.cloudflared}/bin/cloudflared tunnel run --token $(${pkgs.coreutils}/bin/cat ${config.sops.secrets.cloudflare_creds.path})'";
 
         LoadCredential = [

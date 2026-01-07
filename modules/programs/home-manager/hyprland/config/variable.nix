@@ -1,22 +1,25 @@
 {config, ...}: let
   shell = "hyprctl dispatch global quickshell";
+  app2unit = "app2unit --";
 in {
-  term = "kitty";
-  screencapture = "${shell}:screencapture";
-  wallpaper-switcher = "${shell}:wallpaperSelector";
-  gamemode = "${config.home.homeDirectory}/.dots/modules/programs/home-manager/hyprland/config/scripts/gamemode.sh";
-  files = "footclient --title=yaziFM yazi";
-  browser = "zen";
-  vm = "vmware";
-  launcher = "${shell}:appLauncher";
-  powermenu = "${shell}:session";
-  bar = "${shell}:bar";
-  colorpick = "${config.home.homeDirectory}/.dots/modules/programs/home-manager/hyprland/config/scripts/picker.sh";
-  dashboard = "${shell}:dashboard";
-  lockscreen = "shell ipc call lock lock";
-  spotify = "spotify";
-  discord = "vesktop";
-  clipmanager = "kitty --class clipse -e clipse";
-  modalt = "ALT";
-  mod = "SUPER";
+  "$term" = "${app2unit} kitty";
+  "$screencapture" = "${shell}:screencaptureLauncher";
+  "$wallpaper-switcher" = "${shell}:wallpaperSwitcher";
+  "$weather-panel" = "${shell}:weather";
+  "$gamemode" = "${config.home.homeDirectory}/.dots/modules/programs/home-manager/hyprland/config/scripts/gamemode.sh";
+  "$record-panel" = "${shell}:recordPanel";
+  "$files" = "${app2unit} footclient --title=yaziFM yazi";
+  "$browser" = "${app2unit} zen";
+  "$vm" = "${app2unit} vmware";
+  "$launcher" = "${shell}:appLauncher";
+  "$powermenu" = "${shell}:session";
+  "$bar" = "${shell}:layershell";
+  "$colorpick" = "${config.home.homeDirectory}/.dots/modules/programs/home-manager/hyprland/config/scripts/picker.sh";
+  "$dashboard" = "${shell}:dashboard";
+  "$lockscreen" = "shell ipc call lock lock";
+  "$spotify" = "${app2unit} spotify";
+  "$discord" = "${app2unit} vesktop";
+  "$clipmanager" = "kitty --class clipse -e clipse";
+  "$modalt" = "ALT";
+  "$mod" = "SUPER";
 }

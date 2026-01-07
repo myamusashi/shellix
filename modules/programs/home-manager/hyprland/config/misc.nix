@@ -7,7 +7,7 @@
     disable_autoreload = false;
     mouse_move_enables_dpms = true;
     vfr = true;
-    font_family = "SFMono Nerd Font";
+    font_family = "Hack";
     vrr = 0;
     animate_manual_resizes = false;
     mouse_move_focuses_monitor = true;

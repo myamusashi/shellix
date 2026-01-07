@@ -22,7 +22,7 @@
     services = {
       server = {
         database.enable = true;
-        mailserver.enable = true;
+        mailserver.enable = false;
         forgejo.enable = true;
         wireguard = {
           enable = true;
@@ -159,8 +159,8 @@
     networkmanager.enable = true;
     firewall = {
       enable = true;
-      allowedTCPPorts = [20 21 22];
-      allowedUDPPorts = [];
+      allowedTCPPorts = [20 21 22 5432 3001 3002];
+      allowedUDPPorts = [5432 3001 3002];
     };
     extraHosts = ''
       127.0.0.1:${toString config.shellix.variables.port.NEXTCLOUD} cloud.myamusashi.com
@@ -269,4 +269,23 @@
       ];
     };
   };
+
+  # experiment and shit
+  services.resolved = {
+    enable = true;
+    dnssec = "true";
+    dnsovertls = "true";
+    fallbackDns = ["1.1.1.1" "8.8.8.8"]; # DNS cadangan
+  };
+
+  # 2. TENTUKAN NetworkManager pakai resolved
+  networking.networkmanager = {
+    dns = "systemd-resolved"; # Ini kunci utamanya!
+  };
+
+  # 3. TAMBAHKAN DNS fallback di level system
+  networking.nameservers = [
+    "1.1.1.1"
+    "8.8.8.8"
+  ];
 }

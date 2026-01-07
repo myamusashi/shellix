@@ -1,4 +1,4 @@
-{lib}: {
+{lib, ...}: {
   /*
   ** We actually can use the default port from
   ** the OG modules through **config function**,

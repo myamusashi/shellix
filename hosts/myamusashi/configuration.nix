@@ -4,10 +4,26 @@
   lib,
   pkgs,
   ...
-}: {
+}: let
+  qsPackages = inputs.quickshell.packages.${pkgs.stdenv.hostPlatform.system}.default;
+  shellPackages = inputs.shell.packages.${pkgs.stdenv.hostPlatform.system}.default;
+  mangoCfg = pkgs.writeText "mango-greeter.conf" ''
+    exec-once = ${qsPackages}/bin/quickshell -p ${shellPackages}/share/quickshell/Greeter.qml && pkill mango
+  '';
+  hyprCfg = pkgs.writeText "hyprland-greeter.conf" ''
+    monitor = ,preferred, auto, auto
+
+    exec-once = ${qsPackages}/bin/quickshell -p ${shellPackages}/share/quickshell/Greeter.qml && pkill Hyprland
+
+    misc {
+      force_default_wallpaper = 0
+      disable_hyprland_logo = true
+    }
+  '';
+in {
   imports = [
     inputs.sops-nix.nixosModules.sops
-    inputs.mango.nixosModules.mango
+    inputs.mangowc.nixosModules.mango
     ./hardware/default.nix
     ../../modules/shared/Colors.nix
     ../../modules/packages/nixos-packages.nix
@@ -134,11 +150,17 @@
           "libvirtd"
           "qemu-libvirtd"
           "kvm"
+          "adbusers"
           "video"
           "render"
           "input"
           "wireshark"
         ];
+      };
+
+      greeter = {
+        isSystemUser = true;
+        group = "greeter";
       };
 
       docker = {
@@ -147,6 +169,7 @@
       };
     };
     groups.docker = {};
+    groups.greeter = {};
   };
 
   services = {
@@ -157,9 +180,29 @@
     };
     cloudflare-warp.enable = true;
     openssh.enable = true;
-    preload.enable = true;
     xserver.xkb.layout = "us";
+
+    greetd = {
+      enable = true;
+      settings = {
+        default_session = {
+          command = "${inputs.mangowc.packages.${pkgs.stdenv.hostPlatform.system}.default}/bin/mango -c ${mangoCfg}";
+          user = "greeter";
+        };
+        # initial_session = {
+        #   command = "${pkgs.hyprland}/bin/hyprland -c ${hyprCfg}";
+        #   user = "myamusashi";
+        # };
+      };
+    };
   };
+
+  security.pam.services.greetd.text = ''
+    auth      substack      login
+    account   include       login
+    password  substack      login
+    session   include       login
+  '';
 
   shellix = {
     matugen.colors.enable = true;
@@ -167,20 +210,20 @@
     services.nixos = {
       audio.enable = true;
       backup.myamusashi.enable = true;
-      earlyoom.enable = true;
+      earlyoom.enable = false;
       plasma.enable = true;
       resolver.enable = true;
       scx.enable = true;
       display-manager = {
         sddm = {
-          enable = true;
+          enable = false;
           wayland = {
             enable = true;
             compositor = "weston";
           };
           theme = "sddm-astronaut-theme";
           auto-login = {
-            enable = true;
+            enable = false;
             user = "myamusashi";
             session = "hyprland.desktop";
           };
@@ -191,7 +234,7 @@
     programs.nixos = {
       fish.enable = true;
       starship.enable = true;
-      steam.enable = false;
+      steam.enable = true;
       virt-manager.enable = false;
       wireshark.enable = false;
       xonsh.enable = false;
@@ -218,10 +261,11 @@
         screen_recorder = true;
       };
 
-      winapps = true;
+      theming = {
+        icons = true;
+      };
 
       customPackages = with pkgs; [
-        sddm-astronaut
         kdePackages.qtmultimedia
         git-credential-manager
         sops
@@ -231,9 +275,11 @@
         gvfs
         wget2
         iptables
+        greetd
+        arduino
+        spotify
       ];
       excludePackages = [
-        "libvirt"
         "kdePackages.dolphin"
       ];
     };
@@ -248,11 +294,11 @@
       enableSSHSupport = true;
     };
     hyprland.enable = true;
+    adb.enable = true;
     mango.enable = true;
     ccache.enable = true;
     java = {
       enable = true;
-      package = pkgs.jdk23;
     };
   };
 
@@ -291,6 +337,7 @@
     XDG_MENU_PREFIX = "plasma-";
 
     # Application specific settings
+    FREETYPE_PROPERTIES = "cff:no-stem-darkening=0 autofitter:no-stem-darkening=O";
     EDITOR = "nvim";
     MOZ_DISABLE_RDD_SANDBOX = 1;
     MOZ_ENABLE_WAYLAND = "1 zen";
@@ -298,6 +345,9 @@
     _JAVA_AWT_WM_NONREPARENTING = 1;
     QT_WAYLAND_DISABLE_WINDOWDECORATION = 0;
     QT_AUTO_SCREEN_SCALE_FACTOR = 1;
+    QT_ENABLE_HIGHDPI_SCALING = 1;
+    QT_QUICK_CONTROLS_STYLE = "Material";
+    QT_WAYLAND_FORCE_DPI = "physical";
     ELECTRON_OZONE_PLATFORM_HINT = "wayland";
   };
 
@@ -326,7 +376,10 @@
   };
 
   nixpkgs = {
-    config.allowUnfree = true;
+    config = {
+      allowUnfree = true;
+      android_sdk.accept_license = true;
+    };
     overlays = [
       (import ./overlays.nix)
     ];

@@ -22,6 +22,7 @@
     ./winapps/default.nix
     ./matugen/default.nix
     ./winboat/default.nix
+    ./mangowc/default.nix
   ];
 
   options.shellix.programs.home = {
@@ -48,5 +49,6 @@
     shell.enable = lib.mkEnableOption "Enable shell widgets";
     matugen.enable = lib.mkEnableOption "Enable matugen color generation";
     winboat.enable = lib.mkEnableOption "Enable winboat seamless integration with windows";
+    mango.enable = lib.mkEnableOption "Enable mangowc wayland compositor";
   };
 }
