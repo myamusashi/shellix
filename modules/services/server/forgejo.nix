@@ -31,6 +31,9 @@
           RENDER_COMMAND = "${pkgs-stable.python312Packages.nbconvert}/bin/jupyter-nbconvert --to html --stdout";
           IS_INPUT_FILE = true;
         };
+        security = {
+          ALLOWED_DOMAINS = "github.com,*.github.com,raw.githubusercontent.com,objects.githubusercontent.com";
+        };
       };
     };
   };

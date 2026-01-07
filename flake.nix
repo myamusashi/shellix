@@ -15,8 +15,12 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    antigravity-flakes = {
+      url = "github:jacopone/antigravity-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     zen-browser = {
-      url = "github:myamusashi/zen-twilight-flake";
+      url = "github:0xc000022070/zen-browser-flake";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
@@ -70,8 +74,23 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    hyprtoolkit = {
+      url = "github:hyprwm/hyprtoolkit";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    hyprlang = {
+      url = "github:hyprwm/hyprlang";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     hyprpicker = {
       url = "github:hyprwm/hyprpicker";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    hyprpwcenter = {
+      url = "github:hyprwm/hyprpwcenter";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 

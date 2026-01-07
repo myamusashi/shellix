@@ -10,7 +10,7 @@ in {
     programs.tofi = {
       enable = true;
       settings = {
-        font = "SFMono Nerd Font";
+        font = "Hack";
         font-size = 20;
         font-features = "smcp, c2sc";
         font-variations = "wght 700";

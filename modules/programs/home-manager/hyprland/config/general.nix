@@ -13,7 +13,6 @@ in {
     border_size = 5;
     "col.active_border" = "$primary";
     "col.inactive_border" = "$inverse_primary";
-    no_border_on_floating = false;
     layout = layoutHypr;
     snap = {
       enabled = true;

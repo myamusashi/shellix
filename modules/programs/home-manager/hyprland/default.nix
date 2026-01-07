@@ -31,9 +31,9 @@ in {
       enable = lib.mkDefault true;
 
       plugins = [
-        (lib.mkIf cfg.plugins.hy3.enable inputs.hy3.packages.${pkgs.stdenv.hostPlatform.system}.hy3)
+        # (lib.mkIf cfg.plugins.hy3.enable inputs.hy3.packages.${pkgs.stdenv.hostPlatform.system}.hy3)
         (lib.mkIf cfg.plugins.scrolling.enable inputs.hyprland-plugins.packages.${pkgs.stdenv.hostPlatform.system}.hyprscrolling)
-        (lib.mkIf cfg.plugins.hypr-dynamic-cursors.enable "${inputs.hypr-dynamic-cursors.packages.${pkgs.stdenv.hostPlatform.system}.hypr-dynamic-cursors}/lib/libhypr-dynamic-cursors.so")
+        # (lib.mkIf cfg.plugins.hypr-dynamic-cursors.enable "${inputs.hypr-dynamic-cursors.packages.${pkgs.stdenv.hostPlatform.system}.hypr-dynamic-cursors}/lib/libhypr-dynamic-cursors.so")
       ];
 
       importantPrefixes = [
@@ -43,7 +43,6 @@ in {
         "bezier"
         "name"
       ];
-
       settings = import ./config {inherit pkgs config inputs lib;};
     };
   };
