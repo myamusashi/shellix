@@ -93,6 +93,24 @@ in {
   nixpkgs.overlays = [
     (self: super: {
       vesktop = super.vesktop.overrideAttrs (oldAttrs: {
+        preBuild = ''
+          cp -r ${super.electron.dist} electron-dist
+          chmod -R u+w electron-dist
+        '';
+
+        buildPhase = ''
+          runHook preBuild
+
+          pnpm build
+          pnpm exec electron-builder \
+            --dir \
+            -c.asarUnpack="**/*.node" \
+            -c.electronDist="electron-dist" \
+            -c.electronVersion=${super.electron.version}
+
+          runHook postBuild
+        '';
+
         desktopItems = lib.optional super.stdenv.hostPlatform.isLinux (super.makeDesktopItem {
           name = "vesktop";
           desktopName = "Vesktop";
@@ -261,44 +279,35 @@ in {
         pkgs.qtcreator
         pkgs.darkly
         pkgs.cachix
-        pkgs.inter
-        (inputs.vermilion.packages.${pkgs.stdenv.hostPlatform.system}.vermilion.overrideAttrs (oldAttrs: {
-          pnpmDeps = pkgs.pnpm_10.fetchDeps {
-            inherit (oldAttrs) pname src;
-            hash = "sha256-pCMwbE7eYbaOOLhWfSQtjblVctOu7nCGnUal4SID+DQ=";
-            fetcherVersion = 2;
-          };
-        }))
-        pkgs.asciinema
+        # pkgs.inter
+        pkgs.lucide
+        # (inputs.vermilion.packages.${pkgs.stdenv.hostPlatform.system}.vermilion.overrideAttrs (oldAttrs: {
+        #   pnpmDeps = pkgs.pnpm_10.fetchDeps {
+        #     inherit (oldAttrs) pname src;
+        #     hash = "sha256-pCMwbE7eYbaOOLhWfSQtjblVctOu7nCGnUal4SID+DQ=";
+        #     fetcherVersion = 2;
+        #   };
+        # }))
+        # pkgs.asciinema
+        # inputs.antigravity-flakes.packages.${pkgs.stdenv.hostPlatform.system}.default
         (pkgs.la-capitaine-icon-theme.overrideAttrs {dontCheckForBrokenSymlinks = true;})
-        pkgs.roboto-mono
-        pkgs.roboto-flex
-        # inputs.apple-fonts.packages.${pkgs.system}.sf-pro
-        # inputs.apple-fonts.packages.${pkgs.system}.sf-pro-nerd
-        # inputs.apple-fonts.packages.${pkgs.system}.sf-mono
-        # inputs.apple-fonts.packages.${pkgs.system}.sf-mono-nerd
-        pkgs.pulseaudio
         pkgs.wl-screenrec
         pkgs.qt6.qtgraphs
-        pkgs.arduino-cli
-        pkgs.arduino-language-server
-        pkgs.clang-tools
-        # pkgs.sf-mono-liga-bin
-        pkgs.winboat
         pkgs.kdePackages.qtcharts
         pkgs.wl-gammactl
         pkgs.brightnessctl
         pkgs.weather-icons
         pkgs.wlr-randr
-        (pkgs.callPackage ./extra/customfetch.nix {})
+        # (pkgs.callPackage ./extra/customfetch.nix {})
         (pkgs.callPackage ./extra/google-sans-flex.nix {})
-        (pkgs.callPackage ./extra/qmlfmt.nix {})
-        (pkgs.callPackage ./extra/yet-another-monochrome-icon-set.nix {})
-        (pkgs.callPackage ./extra/fonts-audiowide.nix {})
+        # (pkgs.callPackage ./extra/qmlfmt.nix {})
+        # (pkgs.callPackage ./extra/yet-another-monochrome-icon-set.nix {})
+        # (pkgs.callPackage ./extra/fonts-audiowide.nix {})
       ];
       excludePackages = [
         "neovide"
         "rofi"
+        "pinentry-curses"
         "comic-shanns-mono"
         "jetbrains-mono"
         "nix-du"
@@ -312,6 +321,7 @@ in {
         "vimix-icon-theme"
         "morewaita-icon-theme"
         "whitesur-kde"
+        "zed"
       ];
 
       fonts = {

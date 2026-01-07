@@ -34,7 +34,6 @@ in {
         vscode-langservers-extracted
         lua-language-server
         kdePackages.qtdeclarative
-        (callPackage ../../../../hosts/myamusashi/extra/qmlfmt.nix {})
       ];
     };
   };

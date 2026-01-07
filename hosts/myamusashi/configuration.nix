@@ -265,10 +265,7 @@ in {
         icons = true;
       };
 
-      winapps = true;
-
       customPackages = with pkgs; [
-        sddm-astronaut
         kdePackages.qtmultimedia
         git-credential-manager
         sops
@@ -281,8 +278,6 @@ in {
         greetd
         arduino
         spotify
-        android-studio
-        sdkmanager
       ];
       excludePackages = [
         "kdePackages.dolphin"
