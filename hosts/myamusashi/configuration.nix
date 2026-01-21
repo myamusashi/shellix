@@ -20,8 +20,25 @@
       disable_hyprland_logo = true
     }
   '';
+
+  getQmlPath = pkg: "${pkg}/${pkgs.qt6.qtbase.qtQmlPrefix}";
+  quickshell-wrapped =
+    pkgs.runCommand "quickshell-wrapped" {
+      nativeBuildInputs = [pkgs.makeWrapper];
+    } ''
+      mkdir -p $out/bin
+      mkdir -p $out/lib
+      cp -r ${inputs.quickshell.packages.${pkgs.stdenv.hostPlatform.system}.default}/lib/qt-6/qml/Quickshell $out/lib/Quickshell
+
+      makeWrapper ${inputs.quickshell.packages.${pkgs.stdenv.hostPlatform.system}.default}/bin/qs $out/bin/qs \
+        --prefix PATH : ${lib.makeBinPath [pkgs.fd pkgs.coreutils]}
+
+      makeWrapper ${inputs.quickshell.packages.${pkgs.stdenv.hostPlatform.system}.default}/bin/quickshell $out/bin/quickshell \
+        --prefix PATH : ${lib.makeBinPath [pkgs.fd pkgs.coreutils]}
+    '';
 in {
   imports = [
+    inputs.qtengine.nixosModules.default
     inputs.sops-nix.nixosModules.sops
     inputs.mangowc.nixosModules.mango
     ./hardware/default.nix
@@ -154,6 +171,7 @@ in {
           "video"
           "render"
           "input"
+          "seat"
           "wireshark"
         ];
       };
@@ -189,10 +207,9 @@ in {
           command = "${inputs.mangowc.packages.${pkgs.stdenv.hostPlatform.system}.default}/bin/mango -c ${mangoCfg}";
           user = "greeter";
         };
-        # initial_session = {
-        #   command = "${pkgs.hyprland}/bin/hyprland -c ${hyprCfg}";
-        #   user = "myamusashi";
-        # };
+        terminal = {
+          vt = 1;
+        };
       };
     };
   };
@@ -277,7 +294,17 @@ in {
         iptables
         greetd
         arduino
+        zoom-us
         spotify
+        distrobox
+        (linux-wifi-hotspot.overrideAttrs (oldAttrs: {
+          patches = [
+            (pkgs.fetchpatch {
+              url = "https://github.com/lakinduakash/linux-wifi-hotspot/commit/a3fce4b3ee9371eeb7b300fa7e9f291d93986db3.patch";
+              hash = "sha256-4xQ3iRUlkNpoxHXABhMIgsoDY9nENN/9FtHD3UMyAhc=";
+            })
+          ];
+        }))
       ];
       excludePackages = [
         "kdePackages.dolphin"
@@ -300,9 +327,41 @@ in {
     java = {
       enable = true;
     };
+    qtengine = {
+      enable = true;
+
+      config = {
+        theme = {
+          colorScheme = "/home/myamusashi/.local/share/color-schemes/Shellix.colors";
+          iconTheme = "breeze-dark";
+          style = "Darkly";
+
+          font = {
+            family = "Google Sans Flex";
+            size = 11;
+            weight = -1;
+          };
+
+          fontFixed = {
+            family = "Hack";
+            size = 11;
+            weight = -1;
+          };
+        };
+
+        misc = {
+          singleClickActivate = false;
+          menusHaveIcons = true;
+          shortcutsForContextMenus = true;
+        };
+      };
+    };
   };
 
   services.gvfs.enable = true;
+  # broken
+  # services.kmscon.enable = true;
+  # services.kmscon.extraOptions = "--term xterm-256color --drm false --fbdev true";
 
   environment.sessionVariables = {
     # Theming
@@ -310,14 +369,14 @@ in {
     HYPRCURSOR_THEME = "Future-Cyan-Hyprcursor_Theme";
     HYPRCURSOR_SIZE = "50";
     QS_ICON_THEME = "Papirus";
-    QT_QPA_PLATFORMTHEME = "qt6ct";
+    QT_QPA_PLATFORMTHEME = "qtengine";
     XCURSOR_THEME = "Future-Cyan-Hyprcursor_Theme";
     XCURSOR_SIZE = "35";
 
     # Wayland and Graphics
     GTK_USE_PORTAL = 0;
     GDK_BACKEND = "wayland,x11";
-    QT_QPA_PLATFORM = "wayland;xcb";
+    QT_QPA_PLATFORM = "wayland";
     SDL_VIDEODRIVER = "wayland";
     CLUTTER_BACKEND = "wayland";
     LIBVA_DRIVER_NAME = "iHD";
@@ -329,11 +388,8 @@ in {
     AQ_WLR_DEVICES = "/dev/dri/card1:/dev/dri/card0";
     AQ_MGPU_NO_EXPLICIT = 0;
 
-    # Desktop Environment
+    # XDG
     XDG_CONFIG_HOME = "/home/$USER/.config";
-    XDG_CURRENT_DESKTOP = "Hyprland";
-    XDG_SESSION_TYPE = "wayland";
-    XDG_SESSION_DESKTOP = "Hyprland";
     XDG_MENU_PREFIX = "plasma-";
 
     # Application specific settings
@@ -349,6 +405,29 @@ in {
     QT_QUICK_CONTROLS_STYLE = "Material";
     QT_WAYLAND_FORCE_DPI = "physical";
     ELECTRON_OZONE_PLATFORM_HINT = "wayland";
+
+    # Fuckass QML stuff
+    QML2_IMPORT_PATH = lib.concatStringsSep ":" [
+      "${inputs.quickshell.packages.${pkgs.stdenv.hostPlatform.system}.default}/lib/qt-6/qml"
+      "${getQmlPath pkgs.qt6.qt5compat}"
+      "${getQmlPath pkgs.qt6.qtdeclarative}"
+      "${getQmlPath pkgs.qt6.qtmultimedia}"
+      "${getQmlPath pkgs.libsForQt5.kirigami2}"
+      "${getQmlPath pkgs.kdePackages.kirigami-addons}"
+      "${getQmlPath inputs.m3shapes.packages.${pkgs.stdenv.hostPlatform.system}.m3shapes}"
+      "${quickshell-wrapped}/lib"
+    ];
+
+    QML_IMPORT_PATH = lib.concatStringsSep ":" [
+      "${inputs.quickshell.packages.${pkgs.stdenv.hostPlatform.system}.default}/lib/qt-6/qml"
+      "${getQmlPath pkgs.qt6.qt5compat}"
+      "${getQmlPath pkgs.qt6.qtdeclarative}"
+      "${getQmlPath pkgs.qt6.qtmultimedia}"
+      "${getQmlPath pkgs.libsForQt5.kirigami2}"
+      "${getQmlPath pkgs.kdePackages.kirigami-addons}"
+      "${getQmlPath inputs.m3shapes.packages.${pkgs.stdenv.hostPlatform.system}.m3shapes}"
+      "${quickshell-wrapped}/lib"
+    ];
   };
 
   xdg.mime = {
@@ -407,6 +486,9 @@ in {
         "https://walker.cachix.org"
         "https://walker-git.cachix.org"
         "https://cache.flox.dev"
+        ## cachyos kernel binary caches
+        "https://attic.xuyh0120.win/lantian"
+        "https://cache.garnix.io"
       ];
 
       extra-substituters = [
@@ -425,6 +507,8 @@ in {
         "hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc="
         "walker.cachix.org-1:fG8q+uAaMqhsMxWjwvk0IMb4mFPFLqHjuvfwQxE4oJM="
         "walker-git.cachix.org-1:vmC0ocfPWh0S/vRAQGtChuiZBTAe4wiKDeyyXM0/7pM="
+        "lantian:EeAUQ+W+6r7EtwnmYjeVwx5kOGEBpjlBfPlzGlTNvHc="
+        "cache.garnix.io:CTFPyKSLcx5RMJKfLo5EEPUObbA78b0YQ2DTCJXqr9g="
       ];
 
       extra-trusted-public-keys = [
