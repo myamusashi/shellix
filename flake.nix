@@ -4,6 +4,7 @@
     nixpkgs-stable.url = "github:NixOS/nixpkgs/release-25.05";
     sops-nix.url = "github:Mic92/sops-nix";
     chaotic.url = "github:chaotic-cx/nyx/nyxpkgs-unstable";
+    nix-cachyos-kernel.url = "github:xddxdd/nix-cachyos-kernel/release";
 
     home-manager = {
       url = "github:nix-community/home-manager";
@@ -139,26 +140,31 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    neovim-nightly-overlay.url = "github:nix-community/neovim-nightly-overlay";
-    flox.url = "github:flox/flox/v1.7.4";
-    apple-fonts.url = "github:Lyndeno/apple-fonts.nix";
-    # We only use this for ligatures support
-    sf-mono-liga-src = {
-      url = "github:shaunsingh/SFMono-Nerd-Font-Ligaturized";
-      flake = false;
-    };
-
     shell = {
       url = "git+https://git.myamusashi.space/myamusashi/shell";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    m3shapes = {
+      url = "github:myamusashi/m3shapes";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    qtengine = {
+      url = "github:kossLAN/qtengine";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    neovim-nightly-overlay.url = "github:nix-community/neovim-nightly-overlay";
+    flox.url = "github:flox/flox/v1.7.4";
     spicetify-nix.url = "github:Gerg-L/spicetify-nix";
     matugen.url = "github:/InioX/Matugen/v2.4.1";
     nixgl.url = "github:nix-community/nixGL";
   };
 
   outputs = {
+    self,
+    nix-cachyos-kernel,
     nixpkgs,
     nixpkgs-stable,
     chaotic,
@@ -182,7 +188,7 @@
         inputs.hypridle.overlays.default
         inputs.hyprland.overlays.default
         nixgl.overlay
-        inputs.neovim-nightly-overlay.overlays.default
+        inputs.nix-cachyos-kernel.overlays.pinned
         inputs.vicinae.overlays.default
         (final: prev: {
           vicinae = prev.vicinae.overrideAttrs (oldAttrs: {
@@ -228,6 +234,12 @@
           chaotic.nixosModules.default
           ./sops/sops.nix
           ./hosts/myamusashi/configuration.nix
+
+          {
+            nixpkgs.overlays = [
+              nix-cachyos-kernel.overlays.pinned
+            ];
+          }
         ];
         specialArgs = {
           inherit inputs;
