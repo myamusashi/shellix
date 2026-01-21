@@ -78,7 +78,7 @@ with pkgs; {
   ];
 
   development = {
-    code_editor = [zed-editor-fhs neovim neovide];
+    code_editor = [zed-editor-fhs neovide];
     containers = [podman-tui podman-compose podman];
     tools = [git gh curl kdiff3];
   };
