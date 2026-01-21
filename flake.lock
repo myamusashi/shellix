@@ -2447,11 +2447,11 @@
     },
     "nixpkgs-stable": {
       "locked": {
-        "lastModified": 1767051569,
-        "narHash": "sha256-0MnuWoN+n1UYaGBIpqpPs9I9ZHW4kynits4mrnh1Pk4=",
+        "lastModified": 1768649915,
+        "narHash": "sha256-jc21hKogFnxU7KXSVTRmxC7u5D4RHwm9BAvDf5/Z1Uo=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "40ee5e1944bebdd128f9fbada44faefddfde29bd",
+        "rev": "3e3f3c7f9977dc123c23ee21e8085ed63daf8c37",
         "type": "github"
       },
       "original": {
@@ -2866,11 +2866,11 @@
         "quickshell": "quickshell_4"
       },
       "locked": {
-        "lastModified": 1768951638,
-        "narHash": "sha256-YdBsDah7dX3QYCn9A5JsMBogmAjgv8DK8JWa6h0GMD4=",
+        "lastModified": 1768978264,
+        "narHash": "sha256-nV529QgMR8VUgfmhwOa4PqbnpWlu8au8kHsRHnU/BHg=",
         "ref": "refs/heads/master",
-        "rev": "ba3003dd386f8e9081c9fab27ed2ca4c664a04eb",
-        "revCount": 493,
+        "rev": "ab185ee3d337b68b77658d64034a957238861c9b",
+        "revCount": 499,
         "type": "git",
         "url": "https://git.myamusashi.space/myamusashi/shell"
       },
