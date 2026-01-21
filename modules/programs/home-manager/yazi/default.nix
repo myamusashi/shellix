@@ -25,12 +25,12 @@ in {
         git = "${plugin.official-plugins}/git.yazi";
         toggle-pane = "${plugin.official-plugins}/toggle-pane.yazi";
         mount = "${plugin.official-plugins}/mount.yazi";
+        piper = "${plugin.official-plugins}/piper.yazi";
         office = "${plugin.office}";
         rich-preview = "${plugin.rich-preview}";
         eza-preview = "${plugin.eza-preview}";
         mediainfo = "${plugin.mediainfo}";
         fg = "${plugin.fzf}";
-        glow = "${plugin.glow}";
         hexyl = "${plugin.hexyl}";
         ouch = "${plugin.ouch}";
         yatline = "${plugin.yatline}";
