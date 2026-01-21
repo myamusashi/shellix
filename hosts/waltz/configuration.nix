@@ -269,7 +269,13 @@
       ];
     };
   };
-
+  services.kmscon.enable = true;
+  services.kmscon.fonts = [
+    {
+      name = "Hack";
+      package = pkgs-stable.nerd-fonts.hack;
+    }
+  ];
   # experiment and shit
   services.resolved = {
     enable = true;

@@ -177,7 +177,10 @@
     pkgs-stable = import nixpkgs-stable {
       inherit system;
       config.allowUnfree = true;
-      overlays = [(import ./overlays/default.nix)];
+      overlays = [
+(import ./overlays/default.nix)
+        inputs.nix-cachyos-kernel.overlays.pinned
+];
     };
     pkgs = import nixpkgs {
       inherit system;
@@ -218,9 +221,12 @@
           sops-nix.nixosModules.sops
           ./sops/sops.nix
           ./hosts/waltz/configuration.nix
-          chaotic.nixosModules.nyx-cache
-          chaotic.nixosModules.nyx-overlay
-          chaotic.nixosModules.nyx-registry
+
+          {
+            nixpkgs.overlays = [
+              nix-cachyos-kernel.overlays.pinned
+            ];
+          }
         ];
         specialArgs = {
           inherit inputs;
