@@ -72,7 +72,6 @@ in {
     username = "myamusashi";
     homeDirectory = "/home/myamusashi";
     stateVersion = "24.11";
-
     file.".config/hypr/hyprqt6engine.conf" = {
       enable = true;
       text = ''
@@ -279,6 +278,8 @@ in {
         pkgs.qtcreator
         pkgs.darkly
         pkgs.cachix
+        pkgs.imagemagick
+        inputs.m3shapes.packages.${pkgs.stdenv.hostPlatform.system}.m3shapes
         # pkgs.inter
         pkgs.lucide
         # (inputs.vermilion.packages.${pkgs.stdenv.hostPlatform.system}.vermilion.overrideAttrs (oldAttrs: {
@@ -289,7 +290,8 @@ in {
         #   };
         # }))
         # pkgs.asciinema
-        # inputs.antigravity-flakes.packages.${pkgs.stdenv.hostPlatform.system}.default
+		pkgs.libnotify
+        inputs.antigravity-flakes.packages.${pkgs.stdenv.hostPlatform.system}.default
         (pkgs.la-capitaine-icon-theme.overrideAttrs {dontCheckForBrokenSymlinks = true;})
         pkgs.wl-screenrec
         pkgs.qt6.qtgraphs
