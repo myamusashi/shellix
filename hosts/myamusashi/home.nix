@@ -290,7 +290,7 @@ in {
         #   };
         # }))
         # pkgs.asciinema
-		pkgs.libnotify
+        pkgs.libnotify
         inputs.antigravity-flakes.packages.${pkgs.stdenv.hostPlatform.system}.default
         (pkgs.la-capitaine-icon-theme.overrideAttrs {dontCheckForBrokenSymlinks = true;})
         pkgs.wl-screenrec
