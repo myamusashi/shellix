@@ -1,5 +1,5 @@
 {
-  lib,
+  inputs,
   pkgs,
   ...
 }: {
@@ -39,8 +39,6 @@
     };
   };
 
-  chaotic.mesa-git.enable = false;
-
   virtualisation = {
     docker.enable = false;
     libvirtd.enable = true;
@@ -62,7 +60,7 @@
   fileSystems."/".options = ["discard"];
 
   boot = {
-    kernelPackages = pkgs.linuxPackages_cachyos-lto;
+    kernelPackages = pkgs.cachyosKernels.linuxPackages-cachyos-bore-lto;
     initrd.verbose = false;
     consoleLogLevel = 0;
     initrd.availableKernelModules = [
