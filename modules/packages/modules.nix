@@ -12,8 +12,6 @@ with pkgs; {
     polkit
     vulkan-tools
     pinentry-qt
-    pinentry-curses
-    pinentry-tty
     udisks
     udiskie
     gparted
@@ -96,7 +94,8 @@ with pkgs; {
     ];
   };
 
-  gnome = [gnome-keyring];
+  # Qt-based keystore
+  kde = [kdePackages.kwallet kdePackages.kwalletmanager];
 
   gaming = {
     platform = [steam lutris];
@@ -130,7 +129,7 @@ with pkgs; {
   theming = with pkgs; {
     colors = [pywal16];
     apps = [pywalfox-native];
-    tools = [gtk-engine-murrine gnome-themes-extra kdePackages.qtstyleplugin-kvantum gtk3 gtk4];
+    tools = [kdePackages.qtstyleplugin-kvantum gtk3 gtk4];
     cursors = [
       (callPackage ./custom/future-cursor.nix {})
       (callPackage ./custom/future-cyan-hyprcursor.nix {})
