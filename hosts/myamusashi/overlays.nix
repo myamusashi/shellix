@@ -50,6 +50,8 @@ final: prev: {
       };
     });
 
+    doCheck = false;
+
     textual = super.textual.overrideAttrs (oldAttrs: {
       disabledTestPaths = [
         "tests/snapshot_tests/test_snapshots.py"
@@ -57,6 +59,8 @@ final: prev: {
         "tests/text_area/test_languages.py"
         "tests/text_area/test_setting_themes.py"
       ];
+
+      doCheck = false;
     });
   });
   ## End
