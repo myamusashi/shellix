@@ -16,6 +16,8 @@
     iio-sensor-proxy
   ];
 
+  powerManagement.cpuFreqGovernor = "performance";
+
   hardware = {
     sensor.iio.enable = true;
     bluetooth = {
