@@ -1,11 +1,16 @@
 {
   config,
+  pkgs,
   lib,
   ...
 }: {
   config = lib.mkIf config.shellix.services.home-manager.clipse.enable {
     services.clipse = {
       enable = true;
+      package = pkgs.callPackage ./clipse.nix {
+        enableWayland = true;
+        enableX11 = false;
+      };
       historySize = 500;
       allowDuplicates = false;
       keyBindings = {
