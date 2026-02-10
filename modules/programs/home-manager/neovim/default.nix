@@ -1,5 +1,6 @@
 {
   lib,
+  inputs,
   config,
   pkgs,
   ...
@@ -9,6 +10,7 @@ in {
   config = lib.mkIf cfg.enable {
     programs.neovim = {
       enable = true;
+      package = inputs.neovim-nightly-overlay.packages.${pkgs.stdenv.hostPlatform.system}.default;
       plugins = with pkgs; [
         (tree-sitter.withPlugins (plugins: pkgs.tree-sitter.allGrammars))
       ];
@@ -21,6 +23,9 @@ in {
         ripgrep
         vscode-json-languageserver
         tree-sitter
+        gnumake
+        pnpm
+        yarn
         markdownlint-cli2
         live-server
         marksman
