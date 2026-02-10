@@ -157,7 +157,7 @@
     networkmanager.enable = true;
     firewall = {
       enable = true;
-      allowedTCPPorts = [20 21 22 5432 3001 3002];
+      allowedTCPPorts = [20 21 22 2408 5432 3001 3002];
       allowedUDPPorts = [5432 3001 3002];
     };
     extraHosts = ''
@@ -244,6 +244,12 @@
         "https://nix-community.cachix.org"
         "https://ezkea.cachix.org"
         "https://hyprland.cachix.org"
+        "https://walker.cachix.org"
+        "https://walker-git.cachix.org"
+        "https://cache.flox.dev"
+        ## cachyos kernel binary caches
+        "https://attic.xuyh0120.win/lantian"
+        "https://cache.garnix.io"
       ];
 
       extra-substituters = [
@@ -258,11 +264,12 @@
         "chaotic-nyx.cachix.org-1:HfnXSw4pj95iI/n17rIDy40agHj12WfF+Gqk6SonIT8="
         "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
         "ezkea.cachix.org-1:ioBmUbJTZIKsHmWWXPe1FSFbeVe+afhfgqgTSNd34eI="
+        "flox-cache-public-1:7F4OyH7ZCnFhcze3fJdfyXYLQw/aV7GEed86nQ7IsOs="
         "hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc="
-      ];
-
-      extra-trusted-public-keys = [
-        # "cache.myamusashi.space-1:7wJ0GThM/MBLSmvDw8u8Y0XMiXAshFmX1Hz1jJ0PKWg="
+        "walker.cachix.org-1:fG8q+uAaMqhsMxWjwvk0IMb4mFPFLqHjuvfwQxE4oJM="
+        "walker-git.cachix.org-1:vmC0ocfPWh0S/vRAQGtChuiZBTAe4wiKDeyyXM0/7pM="
+        "lantian:EeAUQ+W+6r7EtwnmYjeVwx5kOGEBpjlBfPlzGlTNvHc="
+        "cache.garnix.io:CTFPyKSLcx5RMJKfLo5EEPUObbA78b0YQ2DTCJXqr9g="
       ];
     };
   };

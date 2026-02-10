@@ -10,6 +10,22 @@
     kernelPackages = pkgs.cachyosKernels.linuxPackages-cachyos-server-lto;
   };
 
+  hardware.graphics = {
+    enable = true;
+    enable32Bit = true;
+    extraPackages = with pkgs; [
+      intel-media-driver
+      intel-vaapi-driver
+      libva-vdpau-driver
+      libva
+      libvdpau-va-gl
+    ];
+    extraPackages32 = with pkgs.pkgsi686Linux; [
+      intel-media-driver
+      intel-vaapi-driver
+    ];
+  };
+
   virtualisation = {
     libvirtd.enable = false;
     docker.enable = false;
