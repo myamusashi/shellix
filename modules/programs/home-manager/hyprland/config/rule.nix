@@ -2,6 +2,16 @@ let
   mkWindowRule = name: matches: effects:
     {inherit name;} // matches // effects;
 
+  mkLayerRule = name: namespace: effects:
+    {
+      inherit name;
+      "match:namespace" = namespace;
+    }
+    // effects;
+
+  mkFloat = name: matches:
+    mkWindowRule name matches {float = true;};
+
   mkFloatCenterSize = name: matches: size:
     mkWindowRule name matches {
       float = true;
@@ -9,212 +19,151 @@ let
       inherit size;
     };
 
-  mkFloat = name: matches:
-    mkWindowRule name matches {float = true;};
+  matchClass = class: {"match:class" = class;};
+  matchTitle = title: {"match:title" = title;};
+  matchProps = class: title: matchClass class // matchTitle title;
+  matchInitialTitle = title: {"match:initial_title" = title;};
+  matchInitialClass = class: {"match:initial_class" = class;};
 
-  mkLayerRule = name: namespace: effects:
-    {
-      inherit name;
-      "match:namespace" = namespace;
-    }
-    // effects;
+  floatCenterSized = name: matches: size:
+    mkFloatCenterSize name matches size;
 in {
   windowrule = [
-    # Common dialogs and popups
-    (mkFloat "float_pavucontrol" {"match:class" = "^(pavucontrol)$";})
-    (mkFloat "float_media_viewer" {"match:title" = "^(Media viewer)$";})
-    (mkFloat "float_picture_in_picture" {"match:title" = "^(Picture-in-Picture)$";})
-    (mkFloat "float_clipse" {"match:class" = "^(clipse)";})
+    # ===== Common Dialogs =====
+    (mkFloat "float_pavucontrol" (matchClass "^pavucontrol$"))
+    (mkFloat "float_media_viewer" (matchTitle "^Media viewer$"))
+    (mkFloat "float_picture_in_picture" (matchTitle "^Picture-in-Picture$"))
+    (mkFloat "float_clipse" (matchClass "^clipse"))
 
-    # Generic dialog types
-    (mkFloat "float_file_progress" {"match:class" = "^(file_progress)$";})
-    (mkFloat "float_confirm" {"match:class" = "^(confirm)$";})
-    (mkFloat "float_dialog" {"match:class" = "^(dialog)$";})
-    (mkFloat "float_download" {"match:class" = "^(download)$";})
-    (mkFloat "float_notification" {"match:class" = "^(notification)$";})
-    (mkFloat "float_error" {"match:class" = "^(error)$";})
-    (mkFloat "float_confirmreset" {"match:class" = "^(confirmreset)$";})
+    # ===== Generic dialog types =====
+    (mkFloat "float_file_progress" (matchClass "^file_progress$"))
+    (mkFloat "float_confirm" (matchClass "^confirm$"))
+    (mkFloat "float_dialog" (matchClass "^dialog$"))
+    (mkFloat "float_download" (matchClass "^download$"))
+    (mkFloat "float_notification" (matchClass "^notification$"))
+    (mkFloat "float_error" (matchClass "^error$"))
+    (mkFloat "float_confirmreset" (matchClass "^confirmreset$"))
 
-    # Specific application dialogs
-    (mkFloat "float_open_file" {"match:title" = "^(Open File)$";})
-    (mkFloat "float_branchdialog" {"match:title" = "^(branchdialog)$";})
-    (mkFloat "float_akun_google_title" {"match:title" = "^*.Akun Google.*";})
-    (mkFloat "float_confirm_replace_files" {"match:title" = "^(Confirm to replace files)";})
-    (mkFloat "float_file_operation_progress" {"match:title" = "^(File Operation Progress)";})
-    (mkFloat "float_image_properties" {"match:title" = "^(Image Properties)$";})
+    # ===== Application-Specific Dialogs =====
+    (mkFloat "float_open_file" (matchTitle "^Open File$"))
+    (mkFloat "float_branchdialog" (matchTitle "^branchdialog$"))
+    (mkFloat "float_confirm_replace_files" (matchTitle "^Confirm to replace files"))
+    (mkFloat "float_file_operation_progress" (matchTitle "^File Operation Progress"))
+    (mkFloat "float_image_properties" (matchTitle "^Image Properties$"))
 
-    # Network and bluetooth
-    (mkFloat "float_iwgtk_class" {"match:class" = "^(org.twosheds.iwgtk)$";})
-    (mkFloat "float_iwgtk_title" {"match:title" = "^(iwgtk)$";})
-    (mkFloat "float_blueman_manager" {"match:class" = "^(blueman-manager)$";})
-    (mkFloat "float_bluetooth_devices" {"match:title" = "^(Bluetooth Devices)$";})
+    # ===== Network & Bluetooth =====
+    (mkFloat "float_iwgtk_class" (matchClass "^org\\.twosheds\\.iwgtk$"))
+    (mkFloat "float_iwgtk_title" (matchTitle "^iwgtk$"))
+    (mkFloat "float_blueman_manager" (matchClass "^blueman-manager$"))
+    (mkFloat "float_bluetooth_devices" (matchTitle "^Bluetooth Devices$"))
 
-    # Application specific
-    (mkFloat "float_rofi" {"match:class" = "^(Rofi)$";})
-    (mkFloat "float_volume_control" {"match:title" = "^(Volume Control)$";})
-    (mkFloat "float_friends_list" {"match:title" = "^(Friends List)";})
-    (mkFloat "float_whatsapp_kdeconnect" {"match:title" = "^(WhatsApp — KDE Connect Daemon)";})
-    (mkFloat "float_select_what_to_share" {"match:title" = "^(Select what to share)";})
+    # ===== Desktop Tools =====
+    (mkFloat "float_rofi" (matchClass "^Rofi$"))
+    (mkFloat "float_volume_control" (matchTitle "^Volume Control$"))
+    (mkFloat "float_select_what_to_share" (matchTitle "^Select what to share"))
 
-    # Nemo file manager
-    (mkWindowRule "float_nemo_properties" {
-      "match:class" = "^(nemo)";
-      "match:title" = ".*Properties";
-    } {float = true;})
-
-    # Bitwarden
-    (mkFloat "float_bitwarden" {"match:title" = ".*Bitwarden.*";})
-
-    # Portal dialogs
-    (mkFloat "float_xdg_portal_gtk_open_folder" {
-      "match:class" = "^(xdg-desktop-portal-gtk)";
-      "match:title" = "^(Open Folder)";
-    })
-    (mkFloat "float_xdg_portal_kde" {
-      "match:class" = "^(org.freedesktop.impl.portal.desktop.kde)";
+    # ===== File Managers =====
+    (mkWindowRule "float_nemo_properties" (matchProps "^nemo" ".*Properties") {float = true;})
+    (mkWindowRule "float_dolphin_move" (matchClass "^Move Files") {
+      float = true;
+      idle_inhibit = "focus";
+      size = "660 360";
     })
 
-    # KDE Connect
-    (mkFloat "float_kdeconnect_receiving_files" {
-      "match:class" = "^(org.kde.kdeconnect.daemon)";
-      "match:title" = "^(Receiving files)";
+    # ===== XDG Portals =====
+    (mkFloat "float_xdg_portal_gtk" (matchProps "^xdg-desktop-portal-gtk" "^Open Folder"))
+    (mkFloat "float_xdg_portal_kde" (matchClass "^org\\.freedesktop\\.impl\\.portal\\.desktop\\.kde"))
+
+    # ===== Quickshell Windows =====
+    (mkFloat "float_quickshell_auth" (matchProps "^org\\.quickshell" "^Authentication Required"))
+    (mkFloat "float_quickshell_recording" (matchProps "^org\\.quickshell" "^Recording Widgets"))
+
+    # ===== Browser-Specific =====
+    (mkFloat "float_zen_google_login" (matchProps "^zen" "^Login - Akun Google - Zen Browser"))
+    (mkFloat "float_akun_google_title" (matchTitle "Akun Google"))
+
+    # ===== Messaging & Social =====
+    (mkFloat "float_friends_list" (matchTitle "^Friends List"))
+    (mkFloat "float_whatsapp_kdeconnect" (matchTitle "^WhatsApp — KDE Connect Daemon"))
+    (mkFloat "float_bitwarden" (matchTitle "Bitwarden"))
+
+    # ===== KDE Connect =====
+    (mkFloat "float_kdeconnect_receiving" (matchProps "^org\\.kde\\.kdeconnect\\.daemon" "^Receiving files"))
+
+    # ===== Image Preview =====
+    (mkFloat "float_yazi_image_preview" (matchClass "^ueberzugpp"))
+    (mkWindowRule "resize_yazi_image_preview" (matchClass "^ueberzugpp") {size = "295 199";})
+
+    # ===== Terminal File Managers =====
+    (mkFloat "float_yaziws" (matchInitialTitle "^yaziWS"))
+
+    # ===== Window Positioning =====
+    (mkWindowRule "move_iwgtk" (matchTitle "^iwgtk$") {move = "40 44%";})
+    (mkWindowRule "move_bluetooth_devices" (matchTitle "^Bluetooth Devices$") {move = "40 58%";})
+    (mkWindowRule "move_quickshell_recording" (matchProps "^org\\.quickshell" "^Recording Widgets") {
+      move = "100%-w-20 100%-w-20";
     })
 
-    # Quickshell windows
-    (mkFloat "float_quickshell_auth" {
-      "match:class" = "^(org.quickshell)";
-      "match:title" = "^(Authentication Required)";
-    })
-    (mkFloat "float_quickshell_recording" {
-      "match:class" = "^(org.quickshell)";
-      "match:title" = "^(Recording Widgets)";
-    })
+    # ===== Float + Center + Size Rules =====
+    (floatCenterSized "yaziws" (matchInitialTitle "^yaziWS") "919 437")
+    (floatCenterSized "zen_google_login" (matchProps "^zen" "^Login - Akun Google — Zen Browser") "900 710")
+    (floatCenterSized "xdg_portal_kde" (matchClass "^org\\.freedesktop\\.impl\\.portal\\.desktop\\.kde") "500 500")
+    (floatCenterSized "select_what_to_share" (matchTitle "^Select what to share") "943 800")
+    (floatCenterSized "xdg_portal_gtk_open_folder" (matchProps "^xdg-desktop-portal-gtk" "^Open Folder") "885 443")
+    (floatCenterSized "quickshell_wallpaper" ({"match:float" = 1;} // matchProps "^org\\.quickshell" "^Select a wallpaper") "1000 600")
+    (floatCenterSized "whatsapp_kdeconnect" (matchTitle "^WhatsApp — KDE Connect Daemon") "400 300")
+    (floatCenterSized "friends_list" (matchTitle "^Friends List") "300 650")
+    (floatCenterSized "clipse" (matchClass "^clipse") "622 652")
+    (floatCenterSized "bitwarden" (matchTitle "Bitwarden") "380 630")
+    (floatCenterSized "netbeans" (matchTitle "^Starting Apache NetBeans IDE$") "480 300")
+    (floatCenterSized "vesktop" (matchTitle "^vesktop$") "300 350")
+    (floatCenterSized "akun_google" (matchTitle "Akun Google") "954 641")
+    (floatCenterSized "hyprpanel_settings" (matchTitle "^hyprpanel-settings$") "800 600")
+    (floatCenterSized "hyprpanel_theme" (matchTitle "^Import Hyprpanel Theme$") "800 600")
+    (floatCenterSized "hyprland_polkit" (matchTitle "^Hyprland Polkit Agent$") "800 600")
+    (floatCenterSized "download" (matchClass "^download$") "800 600")
+    (floatCenterSized "volume_control" (matchTitle "^Volume Control$") "800 600")
+    (floatCenterSized "image_properties" (matchTitle "^Image Properties$") "493 254")
+    (floatCenterSized "iwgtk" (matchTitle "^iwgtk$") "505 600")
+    (floatCenterSized "save_file" (matchTitle "^Enter name of file to save to…$") "885 463")
+    (floatCenterSized "bluetooth_devices" (matchTitle "^Bluetooth Devices$") "652 310")
+    (floatCenterSized "kdeconnect_receiving_files" (matchProps "^org\\.kde\\.kdeconnect\\.daemon" "^Receiving files") "370 300")
+    (floatCenterSized "quickshell_auth" (matchProps "^org\\.quickshell" "^Authentication Required") "530 520")
+    (floatCenterSized "quickshell_recording" (matchProps "^org\\.quickshell" "^Recording Widgets") "300 230")
+    (floatCenterSized "eu_properties" (matchProps "^eu\\." "^Properties") "360 363")
 
-    # Zen browser
-    (mkFloat "float_zen_google_login" {
-      "match:class" = "^(zen)";
-      "match:title" = "^(Login - Akun Google - Zen Browser)";
-    })
+    # ===== Center-Only Rules =====
+    (mkWindowRule "center_steam" ({"match:float" = 1;} // matchTitle "^(Steam|Sign in to Steam)") {center = true;})
+    (mkWindowRule "center_rofi_1" (matchTitle "^rofi - $") {center = true;})
+    (mkWindowRule "center_rofi_2" (matchTitle "^rofi -  myamusashi@nixos$") {center = true;})
+    (mkWindowRule "center_rofi_apps" (matchTitle "^rofi - APPS$") {center = true;})
 
-    # yazi image preview (foot)
-    (mkFloat "float_yazi_image_preview" {
-      "match:class" = "^(ueberzugpp*)";
-    })
-    (mkWindowRule "resize_yazi_image_preview" {"match:class" = "^(ueberzugpp*)";} {size = "295 199";})
+    # ===== Focus Rules =====
+    (mkWindowRule "stayfocused_clipse" (matchClass "^clipse") {stay_focused = true;})
+    (mkWindowRule "stayfocused_quickshell_auth" (matchProps "^org\\.quickshell" "^Authentication Required") {stay_focused = true;})
+    (mkWindowRule "stayfocused_yaziws" (matchInitialTitle "^yaziWS") {stay_focused = true;})
 
-    # Yazi file manager
-    (mkFloat "float_yaziws" {"match:initial_title" = "^(yaziWS)";})
+    # ===== Idle Inhibit =====
+    (mkWindowRule "idleinhibit_mpv" (matchClass "^mpv$") {idle_inhibit = "focus";})
+    (mkWindowRule "idleinhibit_firefox" (matchClass "^firefox$") {idle_inhibit = "fullscreen";})
 
-    (mkWindowRule "move_iwgtk" {"match:title" = "^(iwgtk)$";} {move = "40 44%";})
-    (mkWindowRule "move_bluetooth_devices" {"match:title" = "^(Bluetooth Devices)$";} {move = "40 58%";})
-    (mkWindowRule "move_quickshell_recording" {
-      "match:class" = "^(org.quickshell)";
-      "match:title" = "^(Recording Widgets)";
-    } {move = "100%-w-20 100%-w-20";})
+    # ===== Opacity =====
+    (mkWindowRule "opacity_spotify" (matchTitle "^Spotify$") {opacity = "0.90";})
+    (mkWindowRule "opacity_zen" (matchClass "^zen(-twilight|-beta)?$") {opacity = "1 override";})
+    (mkWindowRule "opacity_vesktop" (matchClass "^(vesktop|discord)$") {opacity = "1 override";})
+    (mkWindowRule "opacity_nemo" (matchClass "^nemo$") {opacity = "0.95";})
 
-    (mkFloatCenterSize "yaziws" {"match:initial_title" = "^(yaziWS)";} "919 437")
-    (mkFloatCenterSize "zen_google_login" {
-      "match:class" = "^(zen)";
-      "match:title" = "^(Login - Akun Google — Zen Browser)";
-    } "900 710")
-    (mkFloatCenterSize "xdg_portal_kde" {
-      "match:class" = "^(org.freedesktop.impl.portal.desktop.kde)";
-    } "500 500")
-    (mkFloatCenterSize "select_what_to_share" {
-      "match:title" = "^(Select what to share)";
-    } "943 800")
-    (mkFloatCenterSize "xdg_portal_gtk_open_folder" {
-      "match:class" = "^(xdg-desktop-portal-gtk)";
-      "match:title" = "^(Open Folder)";
-    } "885 443")
-    (mkFloatCenterSize "quickshell_wallpaper" {
-      "match:float" = 1;
-      "match:class" = "^(org.quickshell)";
-      "match:title" = "^(Select a wallpaper)";
-    } "1000 600")
-    (mkFloatCenterSize "whatsapp_kdeconnect" {
-      "match:title" = "^(WhatsApp — KDE Connect Daemon)";
-    } "400 300")
-    (mkFloatCenterSize "friends_list" {"match:title" = "^(Friends List)";} "300 650")
-    (mkFloatCenterSize "clipse" {"match:class" = "^(clipse)";} "622 652")
-    (mkFloatCenterSize "bitwarden" {"match:title" = ".*Bitwarden.*";} "380 630")
-    (mkFloatCenterSize "netbeans" {"match:title" = "^(Starting Apache NetBeans IDE)$";} "480 300")
-    (mkFloatCenterSize "vesktop" {"match:title" = "^(vesktop)$";} "300 350")
-    (mkFloatCenterSize "akun_google" {"match:title" = "^*.Akun Google.*";} "954 641")
-    (mkFloatCenterSize "hyprpanel_settings" {"match:title" = "^(hyprpanel-settings)$";} "800 600")
-    (mkFloatCenterSize "hyprpanel_theme" {"match:title" = "^(Import Hyprpanel Theme)$";} "800 600")
-    (mkFloatCenterSize "hyprland_polkit" {"match:title" = "^(Hyprland Polkit Agent)$";} "800 600")
-    (mkFloatCenterSize "download" {"match:class" = "^(download)$";} "800 600")
-    (mkFloatCenterSize "volume_control" {"match:title" = "^(Volume Control)$";} "800 600")
-    (mkFloatCenterSize "image_properties" {"match:title" = "^(Image Properties)$";} "493 254")
-    (mkFloatCenterSize "iwgtk" {"match:title" = "^(iwgtk)$";} "505 600")
-    (mkFloatCenterSize "save_file" {"match:title" = "^(Enter name of file to save to…)$";} "885 463")
-    (mkFloatCenterSize "bluetooth_devices" {"match:title" = "^(Bluetooth Devices)$";} "652 310")
-    (mkFloatCenterSize "kdeconnect_receiving_files" {
-      "match:class" = "^(org.kde.kdeconnect.daemon)";
-      "match:title" = "^(Receiving files)";
-    } "370 300")
-    (mkFloatCenterSize "quickshell_auth" {
-      "match:class" = "^(org.quickshell)";
-      "match:title" = "^(Authentication Required)";
-    } "530 520")
-    (mkFloatCenterSize "quickshell_recording" {
-      "match:class" = "^(org.quickshell)";
-      "match:title" = "^(Recording Widgets)";
-    } "300 230")
-    (mkFloatCenterSize "eu_properties" {
-      "match:class" = "^(eu.)";
-      "match:title" = "^(Properties)";
-    } "360 363")
+    # ===== Border Size =====
+    (mkWindowRule "bordersize_xdg_portal_gtk" (matchInitialClass "^Xdg-desktop-portal-gtk$") {border_size = 0;})
+    (mkWindowRule "bordersize_xdg_portal_kde" (matchInitialClass "^Xdg-desktop-portal-kde$") {border_size = 0;})
 
-    (mkWindowRule "center_steam" {
-      "match:float" = 1;
-      "match:title" = "^(Steam|Sign in to Steam)";
-    } {center = true;})
+    # ===== Rounding =====
+    (mkWindowRule "rounding_quickshell_auth" (matchProps "^org\\.quickshell" "^Authentication Required") {rounding = 26;})
+    (mkWindowRule "rounding_quickshell_recording" (matchProps "^org\\.quickshell" "^Recording Widgets") {rounding = 26;})
 
-    # Rofi variants
-    (mkWindowRule "center_rofi_1" {"match:title" = "^(rofi - )$";} {center = true;})
-    (mkWindowRule "center_rofi_2" {"match:title" = "^(rofi -  myamusashi@nixos)$";} {center = true;})
-    (mkWindowRule "center_rofi_apps" {"match:title" = "^(rofi - APPS)$";} {center = true;})
-
-    (mkWindowRule "stayfocused_clipse" {"match:class" = "^(clipse)";} {stay_focused = true;})
-    (mkWindowRule "stayfocused_quickshell_auth" {
-      "match:class" = "^(org.quickshell)";
-      "match:title" = "^(Authentication Required)";
-    } {stay_focused = true;})
-    (mkWindowRule "stayfocused_yaziws" {"match:initial_title" = "^(yaziWS)";} {stay_focused = true;})
-
-    (mkWindowRule "idleinhibit_mpv" {"match:class" = "^(mpv)$";} {idle_inhibit = "focus";})
-    (mkWindowRule "idleinhibit_firefox" {"match:class" = "^(firefox)$";} {idle_inhibit = "fullscreen";})
-
-    (mkWindowRule "opacity_spotify" {"match:title" = "^(Spotify)$";} {opacity = "0.90";})
-    (mkWindowRule "opacity_zen" {"match:class" = "^(zen|zen-twilight|zen-beta)$";} {opacity = "1 override";})
-    (mkWindowRule "opacity_vesktop" {"match:class" = "^(vesktop|discord)$";} {opacity = "1 override";})
-    (mkWindowRule "opacity_nemo" {"match:class" = "^(nemo)$";} {opacity = "0.95";})
-
-    (mkWindowRule "bordersize_xdg_portal_gtk" {
-      "match:initial_class" = "^(Xdg-desktop-portal-gtk)$";
-    } {border_size = 0;})
-    (mkWindowRule "bordersize_xdg_portal_kde" {
-      "match:initial_class" = "^(Xdg-desktop-portal-kde)$";
-    } {border_size = 0;})
-
-    (mkWindowRule "rounding_quickshell_auth" {
-      "match:class" = "^(org.quickshell)";
-      "match:title" = "^(Authentication Required)";
-    } {rounding = 26;})
-    (mkWindowRule "rounding_quickshell_recording" {
-      "match:class" = "^(org.quickshell)";
-      "match:title" = "^(Recording Widgets)";
-    } {rounding = 26;})
-
-    # Suppress maximize events for all apps
-    (mkWindowRule "suppress-maximize-events" {
-      "match:class" = ".*";
-    } {suppress_event = "maximize";})
-
-    # Fix XWayland dragging issues
-    (mkWindowRule "fix-xwayland-drags" {
+    # ===== Global Rules =====
+    (mkWindowRule "suppress_maximize_all" {"match:class" = ".*";} {suppress_event = "maximize";})
+    (mkWindowRule "fix_xwayland_drags" {
       "match:class" = "^$";
       "match:title" = "^$";
       "match:xwayland" = true;
@@ -224,38 +173,33 @@ in {
     } {no_focus = true;})
   ];
 
-  layerrule = [
+  layerrule = let
+    popup30 = {animation = "popup 30%";};
+    popup90 = {animation = "popup 90%";};
+    popup95 = {animation = "popup 95%";};
+  in [
     (mkLayerRule "rofi_blur" "rofi" {blur = true;})
     (mkLayerRule "launcher_blur" "launcher" {blur = true;})
     (mkLayerRule "quickshell_blur" "quickshell" {blur = true;})
     (mkLayerRule "shell_dashboard_blur" "shell:dashboard" {blur = true;})
     (mkLayerRule "shell_bigclock_blur" "shell:bigclock" {blur = true;})
     (mkLayerRule "shell_app_blur" "shell:app" {blur = true;})
-    (mkLayerRule "shell_bar_blur" "shell:bar" {blur = true;})
     (mkLayerRule "shell_capture_blur" "shell:capture" {blur = true;})
     (mkLayerRule "shell_session_blur" "shell:session" {blur = true;})
-    (mkLayerRule "shell_drawers_blur" "shell:drawers" {blur = false;})
+    (mkLayerRule "shell_drawers_no_blur" "shell:drawers" {blur = false;})
 
-    # Popup animations (30%)
-    (mkLayerRule "shell_bigclock_animation" "shell:bigclock" {animation = "popup 30%";})
+    (mkLayerRule "shell_bigclock_animation" "shell:bigclock" popup30)
 
-    # Popup animations (90%)
-    (mkLayerRule "shell_drawers_animation" "shell:drawers" {animation = "popup 90%";})
-    (mkLayerRule "shell_app_animation" "shell:app" {animation = "popup 90%";})
-    (mkLayerRule "shell_capture_animation" "shell:capture" {animation = "popup 90%";})
-    (mkLayerRule "shell_topExclusionZone_animation" "shell:topExclusionZone" {animation = "popup 90%";})
-    (mkLayerRule "shell_bottomExclusionZone_animation" "shell:bottomExclusionZone" {animation = "popup 90%";})
-    (mkLayerRule "shell_rightExclusionZone_animation" "shell:rightExclusionZone" {animation = "popup 90%";})
-    (mkLayerRule "shell_leftExclusionZone_animation" "shell:leftExclusionZone" {animation = "popup 90%";})
-    (mkLayerRule "quickshell_animation" "quickshell" {animation = "popup 90%";})
+    (mkLayerRule "shell_drawers_animation" "shell:drawers" popup90)
+    (mkLayerRule "shell_app_animation" "shell:app" popup90)
+    (mkLayerRule "shell_capture_animation" "shell:capture" popup90)
+    (mkLayerRule "shell_top_exclusion" "shell:topExclusionZone" popup90)
+    (mkLayerRule "shell_bottom_exclusion" "shell:bottomExclusionZone" popup90)
+    (mkLayerRule "shell_right_exclusion" "shell:rightExclusionZone" popup90)
+    (mkLayerRule "shell_left_exclusion" "shell:leftExclusionZone" popup90)
+    (mkLayerRule "quickshell_animation" "quickshell" popup90)
 
-    # Popup animation (95%)
-    (mkLayerRule "selection_animation" "selection" {animation = "popup 95%";})
-
-    # Slide animations
-    (mkLayerRule "shell_bar_animation" "shell:bar" {animation = "slide";})
-    (mkLayerRule "shell_dashboard_animation" "shell:dashboard" {animation = "slide";})
-    (mkLayerRule "shell_session_animation" "shell:session" {animation = "slide";})
-    (mkLayerRule "shell_overview_animation" "shell:overview" {animation = "slide";})
+    (mkLayerRule "shell_dashboard_animation" "shell:dashboard" popup95)
+    (mkLayerRule "selection_animation" "selection" popup95)
   ];
 }
