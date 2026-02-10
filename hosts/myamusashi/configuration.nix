@@ -5,37 +5,14 @@
   pkgs,
   ...
 }: let
-  qsPackages = inputs.quickshell.packages.${pkgs.stdenv.hostPlatform.system}.default;
-  shellPackages = inputs.shell.packages.${pkgs.stdenv.hostPlatform.system}.default;
-  mangoCfg = pkgs.writeText "mango-greeter.conf" ''
-    exec-once = ${qsPackages}/bin/quickshell -p ${shellPackages}/share/quickshell/Greeter.qml && pkill mango
+  swayConfig = pkgs.writeText "greetd-sway-config" ''
+    exec "${pkgs.quickshell}/bin/qs -p ${inputs.shell.packages.${pkgs.stdenv.hostPlatform.systen}.default}/share/quickshell/Greeter.qml; swaymsg exit"
+    bindsym Mod4+shift+e exec swaynag \
+      -t warning \
+      -m 'What do you want to do?' \
+      -b 'Poweroff' 'systemctl poweroff' \
+      -b 'Reboot' 'systemctl reboot'
   '';
-  hyprCfg = pkgs.writeText "hyprland-greeter.conf" ''
-    monitor = ,preferred, auto, auto
-
-    exec-once = ${qsPackages}/bin/quickshell -p ${shellPackages}/share/quickshell/Greeter.qml && pkill Hyprland
-
-    misc {
-      force_default_wallpaper = 0
-      disable_hyprland_logo = true
-    }
-  '';
-
-  getQmlPath = pkg: "${pkg}/${pkgs.qt6.qtbase.qtQmlPrefix}";
-  quickshell-wrapped =
-    pkgs.runCommand "quickshell-wrapped" {
-      nativeBuildInputs = [pkgs.makeWrapper];
-    } ''
-      mkdir -p $out/bin
-      mkdir -p $out/lib
-      cp -r ${inputs.quickshell.packages.${pkgs.stdenv.hostPlatform.system}.default}/lib/qt-6/qml/Quickshell $out/lib/Quickshell
-
-      makeWrapper ${inputs.quickshell.packages.${pkgs.stdenv.hostPlatform.system}.default}/bin/qs $out/bin/qs \
-        --prefix PATH : ${lib.makeBinPath [pkgs.fd pkgs.coreutils]}
-
-      makeWrapper ${inputs.quickshell.packages.${pkgs.stdenv.hostPlatform.system}.default}/bin/quickshell $out/bin/quickshell \
-        --prefix PATH : ${lib.makeBinPath [pkgs.fd pkgs.coreutils]}
-    '';
 in {
   imports = [
     inputs.qtengine.nixosModules.default
@@ -159,6 +136,7 @@ in {
         isNormalUser = true;
         hashedPasswordFile = config.sops.secrets.myamusashi-password.path;
         shell = pkgs.fish;
+        home = "/home/myamusashi";
         extraGroups = [
           "networkmanager"
           "wheel"
@@ -177,7 +155,7 @@ in {
       };
 
       greeter = {
-        isSystemUser = true;
+        isNormalUser = true;
         group = "greeter";
       };
 
@@ -191,11 +169,6 @@ in {
   };
 
   services = {
-    resolved = {
-      enable = true;
-      dnssec = "true";
-      dnsovertls = "true";
-    };
     cloudflare-warp.enable = true;
     openssh.enable = true;
     xserver.xkb.layout = "us";
@@ -204,8 +177,12 @@ in {
       enable = true;
       settings = {
         default_session = {
-          command = "${inputs.mangowc.packages.${pkgs.stdenv.hostPlatform.system}.default}/bin/mango -c ${mangoCfg}";
+          command = "${pkgs.sway}/bin/sway --config ${swayConfig}";
           user = "greeter";
+        };
+        initial_session = {
+          command = "${pkgs.hyprland}/bin/start-hyprland";
+          user = "myamusashi";
         };
         terminal = {
           vt = 1;
@@ -288,15 +265,18 @@ in {
         sops
         libva-utils
         lxqt.pcmanfm-qt
+        inputs.quickshell.packages.${pkgs.stdenv.hostPlatform.system}.default
+        inputs.shell.packages.${pkgs.stdenv.hostPlatform.system}.default
         lxqt.pavucontrol-qt
         gvfs
         wget2
+        home-manager
         iptables
         greetd
         arduino
-        zoom-us
+        maple-mono.NF
+        android-tools
         spotify
-        distrobox
         (linux-wifi-hotspot.overrideAttrs (oldAttrs: {
           patches = [
             (pkgs.fetchpatch {
@@ -321,7 +301,6 @@ in {
       enableSSHSupport = true;
     };
     hyprland.enable = true;
-    adb.enable = true;
     mango.enable = true;
     ccache.enable = true;
     java = {
@@ -332,20 +311,18 @@ in {
 
       config = {
         theme = {
-          colorScheme = "/home/myamusashi/.local/share/color-schemes/Shellix.colors";
+          colorScheme = "${config.users.users.myamusashi.home}/.local/share/color-schemes/Shellix.colors";
           iconTheme = "breeze-dark";
           style = "Darkly";
 
           font = {
             family = "Google Sans Flex";
             size = 11;
-            weight = -1;
           };
 
           fontFixed = {
             family = "Hack";
             size = 11;
-            weight = -1;
           };
         };
 
@@ -364,8 +341,7 @@ in {
   # services.kmscon.extraOptions = "--term xterm-256color --drm false --fbdev true";
 
   environment.sessionVariables = {
-    # Theming
-    GTK_THEME = "WhiteSur-Dark-blue";
+    # Theming (GTK removed)
     HYPRCURSOR_THEME = "Future-Cyan-Hyprcursor_Theme";
     HYPRCURSOR_SIZE = "50";
     QS_ICON_THEME = "Papirus";
@@ -374,8 +350,6 @@ in {
     XCURSOR_SIZE = "35";
 
     # Wayland and Graphics
-    GTK_USE_PORTAL = 0;
-    GDK_BACKEND = "wayland,x11";
     QT_QPA_PLATFORM = "wayland";
     SDL_VIDEODRIVER = "wayland";
     CLUTTER_BACKEND = "wayland";
@@ -402,32 +376,8 @@ in {
     QT_WAYLAND_DISABLE_WINDOWDECORATION = 0;
     QT_AUTO_SCREEN_SCALE_FACTOR = 1;
     QT_ENABLE_HIGHDPI_SCALING = 1;
-    QT_QUICK_CONTROLS_STYLE = "Material";
     QT_WAYLAND_FORCE_DPI = "physical";
     ELECTRON_OZONE_PLATFORM_HINT = "wayland";
-
-    # Fuckass QML stuff
-    QML2_IMPORT_PATH = lib.concatStringsSep ":" [
-      "${inputs.quickshell.packages.${pkgs.stdenv.hostPlatform.system}.default}/lib/qt-6/qml"
-      "${getQmlPath pkgs.qt6.qt5compat}"
-      "${getQmlPath pkgs.qt6.qtdeclarative}"
-      "${getQmlPath pkgs.qt6.qtmultimedia}"
-      "${getQmlPath pkgs.libsForQt5.kirigami2}"
-      "${getQmlPath pkgs.kdePackages.kirigami-addons}"
-      "${getQmlPath inputs.m3shapes.packages.${pkgs.stdenv.hostPlatform.system}.m3shapes}"
-      "${quickshell-wrapped}/lib"
-    ];
-
-    QML_IMPORT_PATH = lib.concatStringsSep ":" [
-      "${inputs.quickshell.packages.${pkgs.stdenv.hostPlatform.system}.default}/lib/qt-6/qml"
-      "${getQmlPath pkgs.qt6.qt5compat}"
-      "${getQmlPath pkgs.qt6.qtdeclarative}"
-      "${getQmlPath pkgs.qt6.qtmultimedia}"
-      "${getQmlPath pkgs.libsForQt5.kirigami2}"
-      "${getQmlPath pkgs.kdePackages.kirigami-addons}"
-      "${getQmlPath inputs.m3shapes.packages.${pkgs.stdenv.hostPlatform.system}.m3shapes}"
-      "${quickshell-wrapped}/lib"
-    ];
   };
 
   xdg.mime = {
@@ -459,9 +409,6 @@ in {
       allowUnfree = true;
       android_sdk.accept_license = true;
     };
-    overlays = [
-      (import ./overlays.nix)
-    ];
   };
   nix = {
     enable = true;

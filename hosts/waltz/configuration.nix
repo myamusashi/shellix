@@ -1,12 +1,11 @@
 {
   config,
-  inputs,
   pkgs-stable,
   lib,
   ...
 }: {
   imports = [
-    ./hardware/default.nix ## Virtualization here
+    ./hardware/default.nix
     ../../modules/shared/Colors.nix
     ../../modules/shared/Variable.nix
     ../../modules/packages/nixos-packages.nix
@@ -137,7 +136,6 @@
     steam.enable = lib.mkForce false;
   };
 
-  ## Change the default port from modules
   services = {
     openssh.enable = true;
     xserver.xkb.layout = "us";
@@ -227,7 +225,6 @@
 
   nixpkgs = {
     config.allowUnfree = true;
-    overlays = [(import ./overlays.nix)];
   };
   nix = {
     package = pkgs-stable.nix;
@@ -281,15 +278,14 @@
     enable = true;
     dnssec = "true";
     dnsovertls = "true";
-    fallbackDns = ["1.1.1.1" "8.8.8.8"]; # DNS cadangan
+    fallbackDns = ["1.1.1.1" "8.8.8.8"];
   };
 
-  # 2. TENTUKAN NetworkManager pakai resolved
   networking.networkmanager = {
-    dns = "systemd-resolved"; # Ini kunci utamanya!
+    dns = "systemd-resolved";
   };
 
-  # 3. TAMBAHKAN DNS fallback di level system
+  ## fallback
   networking.nameservers = [
     "1.1.1.1"
     "8.8.8.8"
