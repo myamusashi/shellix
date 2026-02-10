@@ -1,18 +1,17 @@
 {
   decoration = {
-    rounding = 5;
-    rounding_power = 4.0;
+    rounding = 8;
+    rounding_power = 2.0;
     active_opacity = 1;
     inactive_opacity = 0.95;
 
     blur = {
-      enabled = false;
-      size = 7;
+      enabled = true;
+      size = 5;
       special = false;
-      passes = 3;
-      brightness = 0.8;
-      noise = 0.017;
-      contrast = 0.8;
+      passes = 1;
+      brightness = 1;
+      contrast = 0.89;
       popups = true;
       popups_ignorealpha = 0.6;
       new_optimizations = true;
