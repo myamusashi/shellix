@@ -1,66 +1,9 @@
 {
   pkgs,
-  lib,
   inputs,
   config,
   ...
-}: let
-  rstd = pkgs.fetchFromGitHub {
-    owner = "hypengw";
-    repo = "rstd";
-    rev = "7eb8b411258b4a886231b8b87f7b5a472b6712e1";
-    hash = "sha256-AAAAAAAAAAAAAAAAAAAAAAArstdAAAAAAAAAAAAAAAA=";
-  };
-
-  asio = pkgs.fetchFromGitHub {
-    owner = "chriskohlhoff";
-    repo = "asio";
-    rev = "asio-1-29-0";
-    hash = "sha256-7Q2/9avCA/3jG7XvV5Yk9s//x8zCd3Km5m2bZHhL1yw=";
-  };
-
-  pegtl = pkgs.fetchFromGitHub {
-    owner = "taocpp";
-    repo = "PEGTL";
-    rev = "3.2.8";
-    hash = "sha256-jq/iJ3QCnGj3nE1NHVSKbr5zJqmXv2bQf1yWn0Vkud8=";
-  };
-
-  ncrequest = pkgs.fetchFromGitHub {
-    owner = "hypengw";
-    repo = "ncrequest";
-    rev = "b919f0ad9a85dc006392ebf8802eb4c7df7584a2";
-    hash = "sha256-ncrequestAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=";
-  };
-
-  kstore = pkgs.fetchFromGitHub {
-    owner = "hypengw";
-    repo = "kstore";
-    rev = "d6f32d1a04be01328e1e528c0539e37b359c87e3";
-    hash = "sha256-kstoreAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=";
-  };
-
-  qml_material = pkgs.fetchFromGitHub {
-    owner = "hypengw";
-    repo = "qml-material";
-    rev = "872085dd6ffbb66b1e09549b12f8dc862d8619d7";
-    hash = "sha256-qml_materialAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=";
-  };
-
-  random = pkgs.fetchFromGitHub {
-    owner = "effolkronium";
-    repo = "random";
-    rev = "v1.5.0";
-    hash = "sha256-z5yFmprOqMR38LWgqhDNknGTbVJ0sLO+nFNDgz1t8XE=";
-  };
-
-  kdsingleapplication = pkgs.fetchFromGitHub {
-    owner = "KDAB";
-    repo = "KDSingleApplication";
-    rev = "v1.1.0";
-    hash = "sha256-y3TMPyFgWCGcZnSkXfOQVt9Cf8WkOyWJKbQX8RfQMRY=";
-  };
-in {
+}: {
   imports = [
     ../../modules/shared/Colors.nix
     ../../modules/packages/home-packages.nix
@@ -89,129 +32,15 @@ in {
     };
   };
 
-  nixpkgs.overlays = [
-    (self: super: {
-      vesktop = super.vesktop.overrideAttrs (oldAttrs: {
-        preBuild = ''
-          cp -r ${super.electron.dist} electron-dist
-          chmod -R u+w electron-dist
-        '';
+  programs = {
+    home-manager.enable = true;
+    direnv = {
+      enable = true;
+      nix-direnv.enable = true;
 
-        buildPhase = ''
-          runHook preBuild
-
-          pnpm build
-          pnpm exec electron-builder \
-            --dir \
-            -c.asarUnpack="**/*.node" \
-            -c.electronDist="electron-dist" \
-            -c.electronVersion=${super.electron.version}
-
-          runHook postBuild
-        '';
-
-        desktopItems = lib.optional super.stdenv.hostPlatform.isLinux (super.makeDesktopItem {
-          name = "vesktop";
-          desktopName = "Vesktop";
-          exec = "vesktop --enable-features=UseOzonePlatform --ozone-platform=wayland %U";
-          icon = "vesktop";
-          startupWMClass = "Vesktop";
-          genericName = "Internet Messenger";
-          keywords = [
-            "discord"
-            "vencord"
-            "electron"
-            "chat"
-          ];
-          categories = [
-            "Network"
-            "InstantMessaging"
-            "Chat"
-          ];
-        });
-      });
-      qcm = super.qcm.overrideAttrs (oldAttrs: rec {
-        version = "1.3.3";
-        src = pkgs.fetchFromGitHub {
-          owner = "hypengw";
-          repo = "Qcm";
-          rev = "v${version}";
-          hash = "sha256-b9LKiRgD0V4zo639Rs15RmhHvqc7iYNo4/2sm1H+UhA=";
-          fetchSubmodules = true;
-        };
-
-        nativeBuildInputs =
-          oldAttrs.nativeBuildInputs
-          ++ [
-            pkgs.git
-          ];
-
-        buildInputs =
-          oldAttrs.buildInputs
-          ++ [
-            pkgs.protobuf
-            pkgs.qt6.qtgrpc
-          ];
-
-        cmakeFlags =
-          (oldAttrs.cmakeFlags or [])
-          ++ [
-            "-DCMAKE_THREAD_LIBS_INIT=-lpthread"
-            "-DCMAKE_HAVE_THREADS_LIBRARY=1"
-            "-DCMAKE_USE_PTHREADS_INIT=1"
-            "-DFETCHCONTENT_FULLY_DISCONNECTED=ON"
-
-            "-DFETCHCONTENT_SOURCE_DIR_RSTD=${rstd}"
-            "-DFETCHCONTENT_SOURCE_DIR_ASIO=${asio}"
-            "-DFETCHCONTENT_SOURCE_DIR_PEGTL=${pegtl}"
-            "-DFETCHCONTENT_SOURCE_DIR_NCREQUEST=${ncrequest}"
-            "-DFETCHCONTENT_SOURCE_DIR_KSTORE=${kstore}"
-            "-DFETCHCONTENT_SOURCE_DIR_QML_MATERIAL=${qml_material}"
-            "-DFETCHCONTENT_SOURCE_DIR_RANDOM=${random}"
-            "-DFETCHCONTENT_SOURCE_DIR_KDSINGLEAPPLICATION=${kdsingleapplication}"
-          ];
-
-        patches = [];
-
-        postPatch = ''
-          substituteInPlace player/CMakeLists.txt \
-            --replace-fail "PRIVATE cubeb::cubeb" "PRIVATE cubeb"
-
-          substituteInPlace third_party/CMakeLists.txt \
-            --replace-fail "add_library(cubeb::cubeb ALIAS cubeb)"
-
-          substituteInPlace third_party/CMakeLists.txt \
-            --replace-fail 'add_library(random ALIAS effolkronium_random)' \
-                           'add_library(random ALIAS effolkronium_random)'
-        '';
-      });
-      allegro = super.allegro.overrideAttrs (oldAttrs: {
-        cmakeFlags =
-          (oldAttrs.cmakeFlags or [])
-          ++ [
-            "-DCMAKE_POLICY_VERSION_MINIMUM=3.5"
-          ];
-      });
-      sf-mono-liga-bin = super.stdenvNoCC.mkDerivation {
-        pname = "sf-mono-liga-bin";
-        version = "dev";
-        src = inputs.sf-mono-liga-src;
-        dontConfigure = true;
-        installPhase = ''
-          mkdir -p $out/share/fonts/opentype
-          cp -R $src/*.otf $out/share/fonts/opentype/
-        '';
+      config.global = {
+        hide_env_diff = true;
       };
-    })
-  ];
-
-  programs.home-manager.enable = true;
-  programs.direnv = {
-    enable = true;
-    nix-direnv.enable = true;
-
-    config.global = {
-      hide_env_diff = true;
     };
   };
 
@@ -243,7 +72,8 @@ in {
       spicetify.enable = true;
       mpv.enable = true;
       neovim.enable = true;
-      quickshell.enable = true;
+	  neovide.enable = true;
+      quickshell.enable = false;
       vscode.enable = true;
       matugen.enable = true;
     };
@@ -251,14 +81,14 @@ in {
     services = {
       home-manager = {
         clipse.enable = true;
-        easyeffects.enable = false;
+        easyeffects.enable = true;
         hypridle.enable = true;
         kdeconnect.enable = true;
       };
       systemd.user = {
-        adzan.enable = true;
+        adzan.enable = false;
         nm-applet.enable = true;
-        weather-widget.enable = true;
+        weather-widget.enable = false;
       };
     };
 
@@ -274,22 +104,12 @@ in {
         pkgs.zellij
         pkgs.jq
         pkgs.eza
+        pkgs.gapless
         pkgs.ripgrep
         pkgs.qtcreator
         pkgs.darkly
-        pkgs.cachix
         pkgs.imagemagick
-        inputs.m3shapes.packages.${pkgs.stdenv.hostPlatform.system}.m3shapes
-        # pkgs.inter
         pkgs.lucide
-        # (inputs.vermilion.packages.${pkgs.stdenv.hostPlatform.system}.vermilion.overrideAttrs (oldAttrs: {
-        #   pnpmDeps = pkgs.pnpm_10.fetchDeps {
-        #     inherit (oldAttrs) pname src;
-        #     hash = "sha256-pCMwbE7eYbaOOLhWfSQtjblVctOu7nCGnUal4SID+DQ=";
-        #     fetcherVersion = 2;
-        #   };
-        # }))
-        # pkgs.asciinema
         pkgs.libnotify
         inputs.antigravity-flakes.packages.${pkgs.stdenv.hostPlatform.system}.default
         (pkgs.la-capitaine-icon-theme.overrideAttrs {dontCheckForBrokenSymlinks = true;})
@@ -300,11 +120,7 @@ in {
         pkgs.brightnessctl
         pkgs.weather-icons
         pkgs.wlr-randr
-        # (pkgs.callPackage ./extra/customfetch.nix {})
         (pkgs.callPackage ./extra/google-sans-flex.nix {})
-        # (pkgs.callPackage ./extra/qmlfmt.nix {})
-        # (pkgs.callPackage ./extra/yet-another-monochrome-icon-set.nix {})
-        # (pkgs.callPackage ./extra/fonts-audiowide.nix {})
       ];
       excludePackages = [
         "neovide"
@@ -342,7 +158,6 @@ in {
         cursors = true;
         icons = true;
         qt = true;
-        gtk = true;
 
         defaultCursor = "Future-Cyan-Hyprcursor-theme";
         defaultCursorSize = 24;
@@ -402,43 +217,6 @@ in {
     };
   };
 
-  gtk = {
-    enable = true;
-
-    iconTheme = {name = "WhiteSur-dark";};
-    theme = {name = "WhiteSur-Dark-blue";};
-
-    gtk3 = {
-      enable = true;
-      theme.name = "WhiteSur-Dark-blue";
-      font = {
-        name = "Hack";
-
-        size = 11;
-      };
-
-      extraConfig = {
-        "gtk-application-prefer-dark-theme" = 1;
-        "gtk-enable-event-sounds" = 1;
-        "gtk-enable-input-feedback-sounds" = 0;
-        "gtk-xft-antialias" = 1;
-        "gtk-xft-hinting" = 1;
-        "gtk-icon-theme-name " = "Adwaita";
-        "gtk-xft-hintstyle" = "hintslight";
-        "gtk-xft-rgba" = "rgb";
-      };
-    };
-    gtk4 = {
-      enable = true;
-      theme.name = "WhiteSur-Dark-blue";
-      font = {
-        name = "Hack";
-
-        size = 11;
-      };
-    };
-  };
-
   fonts.fontconfig = {
     enable = true;
     defaultFonts = {
@@ -458,7 +236,6 @@ in {
     config = {
       common.default = "hyprland;kde";
       pantheon.default = "kde";
-      gtk.default = "";
     };
   };
 

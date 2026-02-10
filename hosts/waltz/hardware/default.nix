@@ -7,7 +7,7 @@
       efi.canTouchEfiVariables = true;
       systemd-boot.enable = true;
     };
-    kernelPackages = pkgs.cachyosKernels.linux-cachyos-server;
+    kernelPackages = pkgs.cachyosKernels.linuxPackages-cachyos-server-lto;
   };
 
   virtualisation = {
