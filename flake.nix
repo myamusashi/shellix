@@ -1,27 +1,20 @@
 {
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
-    nixpkgs-stable.url = "github:NixOS/nixpkgs/release-25.05";
-    sops-nix.url = "github:Mic92/sops-nix";
-    chaotic.url = "github:chaotic-cx/nyx/nyxpkgs-unstable";
-    nix-cachyos-kernel.url = "github:xddxdd/nix-cachyos-kernel/release";
+    nixpkgs-stable.url = "github:NixOS/nixpkgs/release-25.11";
 
     home-manager = {
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    sops-nix.url = "github:Mic92/sops-nix";
+
+    chaotic.url = "github:chaotic-cx/nyx/nyxpkgs-unstable";
+    nix-cachyos-kernel.url = "github:xddxdd/nix-cachyos-kernel/release";
+
     hyprland = {
       url = "github:hyprwm/Hyprland?submodules=1";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
-    antigravity-flakes = {
-      url = "github:jacopone/antigravity-nix";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-    zen-browser = {
-      url = "github:0xc000022070/zen-browser-flake";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
@@ -40,19 +33,9 @@
       inputs.hyprland.follows = "hyprland";
     };
 
-    hyprpanel = {
-      url = "github:Jas-SinghFSU/HyprPanel";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
-    caelestia-shell = {
-      url = "github:caelestia-dots/shell";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
-    caelestia-cli = {
-      url = "github:caelestia-dots/cli";
-      inputs.nixpkgs.follows = "nixpkgs";
+    hyprland-plugins = {
+      url = "github:hyprwm/hyprland-plugins";
+      inputs.hyprland.follows = "hyprland";
     };
 
     hyprlock = {
@@ -95,23 +78,38 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    hyprland-plugins = {
-      url = "github:hyprwm/hyprland-plugins";
-      inputs.hyprland.follows = "hyprland";
+    hyprwire = {
+      url = "github:hyprwm/hyprwire";
+      inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    kwin-effects-forceblur = {
-      url = "github:taj-ny/kwin-effects-forceblur";
+    antigravity-flakes = {
+      url = "github:jacopone/antigravity-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    zen-browser = {
+      url = "github:0xc000022070/zen-browser-flake";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    hyprpanel = {
+      url = "github:Jas-SinghFSU/HyprPanel";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    caelestia-shell = {
+      url = "github:caelestia-dots/shell";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    caelestia-cli = {
+      url = "github:caelestia-dots/cli";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
     quickshell = {
       url = "git+https://git.outfoxxed.me/outfoxxed/quickshell";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
-    winapps = {
-      url = "github:winapps-org/winapps";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
@@ -125,8 +123,13 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    hyprwire = {
-      url = "github:hyprwm/hyprwire";
+    kwin-effects-forceblur = {
+      url = "github:taj-ny/kwin-effects-forceblur";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    winapps = {
+      url = "github:winapps-org/winapps";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
@@ -162,129 +165,49 @@
     nixgl.url = "github:nix-community/nixGL";
   };
 
-  outputs = {
-    self,
-    nix-cachyos-kernel,
-    nixpkgs,
-    nixpkgs-stable,
-    chaotic,
-    nixgl,
-    home-manager,
-    sops-nix,
-    ...
-  } @ inputs: let
-    system = "x86_64-linux";
-    pkgs-stable = import nixpkgs-stable {
-      inherit system;
-      config.allowUnfree = true;
-      overlays = [
-(import ./overlays/default.nix)
-        inputs.nix-cachyos-kernel.overlays.pinned
-];
-    };
-    pkgs = import nixpkgs {
-      inherit system;
-      config.allowUnfree = true;
-      overlays = [
-        inputs.hyprpicker.overlays.default
-        inputs.hyprsunset.overlays.default
-        inputs.hypridle.overlays.default
-        inputs.hyprland.overlays.default
-        nixgl.overlay
-        inputs.nix-cachyos-kernel.overlays.pinned
-        inputs.vicinae.overlays.default
-        (final: prev: {
-          vicinae = prev.vicinae.overrideAttrs (oldAttrs: {
-            cmakeFlags = [
-              "-DCMAKE_POLICY_VERSION_MINIMUM=3.5"
-            ];
-          });
-          grpc-tools = prev.grpc-tools.overrideAttrs (oldAttrs: {
-            cmakeFlags = [
-              "-DCMAKE_POLICY_VERSION_MINIMUM=3.5"
-            ];
-          });
-          cmark-gfm = prev.cmark-gfm.overrideAttrs (oldAttrs: {
-            cmakeFlags = [
-              "-DCMAKE_POLICY_VERSION_MINIMUM=3.5"
-            ];
-          });
-        })
-      ];
-    };
+  outputs = inputs: let
+    lib = import ./lib {inherit inputs;};
+    inherit (lib) mkHost mkHome mkPkgs forAllSystems;
   in {
     nixosConfigurations = {
-      waltz = nixpkgs.lib.nixosSystem {
-        inherit system;
-
-        modules = [
-          sops-nix.nixosModules.sops
-          ./sops/sops.nix
-          ./hosts/waltz/configuration.nix
-
-          {
-            nixpkgs.overlays = [
-              nix-cachyos-kernel.overlays.pinned
-            ];
-          }
+      nixos = mkHost {
+        hostname = "myamusashi";
+        username = "myamusashi";
+        extraModules = [
+          inputs.chaotic.nixosModules.default
         ];
-        specialArgs = {
-          inherit inputs;
-          inherit pkgs-stable;
-        };
       };
 
-      nixos = nixpkgs.lib.nixosSystem {
-        inherit system;
-        modules = [
-          chaotic.nixosModules.default
-          ./sops/sops.nix
-          ./hosts/myamusashi/configuration.nix
-
-          {
-            nixpkgs.overlays = [
-              nix-cachyos-kernel.overlays.pinned
-            ];
-          }
-        ];
-        specialArgs = {
-          inherit inputs;
-          inherit pkgs-stable;
-        };
+      waltz = mkHost {
+        hostname = "waltz";
+        username = null;
       };
     };
 
     homeConfigurations = {
-      home-manager.sharedModules = [
-        inputs.sops-nix.homeManagerModules.sops
-      ];
-      "myamusashi" = home-manager.lib.homeManagerConfiguration {
-        inherit pkgs;
-
-        extraSpecialArgs = {
-          inherit system;
-          inherit inputs;
-        };
-
-        modules = [
-          ./hosts/myamusashi/home.nix
-        ];
+      "myamusashi" = mkHome {
+        username = "myamusashi";
+        hostname = "myamusashi";
       };
     };
 
-    devShells.${system}.default = pkgs.mkShell {
-      buildInputs = with pkgs; [
-        alejandra
-        nil
-        git
-        statix
-        nix-diff
-        nixd
-      ];
+    devShells = forAllSystems (system: let
+      pkgs = mkPkgs {inherit system;};
+    in {
+      default = pkgs.mkShell {
+        buildInputs = with pkgs; [
+          alejandra
+          nil
+          git
+          statix
+          nix-diff
+          nixd
+        ];
 
-      shellHook = ''
-        echo "NixOS configuration development environment"
-      '';
-    };
+        shellHook = ''
+          echo "NixOS configuration development environment"
+        '';
+      };
+    });
   };
 }
