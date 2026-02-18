@@ -25,7 +25,7 @@
         	font_fixed = Google Sans Flex
 
         	font_fixed_size = 12
-        	font = Hack
+        	font = Maple Mono NF
         	font_size = 12
         }
       '';
@@ -37,10 +37,7 @@
     direnv = {
       enable = true;
       nix-direnv.enable = true;
-
-      config.global = {
-        hide_env_diff = true;
-      };
+      config.global.hide_env_diff = true;
     };
   };
 
@@ -72,8 +69,7 @@
       spicetify.enable = true;
       mpv.enable = true;
       neovim.enable = true;
-	  neovide.enable = true;
-      quickshell.enable = false;
+      neovide.enable = true;
       vscode.enable = true;
       matugen.enable = true;
     };
@@ -84,6 +80,7 @@
         easyeffects.enable = true;
         hypridle.enable = true;
         kdeconnect.enable = true;
+        mpd.enable = true;
       };
       systemd.user = {
         adzan.enable = false;
@@ -95,32 +92,37 @@
     packages.home = {
       enable = true;
 
-      customPackages = [
-        pkgs.git-credential-manager
-        pkgs.libsixel
-        pkgs.ueberzugpp
-        pkgs.fd
-        pkgs.p7zip
-        pkgs.zellij
-        pkgs.jq
-        pkgs.eza
-        pkgs.gapless
-        pkgs.ripgrep
-        pkgs.qtcreator
-        pkgs.darkly
-        pkgs.imagemagick
-        pkgs.lucide
-        pkgs.libnotify
-        inputs.antigravity-flakes.packages.${pkgs.stdenv.hostPlatform.system}.default
-        (pkgs.la-capitaine-icon-theme.overrideAttrs {dontCheckForBrokenSymlinks = true;})
-        pkgs.wl-screenrec
-        pkgs.qt6.qtgraphs
-        pkgs.kdePackages.qtcharts
-        pkgs.wl-gammactl
-        pkgs.brightnessctl
-        pkgs.weather-icons
-        pkgs.wlr-randr
-        (pkgs.callPackage ./extra/google-sans-flex.nix {})
+      customPackages = with pkgs; [
+        git-credential-manager
+        libsixel
+        ueberzugpp
+        fd
+        p7zip
+        zellij
+        jq
+        eza
+        gapless
+        ripgrep
+        iw
+        qtcreator
+        darkly
+        imagemagick
+        lucide
+        libnotify
+        inputs.antigravity-flakes.packages.${stdenv.hostPlatform.system}.default
+        (la-capitaine-icon-theme.overrideAttrs {dontCheckForBrokenSymlinks = true;})
+        python314Packages.mutagen
+        qt6.qt5compat
+        media-downloader
+        yt-dlp
+        wl-screenrec
+        qt6.qtgraphs
+        kdePackages.qtcharts
+        wl-gammactl
+        brightnessctl
+        weather-icons
+        wlr-randr
+        (callPackage ./extra/google-sans-flex.nix {})
       ];
       excludePackages = [
         "neovide"
@@ -221,7 +223,7 @@
     enable = true;
     defaultFonts = {
       serif = ["Google Sans Flex"];
-      monospace = ["Hack"];
+      monospace = ["Maple Mono NF"];
       sansSerif = ["Google Sans Flex"];
     };
   };

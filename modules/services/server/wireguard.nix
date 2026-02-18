@@ -50,16 +50,20 @@ in {
   };
 
   config = lib.mkIf cfg.enable {
-    boot.kernel.sysctl."net.ipv4.ip_forward" = 1;
-    boot.kernel.sysctl."net.ipv4.conf.all.forwarding" = lib.mkOverride 98 true;
-    boot.kernel.sysctl."net.ipv4.conf.default.forwarding" = lib.mkOverride 98 true;
+    boot.kernel.sysctl = {
+      "net.ipv4.ip_forward" = 1;
+      "net.ipv4.conf.all.forwarding" = lib.mkOverride 98 true;
+      "net.ipv4.conf.default.forwarding" = lib.mkOverride 98 true;
+    };
 
     services.dnsmasq = {
-      enable = true; # Enable this for DNS to work
+      enable = true;
       settings = {
         interface = cfg.wireguardInterfaces;
         bind-interfaces = true;
-        listen-address = "127.0.0.1,10.0.0.1";
+        listen-address = "127.0.0.1,10.88.0.1";
+        no-resolv = true;
+        server = ["1.1.1.1"];
       };
     };
 
@@ -75,18 +79,18 @@ in {
 
       wg-quick.interfaces = {
         ${cfg.wireguardInterfaces} = {
-          address = ["10.0.0.1/24"];
+          address = ["10.88.0.1/24"];
           listenPort = cfg.allowedUDPPorts;
           privateKeyFile = cfg.pathPrivateKeyFile;
 
           postUp = ''
             ${pkgs-stable.iptables}/bin/iptables -A FORWARD -i ${cfg.wireguardInterfaces} -j ACCEPT
-            ${pkgs-stable.iptables}/bin/iptables -t nat -A POSTROUTING -s 10.0.0.0/24 -o ${cfg.externalInterfaces} -j MASQUERADE
+            ${pkgs-stable.iptables}/bin/iptables -t nat -A POSTROUTING -s 10.88.0.0/24 -o ${cfg.externalInterfaces} -j MASQUERADE
           '';
 
           preDown = ''
             ${pkgs-stable.iptables}/bin/iptables -D FORWARD -i ${cfg.wireguardInterfaces} -j ACCEPT
-            ${pkgs-stable.iptables}/bin/iptables -t nat -D POSTROUTING -s 10.0.0.0/24 -o ${cfg.externalInterfaces} -j MASQUERADE
+            ${pkgs-stable.iptables}/bin/iptables -t nat -D POSTROUTING -s 10.88.0.0/24 -o ${cfg.externalInterfaces} -j MASQUERADE
           '';
 
           inherit (cfg) peers;

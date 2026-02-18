@@ -31,11 +31,11 @@
           peers = [
             {
               publicKey = "z9vwz2freR66r1sAybDlDz35ElSJhs1D5hMQKSJzlVw=";
-              allowedIPs = ["10.0.0.2/32"];
+              allowedIPs = ["10.88.0.2/32"];
             }
             {
               publicKey = "2Ql33s7ojKEQVd/mG2Aie+cM5wG37Nl9kAlzdD1p+CM=";
-              allowedIPs = ["10.0.0.3/32"];
+              allowedIPs = ["10.88.0.3/32"];
             }
           ];
         };
@@ -48,13 +48,13 @@
       };
       systemd.system = {
         cachix.enable = true;
-        cloudflare-tunnels.enable = true;
-        stirling.enable = true;
+        cloudflare-tunnels.enable = false;
+        stirling.enable = false;
       };
       nixos = {
-        earlyoom.enable = true;
+        earlyoom.enable = false;
         backup.waltz.enable = true;
-        resolver.enable = false;
+        resolver.enable = true;
       };
     };
 
@@ -154,18 +154,56 @@
   };
 
   networking = {
-    networkmanager.enable = true;
+    networkmanager = {
+      enable = true;
+      dns = "systemd-resolved";
+      insertNameservers = [
+        "1.1.1.1#one.one.one.one"
+        "1.0.0.1#one.one.one.one"
+        "94.140.14.14" # adGuard
+        "94.140.15.15"
+      ];
+    };
+    domain = "home.waltz.dev";
+    search = ["home.waltz.dev"];
+    interfaces = {
+      enp1s0.ipv4.addresses = [
+        {
+          address = "192.168.18.14";
+          prefixLength = 28;
+        }
+      ];
+      waltz.ipv4.addresses = [
+        {
+          address = "10.11.11.1";
+          prefixLength = 24;
+        }
+      ];
+    };
+    vlans = {
+      waltz = {
+        id = 2;
+        interface = "enp1s0";
+      };
+    };
+    nameservers = [
+      "192.168.18.14"
+      "1.1.1.1#one.one.one.one"
+      "1.0.0.1#one.one.one.one"
+      "94.140.14.14"
+      "94.140.15.15"
+    ];
+    dhcpcd.enable = true;
+    hostName = "waltz";
+    defaultGateway = {
+      address = "192.168.18.1";
+      interface = "enp1s0";
+    };
     firewall = {
       enable = true;
       allowedTCPPorts = [20 21 22 2408 5432 3001 3002];
       allowedUDPPorts = [5432 3001 3002];
     };
-    extraHosts = ''
-      127.0.0.1:${toString config.shellix.variables.port.NEXTCLOUD} cloud.myamusashi.com
-      127.0.0.1:${toString config.shellix.variables.port.PHPMYADMIN} pma.myamusashi.com
-      127.0.0.1:${toString config.shellix.variables.port.GRAFANA} dash.myamusashi.com
-      127.0.0.1:${toString config.shellix.variables.port.VAULTWARDEN} vault.myamusashi.com
-    '';
   };
 
   sops.secrets.waltz-password.neededForUsers = false;
@@ -280,21 +318,6 @@
       package = pkgs-stable.nerd-fonts.hack;
     }
   ];
-  # experiment and shit
-  services.resolved = {
-    enable = true;
-    dnssec = "true";
-    dnsovertls = "true";
-    fallbackDns = ["1.1.1.1" "8.8.8.8"];
-  };
 
-  networking.networkmanager = {
-    dns = "systemd-resolved";
-  };
-
-  ## fallback
-  networking.nameservers = [
-    "1.1.1.1"
-    "8.8.8.8"
-  ];
+  services.cloudflare-warp.enable = true;
 }
