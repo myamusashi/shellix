@@ -113,9 +113,9 @@ in {
     wg-quick.interfaces = {
       wg0 = {
         mtu = 1420;
-        address = lib.mkDefault ["10.0.0.3/32"];
+        address = lib.mkDefault ["10.88.0.3/32"];
         listenPort = 51820;
-        dns = ["10.0.0.1" "1.1.1.1"];
+        dns = ["1.1.1.1"];
         privateKeyFile = "/etc/wireguard-keys/private.key";
         peers = [
           {
@@ -174,7 +174,7 @@ in {
     xserver.xkb.layout = "us";
 
     greetd = {
-      enable = true;
+      enable = false;
       settings = {
         default_session = {
           command = "${pkgs.sway}/bin/sway --config ${swayConfig}";
@@ -210,14 +210,14 @@ in {
       scx.enable = true;
       display-manager = {
         sddm = {
-          enable = false;
+          enable = true;
           wayland = {
             enable = true;
             compositor = "weston";
           };
           theme = "sddm-astronaut-theme";
           auto-login = {
-            enable = false;
+            enable = true;
             user = "myamusashi";
             session = "hyprland.desktop";
           };
@@ -261,6 +261,7 @@ in {
 
       customPackages = with pkgs; [
         kdePackages.qtmultimedia
+        distrobox
         git-credential-manager
         sops
         libva-utils
@@ -274,7 +275,17 @@ in {
         iptables
         greetd
         arduino
+        virtualgl
+        vulkan-tools
+        libva-utils
         maple-mono.NF
+        (inputs.vermilion.packages.${pkgs.stdenv.hostPlatform.system}.vermilion.overrideAttrs (oldAttrs: {
+          pnpmDeps = pkgs.pnpm_10.fetchDeps {
+            inherit (oldAttrs) pname src;
+            hash = "sha256-pCMwbE7eYbaOOLhWfSQtjblVctOu7nCGnUal4SID+DQ=";
+            fetcherVersion = 2;
+          };
+        }))
         android-tools
         spotify
         (linux-wifi-hotspot.overrideAttrs (oldAttrs: {
@@ -321,7 +332,7 @@ in {
           };
 
           fontFixed = {
-            family = "Hack";
+            family = "Maple Mono NF";
             size = 11;
           };
         };
