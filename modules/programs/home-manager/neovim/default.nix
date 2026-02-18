@@ -32,6 +32,8 @@ in {
         arduino-language-server
         arduino-cli
         llvm
+        clang
+        gcc
         bash-language-server
         shfmt
         prettierd
