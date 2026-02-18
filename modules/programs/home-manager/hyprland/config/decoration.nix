@@ -6,10 +6,10 @@
     inactive_opacity = 0.95;
 
     blur = {
-      enabled = true;
-      size = 5;
+      enabled = false;
+      size = 7;
       special = false;
-      passes = 1;
+      passes = 5;
       brightness = 1;
       contrast = 0.89;
       popups = true;

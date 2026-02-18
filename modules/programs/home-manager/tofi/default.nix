@@ -10,7 +10,7 @@ in {
     programs.tofi = {
       enable = true;
       settings = {
-        font = "Hack";
+        font = "Maple Mono NF";
         font-size = 20;
         font-features = "smcp, c2sc";
         font-variations = "wght 700";
