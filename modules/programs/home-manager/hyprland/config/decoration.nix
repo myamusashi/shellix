@@ -1,7 +1,7 @@
 {
   decoration = {
-    rounding = 8;
-    rounding_power = 2.0;
+    rounding = 18;
+    rounding_power = 2.4;
     active_opacity = 1;
     inactive_opacity = 0.95;
 
@@ -9,16 +9,18 @@
       enabled = false;
       size = 7;
       special = false;
-      passes = 5;
+      passes = 3;
+      noise = 0.05;
       brightness = 1;
       contrast = 0.89;
-      popups = true;
+      vibrancy = 0.5;
+      vibrancy_darkness = 0.5;
+      popups = false;
       popups_ignorealpha = 0.6;
       new_optimizations = true;
       input_methods = true;
-      input_methods_ignorealpha = 0.8;
       xray = true;
-      ignore_opacity = true;
+      input_methods_ignorealpha = 0.8;
     };
 
     shadow = {
