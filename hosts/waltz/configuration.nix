@@ -187,13 +187,12 @@
       };
     };
     nameservers = [
-      "192.168.18.14"
       "1.1.1.1#one.one.one.one"
       "1.0.0.1#one.one.one.one"
       "94.140.14.14"
       "94.140.15.15"
     ];
-    dhcpcd.enable = true;
+
     hostName = "waltz";
     defaultGateway = {
       address = "192.168.18.1";
