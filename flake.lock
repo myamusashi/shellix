@@ -711,11 +711,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1769872935,
-        "narHash": "sha256-07HMIGQ/WJeAQJooA7Kkg1SDKxhAiV6eodvOwTX6WKI=",
+        "lastModified": 1771102945,
+        "narHash": "sha256-e5NfW8NhC3qChR8bHVni/asrig/ZFzd1wzpq+cEE/tg=",
         "owner": "nix-community",
         "repo": "home-manager",
-        "rev": "f4ad5068ee8e89e4a7c2e963e10dd35cd77b37b7",
+        "rev": "ff5e5d882c51f9a032479595cbab40fd04f56399",
         "type": "github"
       },
       "original": {
@@ -2844,11 +2844,11 @@
         "quickshell": "quickshell_4"
       },
       "locked": {
-        "lastModified": 1771293304,
-        "narHash": "sha256-6/hOWhzf66aOTihTeIyOk1PmLekVdtHUKRPLViC6X2o=",
+        "lastModified": 1771477851,
+        "narHash": "sha256-9GbIFUKUHKUE2k7vOWjPyU7P11CNvnAikaZVzEpxmbs=",
         "ref": "refs/heads/master",
-        "rev": "1bec60414d6bd8a55b4736578caa8d17b244c819",
-        "revCount": 550,
+        "rev": "b91c19f0fcd22d74d95b477a54d4325106a22955",
+        "revCount": 577,
         "type": "git",
         "url": "https://git.myamusashi.space/myamusashi/shell"
       },
@@ -3369,11 +3369,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1770707140,
-        "narHash": "sha256-3ZRA2+o5p1+FKWx988WbwB1SQ2Mz5aL95zxhL5iD+O0=",
+        "lastModified": 1771375311,
+        "narHash": "sha256-A78Q4Bf186PsVON7pmQpogPIGolAX8yKuMhcXZWLrD4=",
         "owner": "0xc000022070",
         "repo": "zen-browser-flake",
-        "rev": "db14437f8667f7f09784e2a4e73c105bdc1c7023",
+        "rev": "22cf05f7ca1fe46e8dfe9392fc48cd2a719bc3e8",
         "type": "github"
       },
       "original": {
