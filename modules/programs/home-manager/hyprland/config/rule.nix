@@ -186,7 +186,7 @@ in {
     (mkLayerRule "shell_app_blur" "shell:app" {blur = true;})
     (mkLayerRule "shell_capture_blur" "shell:capture" {blur = true;})
     (mkLayerRule "shell_session_blur" "shell:session" {blur = true;})
-    (mkLayerRule "shell_drawers_no_blur" "shell:drawers" {blur = false;})
+    (mkLayerRule "shell_drawers_no_blur" "shell:drawers" {blur = true;})
 
     (mkLayerRule "shell_bigclock_animation" "shell:bigclock" popup30)
 
