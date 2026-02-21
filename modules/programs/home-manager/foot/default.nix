@@ -1,14 +1,14 @@
 {
-  config,
-  lib,
-  ...
+    config,
+    lib,
+    ...
 }: let
-  cfg = config.shellix.programs.home.foot;
+    cfg = config.shellix.programs.home.foot;
 in {
-  config = lib.mkIf cfg.enable {
-    programs.foot = {
-      enable = true;
-      server.enable = true;
+    config = lib.mkIf cfg.enable {
+        programs.foot = {
+            enable = true;
+            server.enable = true;
+        };
     };
-  };
 }

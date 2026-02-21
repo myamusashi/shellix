@@ -1,35 +1,35 @@
 {
-  lib,
-  stdenvNoCC,
-  unzip,
+    lib,
+    stdenvNoCC,
+    unzip,
 }:
 stdenvNoCC.mkDerivation {
-  pname = "audiowide";
-  version = "1.1";
+    pname = "audiowide";
+    version = "1.1";
 
-  src = ./files/Audiowide.zip;
+    src = ./files/Audiowide.zip;
 
-  buildInputs = [
-    unzip
-  ];
+    buildInputs = [
+        unzip
+    ];
 
-  unpackPhase = ''
-    unzip $src
-  '';
+    unpackPhase = ''
+        unzip $src
+    '';
 
-  installPhase = ''
-    runHook preInstall
+    installPhase = ''
+        runHook preInstall
 
-    install -Dm644 *.ttf -t $out/share/fonts/TTF
+        install -Dm644 *.ttf -t $out/share/fonts/TTF
 
-    runHook postInstall
-  '';
+        runHook postInstall
+    '';
 
-  meta = {
-    description = "I like this one";
-    maintainers = with lib.maintainers; [myamusashi];
-    platforms = with lib.platforms; all;
-    homepage = "";
-    license = lib.licenses.ofl;
-  };
+    meta = {
+        description = "I like this one";
+        maintainers = with lib.maintainers; [myamusashi];
+        platforms = with lib.platforms; all;
+        homepage = "";
+        license = lib.licenses.ofl;
+    };
 }

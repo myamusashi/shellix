@@ -2,48 +2,48 @@
 # and may be overwritten by future invocations.  Please make changes
 # to /etc/nixos/configuration.nix instead.
 {
-  config,
-  lib,
-  pkgs,
-  modulesPath,
-  ...
+    config,
+    lib,
+    pkgs,
+    modulesPath,
+    ...
 }: {
-  imports = [
-    (modulesPath + "/installer/scan/not-detected.nix")
-  ];
+    imports = [
+        (modulesPath + "/installer/scan/not-detected.nix")
+    ];
 
-  boot.initrd.availableKernelModules = ["ahci" "xhci_pci" "usbhid" "uas" "sr_mod" "rtsx_usb_sdmmc"];
-  boot.initrd.kernelModules = [];
-  boot.kernelModules = ["kvm-intel"];
-  boot.extraModulePackages = [];
+    boot.initrd.availableKernelModules = ["ahci" "xhci_pci" "usbhid" "uas" "sr_mod" "rtsx_usb_sdmmc"];
+    boot.initrd.kernelModules = [];
+    boot.kernelModules = ["kvm-intel"];
+    boot.extraModulePackages = [];
 
-  fileSystems."/" = {
-    device = "/dev/disk/by-uuid/ab391bd3-8749-4673-bf72-bb1d521ef124";
-    fsType = "ext4";
-  };
+    fileSystems."/" = {
+        device = "/dev/disk/by-uuid/ab391bd3-8749-4673-bf72-bb1d521ef124";
+        fsType = "ext4";
+    };
 
-  fileSystems."/nix/store" = {
-    device = "/nix/store";
-    fsType = "none";
-    options = ["bind"];
-  };
+    fileSystems."/nix/store" = {
+        device = "/nix/store";
+        fsType = "none";
+        options = ["bind"];
+    };
 
-  fileSystems."/boot" = {
-    device = "/dev/disk/by-uuid/7B0C-5C3D";
-    fsType = "vfat";
-    options = ["fmask=0077" "dmask=0077"];
-  };
+    fileSystems."/boot" = {
+        device = "/dev/disk/by-uuid/7B0C-5C3D";
+        fsType = "vfat";
+        options = ["fmask=0077" "dmask=0077"];
+    };
 
-  fileSystems."/opt/backup" = {
-    device = "/home/waltz/external";
-    fsType = "none";
-    options = ["bind"];
-  };
+    fileSystems."/opt/backup" = {
+        device = "/home/waltz/external";
+        fsType = "none";
+        options = ["bind"];
+    };
 
-  swapDevices = [
-    {device = "/dev/disk/by-uuid/f9122030-53e1-4422-838e-d7872a807a47";}
-  ];
+    swapDevices = [
+        {device = "/dev/disk/by-uuid/f9122030-53e1-4422-838e-d7872a807a47";}
+    ];
 
-  nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
-  hardware.cpu.intel.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
+    nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
+    hardware.cpu.intel.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
 }
