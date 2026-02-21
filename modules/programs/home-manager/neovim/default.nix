@@ -13,6 +13,12 @@ in {
       package = inputs.neovim-nightly-overlay.packages.${pkgs.stdenv.hostPlatform.system}.default;
       plugins = with pkgs; [
         (tree-sitter.withPlugins (plugins: pkgs.tree-sitter.allGrammars))
+        vimPlugins.nvim-treesitter
+        vimPlugins.nvim-treesitter-parsers.json
+        vimPlugins.nvim-treesitter-parsers.json5
+        vimPlugins.nvim-treesitter-parsers.nix
+        vimPlugins.nvim-highlite
+        vimPlugins.nvim-highlight-colors
       ];
       extraPackages = with pkgs; [
         bun
