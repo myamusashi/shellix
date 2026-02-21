@@ -1,28 +1,28 @@
 {
-  config,
-  lib,
-  ...
+    config,
+    lib,
+    ...
 }: let
-  cfg = config.shellix.services.nixos.minidlna;
+    cfg = config.shellix.services.nixos.minidlna;
 in {
-  config = lib.mkIf cfg.enable {
-    services.minidlna = {
-      enable = true;
+    config = lib.mkIf cfg.enable {
+        services.minidlna = {
+            enable = true;
 
-      settings = {
-        media_dir = [
-          "/data/media"
-          "V,$HOME/Videos"
-          "P,$HOME/Pictures"
-        ];
-      };
+            settings = {
+                media_dir = [
+                    "/data/media"
+                    "V,$HOME/Videos"
+                    "P,$HOME/Pictures"
+                ];
+            };
+        };
+
+        users.users.minidlna = {
+            isSystemUser = true;
+            group = "minidlna";
+        };
+
+        users.groups.minidlna = {};
     };
-
-    users.users.minidlna = {
-      isSystemUser = true;
-      group = "minidlna";
-    };
-
-    users.groups.minidlna = {};
-  };
 }

@@ -1,45 +1,45 @@
 {
-  lib,
-  stdenvNoCC,
-  fetchFromGitHub,
-  rename,
-  unstableGitUpdater,
+    lib,
+    stdenvNoCC,
+    fetchFromGitHub,
+    rename,
+    unstableGitUpdater,
 }:
 stdenvNoCC.mkDerivation {
-  pname = "material-symbols";
-  version = "4.0.0-unstable-2025-09-19";
+    pname = "material-symbols";
+    version = "4.0.0-unstable-2025-09-19";
 
-  src = fetchFromGitHub {
-    owner = "google";
-    repo = "material-design-icons";
-    rev = "bb04090f930e272697f2a1f0d7b352d92dfeee43";
-    hash = "sha256-5bcEh7Oetd2JmFEPCcoweDrLGQTpcuaCU8hCjz8ls3M=";
-    sparseCheckout = ["variablefont"];
-  };
+    src = fetchFromGitHub {
+        owner = "google";
+        repo = "material-design-icons";
+        rev = "bb04090f930e272697f2a1f0d7b352d92dfeee43";
+        hash = "sha256-5bcEh7Oetd2JmFEPCcoweDrLGQTpcuaCU8hCjz8ls3M=";
+        sparseCheckout = ["variablefont"];
+    };
 
-  nativeBuildInputs = [rename];
+    nativeBuildInputs = [rename];
 
-  installPhase = ''
-    runHook preInstall
+    installPhase = ''
+        runHook preInstall
 
-    rename 's/\[FILL,GRAD,opsz,wght\]//g' variablefont/*
-    install -Dm755 variablefont/*.ttf -t $out/share/fonts/TTF
-    install -Dm755 variablefont/*.woff2 -t $out/share/fonts/woff2
+        rename 's/\[FILL,GRAD,opsz,wght\]//g' variablefont/*
+        install -Dm755 variablefont/*.ttf -t $out/share/fonts/TTF
+        install -Dm755 variablefont/*.woff2 -t $out/share/fonts/woff2
 
-    runHook postInstall
-  '';
+        runHook postInstall
+    '';
 
-  passthru.updateScript = unstableGitUpdater {};
+    passthru.updateScript = unstableGitUpdater {};
 
-  meta = {
-    description = "Material Symbols icons by Google";
-    homepage = "https://fonts.google.com/icons";
-    downloadPage = "https://github.com/google/material-design-icons";
-    license = lib.licenses.asl20;
-    maintainers = with lib.maintainers; [
-      fufexan
-      luftmensch-luftmensch
-    ];
-    platforms = lib.platforms.all;
-  };
+    meta = {
+        description = "Material Symbols icons by Google";
+        homepage = "https://fonts.google.com/icons";
+        downloadPage = "https://github.com/google/material-design-icons";
+        license = lib.licenses.asl20;
+        maintainers = with lib.maintainers; [
+            fufexan
+            luftmensch-luftmensch
+        ];
+        platforms = lib.platforms.all;
+    };
 }

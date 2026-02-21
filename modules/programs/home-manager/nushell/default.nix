@@ -1,8 +1,8 @@
 {
-  config,
-  lib,
-  pkgs,
-  ...
+    config,
+    lib,
+    pkgs,
+    ...
 }: let
-  cfg = config.shellix.programs.home.nushell;
+    cfg = config.shellix.programs.home.nushell;
 in {}

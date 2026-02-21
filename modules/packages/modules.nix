@@ -1,159 +1,159 @@
 {
-  inputs,
-  config,
-  pkgs,
-  ...
+    inputs,
+    config,
+    pkgs,
+    ...
 }:
 with pkgs; {
-  system = [
-    vim
-    pciutils
-    libgdiplus
-    polkit
-    vulkan-tools
-    pinentry-qt
-    udisks
-    udiskie
-    gparted
-    libvirt
-    upower
-    upower-notify
-    rich-cli
-    power-profiles-daemon
-    bluez
-    mediainfo
-    ouch
-    glow
-    hexyl
-    antiprism
-    fzf
-  ];
-
-  nix-tools = {
-    standard = [
-      nixd
-      alejandra
-      statix
-      nix-output-monitor
-      nh
+    system = [
+        vim
+        pciutils
+        libgdiplus
+        polkit
+        vulkan-tools
+        pinentry-qt
+        udisks
+        udiskie
+        gparted
+        libvirt
+        upower
+        upower-notify
+        rich-cli
+        power-profiles-daemon
+        bluez
+        mediainfo
+        ouch
+        glow
+        hexyl
+        antiprism
+        fzf
     ];
 
-    full = [
-      nixd
-      nil
-      alejandra
-      statix
-      nix-diff
-      nix-tree
-      nix-output-monitor
-      nix-du
-      vulnix
-      deadnix
-      nix-update
+    nix-tools = {
+        standard = [
+            nixd
+            alejandra
+            statix
+            nix-output-monitor
+            nh
+        ];
+
+        full = [
+            nixd
+            nil
+            alejandra
+            statix
+            nix-diff
+            nix-tree
+            nix-output-monitor
+            nix-du
+            vulnix
+            deadnix
+            nix-update
+        ];
+    };
+
+    fonts = {
+        nerd = with nerd-fonts; [
+            hack-font
+            jetbrains-mono
+            inconsolata-lgc
+        ];
+        external = [
+            # (callPackage ./custom/avenir-font.nix {})
+            (callPackage ./custom/feather-font.nix {})
+            # (callPackage ./custom/volte-rounded.nix {})
+            # (callPackage ./custom/_14_segment_led_font.nix {})
+            noto-fonts
+        ];
+    };
+
+    network = [
+        inetutils
+        wireshark
+        networkmanagerapplet
+        cloudflared
     ];
-  };
 
-  fonts = {
-    nerd = with nerd-fonts; [
-      hack-font
-      jetbrains-mono
-      inconsolata-lgc
-    ];
-    external = [
-      # (callPackage ./custom/avenir-font.nix {})
-      (callPackage ./custom/feather-font.nix {})
-      # (callPackage ./custom/volte-rounded.nix {})
-      # (callPackage ./custom/_14_segment_led_font.nix {})
-      noto-fonts
-    ];
-  };
+    development = {
+        code_editor = [zed-editor-fhs neovide];
+        containers = [podman-tui podman-compose podman];
+        tools = [git gh curl kdiff3];
+    };
 
-  network = [
-    inetutils
-    wireshark
-    networkmanagerapplet
-    cloudflared
-  ];
+    security = [pass-wayland bitwarden-cli bitwarden-desktop];
 
-  development = {
-    code_editor = [zed-editor-fhs neovide];
-    containers = [podman-tui podman-compose podman];
-    tools = [git gh curl kdiff3];
-  };
+    multimedia = {
+        office = [onlyoffice-desktopeditors libreoffice unoconv];
+        apps = [
+            telegram-desktop
+            vesktop
+            (config.lib.nixGL.wrap pkgs.vivaldi)
+            vivaldi-ffmpeg-codecs
+            (config.lib.nixGL.wrap inputs.zen-browser.packages.${pkgs.stdenv.hostPlatform.system}.twilight)
+        ];
+    };
 
-  security = [pass-wayland bitwarden-cli bitwarden-desktop];
+    # Qt-based keystore
+    kde = [kdePackages.kwallet kdePackages.kwalletmanager];
 
-  multimedia = {
-    office = [onlyoffice-desktopeditors libreoffice unoconv];
-    apps = [
-      telegram-desktop
-      vesktop
-      (config.lib.nixGL.wrap pkgs.vivaldi)
-      vivaldi-ffmpeg-codecs
-      (config.lib.nixGL.wrap inputs.zen-browser.packages.${pkgs.stdenv.hostPlatform.system}.twilight)
-    ];
-  };
+    gaming = {
+        platform = [steam lutris];
+        utilities = [
+            wine-wayland
+            winetricks
+            wineWowPackages.waylandFull
+            protonup-qt
+        ];
+    };
 
-  # Qt-based keystore
-  kde = [kdePackages.kwallet kdePackages.kwalletmanager];
+    android = [adb-sync scrcpy android-tools];
 
-  gaming = {
-    platform = [steam lutris];
-    utilities = [
-      wine-wayland
-      winetricks
-      wineWowPackages.waylandFull
-      protonup-qt
-    ];
-  };
+    media = {
+        editor = [ffmpeg imagemagick];
+        viewer = [ffmpegthumbnailer poppler-utils mpv lxqt.lximage-qt zathura];
+        screen_recorder = [grim slurp hyprshot wl-screenrec];
+        misc = [playerctl cava mpg123];
+    };
 
-  android = [adb-sync scrcpy android-tools];
+    wayland = {
+        core = [wayland-protocols wl-clipboard];
+        wallpaper = [swww waypaper hyprpaper];
+        launcher = [rofi tofi wofi];
+        hyprland = [
+            hyprpicker
+            hyprsunset
+        ];
+    };
 
-  media = {
-    editor = [ffmpeg imagemagick];
-    viewer = [ffmpegthumbnailer poppler-utils mpv lxqt.lximage-qt zathura];
-    screen_recorder = [grim slurp hyprshot wl-screenrec];
-    misc = [playerctl cava mpg123];
-  };
-
-  wayland = {
-    core = [wayland-protocols wl-clipboard];
-    wallpaper = [swww waypaper hyprpaper];
-    launcher = [rofi tofi wofi];
-    hyprland = [
-      hyprpicker
-      hyprsunset
-    ];
-  };
-
-  theming = with pkgs; {
-    colors = [pywal16];
-    apps = [pywalfox-native];
-    tools = [kdePackages.qtstyleplugin-kvantum gtk3 gtk4];
-    cursors = [
-      (callPackage ./custom/future-cursor.nix {})
-      (callPackage ./custom/future-cyan-hyprcursor.nix {})
-    ];
-    icons = [
-      kanagawa-icon-theme
-      vimix-icon-theme
-      (callPackage ./custom/material-symbols.nix {})
-      morewaita-icon-theme
-      (whitesur-icon-theme.override {themeVariants = ["default"];})
-    ];
-    qt = [whitesur-kde qt6Packages.qt6ct];
-    gtk = [
-      (whitesur-gtk-theme.override {
-        themeVariants = ["blue"];
-        colorVariants = ["dark"];
-        darkerColor = true;
-      })
-      (vimix-gtk-themes.override {
-        themeVariants = ["ruby"];
-        colorVariants = ["dark"];
-        sizeVariants = ["standard"];
-        tweaks = ["translucent"];
-      })
-    ];
-  };
+    theming = with pkgs; {
+        colors = [pywal16];
+        apps = [pywalfox-native];
+        tools = [kdePackages.qtstyleplugin-kvantum gtk3 gtk4];
+        cursors = [
+            (callPackage ./custom/future-cursor.nix {})
+            (callPackage ./custom/future-cyan-hyprcursor.nix {})
+        ];
+        icons = [
+            kanagawa-icon-theme
+            vimix-icon-theme
+            (callPackage ./custom/material-symbols.nix {})
+            morewaita-icon-theme
+            (whitesur-icon-theme.override {themeVariants = ["default"];})
+        ];
+        qt = [whitesur-kde qt6Packages.qt6ct];
+        gtk = [
+            (whitesur-gtk-theme.override {
+                themeVariants = ["blue"];
+                colorVariants = ["dark"];
+                darkerColor = true;
+            })
+            (vimix-gtk-themes.override {
+                themeVariants = ["ruby"];
+                colorVariants = ["dark"];
+                sizeVariants = ["standard"];
+                tweaks = ["translucent"];
+            })
+        ];
+    };
 }

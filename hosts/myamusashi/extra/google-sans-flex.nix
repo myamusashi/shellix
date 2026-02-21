@@ -1,32 +1,32 @@
 {
-  lib,
-  stdenv,
-  unzip,
+    lib,
+    stdenv,
+    unzip,
 }:
 stdenv.mkDerivation {
-  pname = "google-sans-flex";
-  version = "1.0";
+    pname = "google-sans-flex";
+    version = "1.0";
 
-  src = ./files/Google_Sans_Flex_Inter.zip;
+    src = ./files/Google_Sans_Flex_Inter.zip;
 
-  buildInputs = [
-    unzip
-  ];
+    buildInputs = [
+        unzip
+    ];
 
-  unpackPhase = ''
-    unzip $src
-  '';
+    unpackPhase = ''
+        unzip $src
+    '';
 
-  installPhase = ''
-    runHook preInstall
+    installPhase = ''
+        runHook preInstall
 
-    install -Dm644 Google_Sans_Flex_Inter/Google_Sans_Flex/*.ttf -t $out/share/fonts/truetype
+        install -Dm644 Google_Sans_Flex_Inter/Google_Sans_Flex/*.ttf -t $out/share/fonts/truetype
 
-    runHook postInstall
-  '';
+        runHook postInstall
+    '';
 
-  meta = with lib; {
-    description = "Google Sans Flex font family";
-    platforms = platforms.all;
-  };
+    meta = with lib; {
+        description = "Google Sans Flex font family";
+        platforms = platforms.all;
+    };
 }
