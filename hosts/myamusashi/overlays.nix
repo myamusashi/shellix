@@ -39,16 +39,16 @@ final: prev: {
 
   ## Hotfix
   python3Packages = prev.python3Packages.overrideScope (self: super: {
-    tree-sitter-rust = super.tree-sitter-rust.overrideAttrs (oldAttrs: rec {
-      version = "0.23.2";
-
-      src = final.fetchFromGitHub {
-        owner = "tree-sitter";
-        repo = "tree-sitter-rust";
-        tag = "v${version}";
-        hash = "sha256-aT+tlrEKMgWqTEq/NHh8Vj92h6i1aU6uPikDyaP2vfc=";
-      };
-    });
+    # tree-sitter-rust = super.tree-sitter-rust.overrideAttrs (oldAttrs: rec {
+    #   version = "0.23.2";
+    #
+    #   src = final.fetchFromGitHub {
+    #     owner = "tree-sitter";
+    #     repo = "tree-sitter-rust";
+    #     tag = "v${version}";
+    #     hash = "sha256-aT+tlrEKMgWqTEq/NHh8Vj92h6i1aU6uPikDyaP2vfc=";
+    #   };
+    # });
 
     doCheck = false;
 

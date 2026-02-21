@@ -9,29 +9,41 @@ final: prev: {
     vendorHash = "sha256-ie+/48dVU3r+tx/sQBWRIZEWSNWwMBANCqQLnv96JXs=";
   });
 
-  # tree-sitter = prev.tree-sitter.override (oldAttrs: rec {
-  #   version = "0.26.5";
-  #
-  #   src = final.fetchFromGitHub {
-  #     owner = "tree-sitter";
-  #     repo = "tree-sitter";
-  #     tag = "v${version}";
-  #     hash = "sha256-tnZ8VllRRYPL8UhNmrda7IjKSeFmmOnW/2/VqgJFLgU=";
-  #     fetchSubmodules = true;
-  #   };
-  #
-  #   patches = [
-  #     ./patch/tree-sitter-patch/remove-web-interface.patch
-  #   ];
-  #
-  #   cargoHash = "";
-  #
-  #   nativeBuildInputs =
-  #     (oldAttrs.nativeBuildInputs or [])
-  #     ++ [
-  #       final.rustPlatform.bindgenHook
-  #     ];
-  # });
+  neovim-unwrapped = prev.neovim-unwrapped.overrideAttrs (oldAttrs: {
+    version = "0.12.0-dev";
+
+    src = final.fetchFromGitHub {
+      owner = "neovim";
+      repo = "neovim";
+      rev = "76db55c13797c933532dc685d12194bc311439f8";
+      hash = "sha256-yL8JpoeBkYSZYoOhZzPIZRq3HszVXpyQtIQafdqbgr0=";
+    };
+  });
+
+  tree-sitter = prev.tree-sitter.overrideAttrs (oldAttrs: rec {
+    version = "0.26.5";
+
+    src = final.fetchFromGitHub {
+      owner = "tree-sitter";
+      repo = "tree-sitter";
+      tag = "v${version}";
+      hash = "sha256-tnZ8VllRRYPL8UhNmrda7IjKSeFmmOnW/2/VqgJFLgU=";
+      fetchSubmodules = true;
+    };
+
+    patches = [
+      ./patch/tree-sitter-patch/remove-web-interface.patch
+    ];
+
+    cargoDeps = prev.rustPlatform.fetchCargoVendor {
+      inherit src;
+      hash = "sha256-EU8kdG2NT3NvrZ1AqvaJPLpDQQwUhYG3Gj5TAjPYRsY=";
+    };
+
+    nativeBuildInputs =
+      (oldAttrs.nativeBuildInputs or [])
+      ++ [final.rustPlatform.bindgenHook];
+  });
 
   python3Packages = prev.python3Packages.overrideScope (self: super: {
     tree-sitter = super.tree-sitter.overrideAttrs (oldAttrs: rec {
