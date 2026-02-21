@@ -64,6 +64,7 @@ in {
         repo = "waltz@10.88.0.1:/opt/backup/Stations/myamusashi";
         environment = {
           BORG_RSH = "ssh -i /root/.ssh/id_ed25519 -o StrictHostKeyChecking=accept-new";
+          BORG_RELOCATED_REPO_ACCESS_IS_OK = "yes";
         };
         encryption = {
           passCommand = "${pkgs-stable.coreutils}/bin/cat ${config.sops.secrets.myamusashi-borg.path}";
