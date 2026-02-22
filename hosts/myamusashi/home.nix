@@ -52,10 +52,6 @@
                 enable = true;
                 plugins = {
                     enable = true;
-                    scrolling = {
-                        enable = true;
-                        keybind = true;
-                    };
                     hypr-dynamic-cursors = {
                         enable = true;
                     };
