@@ -21,7 +21,7 @@ in
         inherit (import ./render.nix) render;
         inherit (import ./xwayland.nix) xwayland;
         inherit (import ./animation.nix {inherit lib;}) animations;
-        inherit (import ./dwindle.nix) dwindle;
+        inherit (import ./layouts.nix) dwindle scrolling;
         inherit (import ./keybinds.nix {inherit config;}) bind bindm binds;
         inherit (import ./rule.nix) windowrule layerrule;
         inherit (import ./permission.nix {inherit pkgs;}) permission;

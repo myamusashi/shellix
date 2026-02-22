@@ -13,11 +13,11 @@
         "$mod, up, exec, hyprctl dispatch hy3:movewindow u"
         "$mod, down, exec, hyprctl dispatch hy3:movewindow d"
     ];
-    hyprscrolling_bind = [
-        "$modalt CTRL, left, layoutmsg, movewindowto l"
-        "$modalt CTRL, right, layoutmsg, movewindowto r"
-        "$modalt CTRL, up, layoutmsg, movewindowto u"
-        "$modalt CTRL, down, layoutmsg, movewindowto d"
+    scrolling_bind = [
+        "SHIFT CTRL, left, layoutmsg, movewindowto l"
+        "SHIFT CTRL, right, layoutmsg, movewindowto r"
+        "SHIFT CTRL, up, layoutmsg, movewindowto u"
+        "SHIFT CTRL, down, layoutmsg, movewindowto d"
 
         "SHIFT $mod, left, layoutmsg, swapcol l"
         "SHIFT $mod, right, layoutmsg, swapcol r"
@@ -48,8 +48,6 @@
     finalKeybinds =
         if cfg.plugins.hy3.keybind
         then hy3_bind
-        else if cfg.plugins.scrolling.keybind
-        then hyprscrolling_bind
         else default_bind;
 in {
     bindm = [
@@ -109,7 +107,7 @@ in {
             ", XF86AudioMute, exec, wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle"
             "$modalt, TAB, exec, hyprctl dispatch overview:toggle"
         ]
-        ++ finalKeybinds
+        ++ scrolling_bind
         ++ (
             # workspaces - bind $mod + [shift +] {1..9} to [move to] workspace {1..9}
             builtins.concatLists (builtins.genList

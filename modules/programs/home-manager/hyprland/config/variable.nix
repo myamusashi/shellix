@@ -9,7 +9,7 @@ in {
     "$gamemode" = "${config.home.homeDirectory}/.dots/modules/programs/home-manager/hyprland/config/scripts/gamemode.sh";
     "$record-panel" = "${shell}:recordPanel";
     "$files" = "${app2unit} footclient --title=yaziFM yazi";
-    "$browser" = "${app2unit} zen";
+    "$browser" = "${app2unit} zen-twilight";
     "$vm" = "${app2unit} vmware";
     "$launcher" = "${shell}:appLauncher";
     "$powermenu" = "${shell}:session";

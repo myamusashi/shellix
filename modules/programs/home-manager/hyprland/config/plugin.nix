@@ -6,12 +6,6 @@
     cfg = config.shellix.programs.home.hyprland.plugins;
 in {
     plugin = lib.mkIf cfg.enable {
-        hyprscrolling = lib.mkIf cfg.scrolling.enable {
-            follow_focus = false;
-            focus_fit_method = 1; # 0 - center, 1 - fit
-            fullscreen_on_one_column = true;
-        };
-
         hy3 = lib.mkIf cfg.hy3.enable {
             # 0 - always show gaps
             # 1 - hide gaps with a single window onscreen
