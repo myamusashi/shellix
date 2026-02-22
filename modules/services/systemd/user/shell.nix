@@ -14,6 +14,9 @@
                 ExecStart = "shell";
                 Restart = "on-failure";
                 Slice = "app-graphical.slice";
+                Environment = [
+                    "QSG_RHI_BACKEND=vulkan"
+                ];
             };
             Install = {
                 WantedBy = ["hyprland-session.target"];
