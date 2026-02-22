@@ -3,8 +3,6 @@
     layoutHypr =
         if cfg.plugins.hy3.keybind
         then "hy3"
-        else if cfg.plugins.scrolling.keybind
-        then "scrolling"
         else "dwindle";
 in {
     general = {
@@ -13,7 +11,7 @@ in {
         border_size = 5;
         "col.active_border" = "$primary";
         "col.inactive_border" = "$inverse_primary";
-        layout = layoutHypr;
+        layout = "scrolling";
         snap = {
             enabled = true;
             window_gap = 35;

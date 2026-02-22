@@ -15,11 +15,6 @@ in {
                 keybind = lib.mkEnableOption "Enable default keybinding";
             };
 
-            scrolling = {
-                enable = lib.mkEnableOption "Enable hyprscrolling niri like layouts";
-                keybind = lib.mkEnableOption "Enable default keybinding";
-            };
-
             hypr-dynamic-cursors = {
                 enable = lib.mkEnableOption "Enable dynamic cursors";
             };
@@ -30,7 +25,6 @@ in {
         wayland.windowManager.hyprland = {
             enable = lib.mkDefault true;
             plugins = [
-                (lib.mkIf cfg.plugins.scrolling.enable inputs.hyprland-plugins.packages.${pkgs.stdenv.hostPlatform.system}.hyprscrolling)
                 (lib.mkIf cfg.plugins.hypr-dynamic-cursors.enable "${inputs.hypr-dynamic-cursors.packages.${pkgs.stdenv.hostPlatform.system}.hypr-dynamic-cursors}/lib/libhypr-dynamic-cursors.so")
             ];
 
