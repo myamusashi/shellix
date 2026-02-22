@@ -98,7 +98,7 @@ with pkgs; {
     kde = [kdePackages.kwallet kdePackages.kwalletmanager];
 
     gaming = {
-        platform = [steam lutris];
+        platform = [steam heroic];
         utilities = [
             wine-wayland
             winetricks
