@@ -23,7 +23,6 @@ in rec {
                     inputs.hyprsunset.overlays.default
                     inputs.hypridle.overlays.default
                     inputs.hyprland.overlays.default
-                    inputs.nixgl.overlay
                     inputs.nix-cachyos-kernel.overlays.pinned
                     inputs.vicinae.overlays.default
                 ]
