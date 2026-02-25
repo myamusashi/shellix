@@ -236,6 +236,4 @@
             pantheon.default = "kde";
         };
     };
-
-    targets.genericLinux.nixGL.vulkan.enable = true;
 }

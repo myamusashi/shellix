@@ -88,9 +88,9 @@ with pkgs; {
         apps = [
             telegram-desktop
             vesktop
-            (config.lib.nixGL.wrap pkgs.vivaldi)
+            pkgs.vivaldi
             vivaldi-ffmpeg-codecs
-            (config.lib.nixGL.wrap inputs.zen-browser.packages.${pkgs.stdenv.hostPlatform.system}.twilight)
+            inputs.zen-browser.packages.${pkgs.stdenv.hostPlatform.system}.twilight
         ];
     };
 
@@ -98,7 +98,7 @@ with pkgs; {
     kde = [kdePackages.kwallet kdePackages.kwalletmanager];
 
     gaming = {
-        platform = [steam heroic];
+        platform = [steam heroic gamemode];
         utilities = [
             wine-wayland
             winetricks

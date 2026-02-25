@@ -157,7 +157,6 @@
         flox.url = "github:flox/flox/v1.7.4";
         spicetify-nix.url = "github:Gerg-L/spicetify-nix";
         matugen.url = "github:/InioX/Matugen/v2.4.1";
-        nixgl.url = "github:nix-community/nixGL";
     };
 
     outputs = inputs: let
