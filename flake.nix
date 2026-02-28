@@ -10,7 +10,6 @@
 
         sops-nix.url = "github:Mic92/sops-nix";
 
-        chaotic.url = "github:chaotic-cx/nyx/nyxpkgs-unstable";
         nix-cachyos-kernel.url = "github:xddxdd/nix-cachyos-kernel/release";
 
         hyprland = {
@@ -139,7 +138,7 @@
         };
 
         shell = {
-            url = "git+https://git.myamusashi.space/myamusashi/shell";
+            url = "git+https://git.myamusashi.space/myamusashi/vast-shell";
             inputs.nixpkgs.follows = "nixpkgs";
         };
 
@@ -167,9 +166,6 @@
             nixos = mkHost {
                 hostname = "myamusashi";
                 username = "myamusashi";
-                extraModules = [
-                    inputs.chaotic.nixosModules.default
-                ];
             };
 
             waltz = mkHost {
