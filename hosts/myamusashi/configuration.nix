@@ -368,6 +368,10 @@ in {
         OZONE_PLATFORM = "wayland";
         WLR_NO_HARDWARE_CURSORS = 0;
 
+        # Vulkan (VK_KHR_video_decode_queue), this env is need for mpv
+        ANV_VIDEO_DECODE = 1;
+        RADV_PERFTEST = "video_decode,gpl";
+
         # Multi-GPU support (Lmao i don't even have Multi-GPU)
         AQ_DRM_DEVICES = "/dev/dri/card1:/dev/dri/card0";
         AQ_WLR_DEVICES = "/dev/dri/card1:/dev/dri/card0";
@@ -381,7 +385,8 @@ in {
         FREETYPE_PROPERTIES = "cff:no-stem-darkening=0 autofitter:no-stem-darkening=O";
         EDITOR = "nvim";
         MOZ_DISABLE_RDD_SANDBOX = 1;
-        MOZ_ENABLE_WAYLAND = "1 zen";
+        MOZ_X11_EGL = "1";
+        MOZ_ENABLE_WAYLAND = "1";
         MOZ_DRM_DEVICE = "/dev/dri/card1";
         _JAVA_AWT_WM_NONREPARENTING = 1;
         QT_WAYLAND_DISABLE_WINDOWDECORATION = 0;
