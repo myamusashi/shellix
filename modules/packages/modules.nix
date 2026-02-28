@@ -102,7 +102,7 @@ with pkgs; {
         utilities = [
             wine-wayland
             winetricks
-            wineWowPackages.waylandFull
+            wineWow64Packages.waylandFull
             protonup-qt
         ];
     };
@@ -110,7 +110,7 @@ with pkgs; {
     android = [adb-sync scrcpy android-tools];
 
     media = {
-        editor = [ffmpeg imagemagick];
+        editor = [ffmpeg-full imagemagick];
         viewer = [ffmpegthumbnailer poppler-utils mpv lxqt.lximage-qt zathura];
         screen_recorder = [grim slurp hyprshot wl-screenrec];
         misc = [playerctl cava mpg123];
