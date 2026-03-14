@@ -21,7 +21,6 @@
         services = {
             server = {
                 database.enable = true;
-                mailserver.enable = false;
                 forgejo.enable = true;
                 wireguard = {
                     enable = true;
