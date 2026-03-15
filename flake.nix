@@ -142,6 +142,11 @@
             inputs.nixpkgs.follows = "nixpkgs";
         };
 
+        shell-greeter = {
+            url = "git+https://git.myamusashi.space/myamusashi/vast-greeter.git";
+            inputs.nixpkgs.follows = "nixpkgs";
+        };
+
         m3shapes = {
             url = "github:myamusashi/m3shapes";
             inputs.nixpkgs.follows = "nixpkgs";
