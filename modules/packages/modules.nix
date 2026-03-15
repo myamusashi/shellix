@@ -88,8 +88,6 @@ with pkgs; {
         apps = [
             telegram-desktop
             vesktop
-            pkgs.vivaldi
-            vivaldi-ffmpeg-codecs
             inputs.zen-browser.packages.${pkgs.stdenv.hostPlatform.system}.twilight
         ];
     };
