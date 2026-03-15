@@ -5,13 +5,24 @@
     pkgs,
     ...
 }: let
-    swayConfig = pkgs.writeText "greetd-sway-config" ''
-        exec "${pkgs.quickshell}/bin/qs -p ${inputs.shell.packages.${pkgs.stdenv.hostPlatform.systen}.default}/share/quickshell/Greeter.qml; swaymsg exit"
-        bindsym Mod4+shift+e exec swaynag \
-          -t warning \
-          -m 'What do you want to do?' \
-          -b 'Poweroff' 'systemctl poweroff' \
-          -b 'Reboot' 'systemctl reboot'
+    greeterPkg = inputs.shell-greeter.packages.${pkgs.stdenv.hostPlatform.system}.default;
+
+    hyprConfig = pkgs.writeText "greetd-hyprland" ''
+        exec-once = ${greeterPkg}/bin/shell && pkill Hyprland
+
+        monitor = ,preferred, auto, auto
+        env=XDG_CURRENT_DESKTOP,Hyprland
+        misc {
+           force_default_wallpaper = 1
+           disable_hyprland_logo = true
+         }
+    '';
+
+    # Fix ssh login not using qtengine
+    pinentryQtWrapped = pkgs.writeShellScriptBin "pinentry-qt" ''
+        export QT_QPA_PLATFORMTHEME="${config.home.sessionVariables.QT_QPA_PLATFORMTHEME or "qtengine"}"
+        export QT_STYLE_OVERRIDE="${config.home.sessionVariables.QT_STYLE_OVERRIDE or ""}"
+        exec ${pkgs.pinentry-qt}/bin/pinentry-qt "$@"
     '';
 in {
     imports = [
@@ -38,6 +49,12 @@ in {
 
     # Nuh uh, don't fucking changing it
     system.stateVersion = "24.11"; # Did you read the comment?
+
+    systemd.services.greetd.environment = {
+        QML2_IMPORT_PATH = lib.concatStringsSep ":" [
+            "${inputs.shell-greeter.packages.${pkgs.stdenv.hostPlatform.system}.default}/${pkgs.qt6.qtbase.qtQmlPrefix}"
+        ];
+    };
 
     networking = {
         hostName = "nixos";
@@ -155,7 +172,7 @@ in {
             };
 
             greeter = {
-                isNormalUser = true;
+                isSystemUser = true;
                 group = "greeter";
             };
 
@@ -172,23 +189,6 @@ in {
         cloudflare-warp.enable = true;
         openssh.enable = true;
         xserver.xkb.layout = "us";
-
-        greetd = {
-            enable = false;
-            settings = {
-                default_session = {
-                    command = "${pkgs.sway}/bin/sway --config ${swayConfig}";
-                    user = "greeter";
-                };
-                initial_session = {
-                    command = "${pkgs.hyprland}/bin/start-hyprland";
-                    user = "myamusashi";
-                };
-                terminal = {
-                    vt = 1;
-                };
-            };
-        };
     };
 
     security.pam.services.greetd.text = ''
@@ -215,7 +215,6 @@ in {
                         enable = true;
                         compositor = "weston";
                     };
-                    theme = "sddm-astronaut-theme";
                     auto-login = {
                         enable = true;
                         user = "myamusashi";
@@ -266,9 +265,11 @@ in {
                 sops
                 libva-utils
                 lxqt.pcmanfm-qt
+                kdePackages.dolphin
                 inputs.quickshell.packages.${pkgs.stdenv.hostPlatform.system}.default
                 inputs.shell.packages.${pkgs.stdenv.hostPlatform.system}.default
                 lxqt.pavucontrol-qt
+                wl-screenrec
                 gvfs
                 wget2
                 home-manager
@@ -286,6 +287,9 @@ in {
                         fetcherVersion = 2;
                     };
                 }))
+                flutter
+                android-studio
+                netbeans
                 android-tools
                 spotify
                 (linux-wifi-hotspot.overrideAttrs (oldAttrs: {
@@ -298,10 +302,11 @@ in {
                 }))
             ];
             excludePackages = [
-                "kdePackages.dolphin"
             ];
         };
     };
+
+    environment.systemPackages = inputs.shell-greeter.packages.${pkgs.stdenv.hostPlatform.system}.runtimeDeps;
 
     programs = {
         fish.enable = true;
@@ -310,6 +315,7 @@ in {
         gnupg.agent = {
             enable = true;
             enableSSHSupport = true;
+            pinentryPackage = pinentryQtWrapped;
         };
         hyprland.enable = true;
         mango.enable = true;
@@ -368,6 +374,8 @@ in {
         OZONE_PLATFORM = "wayland";
         WLR_NO_HARDWARE_CURSORS = 0;
 
+        ANV_VIDEO_DECODE = 1;
+
         # Multi-GPU support (Lmao i don't even have Multi-GPU)
         AQ_DRM_DEVICES = "/dev/dri/card1:/dev/dri/card0";
         AQ_WLR_DEVICES = "/dev/dri/card1:/dev/dri/card0";
@@ -381,7 +389,8 @@ in {
         FREETYPE_PROPERTIES = "cff:no-stem-darkening=0 autofitter:no-stem-darkening=O";
         EDITOR = "nvim";
         MOZ_DISABLE_RDD_SANDBOX = 1;
-        MOZ_ENABLE_WAYLAND = "1 zen";
+        MOZ_X11_EGL = "1";
+        MOZ_ENABLE_WAYLAND = "1";
         MOZ_DRM_DEVICE = "/dev/dri/card1";
         _JAVA_AWT_WM_NONREPARENTING = 1;
         QT_WAYLAND_DISABLE_WINDOWDECORATION = 0;
@@ -475,5 +484,10 @@ in {
                 # "cache.myamusashi.space-1:7wJ0GThM/MBLSmvDw8u8Y0XMiXAshFmX1Hz1jJ0PKWg="
             ];
         };
+    };
+
+    services.mysql = {
+        enable = true;
+        package = pkgs.mariadb;
     };
 }
