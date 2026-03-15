@@ -1,7 +1,6 @@
 {
     pkgs,
     inputs,
-    config,
     ...
 }: {
     imports = [
@@ -15,21 +14,6 @@
         username = "myamusashi";
         homeDirectory = "/home/myamusashi";
         stateVersion = "24.11";
-        file.".config/hypr/hyprqt6engine.conf" = {
-            enable = true;
-            text = ''
-                theme {
-                	color = ${config.home.homeDirectory}/.local/share/color-schemes/Shellix.colors
-                	icon_theme = la-capitaine-icon-theme
-                	style = Darkly
-                	font_fixed = Google Sans Flex
-
-                	font_fixed_size = 12
-                	font = Maple Mono NF
-                	font_size = 12
-                }
-            '';
-        };
     };
 
     programs = {
@@ -111,7 +95,6 @@
                 qt6.qt5compat
                 media-downloader
                 yt-dlp
-                wl-screenrec
                 qt6.qtgraphs
                 kdePackages.qtcharts
                 wl-gammactl
