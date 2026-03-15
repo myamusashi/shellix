@@ -1,10 +1,6 @@
-{
-    inputs,
-    pkgs,
-    ...
-}: {
+{pkgs, ...}: {
     imports = [
-        "${builtins.fetchGit {
+        "${fetchGit {
             url = "https://github.com/NixOS/nixos-hardware.git";
             rev = "2379bc40992ec29feb1933bb4acd224fa055f3f8";
         }}/lenovo/thinkpad/x270"
@@ -29,6 +25,7 @@
             enable = true;
             enable32Bit = true;
             extraPackages = with pkgs; [
+                vulkan-loader
                 intel-media-driver
                 intel-vaapi-driver
                 libva-vdpau-driver
@@ -151,6 +148,10 @@
             "net.ipv4.tcp_keepalive_time" = 60;
             "net.ipv4.tcp_keepalive_intvl" = 10;
             "net.ipv4.tcp_keepalive_probes" = 6;
+
+            # I hate android studio and flutter
+            "vm.overcommit_memory" = 1;
+            "vm.max_map_count" = 262144;
 
             "vm.vfs_cache_pressure" = 50;
             "vm.dirty_ratio" = 6;
