@@ -100,8 +100,14 @@ in {
         # ===== Window Positioning =====
         (mkWindowRule "move_iwgtk" (matchTitle "^iwgtk$") {move = "40 44%";})
         (mkWindowRule "move_bluetooth_devices" (matchTitle "^Bluetooth Devices$") {move = "40 58%";})
-        (mkWindowRule "move_quickshell_recording" (matchProps "^org\\.quickshell" "^Recording Widgets") {
-            move = "100%-w-20 100%-w-20";
+        (mkWindowRule "move_quickshell_recording" (matchProps "^org\\.quickshell" "^Recording Widgets") {move = "100%-w-20 100%-w-20";})
+
+        # ===== Quickshell settings =====
+        (mkWindowRule "QsSettings" (matchProps "org.quickshell" "Settings") {
+            float = "on";
+            no_shadow = "on";
+            rounding = "on";
+            border_size = 0;
         })
 
         # ===== Float + Center + Size Rules =====
