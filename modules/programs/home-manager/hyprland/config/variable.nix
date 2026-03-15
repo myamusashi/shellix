@@ -5,6 +5,7 @@ in {
     "$term" = "${app2unit} kitty";
     "$screencapture" = "${shell}:screencaptureLauncher";
     "$wallpaper-switcher" = "${shell}:wallpaperSwitcher";
+    "$setting-window" = "${shell}:settings";
     "$weather-panel" = "${shell}:weather";
     "$gamemode" = "${config.home.homeDirectory}/.dots/modules/programs/home-manager/hyprland/config/scripts/gamemode.sh";
     "$record-panel" = "${shell}:recordPanel";

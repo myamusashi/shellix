@@ -9,6 +9,38 @@ final: prev: {
         vendorHash = "sha256-ie+/48dVU3r+tx/sQBWRIZEWSNWwMBANCqQLnv96JXs=";
     });
 
+    wl-screenrec = prev.wl-screenrec.overrideAttrs (oldAttrs: rec {
+        version = "unstable-1-12-25";
+
+        src = final.fetchFromGitHub {
+            owner = "russelltg";
+            repo = "wl-screenrec";
+            rev = "43565c1a5f124ed97df578b5b2b5f63a4b531056";
+            hash = "sha256-nDdZ1zudbIGPZU7wFNCrrHmjwhTDwJKs9d8IgyaeAAw=";
+        };
+
+        cargoDeps = final.rustPlatform.fetchCargoVendor {
+            inherit src;
+            hash = "sha256-vIVDlEKOeAnvaJj+ov25HTbXf26RMFf0K3Tca/hONS8=";
+        };
+
+        cargoBuildFlags = ["--all-features"];
+
+        buildInputs =
+            (final.lib.remove final.ffmpeg_6 oldAttrs.buildInputs)
+            ++ [
+                final.ffmpeg-full
+                final.vulkan-loader
+                final.vulkan-headers
+            ];
+
+        nativeBuildInputs =
+            (oldAttrs.nativeBuildInputs or [])
+            ++ [
+                final.makeWrapper
+            ];
+    });
+
     neovim-unwrapped = prev.neovim-unwrapped.overrideAttrs (oldAttrs: {
         version = "0.12.0-dev";
 
