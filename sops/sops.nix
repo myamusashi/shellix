@@ -7,6 +7,7 @@
             cloudflare_creds.mode = "0440";
             nix-serve_secrets.mode = "0440";
             nextcloud_admin_pass.mode = "0440";
+            grafana_secret_key.mode = "0440";
 
             weatherapi = {
                 path = "/home/myamusashi/.config/sops-nix/secrets/weatherapi";

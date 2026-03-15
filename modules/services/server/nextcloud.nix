@@ -13,7 +13,7 @@
 
         services.nextcloud = {
             enable = true;
-            package = pkgs.nextcloud31; # Disarankan menggunakan versi terbaru
+            package = pkgs.nextcloud32; # Disarankan menggunakan versi terbaru
             hostName = "cloud.myamusashi.com";
             config = {
                 adminpassFile = config.sops.secrets.nextcloud_admin_pass.path;

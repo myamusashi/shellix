@@ -16,6 +16,7 @@
                         http_port = config.shellix.variables.port.GRAFANA;
                         domain = "dash.myamusashi.com";
                     };
+					security.secret_key = config.sops.secrets.grafana_secret_key.path;
                 };
             };
 
