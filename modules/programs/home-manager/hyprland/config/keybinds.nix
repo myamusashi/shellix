@@ -64,7 +64,7 @@ in {
             "$modalt, E, exec, $files" # yazi need
             "SHIFT $modalt, C, exec, $clipmanager" # cliphist need
             "SHIFT $modalt, D, exec, $record-panel"
-            "$modalt, S, exec, hyprctl keyword monitorv2[eDP-1]:disabled 1"
+            "$modalt, S, exec, $setting-window"
             "$modalt, W, exec, $wallpaper-switcher"
             "$modalt CTRL, W, exec, $weather-panel"
             "$modalt, SPACE, exec, $launcher" # quickshell need
