@@ -1,5 +1,21 @@
 {inputs, ...}: let
     inherit (inputs.nixpkgs) lib;
+
+    hyprland-ecosystem = [
+        inputs.hyprpicker.overlays.default
+        inputs.hyprsunset.overlays.default
+        inputs.hypridle.overlays.default
+        inputs.hyprland.overlays.default
+        inputs.aquamarine.overlays.default
+        inputs.hyprcursor.overlays.default
+        inputs.hyprgraphics.overlays.default
+        inputs.hyprland-protocols.overlays.default
+        inputs.hyprland-guiutils.overlays.default
+        inputs.hyprlang.overlays.default
+        inputs.hyprutils.overlays.default
+        inputs.hyprwayland-scanner.overlays.default
+        inputs.hyprwire.overlays.default
+    ];
 in rec {
     supportedSystems = ["x86_64-linux" "aarch64-linux"];
 
@@ -19,14 +35,10 @@ in rec {
             overlays =
                 [
                     (import ../overlays)
-                    inputs.hyprpicker.overlays.default
-                    inputs.hyprsunset.overlays.default
-                    inputs.hypridle.overlays.default
-                    inputs.hyprland.overlays.default
                     inputs.nix-cachyos-kernel.overlays.pinned
                     inputs.vicinae.overlays.default
                 ]
-                ++ overlays;
+                ++ overlays ++ hyprland-ecosystem;
         };
 
     mkPkgsStable = {system}:
@@ -72,14 +84,12 @@ in rec {
                     inputs.sops-nix.nixosModules.sops
 
                     {
-                        nixpkgs.overlays = [
-                            (import ../overlays)
-                            inputs.hyprland.overlays.default
-                            inputs.hyprpicker.overlays.default
-                            inputs.hyprsunset.overlays.default
-                            inputs.hypridle.overlays.default
-                            inputs.nix-cachyos-kernel.overlays.pinned
-                        ];
+                        nixpkgs.overlays =
+                            [
+                                (import ../overlays)
+                                inputs.nix-cachyos-kernel.overlays.pinned
+                            ]
+                            ++ hyprland-ecosystem;
                     }
                 ]
                 ++ hmModules ++ extraModules;
