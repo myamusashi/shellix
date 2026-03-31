@@ -20,6 +20,13 @@ in {
                 vimPlugins.nvim-highlite
                 vimPlugins.nvim-highlight-colors
             ];
+            extraLuaConfig = ''
+                require("config.lazy")
+                require("config.neovide")
+                require("config.keymaps")
+                require("config.options")
+                require("config.core")
+            '';
             extraPackages = with pkgs; [
                 bun
                 mesonlsp
