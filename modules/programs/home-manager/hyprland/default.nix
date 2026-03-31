@@ -24,6 +24,7 @@ in {
     config = lib.mkIf cfg.enable {
         wayland.windowManager.hyprland = {
             enable = lib.mkDefault true;
+            package = pkgs.hyprland;
             plugins = [
                 # (lib.mkIf cfg.plugins.hypr-dynamic-cursors.enable "${inputs.hypr-dynamic-cursors.packages.${pkgs.stdenv.hostPlatform.system}.hypr-dynamic-cursors}/lib/libhypr-dynamic-cursors.so")
             ];
