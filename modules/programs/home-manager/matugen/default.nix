@@ -96,12 +96,12 @@ in {
                 [templates.shell]
                 input_path = "${toString ./templates/shell/colors-dark.json}"
                 mode = "Dark"
-                output_path = "${HOME}/.config/shell/dark-colors.json"
+                output_path = "${HOME}/.config/vast-shell/dark-colors.json"
 
                 [templates.shell_light]
                 input_path = "${toString ./templates/shell/colors-light.json}"
                 mode = "Light"
-                output_path = "${HOME}/.config/shell/light-colors.json"
+                output_path = "${HOME}/.config/vast-shell/light-colors.json"
             '';
         };
 
