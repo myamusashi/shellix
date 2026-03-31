@@ -56,7 +56,7 @@
 
         services = {
             home-manager = {
-                clipse.enable = true;
+                clipse.enable = false;
                 easyeffects.enable = true;
                 hypridle.enable = true;
                 kdeconnect.enable = true;
