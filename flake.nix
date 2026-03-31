@@ -12,8 +12,53 @@
 
         nix-cachyos-kernel.url = "github:xddxdd/nix-cachyos-kernel/release";
 
+        aquamarine = {
+            url = "github:hyprwm/aquamarine";
+            inputs.nixpkgs.follows = "nixpkgs";
+        };
+
         hyprland = {
-            url = "github:hyprwm/Hyprland?submodules=1";
+            url = "github:hyprwm/Hyprland";
+            inputs.nixpkgs.follows = "nixpkgs";
+        };
+
+        hyprutils = {
+            url = "github:hyprwm/hyprutils";
+            inputs.nixpkgs.follows = "nixpkgs";
+        };
+
+        hyprcursor = {
+            url = "github:hyprwm/hyprcursor";
+            inputs.nixpkgs.follows = "nixpkgs";
+        };
+
+        hyprgraphics = {
+            url = "github:hyprwm/hyprgraphics";
+            inputs.nixpkgs.follows = "nixpkgs";
+        };
+
+        hyprland-protocols = {
+            url = "github:hyprwm/hyprland-protocols";
+            inputs.nixpkgs.follows = "nixpkgs";
+        };
+
+        hyprland-guiutils = {
+            url = "github:hyprwm/hyprland-guiutils";
+            inputs.nixpkgs.follows = "nixpkgs";
+        };
+
+        hyprlang = {
+            url = "github:hyprwm/hyprlang";
+            inputs.nixpkgs.follows = "nixpkgs";
+        };
+
+        hyprwayland-scanner = {
+            url = "github:hyprwm/hyprland-guiutils";
+            inputs.nixpkgs.follows = "nixpkgs";
+        };
+
+        hyprwire = {
+            url = "github:hyprwm/hyprwire";
             inputs.nixpkgs.follows = "nixpkgs";
         };
 
@@ -57,11 +102,6 @@
             inputs.nixpkgs.follows = "nixpkgs";
         };
 
-        hyprlang = {
-            url = "github:hyprwm/hyprlang";
-            inputs.nixpkgs.follows = "nixpkgs";
-        };
-
         hyprpicker = {
             url = "github:hyprwm/hyprpicker";
             inputs.nixpkgs.follows = "nixpkgs";
@@ -69,11 +109,6 @@
 
         hyprpwcenter = {
             url = "github:hyprwm/hyprpwcenter";
-            inputs.nixpkgs.follows = "nixpkgs";
-        };
-
-        hyprwire = {
-            url = "github:hyprwm/hyprwire";
             inputs.nixpkgs.follows = "nixpkgs";
         };
 
@@ -138,7 +173,7 @@
         };
 
         shell = {
-            url = "git+https://git.myamusashi.space/myamusashi/vast-shell";
+            url = "github:myamusashi/vast-shell";
             inputs.nixpkgs.follows = "nixpkgs";
         };
 
@@ -154,6 +189,11 @@
 
         qtengine = {
             url = "github:kossLAN/qtengine";
+            inputs.nixpkgs.follows = "nixpkgs";
+        };
+
+        helium = {
+            url = "github:schembriaiden/helium-browser-nix-flake";
             inputs.nixpkgs.follows = "nixpkgs";
         };
 
