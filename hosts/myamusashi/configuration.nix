@@ -168,6 +168,7 @@ in {
                     "input"
                     "seat"
                     "wireshark"
+                    "i2c"
                 ];
             };
 
@@ -276,6 +277,7 @@ in {
                 iptables
                 greetd
                 arduino
+                ddcutil
                 virtualgl
                 vulkan-tools
                 libva-utils
