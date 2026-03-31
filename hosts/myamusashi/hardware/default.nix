@@ -16,6 +16,11 @@
 
     hardware = {
         sensor.iio.enable = true;
+
+        # needs for ddcutil
+        i2c.enable = true;
+        acpilight.enable = true;
+
         bluetooth = {
             enable = true;
             powerOnBoot = true;
@@ -95,6 +100,7 @@
             "hid"
             "usb_storage"
             "zram"
+            "i2c-dev"
         ];
 
         kernelParams = [
@@ -112,6 +118,9 @@
             "i915.enable_fbc=1"
             "i915.enable_psr=2"
             "i915.fastboot=1"
+
+            # needs for ddcutil
+            "acpi_backlight=native"
 
             # Performance tweaks
             "intel_pstate=active"
