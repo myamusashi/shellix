@@ -36,7 +36,6 @@ in rec {
                 [
                     (import ../overlays)
                     inputs.nix-cachyos-kernel.overlays.pinned
-                    inputs.vicinae.overlays.default
                 ]
                 ++ overlays ++ hyprland-ecosystem;
         };
