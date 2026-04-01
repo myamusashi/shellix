@@ -50,7 +50,6 @@
 
         programs.nixos = {
             fish.enable = true;
-            starship.enable = true;
             steam.enable = false;
             virt-manager.enable = false;
             wireshark.enable = false;
