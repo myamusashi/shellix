@@ -4,7 +4,7 @@
     config,
     ...
 }: {
-    config = lib.mkIf config.shellix.services.systemd.system.cloudflare-tunnels.enable {
+    config = lib.mkIf config.shellix.services.nixos.systemd.cloudflare-tunnels.enable {
         systemd.tmpfiles.rules = [
             "d /var/lib/cloudflared 0750 root root - -"
         ];

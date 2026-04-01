@@ -5,7 +5,9 @@
         ./easyeffects/default.nix
         ./kdeconnect/default.nix
         ./mpd/default.nix
-        # ./vicinae/default.nix
+        ./systemd/shell.nix
+        ./systemd/caelestia.nix
+        ./systemd/nm-applet.nix
     ];
 
     options.shellix.services.home-manager = {
@@ -14,6 +16,10 @@
         easyeffects.enable = lib.mkEnableOption "Enable audio I/O manager";
         kdeconnect.enable = lib.mkEnableOption "Enable kde-connect";
         mpd.enable = lib.mkEnableOption "Enable MPD players services";
-        # vicinae.enable = lib.mkEnableOption "Enable vicinae";
+        systemd = {
+            shell.enable = lib.mkEnableOption "Enable vast-shell quickshell";
+            caelestia.enable = lib.mkEnableOption "Enable caelestia quickshell";
+            nm-applet.enable = lib.mkEnableOption "Enable network manger applet tray widgets";
+        };
     };
 }

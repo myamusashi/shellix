@@ -4,7 +4,7 @@
     pkgs-stable,
     ...
 }: {
-    config = lib.mkIf config.shellix.services.systemd.system.stirling.enable {
+    config = lib.mkIf config.shellix.services.nixos.systemd.stirling.enable {
         systemd.services.stirling-pdf = {
             description = "Stirling-PDF service";
             after = ["syslog.target" "network.target"];
