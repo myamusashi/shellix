@@ -128,10 +128,6 @@ final: prev: {
         cmakeFlags = ["-DCMAKE_POLICY_VERSION_MINIMUM=3.5"];
     });
 
-    vicinae = prev.vicinae.overrideAttrs (oldAttrs: {
-        cmakeFlags = ["-DCMAKE_POLICY_VERSION_MINIMUM=3.5"];
-    });
-
     grpc-tools = prev.grpc-tools.overrideAttrs (oldAttrs: {
         cmakeFlags = ["-DCMAKE_POLICY_VERSION_MINIMUM=3.5"];
     });
