@@ -6,18 +6,14 @@
 }: {
     imports = [
         ./hardware/default.nix
-        ../../modules/shared/Colors.nix
         ../../modules/shared/Variable.nix
         ../../modules/packages/nixos-packages.nix
         ../../modules/programs/nixos/default.nix
         ../../modules/services/nixos/default.nix
         ../../modules/services/server/default.nix
-        ../../modules/services/systemd/system/default.nix
     ];
 
     shellix = {
-        matugen.colors.enable = true;
-
         services = {
             server = {
                 database.enable = true;
@@ -44,11 +40,6 @@
                 vsftpd.enable = true;
                 nextcloud.enable = true;
                 nix-serve.enable = false;
-            };
-            systemd.system = {
-                cachix.enable = true;
-                cloudflare-tunnels.enable = false;
-                stirling.enable = false;
             };
             nixos = {
                 earlyoom.enable = false;

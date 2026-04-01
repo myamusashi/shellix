@@ -4,10 +4,8 @@
     ...
 }: {
     imports = [
-        ../../modules/shared/Colors.nix
         ../../modules/packages/home-packages.nix
         ../../modules/programs/home-manager/default.nix
-        ../../modules/services/systemd/user/default.nix
         ../../modules/services/home-manager/default.nix
     ];
     home = {
@@ -26,7 +24,6 @@
     };
 
     shellix = {
-        matugen.colors.enable = true;
         programs.home = {
             btop.enable = true;
             fastfetch.enable = true;
@@ -61,11 +58,7 @@
                 hypridle.enable = true;
                 kdeconnect.enable = true;
                 mpd.enable = true;
-            };
-            systemd.user = {
-                adzan.enable = false;
-                nm-applet.enable = true;
-                weather-widget.enable = false;
+                systemd.nm-applet.enable = true;
             };
         };
 
@@ -90,7 +83,6 @@
                 lucide
                 libnotify
                 inputs.antigravity-flakes.packages.${stdenv.hostPlatform.system}.default
-                (la-capitaine-icon-theme.overrideAttrs {dontCheckForBrokenSymlinks = true;})
                 python314Packages.mutagen
                 qt6.qt5compat
                 media-downloader
@@ -98,10 +90,8 @@
                 qt6.qtgraphs
                 kdePackages.qtcharts
                 wl-gammactl
-                brightnessctl
                 weather-icons
                 wlr-randr
-                (callPackage ./extra/google-sans-flex.nix {})
             ];
             excludePackages = [
                 "neovide"

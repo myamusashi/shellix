@@ -27,10 +27,8 @@
 in {
     imports = [
         inputs.qtengine.nixosModules.default
-        inputs.sops-nix.nixosModules.sops
         inputs.mangowc.nixosModules.mango
         ./hardware/default.nix
-        ../../modules/shared/Colors.nix
         ../../modules/packages/nixos-packages.nix
         ../../modules/programs/nixos/default.nix
         ../../modules/services/nixos/default.nix
@@ -200,8 +198,6 @@ in {
     '';
 
     shellix = {
-        matugen.colors.enable = true;
-
         services.nixos = {
             audio.enable = true;
             backup.myamusashi.enable = true;
