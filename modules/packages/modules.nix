@@ -1,6 +1,5 @@
 {
     inputs,
-    config,
     pkgs,
     ...
 }:
@@ -60,10 +59,8 @@ with pkgs; {
             inconsolata-lgc
         ];
         external = [
-            # (callPackage ./custom/avenir-font.nix {})
             (callPackage ./custom/feather-font.nix {})
-            # (callPackage ./custom/volte-rounded.nix {})
-            # (callPackage ./custom/_14_segment_led_font.nix {})
+            (callPackage ./custom/google-sans-flex.nix {})
             noto-fonts
         ];
     };
@@ -78,7 +75,13 @@ with pkgs; {
     development = {
         code_editor = [zed-editor-fhs neovide];
         containers = [podman-tui podman-compose podman];
-        tools = [git gh curl kdiff3];
+        tools = [
+            git
+            gh
+            curl
+            kdiff3
+            (callPackage ./custom/app2unit.nix {})
+        ];
     };
 
     security = [pass-wayland bitwarden-cli bitwarden-desktop];
@@ -137,6 +140,7 @@ with pkgs; {
             kanagawa-icon-theme
             vimix-icon-theme
             (callPackage ./custom/material-symbols.nix {})
+            (callPackage ./custom/yet-another-monochrome-icon-set.nix {})
             morewaita-icon-theme
             (whitesur-icon-theme.override {themeVariants = ["default"];})
         ];
