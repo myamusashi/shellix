@@ -3,6 +3,8 @@
         nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
         nixpkgs-stable.url = "github:NixOS/nixpkgs/release-25.11";
 
+        flake-parts.url = "github:hercules-ci/flake-parts";
+
         home-manager = {
             url = "github:nix-community/home-manager";
             inputs.nixpkgs.follows = "nixpkgs";
@@ -162,11 +164,6 @@
             inputs.nixpkgs.follows = "nixpkgs";
         };
 
-        vicinae = {
-            url = "github:vicinaehq/vicinae";
-            inputs.nixpkgs.follows = "nixpkgs";
-        };
-
         mangowc = {
             url = "github:DreamMaoMao/mangowc";
             inputs.nixpkgs.follows = "nixpkgs";
@@ -203,46 +200,51 @@
         matugen.url = "github:/InioX/Matugen/v2.4.1";
     };
 
-    outputs = inputs: let
-        lib = import ./lib {inherit inputs;};
-        inherit (lib) mkHost mkHome mkPkgs forAllSystems;
-    in {
-        nixosConfigurations = {
-            nixos = mkHost {
-                hostname = "myamusashi";
-                username = "myamusashi";
+    outputs = inputs @ {flake-parts, ...}:
+        flake-parts.lib.mkFlake {inherit inputs;} {
+            systems = ["x86_64-linux" "aarch64-linux"];
+
+            flake = let
+                lib = import ./lib {inherit inputs;};
+                inherit (lib) mkHost mkHome;
+            in {
+                nixosConfigurations = {
+                    nixos = mkHost {
+                        hostname = "myamusashi";
+                        username = "myamusashi";
+                    };
+
+                    waltz = mkHost {
+                        hostname = "waltz";
+                        username = null;
+                    };
+                };
+
+                homeConfigurations = {
+                    "myamusashi" = mkHome {
+                        username = "myamusashi";
+                        hostname = "myamusashi";
+                    };
+                };
             };
 
-            waltz = mkHost {
-                hostname = "waltz";
-                username = null;
+            perSystem = {pkgs, ...}: {
+                formatter = pkgs.alejandra;
+
+                devShells.default = pkgs.mkShell {
+                    buildInputs = with pkgs; [
+                        alejandra
+                        nil
+                        git
+                        statix
+                        nix-diff
+                        nixd
+                    ];
+
+                    shellHook = ''
+                        echo "NixOS configuration development environment"
+                    '';
+                };
             };
         };
-
-        homeConfigurations = {
-            "myamusashi" = mkHome {
-                username = "myamusashi";
-                hostname = "myamusashi";
-            };
-        };
-
-        devShells = forAllSystems (system: let
-            pkgs = mkPkgs {inherit system;};
-        in {
-            default = pkgs.mkShell {
-                buildInputs = with pkgs; [
-                    alejandra
-                    nil
-                    git
-                    statix
-                    nix-diff
-                    nixd
-                ];
-
-                shellHook = ''
-                    echo "NixOS configuration development environment"
-                '';
-            };
-        });
-    };
 }
