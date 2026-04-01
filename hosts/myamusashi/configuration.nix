@@ -255,6 +255,7 @@ in {
             };
 
             customPackages = with pkgs; [
+                starship
                 kdePackages.qtmultimedia
                 distrobox
                 git-credential-manager
