@@ -1,21 +1,22 @@
 {
     lib,
     config,
-    inputs,
-    pkgs,
     ...
 }: {
-    config = lib.mkIf config.shellix.services.systemd.user.caelestia.enable {
-        systemd.user.services.caelestia-shell = {
+    config = lib.mkIf config.shellix.services.home-manager.systemd.shell.enable {
+        systemd.user.services.shell = {
             Unit = {
-                Description = "Caelestia-shell build with quickshell";
+                Description = "Shell widget using quickshell";
                 After = ["hyprland-session.target"];
             };
             Service = {
                 Type = "exec";
-                ExecStart = "${inputs.caelestia-shell.packages.${pkgs.stdenv.hostPlatform.system}.default}/bin/caelestia-shell";
+                ExecStart = "shell";
                 Restart = "on-failure";
                 Slice = "app-graphical.slice";
+                Environment = [
+                    "QSG_RHI_BACKEND=vulkan"
+                ];
             };
             Install = {
                 WantedBy = ["hyprland-session.target"];

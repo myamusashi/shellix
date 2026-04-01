@@ -4,7 +4,7 @@
     pkgs,
     ...
 }: {
-    config = lib.mkIf config.shellix.services.systemd.user.nm-applet.enable {
+    config = lib.mkIf config.shellix.services.home-manager.systemd.nm-applet.enable {
         systemd.user.services.nm-applet = {
             Unit = {
                 Description = "network manager tray";

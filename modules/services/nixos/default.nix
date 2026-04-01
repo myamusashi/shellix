@@ -9,6 +9,9 @@
         ./plasma.nix
         ./display-manager.nix
         ./minidlna.nix
+        ./systemd/cachix.nix
+        ./systemd/stirling.nix
+        ./systemd/cloudflare-tunnels.nix
     ];
 
     options.shellix.services.nixos = {
@@ -27,5 +30,10 @@
             sddm.enable = lib.mkEnableOption "Enable SDDM display manager";
         };
         minidlna.enable = lib.mkEnableOption "Enable MiniDLNA";
+        systemd = {
+            cachix.enable = lib.mkEnableOption "Enable cachix daemon";
+            stirling.enable = lib.mkEnableOption "Enable stirling PDF services";
+            cloudflare-tunnels.enable = lib.mkEnableOption "Enable cloudflare-tunnels keys for running cloudflare services";
+        };
     };
 }

@@ -4,7 +4,7 @@
     pkgs-stable,
     ...
 }: {
-    config = lib.mkIf config.shellix.services.systemd.system.cachix.enable {
+    config = lib.mkIf config.shellix.services.nixos.systemd.cachix.enable {
         systemd.services.cachix_runner = {
             description = "Cachix daemon";
             after = ["network.target"];
