@@ -223,7 +223,6 @@ in {
 
         programs.nixos = {
             fish.enable = true;
-            starship.enable = true;
             steam.enable = true;
             virt-manager.enable = false;
             wireshark.enable = false;
