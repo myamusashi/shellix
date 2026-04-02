@@ -170,7 +170,7 @@
         };
 
         shell = {
-            url = "github:myamusashi/vast-shell";
+            url = "git+https://git.myamusashi.space/myamusashi/vast-shell";
             inputs.nixpkgs.follows = "nixpkgs";
         };
 
