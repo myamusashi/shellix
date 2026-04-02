@@ -19,7 +19,6 @@ in {
                 [config.wallpaper]
                 set = true
 
-                command = "shell ipc call img set {{ image }}"
                 type = "SchemeExpressive"
                 caching = false
 
