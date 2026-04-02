@@ -55,6 +55,7 @@ in {
     };
 
     networking = {
+        enableIPv6 = true;
         hostName = "nixos";
         defaultGateway = {
             address = "192.168.18.1";
