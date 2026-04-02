@@ -16,6 +16,13 @@ in {
 
         home.file = {
             ".config/matugen/config.toml".text = ''
+                [config.wallpaper]
+                set = true
+
+                command = "shell ipc call img set {{ image }}"
+                type = "SchemeExpressive"
+                caching = false
+
                 [config.custom_colors]
 
                 [templates.btop]
