@@ -3363,11 +3363,11 @@
         "quickshell": "quickshell_4"
       },
       "locked": {
-        "lastModified": 1775119164,
-        "narHash": "sha256-DrVxt+euNVe9O6wtcLkU+krlnzbQW23O3onOwuD5tS8=",
+        "lastModified": 1775165451,
+        "narHash": "sha256-F+osPg0OUXJUMzPEiObjcokbPg9fkAwqcNhLqS5dv7E=",
         "ref": "refs/heads/master",
-        "rev": "b98f3aaea8bd53e1420982405a325d4d619dc3af",
-        "revCount": 1048,
+        "rev": "4198039a8dded06f5e27cb7ca9e6624d5b21221b",
+        "revCount": 1050,
         "type": "git",
         "url": "https://git.myamusashi.space/myamusashi/vast-shell"
       },
