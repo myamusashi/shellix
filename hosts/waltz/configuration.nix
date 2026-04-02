@@ -92,6 +92,8 @@
                 nixdoc
                 nethogs
                 zellij
+                nh
+                starship
             ];
 
             excludePackages = [
