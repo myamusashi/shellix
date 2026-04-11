@@ -239,7 +239,16 @@
         extraGroups = ["forgejo" "docker" "podman"];
     };
 
-    services.chrony.enable = true;
+    services.chrony = {
+        enable = true;
+        servers = ["pool.ntp.org"];
+        enableRTCTrimming = false;
+        extraConfig = ''
+            makestep 1 -1
+            rtcsync
+        '';
+    };
+
     time.timeZone = "Asia/Jakarta";
     # Select internationalisation properties.
     i18n.defaultLocale = "en_US.UTF-8";

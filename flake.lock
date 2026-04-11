@@ -1108,15 +1108,15 @@
         "xdph": "xdph"
       },
       "locked": {
-        "lastModified": 1775082056,
-        "narHash": "sha256-rC0fWLlXNnZe+SjrCUqnX9QSrGiwLhTjR+y14onv+J4=",
-        "owner": "hyprwm",
+        "lastModified": 1775604760,
+        "narHash": "sha256-5fUauhbGuV0xLd4CJG2lYe0oX1K/86uoh0argMAI42Q=",
+        "owner": "myamusashi",
         "repo": "Hyprland",
-        "rev": "529f72249c2cf4cefc824a612aeddf2d5f858f54",
+        "rev": "bfc0fbe7c176ee24fa2ac5c8d6a05194c50623ff",
         "type": "github"
       },
       "original": {
-        "owner": "hyprwm",
+        "owner": "myamusashi",
         "repo": "Hyprland",
         "type": "github"
       }
@@ -2237,11 +2237,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1774211405,
-        "narHash": "sha256-6KNwP4ojUzv3YBlZU5BqCpTrWHcix1Jo01BISsTT0xk=",
+        "lastModified": 1774534854,
+        "narHash": "sha256-grFWyjph17nSuIGE+eh9oPEW5prXRzyWsQ4xCvXTzWc=",
         "owner": "hyprwm",
         "repo": "hyprutils",
-        "rev": "cb4e152dc72095a2af422956c6b689590572231a",
+        "rev": "762166b516432ce4b02bfbae365f1daa6f88f76d",
         "type": "github"
       },
       "original": {
@@ -3212,11 +3212,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1774950564,
-        "narHash": "sha256-KWU38p8zEtgFOL5KZoWeqWVv27uBFLX3N+Ih+TFs9/0=",
+        "lastModified": 1775637315,
+        "narHash": "sha256-HjoClXqkEFR8o2LRBLQOKFpHr9Nr5EkO83neeV3Qrjo=",
         "ref": "refs/heads/master",
-        "rev": "d6122277409783377059be6399004eb090a6008e",
-        "revCount": 782,
+        "rev": "7208f68bb7f4bf7e476b828decde1321ae544f5d",
+        "revCount": 798,
         "type": "git",
         "url": "https://git.outfoxxed.me/outfoxxed/quickshell"
       },
@@ -3233,11 +3233,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1774950564,
-        "narHash": "sha256-KWU38p8zEtgFOL5KZoWeqWVv27uBFLX3N+Ih+TFs9/0=",
+        "lastModified": 1775720097,
+        "narHash": "sha256-p+vqkCuFfVNyQBo370wr6MebNUvz55RZiC0m8YKUhvQ=",
         "ref": "refs/heads/master",
-        "rev": "d6122277409783377059be6399004eb090a6008e",
-        "revCount": 782,
+        "rev": "d4c92973b53d9fa34cc110d3b974eb6bde5b3027",
+        "revCount": 800,
         "type": "git",
         "url": "https://git.outfoxxed.me/outfoxxed/quickshell"
       },
@@ -3363,11 +3363,11 @@
         "quickshell": "quickshell_4"
       },
       "locked": {
-        "lastModified": 1775119164,
-        "narHash": "sha256-DrVxt+euNVe9O6wtcLkU+krlnzbQW23O3onOwuD5tS8=",
+        "lastModified": 1775788390,
+        "narHash": "sha256-aSVhskdvKDRCJ9MVrWT9SGV8pOMkKCdxc8oLPxVBA9M=",
         "ref": "refs/heads/master",
-        "rev": "b98f3aaea8bd53e1420982405a325d4d619dc3af",
-        "revCount": 1048,
+        "rev": "156ff8b93a52e907bb0b27f118341c86073c8296",
+        "revCount": 1060,
         "type": "git",
         "url": "https://git.myamusashi.space/myamusashi/vast-shell"
       },

@@ -16,12 +16,6 @@ in {
 
         home.file = {
             ".config/matugen/config.toml".text = ''
-                [config.wallpaper]
-                set = true
-
-                type = "SchemeExpressive"
-                caching = false
-
                 [config.custom_colors]
 
                 [templates.btop]
@@ -58,6 +52,11 @@ in {
                 input_path = "${toString ./templates/hyprland/colors.conf}"
                 mode = "Dark"
                 output_path = "${HOME}/.config/hypr/colors.conf"
+
+                [templates.hyprland_lua_colors]
+                input_path = "${toString ./templates/hyprland/colors.lua}"
+                mode = "Dark"
+                output_path = "${HOME}/.config/hypr/colors-hypr-matugen.lua"
 
                 [templates.kitty]
                 input_path = "${toString ./templates/kitty/kitty-colors.conf}"
