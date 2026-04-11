@@ -283,6 +283,7 @@ in {
                 greetd
                 arduino
                 ddcutil
+                mendeley
                 virtualgl
                 cisco-packet-tracer_9
                 vulkan-tools
