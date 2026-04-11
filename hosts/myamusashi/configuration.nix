@@ -32,6 +32,7 @@ in {
         ../../modules/packages/nixos-packages.nix
         ../../modules/programs/nixos/default.nix
         ../../modules/services/nixos/default.nix
+        ../../modules/services/server/default.nix
     ];
     sops = {
         age.keyFile = lib.mkForce "/home/myamusashi/.config/sops/age/keys1.txt";
@@ -180,9 +181,15 @@ in {
                 isSystemUser = true;
                 group = "docker";
             };
+
+            nginx = {
+                isSystemUser = true;
+                group = "nginx";
+            };
         };
         groups.docker = {};
         groups.greeter = {};
+        groups.nginx = {};
     };
 
     services = {
@@ -199,6 +206,7 @@ in {
     '';
 
     shellix = {
+        services.server.phpmyadmin.enable = true;
         services.nixos = {
             audio.enable = true;
             backup.myamusashi.enable = true;
@@ -214,7 +222,7 @@ in {
                         compositor = "weston";
                     };
                     auto-login = {
-                        enable = true;
+                        enable = false;
                         user = "myamusashi";
                         session = "hyprland.desktop";
                     };
@@ -276,6 +284,7 @@ in {
                 arduino
                 ddcutil
                 virtualgl
+                cisco-packet-tracer_9
                 vulkan-tools
                 libva-utils
                 maple-mono.NF

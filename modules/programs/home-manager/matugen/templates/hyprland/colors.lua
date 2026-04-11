@@ -1,0 +1,5 @@
+local colors = {
+	<* for name, value in colors *> {{name}} = 0x{{value.default.hex_stripped}}ff, <* endfor *>
+};
+
+return colors;
