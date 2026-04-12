@@ -1,0 +1,77 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 5661c18..27a5010 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -67,10 +67,10 @@ endif()
+ 
+ include_directories(
+   ${PROJECT_SOURCE_DIR}/generated/
+-  ${PROJECT_SOURCE_DIR}/third_party/
+-  ${PROJECT_SOURCE_DIR}/third_party/Catch2/single_include
+-  ${PROJECT_SOURCE_DIR}/third_party/yaml-cpp/include
+-  ${PROJECT_SOURCE_DIR}/third_party/antlr4/runtime/Cpp/runtime/src
++  @libargs@/include
++  @catch2@/include
++  @yamlCppDev@/include
++  @antlr4RuntimeCppDev@/include/antlr4-runtime
+   ${PROJECT_SOURCE_DIR}/src/
+   )
+ 
+@@ -89,9 +89,6 @@ file(GLOB_RECURSE yaml-cpp-src
+   ${PROJECT_SOURCE_DIR}/third_party/yaml-cpp/src/*.cpp
+   )
+ 
+-add_library (antlr4-cpp-runtime STATIC ${antlr4-cpp-src})
+-add_library (yaml-cpp STATIC ${yaml-cpp-src})
+-
+ add_executable(lua-format ${src_dir} src/main.cpp)
+ 
+ target_compile_definitions(lua-format PRIVATE LUA_FORMAT_VERSION="${CMAKE_PROJECT_VERSION}")
+@@ -103,7 +100,11 @@ endif()
+ 
+ set_target_properties(lua-format PROPERTIES LINKER_LANGUAGE CXX)
+ 
+-target_link_libraries(lua-format yaml-cpp antlr4-cpp-runtime ${extra-libs})
++target_link_libraries(lua-format
++    @yamlCpp@/lib/libyaml-cpp.so
++    @antlr4RuntimeCpp@/lib/libantlr4-runtime.so
++    ${extra-libs}
++)
+ 
+ install(TARGETS lua-format
+   RUNTIME DESTINATION bin
+@@ -138,7 +139,13 @@ if(BUILD_TESTS)
+   endif()
+ 
+   target_compile_definitions(lua-format-test PUBLIC PROJECT_PATH="${PROJECT_SOURCE_DIR}")
+-  target_link_libraries(lua-format-test yaml-cpp antlr4-cpp-runtime ${extra-libs})
++  if(BUILD_TESTS)
++    target_link_libraries(lua-format-test
++      @yamlCpp@/lib/libyaml-cpp.so
++      @antlr4RuntimeCpp@/lib/libantlr4-runtime.so
++      ${extra-libs}
++    )
++  endif()
+ 
+   add_test(NAME args COMMAND lua-format-test [args])
+   add_test(NAME config COMMAND lua-format-test [config])
+diff --git a/src/main.cpp b/src/main.cpp
+index e7d711a..24dd076 100644
+--- a/src/main.cpp
++++ b/src/main.cpp
+@@ -1,4 +1,4 @@
+-#include <args/args.hxx>
++#include <args.hxx>
+ #include <cstdlib>
+ #include <fstream>
+ #include <iostream>
+diff --git a/test/test_args.cpp b/test/test_args.cpp
+index 69a5746..b988d00 100644
+--- a/test/test_args.cpp
++++ b/test/test_args.cpp
+@@ -1,4 +1,4 @@
+-#include <args/args.hxx>
++#include <args.hxx>
+ #include <catch2/catch.hpp>
+ #include <iostream>
+ #include <tuple>
