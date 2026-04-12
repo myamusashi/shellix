@@ -265,6 +265,7 @@ in {
 
             customPackages = with pkgs; [
                 starship
+                luaformatter
                 kdePackages.qtmultimedia
                 distrobox
                 git-credential-manager
