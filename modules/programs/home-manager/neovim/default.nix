@@ -12,7 +12,7 @@ in {
             enable = true;
             package = inputs.neovim-nightly-overlay.packages.${pkgs.stdenv.hostPlatform.system}.default;
             plugins = with pkgs; [
-				vimPlugins.nvim-treesitter.withAllGrammars
+                vimPlugins.nvim-treesitter.withAllGrammars
                 (tree-sitter.withPlugins (plugins: pkgs.tree-sitter.allGrammars))
                 vimPlugins.nvim-treesitter
                 vimPlugins.nvim-treesitter-parsers.json
