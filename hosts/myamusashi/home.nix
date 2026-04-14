@@ -4,6 +4,7 @@
     ...
 }: {
     imports = [
+        inputs.zen-browser.homeModules.beta
         ../../modules/packages/home-packages.nix
         ../../modules/programs/home-manager/default.nix
         ../../modules/services/home-manager/default.nix
@@ -21,6 +22,10 @@
             enable = true;
             nix-direnv.enable = true;
             config.global.hide_env_diff = true;
+        };
+        zen-browser = {
+            enable = true;
+            setAsDefaultBrowser = true;
         };
     };
 
