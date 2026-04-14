@@ -290,6 +290,7 @@ in {
                 vulkan-tools
                 libva-utils
                 maple-mono.NF
+                (pkgs.callPackage ../../modules/packages/custom/spotiFLAC.nix {})
                 (inputs.vermilion.packages.${pkgs.stdenv.hostPlatform.system}.vermilion.overrideAttrs (oldAttrs: {
                     pnpmDeps = pkgs.pnpm_10.fetchDeps {
                         inherit (oldAttrs) pname src;
