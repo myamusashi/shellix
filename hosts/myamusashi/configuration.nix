@@ -27,7 +27,6 @@
 in {
     imports = [
         inputs.qtengine.nixosModules.default
-        inputs.mangowc.nixosModules.mango
         ./hardware/default.nix
         ../../modules/packages/nixos-packages.nix
         ../../modules/programs/nixos/default.nix
@@ -283,6 +282,7 @@ in {
                 iptables
                 greetd
                 arduino
+                strawberry
                 ddcutil
                 mendeley
                 virtualgl
@@ -329,7 +329,6 @@ in {
             pinentryPackage = pinentryQtWrapped;
         };
         hyprland.enable = true;
-        mango.enable = true;
         ccache.enable = true;
         java = {
             enable = true;
