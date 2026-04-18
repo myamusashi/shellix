@@ -1090,15 +1090,16 @@
         "xdph": "xdph"
       },
       "locked": {
-        "lastModified": 1776470288,
-        "narHash": "sha256-KSbi12umBHoGt+9lcNV7l/L4Vu3f9i7DheflCx23yj4=",
-        "owner": "myamusashi",
+        "lastModified": 1776552947,
+        "narHash": "sha256-7bS8TbBot20iHJG9Q/cWdyB2IKqNEXBxAxvjwgxUQg8=",
+        "owner": "vaxerski",
         "repo": "Hyprland",
-        "rev": "c006b2ce97ef6b00330c8eae5a6a8fc99c8038d2",
+        "rev": "1ad0aecbde211e4e02e6300d3f96bed0f92e2f19",
         "type": "github"
       },
       "original": {
-        "owner": "myamusashi",
+        "owner": "vaxerski",
+        "ref": "lua-lua-lua-lua-lua-lua-lua",
         "repo": "Hyprland",
         "type": "github"
       }
@@ -3286,11 +3287,11 @@
         "quickshell": "quickshell_4"
       },
       "locked": {
-        "lastModified": 1775788390,
-        "narHash": "sha256-aSVhskdvKDRCJ9MVrWT9SGV8pOMkKCdxc8oLPxVBA9M=",
+        "lastModified": 1776526000,
+        "narHash": "sha256-0YD2Ye+UWgBTymNX+3s5VZss5lrbIdHjWt+TWe53wZc=",
         "ref": "refs/heads/master",
-        "rev": "156ff8b93a52e907bb0b27f118341c86073c8296",
-        "revCount": 1060,
+        "rev": "ff80398a974b45e42be2fb11d4f6cf915400c789",
+        "revCount": 1063,
         "type": "git",
         "url": "https://git.myamusashi.space/myamusashi/vast-shell"
       },
