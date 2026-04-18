@@ -27,7 +27,7 @@ in {
                     p.typescript
                 ]))
             ];
-            extraLuaConfig = ''
+            initLua = ''
                 require("config.lazy")
                 require("config.neovide")
                 require("config.keymaps")
