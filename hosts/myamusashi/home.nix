@@ -1,6 +1,7 @@
 {
     pkgs,
     inputs,
+    config,
     ...
 }: {
     imports = [
@@ -46,7 +47,6 @@
             };
             kitty.enable = true;
             lazygit.enable = true;
-            mango.enable = true;
             shell.enable = true;
             yazi.enable = true;
             spicetify.enable = true;
@@ -60,7 +60,10 @@
         services = {
             home-manager = {
                 clipse.enable = false;
-                easyeffects.enable = true;
+                easyeffects = {
+                    enable = true;
+                    preset = "gentle-dynamics"; # gentle-dynamics, earphone-wired
+                };
                 hypridle.enable = true;
                 kdeconnect.enable = true;
                 mpd.enable = true;
