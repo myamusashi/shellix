@@ -164,10 +164,10 @@
             inputs.nixpkgs.follows = "nixpkgs";
         };
 
-        mangowc = {
-            url = "github:DreamMaoMao/mangowc";
-            inputs.nixpkgs.follows = "nixpkgs";
-        };
+        # mangowc = {
+        #     url = "github:DreamMaoMao/mangowc";
+        #     inputs.nixpkgs.follows = "nixpkgs";
+        # };
 
         shell = {
             url = "git+https://git.myamusashi.space/myamusashi/vast-shell";
@@ -235,9 +235,7 @@
                     buildInputs = with pkgs; [
                         alejandra
                         nil
-                        git
                         statix
-                        nix-diff
                         nixd
                     ];
 
