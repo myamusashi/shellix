@@ -1,9 +1,11 @@
 {
     pkgs,
     inputs,
+    config,
     ...
 }: {
     imports = [
+        inputs.zen-browser.homeModules.beta
         ../../modules/packages/home-packages.nix
         ../../modules/programs/home-manager/default.nix
         ../../modules/services/home-manager/default.nix
@@ -21,6 +23,10 @@
             enable = true;
             nix-direnv.enable = true;
             config.global.hide_env_diff = true;
+        };
+        zen-browser = {
+            enable = true;
+            setAsDefaultBrowser = true;
         };
     };
 
@@ -41,7 +47,6 @@
             };
             kitty.enable = true;
             lazygit.enable = true;
-            mango.enable = true;
             shell.enable = true;
             yazi.enable = true;
             spicetify.enable = true;
@@ -55,7 +60,10 @@
         services = {
             home-manager = {
                 clipse.enable = false;
-                easyeffects.enable = true;
+                easyeffects = {
+                    enable = true;
+                    preset = "gentle-dynamics"; # gentle-dynamics, earphone-wired
+                };
                 hypridle.enable = true;
                 kdeconnect.enable = true;
                 mpd.enable = true;

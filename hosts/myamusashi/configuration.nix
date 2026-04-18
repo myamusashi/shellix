@@ -27,7 +27,6 @@
 in {
     imports = [
         inputs.qtengine.nixosModules.default
-        inputs.mangowc.nixosModules.mango
         ./hardware/default.nix
         ../../modules/packages/nixos-packages.nix
         ../../modules/programs/nixos/default.nix
@@ -265,6 +264,7 @@ in {
 
             customPackages = with pkgs; [
                 starship
+                luaformatter
                 kdePackages.qtmultimedia
                 distrobox
                 git-credential-manager
@@ -282,12 +282,15 @@ in {
                 iptables
                 greetd
                 arduino
+                strawberry
                 ddcutil
+                mendeley
                 virtualgl
                 cisco-packet-tracer_9
                 vulkan-tools
                 libva-utils
                 maple-mono.NF
+                (pkgs.callPackage ../../modules/packages/custom/spotiFLAC.nix {})
                 (inputs.vermilion.packages.${pkgs.stdenv.hostPlatform.system}.vermilion.overrideAttrs (oldAttrs: {
                     pnpmDeps = pkgs.pnpm_10.fetchDeps {
                         inherit (oldAttrs) pname src;
@@ -326,7 +329,6 @@ in {
             pinentryPackage = pinentryQtWrapped;
         };
         hyprland.enable = true;
-        mango.enable = true;
         ccache.enable = true;
         java = {
             enable = true;

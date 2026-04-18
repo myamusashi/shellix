@@ -4,7 +4,28 @@ final: prev: {
         doCheck = false;
     });
 
-    # Fix tree-sitter-bundled-vendor hash (for stable pkgs)
+    luaformatter = prev.luaformatter.overrideAttrs (oldAttrs: {
+        version = "unstable-21-02-2023";
+
+        src = final.fetchFromGitHub {
+            owner = "Koihik";
+            repo = "LuaFormatter";
+            rev = "29afe1046ad015de96ffdb6d361a21882356e801";
+            hash = "sha256-6f2UM1F9va08gkkePur8EF23bL5Dk29VXrumLWajh2c=";
+        };
+
+        patches = [
+            (final.replaceVars ./patch/luaformatter/fix-lib-paths.patch {
+                antlr4RuntimeCppDev = final.antlr4_9.runtime.cpp.dev;
+                antlr4RuntimeCpp = final.antlr4_9.runtime.cpp;
+                yamlCppDev = final.yaml-cpp;
+                yamlCpp = final.yaml-cpp;
+                inherit (final) libargs catch2;
+            })
+        ];
+    });
+
+        # Fix tree-sitter-bundled-vendor hash (for stable pkgs)
     tree-sitter-bundled-vendor = prev.tree-sitter-bundled-vendor.override (oldAttrs: {
         vendorHash = "sha256-ie+/48dVU3r+tx/sQBWRIZEWSNWwMBANCqQLnv96JXs=";
     });
@@ -41,16 +62,16 @@ final: prev: {
             ];
     });
 
-    neovim-unwrapped = prev.neovim-unwrapped.overrideAttrs (oldAttrs: {
-        version = "0.12.0-dev";
-
-        src = final.fetchFromGitHub {
-            owner = "neovim";
-            repo = "neovim";
-            rev = "76db55c13797c933532dc685d12194bc311439f8";
-            hash = "sha256-yL8JpoeBkYSZYoOhZzPIZRq3HszVXpyQtIQafdqbgr0=";
-        };
-    });
+    # neovim-unwrapped = prev.neovim-unwrapped.overrideAttrs (oldAttrs: {
+    #     version = "0.12.0-dev";
+    #
+    #     src = final.fetchFromGitHub {
+    #         owner = "neovim";
+    #         repo = "neovim";
+    #         rev = "76db55c13797c933532dc685d12194bc311439f8";
+    #         hash = "sha256-yL8JpoeBkYSZYoOhZzPIZRq3HszVXpyQtIQafdqbgr0=";
+    #     };
+    # });
 
     tree-sitter = prev.tree-sitter.overrideAttrs (oldAttrs: rec {
         version = "0.26.5";

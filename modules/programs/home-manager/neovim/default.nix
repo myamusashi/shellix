@@ -12,6 +12,7 @@ in {
             enable = true;
             package = inputs.neovim-nightly-overlay.packages.${pkgs.stdenv.hostPlatform.system}.default;
             plugins = with pkgs; [
+                vimPlugins.nvim-treesitter.withAllGrammars
                 (tree-sitter.withPlugins (plugins: pkgs.tree-sitter.allGrammars))
                 vimPlugins.nvim-treesitter
                 vimPlugins.nvim-treesitter-parsers.json
@@ -19,8 +20,14 @@ in {
                 vimPlugins.nvim-treesitter-parsers.nix
                 vimPlugins.nvim-highlite
                 vimPlugins.nvim-highlight-colors
+                (vimPlugins.nvim-treesitter.withPlugins (p: [
+                    p.svelte
+                    p.html
+                    p.javascript
+                    p.typescript
+                ]))
             ];
-            extraLuaConfig = ''
+            initLua = ''
                 require("config.lazy")
                 require("config.neovide")
                 require("config.keymaps")
@@ -50,6 +57,7 @@ in {
                 bash-language-server
                 shfmt
                 prettierd
+                luaformatter
                 stylua
                 vscode-langservers-extracted
                 lua-language-server
