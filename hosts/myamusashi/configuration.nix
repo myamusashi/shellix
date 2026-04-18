@@ -278,6 +278,7 @@ in {
                 wl-screenrec
                 gvfs
                 wget2
+                drawio
                 home-manager
                 iptables
                 greetd
