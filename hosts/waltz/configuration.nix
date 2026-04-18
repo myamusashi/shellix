@@ -34,7 +34,7 @@
                         }
                     ];
                 };
-                monitoring.enable = true;
+                monitoring.enable = false;
                 phpmyadmin.enable = false;
                 vaultwarden.enable = true;
                 vsftpd.enable = true;
@@ -70,6 +70,7 @@
             };
 
             customPackages = with pkgs-stable; [
+                forgejo-runner
                 sops
                 borgbackup
                 cachix
@@ -232,10 +233,10 @@
         group = "atticd";
     };
 
-    users.groups.forgejo-runner = {};
-    users.users.forgejo-runner = {
+    users.groups.runner = {};
+    users.users.runner = {
         isNormalUser = true;
-        group = "forgejo-runner";
+        group = "runner";
         extraGroups = ["forgejo" "docker" "podman"];
     };
 
