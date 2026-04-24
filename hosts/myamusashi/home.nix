@@ -1,7 +1,6 @@
 {
     pkgs,
     inputs,
-    config,
     ...
 }: {
     imports = [
@@ -87,7 +86,6 @@
                 ripgrep
                 iw
                 qtcreator
-                darkly
                 imagemagick
                 lucide
                 libnotify
@@ -189,7 +187,7 @@
 
     qt = {
         enable = true;
-        platformTheme.name = "qtct";
+        platformTheme.name = "qtengine";
         style = {
             package = with pkgs; [
                 darkly
