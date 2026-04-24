@@ -5,6 +5,7 @@
     ...
 }: {
     config = lib.mkIf config.shellix.services.server.phpmyadmin.enable {
+        services.nginx.enable = true;
         services.phpfpm.pools.phpmyadmin = {
             user = "nginx";
             settings = {
@@ -37,6 +38,9 @@
                     port = 9000;
                 }
             ];
+            extraConfig = ''
+                index index.php index.html;
+            '';
             locations."~ \\.php$".extraConfig = ''
                 fastcgi_split_path_info ^(.+\.php)(/.+)$;
                 fastcgi_pass unix:${config.services.phpfpm.pools.phpmyadmin.socket};
