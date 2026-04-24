@@ -160,7 +160,8 @@
 
             # I hate android studio and flutter
             "vm.overcommit_memory" = 1;
-            "vm.max_map_count" = 262144;
+            "kernel.threads-max" = 500000;
+            "vm.max_map_count" = 1048576;
 
             "vm.vfs_cache_pressure" = 50;
             "vm.dirty_ratio" = 6;
