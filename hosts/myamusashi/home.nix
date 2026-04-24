@@ -90,7 +90,6 @@
                 lucide
                 libnotify
                 inputs.antigravity-flakes.packages.${stdenv.hostPlatform.system}.default
-                python314Packages.mutagen
                 qt6.qt5compat
                 media-downloader
                 yt-dlp
@@ -191,6 +190,7 @@
         style = {
             package = with pkgs; [
                 darkly
+                darkly-qt5
             ];
         };
     };

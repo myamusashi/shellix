@@ -270,6 +270,7 @@ in {
             customPackages = with pkgs; [
                 starship
                 darkly
+                darkly-qt5
                 luaformatter
                 kdePackages.qtmultimedia
                 distrobox
