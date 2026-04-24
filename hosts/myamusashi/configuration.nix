@@ -103,11 +103,14 @@ in {
         ];
         extraHosts = ''
             127.0.0.1 pmo.com
+            127.0.0.1:9000 pma.myamusashi.com
         '';
         firewall = {
             enable = true;
             allowedTCPPorts = [
                 22
+                80
+                443
             ];
             allowedUDPPorts = [
                 22
@@ -195,6 +198,7 @@ in {
         cloudflare-warp.enable = true;
         openssh.enable = true;
         xserver.xkb.layout = "us";
+        nginx.enable = true;
     };
 
     security.pam.services.greetd.text = ''
@@ -206,6 +210,7 @@ in {
 
     shellix = {
         services.server.phpmyadmin.enable = true;
+
         services.nixos = {
             audio.enable = true;
             backup.myamusashi.enable = true;
@@ -264,6 +269,7 @@ in {
 
             customPackages = with pkgs; [
                 starship
+                darkly
                 luaformatter
                 kdePackages.qtmultimedia
                 distrobox
@@ -278,6 +284,7 @@ in {
                 wl-screenrec
                 gvfs
                 wget2
+                mysql-workbench
                 drawio
                 home-manager
                 iptables
@@ -320,6 +327,8 @@ in {
 
     environment.systemPackages = inputs.shell-greeter.packages.${pkgs.stdenv.hostPlatform.system}.runtimeDeps;
 
+    services.gnome.gnome-keyring.enable = true;
+
     programs = {
         fish.enable = true;
         dconf.enable = true;
@@ -340,17 +349,19 @@ in {
             config = {
                 theme = {
                     colorScheme = "${config.users.users.myamusashi.home}/.local/share/color-schemes/Shellix.colors";
-                    iconTheme = "breeze-dark";
+                    iconTheme = "MoreWaita";
                     style = "Darkly";
 
                     font = {
                         family = "Google Sans Flex";
                         size = 11;
+                        weight = -1;
                     };
 
                     fontFixed = {
                         family = "Maple Mono NF";
                         size = 11;
+                        weight = -1;
                     };
                 };
 
