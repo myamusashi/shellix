@@ -20,7 +20,7 @@
         };
 
         hyprland = {
-            url = "github:vaxerski/Hyprland/lua-lua-lua-lua-lua-lua-lua";
+            url = "github:hyprwm/Hyprland";
             inputs.nixpkgs.follows = "nixpkgs";
         };
 
