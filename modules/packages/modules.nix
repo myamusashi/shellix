@@ -2,160 +2,172 @@
     inputs,
     pkgs,
     ...
-}:
-with pkgs; {
-    system = [
-        vim
-        pciutils
-        libgdiplus
-        polkit
-        vulkan-tools
-        pinentry-qt
-        udisks
-        udiskie
-        gparted
-        libvirt
-        upower
-        upower-notify
-        rich-cli
-        power-profiles-daemon
-        bluez
-        mediainfo
-        ouch
-        glow
-        hexyl
-        antiprism
-        fzf
-    ];
-
-    nix-tools = {
-        standard = [
-            nixd
-            alejandra
-            statix
-            nix-output-monitor
-            nh
+}: let
+    helium-base = inputs.helium.packages.${pkgs.stdenv.hostPlatform.system}.default;
+    helium = pkgs.writeShellScriptBin "helium" ''
+        export VK_ICD_FILENAMES=/run/opengl-driver/share/vulkan/icd.d/intel_icd.x86_64.json
+        exec ${helium-base}/bin/helium \
+          --enable-features=Vulkan \
+          --enable-features=VaapiVideoDecodeLinuxGL,VaapiIgnoreDriverChecks,VaapiVideoDecoder \
+          --enable-features=UseMultiPlaneFormatForHardwareVideo \
+          --ignore-gpu-blocklist \
+          --enable-zero-copy \
+          "$@"
+    '';
+in
+    with pkgs; {
+        system = [
+            vim
+            pciutils
+            libgdiplus
+            polkit
+            vulkan-tools
+            pinentry-qt
+            udisks
+            udiskie
+            gparted
+            libvirt
+            upower
+            upower-notify
+            rich-cli
+            power-profiles-daemon
+            bluez
+            mediainfo
+            ouch
+            glow
+            hexyl
+            antiprism
+            fzf
         ];
 
-        full = [
-            nixd
-            nil
-            alejandra
-            statix
-            nix-diff
-            nix-tree
-            nix-output-monitor
-            nix-du
-            vulnix
-            deadnix
-            nix-update
+        nix-tools = {
+            standard = [
+                nixd
+                alejandra
+                statix
+                nix-output-monitor
+                nh
+            ];
+
+            full = [
+                nixd
+                nil
+                alejandra
+                statix
+                nix-diff
+                nix-tree
+                nix-output-monitor
+                nix-du
+                vulnix
+                deadnix
+                nix-update
+            ];
+        };
+
+        fonts = {
+            nerd = with nerd-fonts; [
+                hack-font
+                jetbrains-mono
+                inconsolata-lgc
+            ];
+            external = [
+                (callPackage ./custom/feather-font.nix {})
+                (callPackage ./custom/google-sans-flex.nix {})
+                noto-fonts
+            ];
+        };
+
+        network = [
+            inetutils
+            wireshark
+            networkmanagerapplet
+            cloudflared
         ];
-    };
 
-    fonts = {
-        nerd = with nerd-fonts; [
-            hack-font
-            jetbrains-mono
-            inconsolata-lgc
-        ];
-        external = [
-            (callPackage ./custom/feather-font.nix {})
-            (callPackage ./custom/google-sans-flex.nix {})
-            noto-fonts
-        ];
-    };
+        development = {
+            code_editor = [zed-editor-fhs neovide];
+            containers = [podman-tui podman-compose podman];
+            tools = [
+                git
+                gh
+                curl
+                kdiff3
+                (callPackage ./custom/app2unit.nix {})
+            ];
+        };
 
-    network = [
-        inetutils
-        wireshark
-        networkmanagerapplet
-        cloudflared
-    ];
+        security = [pass-wayland bitwarden-cli bitwarden-desktop];
 
-    development = {
-        code_editor = [zed-editor-fhs neovide];
-        containers = [podman-tui podman-compose podman];
-        tools = [
-            git
-            gh
-            curl
-            kdiff3
-            (callPackage ./custom/app2unit.nix {})
-        ];
-    };
+        multimedia = {
+            office = [onlyoffice-desktopeditors libreoffice unoconv];
+            apps = [
+                telegram-desktop
+                vesktop
+                helium
+            ];
+        };
 
-    security = [pass-wayland bitwarden-cli bitwarden-desktop];
+        # Qt-based keystore
+        kde = [kdePackages.kwallet kdePackages.kwalletmanager];
 
-    multimedia = {
-        office = [onlyoffice-desktopeditors libreoffice unoconv];
-        apps = [
-            telegram-desktop
-            vesktop
-            inputs.helium.packages.${pkgs.stdenv.hostPlatform.system}.default
-        ];
-    };
+        gaming = {
+            platform = [steam heroic gamemode];
+            utilities = [
+                wine-wayland
+                winetricks
+                wineWow64Packages.waylandFull
+                protonup-qt
+            ];
+        };
 
-    # Qt-based keystore
-    kde = [kdePackages.kwallet kdePackages.kwalletmanager];
+        android = [adb-sync scrcpy android-tools];
 
-    gaming = {
-        platform = [steam heroic gamemode];
-        utilities = [
-            wine-wayland
-            winetricks
-            wineWow64Packages.waylandFull
-            protonup-qt
-        ];
-    };
+        media = {
+            editor = [ffmpeg-full imagemagick];
+            viewer = [ffmpegthumbnailer poppler-utils mpv lxqt.lximage-qt zathura];
+            screen_recorder = [grim slurp hyprshot wl-screenrec];
+            misc = [playerctl cava mpg123];
+        };
 
-    android = [adb-sync scrcpy android-tools];
+        wayland = {
+            core = [wayland-protocols wl-clipboard];
+            wallpaper = [swww waypaper hyprpaper];
+            launcher = [rofi tofi wofi];
+            hyprland = [
+                hyprpicker
+                hyprsunset
+            ];
+        };
 
-    media = {
-        editor = [ffmpeg-full imagemagick];
-        viewer = [ffmpegthumbnailer poppler-utils mpv lxqt.lximage-qt zathura];
-        screen_recorder = [grim slurp hyprshot wl-screenrec];
-        misc = [playerctl cava mpg123];
-    };
-
-    wayland = {
-        core = [wayland-protocols wl-clipboard];
-        wallpaper = [swww waypaper hyprpaper];
-        launcher = [rofi tofi wofi];
-        hyprland = [
-            hyprpicker
-            hyprsunset
-        ];
-    };
-
-    theming = with pkgs; {
-        colors = [pywal16];
-        apps = [pywalfox-native];
-        tools = [kdePackages.qtstyleplugin-kvantum gtk3 gtk4];
-        cursors = [
-            (callPackage ./custom/future-cursor.nix {})
-            (callPackage ./custom/future-cyan-hyprcursor.nix {})
-        ];
-        icons = [
-            kanagawa-icon-theme
-            vimix-icon-theme
-            (callPackage ./custom/material-symbols.nix {})
-            (callPackage ./custom/yet-another-monochrome-icon-set.nix {})
-            morewaita-icon-theme
-            (whitesur-icon-theme.override {themeVariants = ["default"];})
-        ];
-        qt = [whitesur-kde qt6Packages.qt6ct];
-        gtk = [
-            (whitesur-gtk-theme.override {
-                themeVariants = ["blue"];
-                colorVariants = ["dark"];
-                darkerColor = true;
-            })
-            (vimix-gtk-themes.override {
-                themeVariants = ["ruby"];
-                colorVariants = ["dark"];
-                sizeVariants = ["standard"];
-                tweaks = ["translucent"];
-            })
-        ];
-    };
-}
+        theming = with pkgs; {
+            colors = [pywal16];
+            apps = [pywalfox-native];
+            tools = [kdePackages.qtstyleplugin-kvantum gtk3 gtk4];
+            cursors = [
+                (callPackage ./custom/future-cursor.nix {})
+                (callPackage ./custom/future-cyan-hyprcursor.nix {})
+            ];
+            icons = [
+                kanagawa-icon-theme
+                vimix-icon-theme
+                (callPackage ./custom/material-symbols.nix {})
+                (callPackage ./custom/yet-another-monochrome-icon-set.nix {})
+                morewaita-icon-theme
+                (whitesur-icon-theme.override {themeVariants = ["default"];})
+            ];
+            qt = [whitesur-kde qt6Packages.qt6ct];
+            gtk = [
+                (whitesur-gtk-theme.override {
+                    themeVariants = ["blue"];
+                    colorVariants = ["dark"];
+                    darkerColor = true;
+                })
+                (vimix-gtk-themes.override {
+                    themeVariants = ["ruby"];
+                    colorVariants = ["dark"];
+                    sizeVariants = ["standard"];
+                    tweaks = ["translucent"];
+                })
+            ];
+        };
+    }
