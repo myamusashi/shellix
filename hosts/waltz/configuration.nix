@@ -35,7 +35,7 @@
                     ];
                 };
                 monitoring.enable = false;
-                phpmyadmin.enable = false;
+                phpmyadmin.enable = true;
                 vaultwarden.enable = true;
                 vsftpd.enable = true;
                 nextcloud.enable = true;
