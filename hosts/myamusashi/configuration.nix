@@ -277,6 +277,11 @@ in {
                 git-credential-manager
                 sops
                 libva-utils
+                bat
+                duf
+                unzip
+                zip
+                unrar
                 lxqt.pcmanfm-qt
                 kdePackages.dolphin
                 inputs.quickshell.packages.${pkgs.stdenv.hostPlatform.system}.default
