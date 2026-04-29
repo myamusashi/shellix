@@ -124,33 +124,8 @@
             inputs.nixpkgs.follows = "nixpkgs";
         };
 
-        hyprpanel = {
-            url = "github:Jas-SinghFSU/HyprPanel";
-            inputs.nixpkgs.follows = "nixpkgs";
-        };
-
-        caelestia-shell = {
-            url = "github:caelestia-dots/shell";
-            inputs.nixpkgs.follows = "nixpkgs";
-        };
-
-        caelestia-cli = {
-            url = "github:caelestia-dots/cli";
-            inputs.nixpkgs.follows = "nixpkgs";
-        };
-
         quickshell = {
             url = "git+https://git.outfoxxed.me/outfoxxed/quickshell";
-            inputs.nixpkgs.follows = "nixpkgs";
-        };
-
-        walker = {
-            url = "github:abenz1267/walker";
-            inputs.nixpkgs.follows = "nixpkgs";
-        };
-
-        vermilion = {
-            url = "github:vaxerski/Vermilion";
             inputs.nixpkgs.follows = "nixpkgs";
         };
 
@@ -158,16 +133,6 @@
             url = "github:taj-ny/kwin-effects-forceblur";
             inputs.nixpkgs.follows = "nixpkgs";
         };
-
-        winapps = {
-            url = "github:winapps-org/winapps";
-            inputs.nixpkgs.follows = "nixpkgs";
-        };
-
-        # mangowc = {
-        #     url = "github:DreamMaoMao/mangowc";
-        #     inputs.nixpkgs.follows = "nixpkgs";
-        # };
 
         shell = {
             url = "git+https://git.myamusashi.space/myamusashi/vast-shell";
@@ -195,7 +160,6 @@
         };
 
         neovim-nightly-overlay.url = "github:nix-community/neovim-nightly-overlay";
-        flox.url = "github:flox/flox/v1.7.4";
         spicetify-nix.url = "github:Gerg-L/spicetify-nix";
         matugen.url = "github:/InioX/Matugen/v2.4.1";
     };
