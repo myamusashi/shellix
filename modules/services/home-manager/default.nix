@@ -6,7 +6,6 @@
         ./kdeconnect/default.nix
         ./mpd/default.nix
         ./systemd/shell.nix
-        ./systemd/caelestia.nix
         ./systemd/nm-applet.nix
     ];
 
@@ -18,7 +17,6 @@
         mpd.enable = lib.mkEnableOption "Enable MPD players services";
         systemd = {
             shell.enable = lib.mkEnableOption "Enable vast-shell quickshell";
-            caelestia.enable = lib.mkEnableOption "Enable caelestia quickshell";
             nm-applet.enable = lib.mkEnableOption "Enable network manger applet tray widgets";
         };
     };
