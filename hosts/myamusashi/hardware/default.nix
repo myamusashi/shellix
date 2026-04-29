@@ -32,10 +32,6 @@
             extraPackages = with pkgs; [
                 vulkan-loader
                 intel-media-driver
-                intel-vaapi-driver
-                libva-vdpau-driver
-                libva
-                libvdpau-va-gl
             ];
             extraPackages32 = with pkgs.pkgsi686Linux; [
                 intel-media-driver
