@@ -11,22 +11,35 @@ in {
         programs.neovim = {
             enable = true;
             package = inputs.neovim-nightly-overlay.packages.${pkgs.stdenv.hostPlatform.system}.default;
-            plugins = with pkgs; [
-                vimPlugins.nvim-treesitter.withAllGrammars
-                (tree-sitter.withPlugins (plugins: pkgs.tree-sitter.allGrammars))
-                vimPlugins.nvim-treesitter
-                vimPlugins.nvim-treesitter-parsers.json
-                vimPlugins.nvim-treesitter-parsers.json5
-                vimPlugins.nvim-treesitter-parsers.nix
-                vimPlugins.nvim-highlite
-                vimPlugins.nvim-highlight-colors
-                (vimPlugins.nvim-treesitter.withPlugins (p: [
-                    p.svelte
-                    p.html
-                    p.javascript
+
+            plugins = with pkgs.vimPlugins; [
+                (nvim-treesitter.withPlugins (p: [
                     p.typescript
+                    p.tsx
+                    p.javascript
+                    p.html
+                    p.css
+                    p.svelte
+                    p.dart
+                    p.qmljs
+                    p.json
+                    p.json5
+                    p.nix
+                    p.lua
+                    p.bash
+                    p.markdown
+                    p.markdown_inline
+                    p.yaml
+                    p.toml
+                    p.dockerfile
+                    p.sql
+                    p.cpp
+                    p.c
+                    p.fish
+                    p.arduino
                 ]))
             ];
+
             initLua = ''
                 require("config.lazy")
                 require("config.neovide")
@@ -34,34 +47,37 @@ in {
                 require("config.options")
                 require("config.core")
             '';
+
             extraPackages = with pkgs; [
-                bun
-                mesonlsp
-                sqls
+                lua-language-server
+                bash-language-server
+                vscode-langservers-extracted
                 docker-language-server
                 fish-lsp
-                ripgrep
-                vscode-json-languageserver
-                tree-sitter
-                gnumake
-                pnpm
-                yarn
-                markdownlint-cli2
-                live-server
-                marksman
+                mesonlsp
+                sqls
                 arduino-language-server
-                arduino-cli
                 llvm
                 clang
-                gcc
-                bash-language-server
+
+                stylua
+                luaformatter
                 shfmt
                 prettierd
-                luaformatter
-                stylua
-                vscode-langservers-extracted
-                lua-language-server
+                markdownlint-cli2
+
+                arduino-cli
+                ripgrep
+                bun
+                pnpm
+                yarn
+                live-server
+                marksman
                 kdePackages.qtdeclarative
+
+                gcc
+                gnumake
+                tree-sitter
             ];
         };
     };
