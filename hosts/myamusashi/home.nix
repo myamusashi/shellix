@@ -82,7 +82,6 @@
                 zellij
                 jq
                 eza
-                gapless
                 ripgrep
                 iw
                 qtcreator

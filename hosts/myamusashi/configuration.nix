@@ -300,31 +300,15 @@ in {
                 ddcutil
                 mendeley
                 virtualgl
-                cisco-packet-tracer_9
                 vulkan-tools
                 libva-utils
                 maple-mono.NF
                 (pkgs.callPackage ../../modules/packages/custom/spotiFLAC.nix {})
-                (inputs.vermilion.packages.${pkgs.stdenv.hostPlatform.system}.vermilion.overrideAttrs (oldAttrs: {
-                    pnpmDeps = pkgs.pnpm_10.fetchDeps {
-                        inherit (oldAttrs) pname src;
-                        hash = "sha256-pCMwbE7eYbaOOLhWfSQtjblVctOu7nCGnUal4SID+DQ=";
-                        fetcherVersion = 2;
-                    };
-                }))
                 flutter
                 android-studio
                 netbeans
                 android-tools
                 spotify
-                (linux-wifi-hotspot.overrideAttrs (oldAttrs: {
-                    patches = [
-                        (pkgs.fetchpatch {
-                            url = "https://github.com/lakinduakash/linux-wifi-hotspot/commit/a3fce4b3ee9371eeb7b300fa7e9f291d93986db3.patch";
-                            hash = "sha256-4xQ3iRUlkNpoxHXABhMIgsoDY9nENN/9FtHD3UMyAhc=";
-                        })
-                    ];
-                }))
             ];
             excludePackages = [
             ];
@@ -381,7 +365,8 @@ in {
     };
 
     services.gvfs.enable = true;
-    # broken
+
+    # broken ass
     # services.kmscon.enable = true;
     # services.kmscon.extraOptions = "--term xterm-256color --drm false --fbdev true";
 
@@ -401,8 +386,9 @@ in {
         LIBVA_DRIVER_NAME = "iHD";
         OZONE_PLATFORM = "wayland";
         WLR_NO_HARDWARE_CURSORS = 0;
-
+        ELECTRON_OZONE_PLATFORM_HINT = "wayland";
         ANV_VIDEO_DECODE = 1;
+        VK_ICD_FILENAMES = "${pkgs.mesa}/share/vulkan/icd.d/intel_icd.x86_64.json";
 
         # Multi-GPU support (Lmao i don't even have Multi-GPU)
         AQ_DRM_DEVICES = "/dev/dri/card1:/dev/dri/card0";
@@ -425,7 +411,6 @@ in {
         QT_AUTO_SCREEN_SCALE_FACTOR = 1;
         QT_ENABLE_HIGHDPI_SCALING = 1;
         QT_WAYLAND_FORCE_DPI = "physical";
-        ELECTRON_OZONE_PLATFORM_HINT = "wayland";
     };
 
     xdg.mime = {
