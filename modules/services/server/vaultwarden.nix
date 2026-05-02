@@ -11,14 +11,25 @@
             webVaultPackage = pkgs-stable.vaultwarden.webvault;
             dbBackend = "sqlite";
             backupDir = "/var/backup/vaultwarden";
+            environmentFile = config.sops.secrets.smtp_app_password.path;
             config = {
                 DOMAIN = "https://vault.myamusashi.space";
-                SIGNUPS_ALLOWED = false;
+
+                SIGNUPS_ALLOWED = true;
+                PASSWORD_HINTS_ALLOWED = true;
+                MAX_INVALID_LOGINS = 5;
 
                 ROCKET_ADDRESS = "127.0.0.1";
                 ROCKET_PORT = 8222;
 
                 ROCKET_LOG = "critical";
+
+                SMTP_HOST = "smtp.gmail.com";
+                SMTP_PORT = 587;
+                SMTP_SECURITY = "starttls";
+                SMTP_FROM = "jinxprogilang666@gmail.com";
+                SMTP_FROM_NAME = "Vaultwarden";
+                SMTP_USERNAME = "jinxprogilang666@gmail.com";
             };
         };
 
