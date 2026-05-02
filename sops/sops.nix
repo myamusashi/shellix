@@ -32,6 +32,10 @@
                 path = "/var/lib/waltz/borg-secret";
             };
 
+            smtp_app_password = {
+                owner = "vaultwarden";
+            };
+
             user1-mail = {
                 mode = "0440";
             };
