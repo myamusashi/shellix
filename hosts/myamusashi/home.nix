@@ -35,15 +35,6 @@
             fastfetch.enable = true;
             foot.enable = true;
             htop.enable = true;
-            hyprland = {
-                enable = true;
-                plugins = {
-                    enable = true;
-                    hypr-dynamic-cursors = {
-                        enable = true;
-                    };
-                };
-            };
             kitty.enable = true;
             lazygit.enable = true;
             shell.enable = true;
@@ -166,6 +157,8 @@
             };
         };
     };
+
+    systemd.user.startServices = "sd-switch";
 
     programs.git = {
         enable = true;

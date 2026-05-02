@@ -9,7 +9,6 @@
         ./neovim/default.nix
         ./lazygit/default.nix
         ./neovide/default.nix
-        ./hyprland/default.nix
         ./fastfetch/default.nix
         ./spicetify/default.nix
         ./quickshell/default.nix
@@ -30,7 +29,6 @@
         neovim.enable = lib.mkEnableOption "Enable Neovim code editor applications";
         lazygit.enable = lib.mkEnableOption "Enable Lazygit TUI applications";
         neovide.enable = lib.mkEnableOption "Enable Neovim wrapper written in rust";
-        hyprland.enable = lib.mkEnableOption "Enable Hyprland wayland compositor";
         fastfetch.enable = lib.mkEnableOption "Enable Fastfetch system information";
         spicetify.enable = lib.mkEnableOption "Enable Spicetify spotify mod applications";
         quickshell.enable = lib.mkEnableOption "Enable Quickshell qt widget and shell applications";
