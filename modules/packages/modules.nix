@@ -4,16 +4,17 @@
     ...
 }: let
     helium-base = inputs.helium.packages.${pkgs.stdenv.hostPlatform.system}.default;
-    helium = pkgs.writeShellScriptBin "helium" ''
-        export VK_ICD_FILENAMES=/run/opengl-driver/share/vulkan/icd.d/intel_icd.x86_64.json
+    helium-wrapper = pkgs.writeShellScriptBin "helium" ''
         exec ${helium-base}/bin/helium \
-          --enable-features=Vulkan \
-          --enable-features=VaapiVideoDecodeLinuxGL,VaapiIgnoreDriverChecks,VaapiVideoDecoder \
-          --enable-features=UseMultiPlaneFormatForHardwareVideo \
+          --enable-features=Vulkan,VaapiVideoDecodeLinuxGL,VaapiIgnoreDriverChecks,VaapiVideoDecoder,VaapiVideoEncoder,AcceleratedVideoEncoder,UseMultiPlaneFormatForHardwareVideo,SkiaGraphite \
           --ignore-gpu-blocklist \
           --enable-zero-copy \
           "$@"
     '';
+    helium = pkgs.symlinkJoin {
+        name = "helium";
+        paths = [helium-wrapper helium-base];
+    };
 in
     with pkgs; {
         system = [
