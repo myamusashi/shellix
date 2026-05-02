@@ -388,7 +388,8 @@ in {
         WLR_NO_HARDWARE_CURSORS = 0;
         ELECTRON_OZONE_PLATFORM_HINT = "wayland";
         ANV_VIDEO_DECODE = 1;
-        VK_ICD_FILENAMES = "${pkgs.mesa}/share/vulkan/icd.d/intel_icd.x86_64.json";
+        VK_ICD_FILENAMES = "/run/opengl-driver/share/vulkan/icd.d/intel_icd.x86_64.json";
+        LIBVA_DRIVERS_PATH = "/run/opengl-driver/lib/dri";
 
         # Multi-GPU support (Lmao i don't even have Multi-GPU)
         AQ_DRM_DEVICES = "/dev/dri/card1:/dev/dri/card0";
