@@ -160,6 +160,11 @@
 
     systemd.user.startServices = "sd-switch";
 
+    wayland.windowManager.hyprland = {
+        enable = true;
+        package = pkgs.hyprland;
+    };
+
     programs.git = {
         enable = true;
         settings = {
