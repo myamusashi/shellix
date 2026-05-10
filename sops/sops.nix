@@ -8,6 +8,8 @@
             nix-serve_secrets.mode = "0440";
             nextcloud_admin_pass.mode = "0440";
             grafana_secret_key.mode = "0440";
+            smtp_app_password.mode = "0440";
+            user1-mail.mode = "0440";
 
             weatherapi = {
                 path = "/home/myamusashi/.config/sops-nix/secrets/weatherapi";
@@ -30,14 +32,6 @@
             };
             waltz-borg = {
                 path = "/var/lib/waltz/borg-secret";
-            };
-
-            smtp_app_password = {
-                owner = "vaultwarden";
-            };
-
-            user1-mail = {
-                mode = "0440";
             };
         };
     };
