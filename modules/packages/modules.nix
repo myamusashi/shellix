@@ -3,18 +3,25 @@
     pkgs,
     ...
 }: let
+    electron-flags = [
+        "--enable-features=Vulkan,VaapiVideoDecodeLinuxGL,VaapiIgnoreDriverChecks,VaapiVideoDecoder,VaapiVideoEncoder,AcceleratedVideoEncoder,UseMultiPlaneFormatForHardwareVideo,SkiaGraphite"
+        "--ignore-gpu-blocklist"
+        "--enable-zero-copy"
+    ];
+
+    wrapElectron = pkg: binary:
+        pkgs.symlinkJoin {
+            name = "${pkg.pname or pkg.name}-wrapped";
+            paths = [
+                (pkgs.writeShellScriptBin binary ''
+                    exec ${pkg}/bin/${binary} ${builtins.concatStringsSep " " electron-flags} "$@"
+                '')
+                pkg
+            ];
+        };
+
     helium-base = inputs.helium.packages.${pkgs.stdenv.hostPlatform.system}.default;
-    helium-wrapper = pkgs.writeShellScriptBin "helium" ''
-        exec ${helium-base}/bin/helium \
-          --enable-features=Vulkan,VaapiVideoDecodeLinuxGL,VaapiIgnoreDriverChecks,VaapiVideoDecoder,VaapiVideoEncoder,AcceleratedVideoEncoder,UseMultiPlaneFormatForHardwareVideo,SkiaGraphite \
-          --ignore-gpu-blocklist \
-          --enable-zero-copy \
-          "$@"
-    '';
-    helium = pkgs.symlinkJoin {
-        name = "helium";
-        paths = [helium-wrapper helium-base];
-    };
+    helium = wrapElectron helium-base "helium";
 in
     with pkgs; {
         system = [
@@ -97,13 +104,13 @@ in
             ];
         };
 
-        security = [pass-wayland bitwarden-cli bitwarden-desktop];
+        security = [pass-wayland bitwarden-cli (wrapElectron bitwarden-desktop "bitwarden")];
 
         multimedia = {
-            office = [onlyoffice-desktopeditors libreoffice unoconv];
+            office = [(wrapElectron onlyoffice-desktopeditors "onlyoffice-desktopeditors") libreoffice unoconv];
             apps = [
                 telegram-desktop
-                vesktop
+                (wrapElectron vesktop "vesktop")
                 helium
             ];
         };
@@ -112,7 +119,7 @@ in
         kde = [kdePackages.kwallet kdePackages.kwalletmanager];
 
         gaming = {
-            platform = [steam heroic gamemode];
+            platform = [steam (wrapElectron heroic "heroic") gamemode];
             utilities = [
                 wine-wayland
                 winetricks

@@ -24,6 +24,24 @@
         export QT_STYLE_OVERRIDE="${config.home.sessionVariables.QT_STYLE_OVERRIDE or ""}"
         exec ${pkgs.pinentry-qt}/bin/pinentry-qt "$@"
     '';
+
+    # Helper to wrap Electron apps with performance tweaks
+    electron-flags = [
+        "--enable-features=Vulkan,VaapiVideoDecodeLinuxGL,VaapiIgnoreDriverChecks,VaapiVideoDecoder,VaapiVideoEncoder,AcceleratedVideoEncoder,UseMultiPlaneFormatForHardwareVideo,SkiaGraphite"
+        "--ignore-gpu-blocklist"
+        "--enable-zero-copy"
+    ];
+
+    wrapElectron = pkg: binary:
+        pkgs.symlinkJoin {
+            name = "${pkg.pname or pkg.name}-wrapped";
+            paths = [
+                (pkgs.writeShellScriptBin binary ''
+                    exec ${pkg}/bin/${binary} ${builtins.concatStringsSep " " electron-flags} "$@"
+                '')
+                pkg
+            ];
+        };
 in {
     imports = [
         inputs.qtengine.nixosModules.default
@@ -282,23 +300,23 @@ in {
                 unzip
                 zip
                 unrar
+                sqlite
                 lxqt.pcmanfm-qt
                 kdePackages.dolphin
-                inputs.quickshell.packages.${pkgs.stdenv.hostPlatform.system}.default
                 inputs.shell.packages.${pkgs.stdenv.hostPlatform.system}.default
                 lxqt.pavucontrol-qt
                 wl-screenrec
                 gvfs
                 wget2
                 mysql-workbench
-                drawio
+                (wrapElectron drawio "drawio")
                 home-manager
                 iptables
                 greetd
                 arduino
                 strawberry
                 ddcutil
-                mendeley
+                (wrapElectron mendeley "mendeley-reference-manager")
                 virtualgl
                 vulkan-tools
                 libva-utils
@@ -309,6 +327,11 @@ in {
                 netbeans
                 android-tools
                 spotify
+                noto-fonts-cjk-sans
+                virtio-win
+                virt-viewer
+                freerdp
+                pv
             ];
             excludePackages = [
             ];
