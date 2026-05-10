@@ -45,6 +45,7 @@
             neovide.enable = true;
             vscode.enable = true;
             matugen.enable = true;
+            quickshell.enable = true;
         };
 
         services = {
