@@ -396,17 +396,17 @@
         "utils": "utils"
       },
       "locked": {
-        "lastModified": 1778054244,
-        "narHash": "sha256-4yvin6Bm8MxAlAr7QCNSDFQz9WCzBltW+lYdGt1vsv4=",
-        "owner": "schembriaiden",
-        "repo": "helium-browser-nix-flake",
-        "rev": "b2790d366bbafa7cd01984a8c7eabe73fe10fd41",
-        "type": "github"
+        "lastModified": 1778653854,
+        "narHash": "sha256-KvhJMnEAAhV0gX88PeG1oaQ2vgFtrviczNZ2UgYczHY=",
+        "ref": "refs/heads/master",
+        "rev": "3fa056f7b8b790ca2905ed4ce02b5d91e72e2fbd",
+        "revCount": 12,
+        "type": "git",
+        "url": "https://git.myamusashi.space/myamusashi/helium-flakes.git"
       },
       "original": {
-        "owner": "schembriaiden",
-        "repo": "helium-browser-nix-flake",
-        "type": "github"
+        "type": "git",
+        "url": "https://git.myamusashi.space/myamusashi/helium-flakes.git"
       }
     },
     "home-manager": {
