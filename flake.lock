@@ -396,17 +396,17 @@
         "utils": "utils"
       },
       "locked": {
-        "lastModified": 1778054244,
-        "narHash": "sha256-4yvin6Bm8MxAlAr7QCNSDFQz9WCzBltW+lYdGt1vsv4=",
-        "owner": "schembriaiden",
-        "repo": "helium-browser-nix-flake",
-        "rev": "b2790d366bbafa7cd01984a8c7eabe73fe10fd41",
-        "type": "github"
+        "lastModified": 1778677421,
+        "narHash": "sha256-NLYLGD4lAItW1yKaM+TBBifQru1JaQ2WNWf28Cg3JlE=",
+        "ref": "refs/heads/master",
+        "rev": "4326f4010f49d0ddddbd3c7e96c4a080a2c45225",
+        "revCount": 16,
+        "type": "git",
+        "url": "https://git.myamusashi.cc/myamusashi/helium-flakes.git"
       },
       "original": {
-        "owner": "schembriaiden",
-        "repo": "helium-browser-nix-flake",
-        "type": "github"
+        "type": "git",
+        "url": "https://git.myamusashi.cc/myamusashi/helium-flakes.git"
       }
     },
     "home-manager": {
@@ -2705,11 +2705,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1777871389,
-        "narHash": "sha256-gU+VGpwGJ2vvg0mtYqVvj5u+2LteuHlpokH6JSAtueY=",
+        "lastModified": 1778488696,
+        "narHash": "sha256-QSWgYuZUCNUJ/cxmaq83WkcT7lHQDDfsPVgH+96kIl0=",
         "ref": "refs/heads/master",
-        "rev": "59e9c47b0eb48a9e4bcf9631fa062ee939bd2e83",
-        "revCount": 815,
+        "rev": "7d1c9a9c6721606b129829134d6f614f015621e2",
+        "revCount": 818,
         "type": "git",
         "url": "https://git.outfoxxed.me/outfoxxed/quickshell"
       },
@@ -2726,11 +2726,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1777341401,
-        "narHash": "sha256-QEAVYeXxvTamsYJVBq8+qSJV9ml2MxqRaZvkobfuPWA=",
+        "lastModified": 1778488696,
+        "narHash": "sha256-QSWgYuZUCNUJ/cxmaq83WkcT7lHQDDfsPVgH+96kIl0=",
         "ref": "refs/heads/master",
-        "rev": "0baa81aa03559ca315668e5a306364cddf1a6f49",
-        "revCount": 812,
+        "rev": "7d1c9a9c6721606b129829134d6f614f015621e2",
+        "revCount": 818,
         "type": "git",
         "url": "https://git.outfoxxed.me/outfoxxed/quickshell"
       },
@@ -2789,17 +2789,17 @@
         "quickshell": "quickshell_2"
       },
       "locked": {
-        "lastModified": 1778160682,
-        "narHash": "sha256-oG35C0rmfR7aBLhnnxMEfkR5tvM3+MGn54vIipR6vYk=",
+        "lastModified": 1778810205,
+        "narHash": "sha256-F5j1WbGw9qBm9+DmABQdkuIEQa/Vzjk6Q4qYitC3B/A=",
         "ref": "refs/heads/master",
-        "rev": "ecd48cb44e48d7c04c40cd1b065719479915e2b4",
-        "revCount": 1090,
+        "rev": "0f2613a7e30b260859103d29d32ca2d7fb2dcfa0",
+        "revCount": 1093,
         "type": "git",
-        "url": "https://git.myamusashi.space/myamusashi/vast-shell"
+        "url": "https://git.myamusashi.cc/myamusashi/vast-shell"
       },
       "original": {
         "type": "git",
-        "url": "https://git.myamusashi.space/myamusashi/vast-shell"
+        "url": "https://git.myamusashi.cc/myamusashi/vast-shell"
       }
     },
     "shell-greeter": {
@@ -2816,11 +2816,11 @@
         "rev": "ece43d3ca55ca44665b67572e636c5de8f8a6985",
         "revCount": 8,
         "type": "git",
-        "url": "https://git.myamusashi.space/myamusashi/vast-greeter.git"
+        "url": "https://git.myamusashi.cc/myamusashi/vast-greeter.git"
       },
       "original": {
         "type": "git",
-        "url": "https://git.myamusashi.space/myamusashi/vast-greeter.git"
+        "url": "https://git.myamusashi.cc/myamusashi/vast-greeter.git"
       }
     },
     "sops-nix": {
