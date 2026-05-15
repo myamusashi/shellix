@@ -292,7 +292,7 @@
             ];
 
             extra-substituters = [
-                # "https://cache.myamusashi.space"
+                # "https://cache.myamusashi.cc"
             ];
 
             trusted-public-keys = [
