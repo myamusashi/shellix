@@ -20,7 +20,7 @@
                 dbtype = "pgsql";
                 adminuser = "admin";
             };
-            settings.trusted_domains = ["cloud.myamusashi.space"];
+            settings.trusted_domains = ["cloud.myamusashi.cc"];
             extraApps = with config.services.nextcloud.package.packages.apps; {inherit contacts calendar tasks notes;};
             database.createLocally = true;
             configureRedis = true;

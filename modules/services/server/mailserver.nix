@@ -19,15 +19,15 @@ in {
     mailserver = lib.mkIf cfg.enable {
         enable = true;
         stateVersion = 3;
-        fqdn = "mail.myamusashi.space";
-        domains = ["myamusashi.space"];
+        fqdn = "mail.myamusashi.cc";
+        domains = ["myamusashi.cc"];
 
         # A list of all login accounts. To create the password hashes, use
         # nix-shell -p mkpasswd --run 'mkpasswd -sm bcrypt'
         loginAccounts = {
             "admin@myamusashi.cc" = {
                 hashedPasswordFile = config.sops.secrets.user1-mail.path;
-                aliases = ["postmaster@myamusashi.space"];
+                aliases = ["postmaster@myamusashi.cc"];
             };
         };
 
@@ -36,5 +36,5 @@ in {
         certificateScheme = "acme-nginx";
     };
     security.acme.acceptTerms = true;
-    security.acme.defaults.email = "security@myamusashi.space";
+    security.acme.defaults.email = "security@myamusashi.cc";
 }

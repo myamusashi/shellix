@@ -12,11 +12,11 @@
             settings = {
                 server = {
                     PROTOCOL = "http+unix";
-                    DOMAIN = "git.myamusashi.space";
-                    ROOT_URL = "https://git.myamusashi.space";
+                    DOMAIN = "git.myamusashi.cc";
+                    ROOT_URL = "https://git.myamusashi.cc";
                     HTTP_ADDR = "/run/forgejo/forgejo.sock";
                     HTTP_PORT = 3000;
-                    SSH_DOMAIN = "git.myamusashi.space";
+                    SSH_DOMAIN = "git.myamusashi.cc";
                 };
                 actions = {
                     ENABLED = true;
