@@ -135,12 +135,12 @@
         };
 
         shell = {
-            url = "git+https://git.myamusashi.space/myamusashi/vast-shell";
+            url = "git+https://git.myamusashi.cc/myamusashi/vast-shell";
             inputs.nixpkgs.follows = "nixpkgs";
         };
 
         shell-greeter = {
-            url = "git+https://git.myamusashi.space/myamusashi/vast-greeter.git";
+            url = "git+https://git.myamusashi.cc/myamusashi/vast-greeter.git";
             inputs.nixpkgs.follows = "nixpkgs";
         };
 
@@ -155,7 +155,7 @@
         };
 
         helium = {
-            url = "github:schembriaiden/helium-browser-nix-flake";
+            url = "git+https://git.myamusashi.cc/myamusashi/helium-flakes.git";
             inputs.nixpkgs.follows = "nixpkgs";
         };
 
