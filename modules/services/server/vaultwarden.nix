@@ -13,7 +13,7 @@
             backupDir = "/var/backup/vaultwarden";
             environmentFile = config.sops.secrets.smtp_app_password.path;
             config = {
-                DOMAIN = "https://vault.myamusashi.space";
+                DOMAIN = "https://vault.myamusashi.cc";
 
                 SIGNUPS_ALLOWED = true;
                 PASSWORD_HINTS_ALLOWED = true;
