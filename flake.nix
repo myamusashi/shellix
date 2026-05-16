@@ -159,6 +159,7 @@
             inputs.nixpkgs.follows = "nixpkgs";
         };
 
+        qml-language-server.url = "github:cushycush/qml-language-server";
         neovim-nightly-overlay.url = "github:nix-community/neovim-nightly-overlay";
         spicetify-nix.url = "github:Gerg-L/spicetify-nix";
         matugen.url = "github:/InioX/Matugen/v2.4.1";
