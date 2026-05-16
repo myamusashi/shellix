@@ -277,6 +277,11 @@ in {
                 core = true;
             };
 
+            multimedia = {
+                office = true;
+                apps = true;
+            };
+
             media = {
                 screen_recorder = true;
             };

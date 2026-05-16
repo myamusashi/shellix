@@ -42,7 +42,7 @@
             spicetify.enable = true;
             mpv.enable = true;
             neovim.enable = true;
-            neovide.enable = true;
+            neovide.enable = false;
             vscode.enable = true;
             matugen.enable = true;
             quickshell.enable = true;
@@ -134,11 +134,6 @@
             development = {
                 code_editor = true;
                 containers = true;
-            };
-
-            multimedia = {
-                office = true;
-                apps = true;
             };
 
             gaming = {
