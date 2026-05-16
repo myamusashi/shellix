@@ -93,7 +93,7 @@ in
         ];
 
         development = {
-            code_editor = [zed-editor-fhs neovide];
+            code_editor = [zed-editor-fhs];
             containers = [podman-tui podman-compose podman];
             tools = [
                 git
