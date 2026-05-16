@@ -59,6 +59,7 @@ in {
                 arduino-language-server
                 llvm
                 clang
+                nil
 
                 stylua
                 luaformatter
@@ -74,6 +75,7 @@ in {
                 live-server
                 marksman
                 kdePackages.qtdeclarative
+                inputs.qml-language-server.packages.${stdenv.hostPlatform.system}.default
 
                 gcc
                 gnumake
