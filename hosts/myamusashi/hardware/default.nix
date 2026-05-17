@@ -40,7 +40,6 @@
     };
 
     virtualisation = {
-        docker.enable = false;
         libvirtd.enable = true;
         podman = {
             enable = true;
@@ -49,7 +48,7 @@
             defaultNetwork.settings.dns_enabled = true;
         };
         vmware = {
-            host.enable = true;
+            host.enable = false;
             guest = {
                 enable = true;
                 headless = false;
@@ -97,22 +96,26 @@
             "usb_storage"
             "zram"
             "i2c-dev"
+            "msr"
+            "tcp_bbr"
+            "ntsync"
         ];
 
         kernelParams = [
             "quiet"
             "splash"
             "loglevel=3"
-            "acpi_backlight=video"
             "boot.shell_on_fail"
             "rd.systemd.show_status=false"
             "rd.udev.log_level=3"
             "udev.log_priority=3"
             "console=tty1"
+            "pcie_aspm=force"
 
             # Intel GPU optimizations
+            "i915.enable_guc=3"
             "i915.enable_fbc=1"
-            "i915.enable_psr=2"
+            "i915.enable_psr=1"
             "i915.fastboot=1"
 
             # needs for ddcutil
@@ -121,6 +124,7 @@
             # Performance tweaks
             "intel_pstate=active"
             "nmi_watchdog=0"
+            "nowatchdog"
 
             # Disable mitigations (kinda risky tbh)
             "noibrs"
@@ -136,7 +140,7 @@
         ];
 
         kernel.sysctl = {
-            "net.core.default_qdisc" = "fq";
+            "net.core.default_qdisc" = "cake";
             "net.core.rmem_max" = 16777216;
             "net.core.wmem_max" = 16777216;
             "net.core.somaxconn" = 1024;
@@ -160,8 +164,8 @@
             "vm.max_map_count" = 1048576;
 
             "vm.vfs_cache_pressure" = 50;
-            "vm.dirty_ratio" = 6;
-            "vm.dirty_background_ratio" = 3;
+            "vm.dirty_ratio" = 10;
+            "vm.dirty_background_ratio" = 5;
             "vm.dirty_writeback_centisecs" = 1500;
             "vm.swappiness" = 10;
             "vm.page-cluster" = 0;
@@ -169,8 +173,12 @@
             "fs.inotify.max_user_watches" = 524288;
             "fs.file-max" = 2097152;
 
+            "kernel.nmi_watchdog" = 0;
             "kernel.sched_migration_cost_ns" = 5000000;
-            "kernel.sched_autogroup_enabled" = 0;
+            "kernel.sched_autogroup_enabled" = 1;
+            "kernel.sched_latency_ns" = 4000000;
+            "kernel.sched_min_granularity_ns" = 500000;
+            "kernel.sched_wakeup_granularity_ns" = 1000000;
             "kernel.perf_event_paranoid" = 2; # Need this because intel-gpu-tools
         };
     };
@@ -181,13 +189,36 @@
             interval = "weekly";
         };
 
-        irqbalance.enable = true;
-    };
+        udev.extraRules = ''
+            ACTION=="add|change", KERNEL=="sd[a-z]*", ATTR{queue/scheduler}="mq-deadline"
+        '';
 
-    services.journald.extraConfig = ''
-        SystemMaxUse=100M
-        MaxRetentionSec=7day
-    '';
+        tlp = {
+            enable = true;
+            settings = {
+                CPU_SCALING_GOVERNOR_ON_AC = "performance";
+                CPU_SCALING_GOVERNOR_ON_BAT = "performance";
+
+                CPU_ENERGY_PERF_POLICY_ON_BAT = "performance";
+                CPU_ENERGY_PERF_POLICY_ON_AC = "performance";
+
+                CPU_MIN_PERF_ON_AC = 0;
+                CPU_MAX_PERF_ON_AC = 100;
+                CPU_MIN_PERF_ON_BAT = 0;
+                CPU_MAX_PERF_ON_BAT = 100;
+
+                INTEL_GPU_MIN_FREQ_ON_AC = 500;
+                INTEL_GPU_MIN_FREQ_ON_BAT = 500;
+            };
+        };
+
+        irqbalance.enable = true;
+
+        journald.extraConfig = ''
+            SystemMaxUse=100M
+            MaxRetentionSec=7day
+        '';
+    };
 
     security = {
         wrappers.gsr-kms-server = {

@@ -183,7 +183,6 @@
         style = {
             package = with pkgs; [
                 darkly
-                darkly-qt5
             ];
         };
     };

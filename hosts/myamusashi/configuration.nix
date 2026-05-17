@@ -18,14 +18,12 @@
          }
     '';
 
-    # Fix ssh login not using qtengine
     pinentryQtWrapped = pkgs.writeShellScriptBin "pinentry-qt" ''
         export QT_QPA_PLATFORMTHEME="${config.home.sessionVariables.QT_QPA_PLATFORMTHEME or "qtengine"}"
         export QT_STYLE_OVERRIDE="${config.home.sessionVariables.QT_STYLE_OVERRIDE or ""}"
         exec ${pkgs.pinentry-qt}/bin/pinentry-qt "$@"
     '';
 
-    # Helper to wrap Electron apps with performance tweaks
     electron-flags = [
         "--enable-features=Vulkan,VaapiVideoDecodeLinuxGL,VaapiIgnoreDriverChecks,VaapiVideoDecoder,VaapiVideoEncoder,AcceleratedVideoEncoder,UseMultiPlaneFormatForHardwareVideo,SkiaGraphite"
         "--ignore-gpu-blocklist"
@@ -207,9 +205,11 @@ in {
                 group = "nginx";
             };
         };
-        groups.docker = {};
-        groups.greeter = {};
-        groups.nginx = {};
+        groups = {
+            docker = {};
+            greeter = {};
+            nginx = {};
+        };
     };
 
     services = {
@@ -217,6 +217,12 @@ in {
         openssh.enable = true;
         xserver.xkb.layout = "us";
         nginx.enable = true;
+        gnome.gnome-keyring.enable = true;
+        gvfs.enable = true;
+        mysql = {
+            enable = true;
+            package = pkgs.mariadb;
+        };
     };
 
     security.pam.services.greetd.text = ''
@@ -293,10 +299,9 @@ in {
             customPackages = with pkgs; [
                 starship
                 darkly
-                darkly-qt5
                 luaformatter
-                kdePackages.qtmultimedia
-                distrobox
+                # kdePackages.qtmultimedia
+                # distrobox
                 git-credential-manager
                 sops
                 libva-utils
@@ -306,7 +311,7 @@ in {
                 zip
                 unrar
                 sqlite
-                lxqt.pcmanfm-qt
+                # lxqt.pcmanfm-qt
                 kdePackages.dolphin
                 inputs.shell.packages.${pkgs.stdenv.hostPlatform.system}.default
                 lxqt.pavucontrol-qt
@@ -314,27 +319,27 @@ in {
                 gvfs
                 wget2
                 mysql-workbench
-                (wrapElectron drawio "drawio")
+                # (wrapElectron drawio "drawio")
                 home-manager
                 iptables
                 greetd
                 arduino
                 strawberry
                 ddcutil
-                (wrapElectron mendeley "mendeley-reference-manager")
+                # (wrapElectron mendeley "mendeley-reference-manager")
                 virtualgl
                 vulkan-tools
                 libva-utils
                 maple-mono.NF
-                (pkgs.callPackage ../../modules/packages/custom/spotiFLAC.nix {})
+                # (pkgs.callPackage ../../modules/packages/custom/spotiFLAC.nix {})
                 flutter
-                android-studio
+                # android-studio
                 netbeans
-                android-tools
-                spotify
+                # android-tools
+                # spotify
                 noto-fonts-cjk-sans
-                virtio-win
-                virt-viewer
+                # virtio-win
+                # virt-viewer
                 freerdp
                 pv
             ];
@@ -342,10 +347,6 @@ in {
             ];
         };
     };
-
-    environment.systemPackages = inputs.shell-greeter.packages.${pkgs.stdenv.hostPlatform.system}.runtimeDeps;
-
-    services.gnome.gnome-keyring.enable = true;
 
     programs = {
         fish.enable = true;
@@ -391,8 +392,6 @@ in {
             };
         };
     };
-
-    services.gvfs.enable = true;
 
     # broken ass
     # services.kmscon.enable = true;
@@ -446,9 +445,9 @@ in {
         enable = true;
         defaultApplications = {
             "x-scheme-handler/tonsite" = "org.telegram.desktop.desktop";
-            "text/plain" = "zen-browser.desktop";
-            "inode/directory" = "pcmanfm-qt.desktop";
-            "application/x-gnome-saved-search" = "pcmanfm-qt.desktop";
+            "text/plain" = "helium.desktop";
+            "inode/directory" = "org.kde.dolphin.desktop";
+            "application/x-gnome-saved-search" = "org.kde.dolphin.desktop";
             "image/png" = "lximage-qt.desktop.in";
             "x-scheme-handler/tg" = "org.telegram.desktop.desktop";
             "image/jpeg" = "lximage-qt.desktop.in";
@@ -458,13 +457,13 @@ in {
             "application/vnd.openxmlformats-officedocument.wordprocessingml.document" = ["draw.desktop"];
             "application/vnd.openxmlformats-officedocument.presentationml.presentation" = ["impress.desktop"];
             "image/png" = ["lximage-qt.desktop.in" "yazi.desktop"];
-            "text/x-log" = ["dev.zed.Zed.desktop"];
+            "text/x-log" = ["vim.desktop"];
             "image/svg+xml" = ["lximage-qt.desktop.in"];
             "x-scheme-handler/tg" = ["org.telegram.desktop.desktop"];
-            "text/x-java-source" = ["dev.zed.Zed.desktop"];
+            "text/x-java-source" = ["vim.desktop"];
             "image/jpeg" = ["lximage-qt.desktop.in"];
-            "text/plain" = ["nvim.desktop"];
-            "text/x-shellscript" = ["nvim.desktop"];
+            "text/plain" = ["vim.desktop"];
+            "text/x-shellscript" = ["vim.desktop"];
         };
     };
 
@@ -526,10 +525,5 @@ in {
                 # "cache.myamusashi.cc-1:7wJ0GThM/MBLSmvDw8u8Y0XMiXAshFmX1Hz1jJ0PKWg="
             ];
         };
-    };
-
-    services.mysql = {
-        enable = true;
-        package = pkgs.mariadb;
     };
 }
