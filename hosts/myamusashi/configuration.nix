@@ -299,7 +299,7 @@ in {
             customPackages = with pkgs; [
                 starship
                 darkly
-                luaformatter
+                stylua
                 # kdePackages.qtmultimedia
                 # distrobox
                 git-credential-manager
