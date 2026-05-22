@@ -21,6 +21,27 @@
         "type": "github"
       }
     },
+    "aerothemeplasma-nix": {
+      "inputs": {
+        "flake-parts": "flake-parts",
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1779343476,
+        "narHash": "sha256-8DMIGLxw8yHrl2FlFMMjY9Fvw1TcmlvV6DkwhHCLU5w=",
+        "owner": "nyakase",
+        "repo": "aerothemeplasma-nix",
+        "rev": "63eb9331e14ba3cb4a3738bc57aeee97ab8bc79f",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nyakase",
+        "repo": "aerothemeplasma-nix",
+        "type": "github"
+      }
+    },
     "antigravity-flakes": {
       "inputs": {
         "flake-utils": "flake-utils",
@@ -311,6 +332,24 @@
     },
     "flake-parts_2": {
       "inputs": {
+        "nixpkgs-lib": "nixpkgs-lib_2"
+      },
+      "locked": {
+        "lastModified": 1778716662,
+        "narHash": "sha256-m1Yf0wZ8j1OHjTc2UwHwyQRSnNeSgLJOd7q5Y45hzi4=",
+        "owner": "hercules-ci",
+        "repo": "flake-parts",
+        "rev": "f7c1a2d347e4c52d5fb8d10cb4d94b5884e546fb",
+        "type": "github"
+      },
+      "original": {
+        "owner": "hercules-ci",
+        "repo": "flake-parts",
+        "type": "github"
+      }
+    },
+    "flake-parts_3": {
+      "inputs": {
         "nixpkgs-lib": [
           "neovim-nightly-overlay",
           "nixpkgs"
@@ -330,9 +369,9 @@
         "type": "github"
       }
     },
-    "flake-parts_3": {
+    "flake-parts_4": {
       "inputs": {
-        "nixpkgs-lib": "nixpkgs-lib_2"
+        "nixpkgs-lib": "nixpkgs-lib_3"
       },
       "locked": {
         "lastModified": 1778716662,
@@ -2440,7 +2479,7 @@
     },
     "neovim-nightly-overlay": {
       "inputs": {
-        "flake-parts": "flake-parts_2",
+        "flake-parts": "flake-parts_3",
         "neovim-src": "neovim-src",
         "nixpkgs": "nixpkgs_3"
       },
@@ -2479,7 +2518,7 @@
         "cachyos-kernel": "cachyos-kernel",
         "cachyos-kernel-patches": "cachyos-kernel-patches",
         "flake-compat": "flake-compat_2",
-        "flake-parts": "flake-parts_3",
+        "flake-parts": "flake-parts_4",
         "nixpkgs": "nixpkgs_4"
       },
       "locked": {
@@ -2529,6 +2568,21 @@
       }
     },
     "nixpkgs-lib_2": {
+      "locked": {
+        "lastModified": 1777168982,
+        "narHash": "sha256-GOkGPcboWE9BmGCRMLX3worL4EMnsnG8MyKmXNeYuhQ=",
+        "owner": "nix-community",
+        "repo": "nixpkgs.lib",
+        "rev": "f5901329dade4a6ea039af1433fb087bd9c1fe14",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nix-community",
+        "repo": "nixpkgs.lib",
+        "type": "github"
+      }
+    },
+    "nixpkgs-lib_3": {
       "locked": {
         "lastModified": 1777168982,
         "narHash": "sha256-GOkGPcboWE9BmGCRMLX3worL4EMnsnG8MyKmXNeYuhQ=",
@@ -2795,9 +2849,10 @@
     "root": {
       "inputs": {
         "Hyprspace": "Hyprspace",
+        "aerothemeplasma-nix": "aerothemeplasma-nix",
         "antigravity-flakes": "antigravity-flakes",
         "aquamarine": "aquamarine",
-        "flake-parts": "flake-parts",
+        "flake-parts": "flake-parts_2",
         "helium": "helium",
         "home-manager": "home-manager",
         "hy3": "hy3",
@@ -2843,11 +2898,11 @@
         "quickshell": "quickshell_2"
       },
       "locked": {
-        "lastModified": 1778938665,
-        "narHash": "sha256-wOHPYQ/iHrSoHt8Wh8zrDmKNiS8L0o4zxjH8gShFMXM=",
+        "lastModified": 1779145667,
+        "narHash": "sha256-+MrwRD/2AZO+ZYVQJTBxM6mpZhu0lLgodlrnQHI1yVg=",
         "ref": "refs/heads/master",
-        "rev": "2ebc8e85d19906362bebe193f878c8e2e0ffd89f",
-        "revCount": 1108,
+        "rev": "352a9e0ef66aa48b8c801f54eccba4a78226c81b",
+        "revCount": 1111,
         "type": "git",
         "url": "https://git.myamusashi.cc/myamusashi/vast-shell"
       },

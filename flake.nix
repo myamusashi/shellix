@@ -2,17 +2,12 @@
     inputs = {
         nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
         nixpkgs-stable.url = "github:NixOS/nixpkgs/release-25.11";
-
         flake-parts.url = "github:hercules-ci/flake-parts";
 
         home-manager = {
             url = "github:nix-community/home-manager";
             inputs.nixpkgs.follows = "nixpkgs";
         };
-
-        sops-nix.url = "github:Mic92/sops-nix";
-
-        nix-cachyos-kernel.url = "github:xddxdd/nix-cachyos-kernel/release";
 
         aquamarine = {
             url = "github:hyprwm/aquamarine";
@@ -159,6 +154,13 @@
             inputs.nixpkgs.follows = "nixpkgs";
         };
 
+        aerothemeplasma-nix = {
+            url = "github:nyakase/aerothemeplasma-nix";
+            inputs.nixpkgs.follows = "nixpkgs";
+        };
+
+        sops-nix.url = "github:Mic92/sops-nix";
+        nix-cachyos-kernel.url = "github:xddxdd/nix-cachyos-kernel/release";
         qml-language-server.url = "github:cushycush/qml-language-server";
         neovim-nightly-overlay.url = "github:nix-community/neovim-nightly-overlay";
         spicetify-nix.url = "github:Gerg-L/spicetify-nix";
