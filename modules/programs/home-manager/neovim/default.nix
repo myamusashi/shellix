@@ -62,7 +62,6 @@ in {
                 nil
 
                 stylua
-                luaformatter
                 shfmt
                 prettierd
                 markdownlint-cli2

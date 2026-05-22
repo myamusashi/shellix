@@ -38,7 +38,6 @@ in
             upower
             upower-notify
             rich-cli
-            power-profiles-daemon
             bluez
             mediainfo
             ouch
