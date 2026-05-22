@@ -4,6 +4,22 @@ final: prev: {
         doCheck = false;
     });
 
+    stylua = prev.stylua.overrideAttrs (oldAttrs: rec {
+        version = "2.5.2";
+
+        src = final.fetchFromGitHub {
+            owner = "johnnymorganz";
+            repo = "stylua";
+            rev = "v${version}";
+            hash = "sha256-C0X7IdYqs/hhSX96XWVyk7rfQNd9DjYxYgHL34cI+3g=";
+        };
+
+        cargoDeps = final.rustPlatform.fetchCargoVendor {
+            inherit src;
+            hash = "sha256-m31oocBkx4i2KxM0YC1omVWtypFi7iEoDVlXgT93iSI=";
+        };
+    });
+
     luaformatter = prev.luaformatter.overrideAttrs (oldAttrs: {
         version = "unstable-21-02-2023";
 
