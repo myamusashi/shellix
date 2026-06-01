@@ -39,11 +39,11 @@
             lazygit.enable = true;
             shell.enable = true;
             yazi.enable = true;
-            spicetify.enable = true;
+            spicetify.enable = false;
             mpv.enable = true;
             neovim.enable = true;
             neovide.enable = false;
-            vscode.enable = true;
+            vscode.enable = false;
             matugen.enable = true;
             quickshell.enable = true;
         };
@@ -190,9 +190,9 @@
     fonts.fontconfig = {
         enable = true;
         defaultFonts = {
-            serif = ["Google Sans Flex"];
+            serif = ["Segoe UI"];
             monospace = ["Maple Mono NF"];
-            sansSerif = ["Google Sans Flex"];
+            sansSerif = ["Segoe UI"];
         };
     };
 
