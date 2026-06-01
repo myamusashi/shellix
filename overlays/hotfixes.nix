@@ -52,13 +52,13 @@ final: prev: {
         src = final.fetchFromGitHub {
             owner = "russelltg";
             repo = "wl-screenrec";
-            rev = "43565c1a5f124ed97df578b5b2b5f63a4b531056";
-            hash = "sha256-nDdZ1zudbIGPZU7wFNCrrHmjwhTDwJKs9d8IgyaeAAw=";
+            rev = "09252908c6304f0b71a5af9ddddf587559fbc471";
+            hash = "sha256-8JZEOcHcP+q4KPsTOghwwFFQzZ9OEGSLG00o7W2uUoQ=";
         };
 
         cargoDeps = final.rustPlatform.fetchCargoVendor {
             inherit src;
-            hash = "sha256-vIVDlEKOeAnvaJj+ov25HTbXf26RMFf0K3Tca/hONS8=";
+            hash = "sha256-XvvZBB6lg7YByNAI5QDFy5OR2rDcIzMhYkf5QTMtPxk=";
         };
 
         cargoBuildFlags = ["--all-features"];
