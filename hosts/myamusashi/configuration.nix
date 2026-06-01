@@ -339,7 +339,7 @@ in {
                 # spotify
                 noto-fonts-cjk-sans
                 # virtio-win
-                # virt-viewer
+                virt-viewer
                 freerdp
                 pv
             ];
@@ -367,12 +367,12 @@ in {
 
             config = {
                 theme = {
-                    colorScheme = "${config.users.users.myamusashi.home}/.local/share/color-schemes/Shellix.colors";
-                    iconTheme = "MoreWaita";
-                    style = "Darkly";
+                    colorScheme = "/run/current-system/sw/share/color-schemes/Aero.colors";
+                    iconTheme = "Windows 7 Aero";
+                    style = "MS Windows 9x";
 
                     font = {
-                        family = "Google Sans Flex";
+                        family = "Segoe UI";
                         size = 11;
                         weight = -1;
                     };
