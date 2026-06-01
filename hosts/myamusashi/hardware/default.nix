@@ -7,10 +7,20 @@
         ./hardware-configuration.nix
     ];
 
-    environment.systemPackages = with pkgs; [
-        intel-gpu-tools
-        iio-sensor-proxy
-    ];
+    environment = {
+        etc = {
+            "icc/thinkpad-x270.icm" = {
+                source = ./thinkpad_270_icc.icm;
+            };
+            "icc/lg-mk400.icm" = {
+                source = ./lg_mk400_icc.icm;
+            };
+        };
+        systemPackages = with pkgs; [
+            intel-gpu-tools
+            iio-sensor-proxy
+        ];
+    };
 
     hardware = {
         sensor.iio.enable = true;
