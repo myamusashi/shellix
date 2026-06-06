@@ -154,6 +154,11 @@
             inputs.nixpkgs.follows = "nixpkgs";
         };
 
+        yazi-plugins-flakes = {
+            url = "git+https://git.myamusashi.cc/myamusashi/yazi_plugins-flake.git";
+            inputs.nixpkgs.follows = "nixpkgs";
+        };
+
         aerothemeplasma-nix = {
             url = "github:nyakase/aerothemeplasma-nix";
             inputs.nixpkgs.follows = "nixpkgs";

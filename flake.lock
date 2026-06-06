@@ -73,11 +73,11 @@
         "systems": "systems_3"
       },
       "locked": {
-        "lastModified": 1779914800,
-        "narHash": "sha256-mk9afbuPuSkW5vh8e93cBKYzLSldwPbgpyEGYEXLDlE=",
+        "lastModified": 1780140823,
+        "narHash": "sha256-cGonDmQ1CjkMOyuXNji5voM8ZZbxwrGMxtrErudVFd4=",
         "owner": "hyprwm",
         "repo": "aquamarine",
-        "rev": "ff9b933d5559ca88289f8d2521dda39640b5aaab",
+        "rev": "1699271f610719dd0b7f643899c863162a3beb87",
         "type": "github"
       },
       "original": {
@@ -408,6 +408,24 @@
     "flake-utils_2": {
       "inputs": {
         "systems": "systems_23"
+      },
+      "locked": {
+        "lastModified": 1731533236,
+        "narHash": "sha256-l0KFg5HjrsfsO/JpG+r7fRrqm12kzFHyUHqHCVpMMbI=",
+        "owner": "numtide",
+        "repo": "flake-utils",
+        "rev": "11707dc2f618dd54ca8739b309ec4fc024de578b",
+        "type": "github"
+      },
+      "original": {
+        "owner": "numtide",
+        "repo": "flake-utils",
+        "type": "github"
+      }
+    },
+    "flake-utils_3": {
+      "inputs": {
+        "systems": "systems_25"
       },
       "locked": {
         "lastModified": 1731533236,
@@ -839,11 +857,11 @@
         "xdph": "xdph"
       },
       "locked": {
-        "lastModified": 1780058324,
-        "narHash": "sha256-+t97F7PpZWjMcXFOH9oPGNsG424azqCDTcBRL1gMkoE=",
+        "lastModified": 1780428376,
+        "narHash": "sha256-EJ3Is/hOcKnuYtzwYDZfG5VXDHGYzTX187nFaQh0ftw=",
         "owner": "hyprwm",
         "repo": "Hyprland",
-        "rev": "cbcddf2848fcdd9d2490df786c92003bcd763fac",
+        "rev": "61321ce5c7eba171e243ae1ee1a1fca0b0736e35",
         "type": "github"
       },
       "original": {
@@ -1794,11 +1812,11 @@
         "systems": "systems_18"
       },
       "locked": {
-        "lastModified": 1779475241,
-        "narHash": "sha256-Nw4DN0A5krWNcPBvuWe5Gz2yuxsUUPiDgtu6SVPJQeU=",
+        "lastModified": 1780251518,
+        "narHash": "sha256-fG9xbb1SOAAJ+2kJRakp3ch+BmA/3dEg/K3PoAZTKkw=",
         "owner": "hyprwm",
         "repo": "hyprutils",
-        "rev": "3cd3972b2ee658a14d2610d8494e09259e530124",
+        "rev": "40ede2e7bdec80ba5d4c443160d905e9f841ae5f",
         "type": "github"
       },
       "original": {
@@ -2887,6 +2905,7 @@
         "shell-greeter": "shell-greeter",
         "sops-nix": "sops-nix",
         "spicetify-nix": "spicetify-nix",
+        "yazi-plugins-flakes": "yazi-plugins-flakes",
         "zen-browser": "zen-browser"
       }
     },
@@ -3224,6 +3243,21 @@
         "type": "github"
       }
     },
+    "systems_25": {
+      "locked": {
+        "lastModified": 1681028828,
+        "narHash": "sha256-Vy1rq5AaRuLzOxct8nz4T6wlgyUR7zLU309k9mBC768=",
+        "owner": "nix-systems",
+        "repo": "default",
+        "rev": "da67096a3b9bf56a91d16901293e51ba5b49a27e",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nix-systems",
+        "repo": "default",
+        "type": "github"
+      }
+    },
     "systems_3": {
       "locked": {
         "lastModified": 1689347949,
@@ -3404,6 +3438,27 @@
         "owner": "hyprwm",
         "repo": "xdg-desktop-portal-hyprland",
         "type": "github"
+      }
+    },
+    "yazi-plugins-flakes": {
+      "inputs": {
+        "flake-utils": "flake-utils_3",
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1780449363,
+        "narHash": "sha256-jpp8+GcNaD5dor+HRFw0K+fuxuD1GvDkH1eOowqNVGs=",
+        "ref": "refs/heads/master",
+        "rev": "d78673e8ee0f204f245cb891616c0ec0a97313e2",
+        "revCount": 11,
+        "type": "git",
+        "url": "https://git.myamusashi.cc/myamusashi/yazi_plugins-flake.git"
+      },
+      "original": {
+        "type": "git",
+        "url": "https://git.myamusashi.cc/myamusashi/yazi_plugins-flake.git"
       }
     },
     "zen-browser": {
