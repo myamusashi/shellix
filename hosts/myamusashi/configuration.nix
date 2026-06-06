@@ -5,41 +5,11 @@
     pkgs,
     ...
 }: let
-    greeterPkg = inputs.shell-greeter.packages.${pkgs.stdenv.hostPlatform.system}.default;
-
-    hyprConfig = pkgs.writeText "greetd-hyprland" ''
-        exec-once = ${greeterPkg}/bin/shell && pkill Hyprland
-
-        monitor = ,preferred, auto, auto
-        env=XDG_CURRENT_DESKTOP,Hyprland
-        misc {
-           force_default_wallpaper = 1
-           disable_hyprland_logo = true
-         }
-    '';
-
     pinentryQtWrapped = pkgs.writeShellScriptBin "pinentry-qt" ''
         export QT_QPA_PLATFORMTHEME="${config.home.sessionVariables.QT_QPA_PLATFORMTHEME or "qtengine"}"
         export QT_STYLE_OVERRIDE="${config.home.sessionVariables.QT_STYLE_OVERRIDE or ""}"
         exec ${pkgs.pinentry-qt}/bin/pinentry-qt "$@"
     '';
-
-    electron-flags = [
-        "--enable-features=Vulkan,VaapiVideoDecodeLinuxGL,VaapiIgnoreDriverChecks,VaapiVideoDecoder,VaapiVideoEncoder,AcceleratedVideoEncoder,UseMultiPlaneFormatForHardwareVideo,SkiaGraphite"
-        "--ignore-gpu-blocklist"
-        "--enable-zero-copy"
-    ];
-
-    wrapElectron = pkg: binary:
-        pkgs.symlinkJoin {
-            name = "${pkg.pname or pkg.name}-wrapped";
-            paths = [
-                (pkgs.writeShellScriptBin binary ''
-                    exec ${pkg}/bin/${binary} ${builtins.concatStringsSep " " electron-flags} "$@"
-                '')
-                pkg
-            ];
-        };
 in {
     imports = [
         inputs.qtengine.nixosModules.default
