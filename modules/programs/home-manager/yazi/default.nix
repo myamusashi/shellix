@@ -2,42 +2,43 @@
     config,
     lib,
     pkgs,
+    inputs,
     ...
 }: let
     cfg = config.shellix.programs.home.yazi;
-    plugin = import ./plugins/package.nix {inherit pkgs;};
+    yazi-plugins = inputs.yazi-plugins-flakes.packages.${pkgs.stdenv.hostPlatform.system};
 in {
     config = lib.mkIf cfg.enable {
         programs.yazi = {
             enable = true;
             initLua = ./init.lua;
             flavors = {
-                kanagawa = "${plugin.kanagawa}";
-                material-ocean = "${plugin.material-ocean}";
+                kanagawa = "${yazi-plugins.kanagawa}";
+                material-ocean = "${yazi-plugins.material-ocean}";
             };
             theme.flavor = {
                 dark = "shellix";
             };
             plugins = {
-                chmod = "${plugin.official-plugins}/chmod.yazi";
-                diff = "${plugin.official-plugins}/diff.yazi";
-                full-border = "${plugin.official-plugins}/full-border.yazi";
-                git = "${plugin.official-plugins}/git.yazi";
-                toggle-pane = "${plugin.official-plugins}/toggle-pane.yazi";
-                mount = "${plugin.official-plugins}/mount.yazi";
-                piper = "${plugin.official-plugins}/piper.yazi";
-                office = "${plugin.office}";
-                rich-preview = "${plugin.rich-preview}";
-                eza-preview = "${plugin.eza-preview}";
-                mediainfo = "${plugin.mediainfo}";
-                fg = "${plugin.fzf}";
-                hexyl = "${plugin.hexyl}";
-                ouch = "${plugin.ouch}";
-                yatline = "${plugin.yatline}";
-                lazygit = "${plugin.lazygit}";
-                # githead = "${plugin.githead}";
-                kdeconnect-send = "${plugin.kdeconnect-send}";
-                custom-shell = "${plugin.custom-shell}";
+                chmod = "${yazi-plugins.official-plugins}/chmod.yazi";
+                diff = "${yazi-plugins.official-plugins}/diff.yazi";
+                full-border = "${yazi-plugins.official-plugins}/full-border.yazi";
+                git = "${yazi-plugins.official-plugins}/git.yazi";
+                toggle-pane = "${yazi-plugins.official-plugins}/toggle-pane.yazi";
+                mount = "${yazi-plugins.official-plugins}/mount.yazi";
+                piper = "${yazi-plugins.official-plugins}/piper.yazi";
+                office = "${yazi-plugins.office}";
+                rich-preview = "${yazi-plugins.rich-preview}";
+                eza-preview = "${yazi-plugins.eza-preview}";
+                mediainfo = "${yazi-plugins.mediainfo}";
+                fg = "${yazi-plugins.fzf}";
+                hexyl = "${yazi-plugins.hexyl}";
+                ouch = "${yazi-plugins.ouch}";
+                yatline = "${yazi-plugins.yatline}";
+                lazygit = "${yazi-plugins.lazygit}";
+                # githead = "${yazi-plugins.githead}";
+                kdeconnect-send = "${yazi-plugins.kdeconnect-send}";
+                custom-shell = "${yazi-plugins.custom-shell}";
             };
             keymap = {
                 mgr = {
@@ -168,11 +169,11 @@ in {
                 open = {
                     prepend_rules = [
                         {
-                            name = "*.{svg,png,jpg,jpeg,gif}";
+                            url = "*.{svg,png,jpg,jpeg,gif}";
                             use = "openImage";
                         }
                         {
-                            name = "*.pdf";
+                            url = "*.pdf";
                             use = "openPdf";
                         }
                     ];
@@ -181,14 +182,14 @@ in {
                 plugin = {
                     prepend_fetchers = [
                         {
-                            id = "git";
-                            name = "*";
+                            group = "git";
+                            url = "*";
                             run = "git";
                         }
 
                         {
-                            id = "git";
-                            name = "*/";
+                            group = "git";
+                            url = "*/";
                             run = "git";
                         }
                     ];
@@ -223,13 +224,13 @@ in {
                         }
 
                         {
-                            name = "*.docx";
+                            url = "*.docx";
                             run = "office";
                         }
                     ];
                     prepend_previewers = [
                         {
-                            name = "*/";
+                            url = "*/";
                             run = "eza-preview";
                         }
 
@@ -239,7 +240,7 @@ in {
                         }
 
                         {
-                            name = "*.{jpg,png,webp}";
+                            url = "*.{jpg,png,webp}";
                             run = "mediainfo";
                         }
 
@@ -249,27 +250,27 @@ in {
                         }
 
                         {
-                            name = "*.csv";
+                            url = "*.csv";
                             run = "rich-preview";
                         }
 
                         {
-                            name = "*.md";
+                            url = "*.md";
                             run = "rich-preview";
                         }
 
                         {
-                            name = "*.rst";
+                            url = "*.rst";
                             run = "rich-preview";
                         }
 
                         {
-                            name = "*.ipynb";
+                            url = "*.ipynb";
                             run = "rich-preview";
                         }
 
                         {
-                            name = "*.json";
+                            url = "*.json";
                             run = "rich-preview";
                         }
 
@@ -294,7 +295,7 @@ in {
                         }
 
                         {
-                            name = "*.docx";
+                            url = "*.docx";
                             run = "office";
                         }
 
