@@ -187,6 +187,7 @@
 
     services = {
         power-profiles-daemon.enable = false;
+        fprintd.enable = true;
         fstrim = {
             enable = true;
             interval = "weekly";
