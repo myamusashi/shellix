@@ -342,6 +342,9 @@ in {
                 virt-viewer
                 freerdp
                 pv
+                rclone
+                rclone-browser
+                mprisence
             ];
             excludePackages = [
             ];
