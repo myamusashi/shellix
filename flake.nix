@@ -69,6 +69,11 @@
             inputs.hyprland.follows = "hyprland";
         };
 
+        hypr-scroll-overview = {
+            url = "github:myamusashi/hyprland-scroll-overview";
+            inputs.hyprland.follows = "hyprland";
+        };
+
         Hyprspace = {
             url = "github:myamusashi/Hyprspace";
             inputs.hyprland.follows = "hyprland";

@@ -293,6 +293,7 @@ in {
                 home-manager
                 iptables
                 greetd
+                qbittorrent-enhanced-nox
                 arduino
                 strawberry
                 ddcutil
@@ -315,6 +316,7 @@ in {
                 rclone
                 rclone-browser
                 mprisence
+                inputs.hypr-scroll-overview.packages.${pkgs.stdenv.hostPlatform.system}.default
             ];
             excludePackages = [
             ];
