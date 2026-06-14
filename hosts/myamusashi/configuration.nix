@@ -232,7 +232,7 @@ in {
             fish.enable = true;
             steam.enable = true;
             virt-manager.enable = false;
-            wireshark.enable = false;
+            wireshark.enable = true;
             xonsh.enable = false;
         };
 
