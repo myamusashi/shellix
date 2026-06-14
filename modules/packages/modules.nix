@@ -86,7 +86,6 @@ in
 
         network = [
             inetutils
-            wireshark
             networkmanagerapplet
             cloudflared
         ];
