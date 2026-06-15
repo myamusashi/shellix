@@ -4,11 +4,6 @@
         nixpkgs-stable.url = "github:NixOS/nixpkgs/release-25.11";
         flake-parts.url = "github:hercules-ci/flake-parts";
 
-        home-manager = {
-            url = "github:nix-community/home-manager";
-            inputs.nixpkgs.follows = "nixpkgs";
-        };
-
         aquamarine = {
             url = "github:hyprwm/aquamarine";
             inputs.nixpkgs.follows = "nixpkgs";
@@ -66,6 +61,11 @@
 
         hypr-dynamic-cursors = {
             url = "github:VirtCode/hypr-dynamic-cursors";
+            inputs.hyprland.follows = "hyprland";
+        };
+
+        hypr-scroll-overview = {
+            url = "github:myamusashi/hyprland-scroll-overview";
             inputs.hyprland.follows = "hyprland";
         };
 
@@ -166,7 +166,6 @@
 
         sops-nix.url = "github:Mic92/sops-nix";
         nix-cachyos-kernel.url = "github:xddxdd/nix-cachyos-kernel/release";
-        qml-language-server.url = "github:cushycush/qml-language-server";
         neovim-nightly-overlay.url = "github:nix-community/neovim-nightly-overlay";
         spicetify-nix.url = "github:Gerg-L/spicetify-nix";
         matugen.url = "github:/InioX/Matugen/v2.4.1";
@@ -178,7 +177,7 @@
 
             flake = let
                 lib = import ./lib {inherit inputs;};
-                inherit (lib) mkHost mkHome;
+                inherit (lib) mkHost;
             in {
                 nixosConfigurations = {
                     nixos = mkHost {
@@ -189,13 +188,6 @@
                     waltz = mkHost {
                         hostname = "waltz";
                         username = null;
-                    };
-                };
-
-                homeConfigurations = {
-                    "myamusashi" = mkHome {
-                        username = "myamusashi";
-                        hostname = "myamusashi";
                     };
                 };
             };
@@ -210,7 +202,6 @@
                         statix
                         nixd
                     ];
-
                     shellHook = ''
                         echo "NixOS configuration development environment"
                     '';

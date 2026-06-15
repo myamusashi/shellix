@@ -21,6 +21,10 @@ in rec {
 
     forAllSystems = lib.genAttrs supportedSystems;
 
+    shellix-lib = import ./modules.nix { inherit lib; };
+
+    shellix-pkgs = system: import ./pkgs.nix { pkgs = mkPkgs { inherit system; }; };
+
     mkPkgs = {
         system,
         nixpkgs ? inputs.nixpkgs,
@@ -55,25 +59,14 @@ in rec {
         username ? null,
         homeFile ? "home.nix",
         extraModules ? [],
-    }: let
-        hmModules = lib.optionals (username != null) [
-            inputs.home-manager.nixosModules.home-manager
-            {
-                home-manager = {
-                    useGlobalPkgs = true;
-                    useUserPackages = true;
-                    backupFileExtension = "hm-backup";
-                    extraSpecialArgs = {inherit inputs system;};
-                    users.${username} = import ../hosts/${hostname}/${homeFile};
-                };
-            }
-        ];
-    in
+    }:
         inputs.nixpkgs.lib.nixosSystem {
             inherit system;
             specialArgs = {
                 inherit inputs;
                 pkgs-stable = mkPkgsStable {inherit system;};
+                shellix-lib = shellix-lib;
+                shellix-pkgs = shellix-pkgs system;
             };
             modules =
                 [
@@ -91,18 +84,6 @@ in rec {
                             ++ hyprland-ecosystem;
                     }
                 ]
-                ++ hmModules ++ extraModules;
-        };
-
-    mkHome = {
-        username,
-        hostname,
-        system ? "x86_64-linux",
-        homeFile ? "home.nix",
-    }:
-        inputs.home-manager.lib.homeManagerConfiguration {
-            pkgs = mkPkgs {inherit system;};
-            extraSpecialArgs = {inherit inputs system;};
-            modules = [../hosts/${hostname}/${homeFile}];
+                ++ extraModules;
         };
 }

@@ -86,7 +86,6 @@ in
 
         network = [
             inetutils
-            wireshark
             networkmanagerapplet
             cloudflared
         ];
@@ -103,7 +102,7 @@ in
             ];
         };
 
-        security = [pass-wayland bitwarden-cli (wrapElectron bitwarden-desktop "bitwarden")];
+        security = [pass-wayland bitwarden-cli];
 
         multimedia = {
             office = [(wrapElectron onlyoffice-desktopeditors "onlyoffice-desktopeditors") libreoffice unoconv];
