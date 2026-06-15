@@ -1,0 +1,61 @@
+{pkgs, ...}: {
+    nixpkgs = {
+        config = {
+            allowUnfree = true;
+            android_sdk.accept_license = true;
+        };
+    };
+    nix = {
+        enable = true;
+        package = pkgs.nix;
+        settings = {
+            experimental-features = [
+                "nix-command"
+                "flakes"
+            ];
+            trusted-users = [
+                "root"
+                "myamusashi"
+            ];
+            substituters = [
+                "https://myamusashi.cachix.org"
+                "https://cache.nixos.org"
+                "https://nix-community.cachix.org"
+                "https://chaotic-nyx.cachix.org"
+                "https://nix-community.cachix.org"
+                "https://ezkea.cachix.org"
+                "https://hyprland.cachix.org"
+                "https://walker.cachix.org"
+                "https://walker-git.cachix.org"
+                "https://cache.flox.dev"
+                ## cachyos kernel binary caches
+                "https://attic.xuyh0120.win/lantian"
+                "https://cache.garnix.io"
+            ];
+
+            extra-substituters = [
+                # "https://cache.myamusashi.cc"
+            ];
+
+            trusted-public-keys = [
+                "myamusashi.cachix.org-1:ra4PbY6yqM1pSvkGqJ78CZse3WWgjk4rOXBMtjD9YrY="
+                "chaotic-nyx.cachix.org-1:HfnXSw4pj95iI/n17rIDy40agHj12WfF+Gqk6SonIT8="
+                "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
+                "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
+                "chaotic-nyx.cachix.org-1:HfnXSw4pj95iI/n17rIDy40agHj12WfF+Gqk6SonIT8="
+                "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
+                "ezkea.cachix.org-1:ioBmUbJTZIKsHmWWXPe1FSFbeVe+afhfgqgTSNd34eI="
+                "flox-cache-public-1:7F4OyH7ZCnFhcze3fJdfyXYLQw/aV7GEed86nQ7IsOs="
+                "hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc="
+                "walker.cachix.org-1:fG8q+uAaMqhsMxWjwvk0IMb4mFPFLqHjuvfwQxE4oJM="
+                "walker-git.cachix.org-1:vmC0ocfPWh0S/vRAQGtChuiZBTAe4wiKDeyyXM0/7pM="
+                "lantian:EeAUQ+W+6r7EtwnmYjeVwx5kOGEBpjlBfPlzGlTNvHc="
+                "cache.garnix.io:CTFPyKSLcx5RMJKfLo5EEPUObbA78b0YQ2DTCJXqr9g="
+            ];
+
+            extra-trusted-public-keys = [
+                # "cache.myamusashi.cc-1:7wJ0GThM/MBLSmvDw8u8Y0XMiXAshFmX1Hz1jJ0PKWg="
+            ];
+        };
+    };
+}

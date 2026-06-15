@@ -7,117 +7,50 @@
     imports = [
         ./hardware/default.nix
         ../../modules/shared/Variable.nix
-        ../../modules/packages/nixos-packages.nix
-        ../../modules/programs/nixos/default.nix
-        ../../modules/services/nixos/default.nix
-        ../../modules/services/server/default.nix
+        ../../modules/nixos/programs/default.nix
+        ../../modules/nixos/services/default.nix
+        ../../modules/server/default.nix
     ];
 
     shellix = {
+        server = {
+            database.enable = true;
+            forgejo.enable = true;
+            wireguard = {
+                enable = true;
+                externalInterfaces = "enp1s0";
+                wireguardInterfaces = "wg0";
+                pathPrivateKeyFile = "/etc/wireguard-keys/private.key";
+                peers = [
+                    {
+                        publicKey = "FOw44zb+Efuxud+s75EN0ySC4dnagHHCTBRn0LKzPxM=";
+                        allowedIPs = ["10.88.0.2/32"];
+                    }
+                    {
+                        publicKey = "2Ql33s7ojKEQVd/mG2Aie+cM5wG37Nl9kAlzdD1p+CM=";
+                        allowedIPs = ["10.88.0.3/32"];
+                    }
+                ];
+            };
+            monitoring.enable = false;
+            phpmyadmin.enable = false;
+            vaultwarden.enable = true;
+            vsftpd.enable = true;
+            nextcloud.enable = true;
+            nix-serve.enable = false;
+        };
         services = {
-            server = {
-                database.enable = true;
-                forgejo.enable = true;
-                wireguard = {
-                    enable = true;
-                    externalInterfaces = "enp1s0";
-                    wireguardInterfaces = "wg0";
-                    pathPrivateKeyFile = "/etc/wireguard-keys/private.key";
-                    peers = [
-                        {
-                            publicKey = "FOw44zb+Efuxud+s75EN0ySC4dnagHHCTBRn0LKzPxM=";
-                            allowedIPs = ["10.88.0.2/32"];
-                        }
-                        {
-                            publicKey = "2Ql33s7ojKEQVd/mG2Aie+cM5wG37Nl9kAlzdD1p+CM=";
-                            allowedIPs = ["10.88.0.3/32"];
-                        }
-                    ];
-                };
-                monitoring.enable = false;
-                phpmyadmin.enable = false;
-                vaultwarden.enable = true;
-                vsftpd.enable = true;
-                nextcloud.enable = true;
-                nix-serve.enable = false;
-            };
-            nixos = {
-                earlyoom.enable = false;
-                backup.waltz.enable = true;
-                resolver.enable = true;
-            };
+            earlyoom.enable = false;
+            backup.waltz.enable = true;
+            resolver.enable = true;
         };
 
-        programs.nixos = {
+        programs = {
             fish.enable = true;
             steam.enable = false;
             virt-manager.enable = false;
             wireshark.enable = false;
             xonsh.enable = false;
-        };
-
-        packages.nixos = {
-            enable = true;
-
-            system = true;
-            network = true;
-            security = true;
-            android = true;
-
-            development = {
-                containers = true;
-                tools = true;
-            };
-
-            customPackages = with pkgs-stable; [
-                forgejo-runner
-                sops
-                borgbackup
-                cachix
-                age
-                alejandra
-                statix
-                unzip
-                ntfs3g
-                jq
-                btop
-                htop
-                lazygit
-                lazyjournal
-                lazysql
-                openssl
-                home-manager
-                podman-compose
-                nil
-                nixd
-                nixdoc
-                nethogs
-                zellij
-                nh
-                starship
-            ];
-
-            excludePackages = [
-                "pinentry-qt"
-                "pinentry-curses"
-                "udisks"
-                "udiskie"
-                "gparted"
-                "libvirt"
-                "rich-cli"
-                "power-profiles-daemon"
-                "bluez"
-                "mediainfo"
-                "ouch"
-                "glow"
-                "hexyl"
-                "antiprism"
-                "wireshark"
-                "networkmanagerapplet"
-                "bitwarden-desktop"
-                "pass-wayland"
-                "kdiff3"
-            ];
         };
     };
 
@@ -197,8 +130,11 @@
         };
     };
 
-    sops.secrets.waltz-password.neededForUsers = false;
-    sops.age.keyFile = lib.mkForce "/home/waltz/.config/sops/age/keys.txt";
+    sops = {
+        secrets.waltz-password.neededForUsers = false;
+        age.keyFile = lib.mkForce "/home/waltz/.config/sops/age/keys.txt";
+    };
+
     users.users.waltz = {
         isNormalUser = true;
         # hashedPasswordFile = config.sops.secrets.waltz-password.path;
@@ -288,7 +224,6 @@
                 "https://cache.flox.dev"
                 ## cachyos kernel binary caches
                 "https://attic.xuyh0120.win/lantian"
-                "https://cache.garnix.io"
             ];
 
             extra-substituters = [
@@ -308,7 +243,6 @@
                 "walker.cachix.org-1:fG8q+uAaMqhsMxWjwvk0IMb4mFPFLqHjuvfwQxE4oJM="
                 "walker-git.cachix.org-1:vmC0ocfPWh0S/vRAQGtChuiZBTAe4wiKDeyyXM0/7pM="
                 "lantian:EeAUQ+W+6r7EtwnmYjeVwx5kOGEBpjlBfPlzGlTNvHc="
-                "cache.garnix.io:CTFPyKSLcx5RMJKfLo5EEPUObbA78b0YQ2DTCJXqr9g="
             ];
         };
     };
