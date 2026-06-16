@@ -30,7 +30,6 @@
                 "https://cache.flox.dev"
                 ## cachyos kernel binary caches
                 "https://attic.xuyh0120.win/lantian"
-                "https://cache.garnix.io"
             ];
 
             extra-substituters = [
@@ -50,7 +49,6 @@
                 "walker.cachix.org-1:fG8q+uAaMqhsMxWjwvk0IMb4mFPFLqHjuvfwQxE4oJM="
                 "walker-git.cachix.org-1:vmC0ocfPWh0S/vRAQGtChuiZBTAe4wiKDeyyXM0/7pM="
                 "lantian:EeAUQ+W+6r7EtwnmYjeVwx5kOGEBpjlBfPlzGlTNvHc="
-                "cache.garnix.io:CTFPyKSLcx5RMJKfLo5EEPUObbA78b0YQ2DTCJXqr9g="
             ];
 
             extra-trusted-public-keys = [

@@ -1,0 +1,94 @@
+{
+    lib,
+    inputs,
+    config,
+    pkgs,
+    ...
+}: let
+    cfg = config.shellix.programs.neovim;
+
+    runtimePackages = with pkgs; [
+        typescript-language-server
+        javascript-typescript-langserver
+        svelte-language-server
+        lua-language-server
+        ltex-ls-plus
+        pyright
+        tailwindcss-language-server
+        nil
+        kdePackages.qtdeclarative
+        marksman
+        mesonlsp
+        oxlint
+        oxfmt
+        vscode-langservers-extracted
+        (callPackage ./plugins/csskit.nix {})
+        docker-language-server
+        cmake-language-server
+        clang-tools
+        fish-lsp
+
+        stylua
+        shfmt
+        shellcheck
+
+        ## need for recognize types and standard libraries
+        python3
+        clang
+        tree-sitter
+        typescript
+        nodejs
+        yarn
+        pnpm
+    ];
+    neovimWrapped = pkgs.wrapNeovimUnstable
+    inputs.neovim-nightly-overlay.packages.${pkgs.stdenv.hostPlatform.system}.default
+    {
+        plugins = [
+            (pkgs.vimPlugins.nvim-treesitter.withPlugins (p: [
+                p.typescript
+                p.tsx
+                p.javascript
+                p.html
+                p.css
+                p.svelte
+                p.dart
+                p.qmljs
+                p.json
+                p.json5
+                p.nix
+                p.lua
+                p.bash
+                p.markdown
+                p.markdown_inline
+                p.yaml
+                p.toml
+                p.dockerfile
+                p.sql
+                p.cpp
+                p.c
+                p.fish
+            ]))
+        ];
+        wrapRc = false;
+        inherit (cfg) viAlias vimAlias vimdiffAlias extraPackages;
+    };
+in {
+    config = lib.mkIf cfg.enable {
+        environment = {
+            systemPackages =
+                [
+                    neovimWrapped
+                ]
+                ++ runtimePackages;
+
+            variables = lib.mkIf cfg.defaultEditor {
+                EDITOR = "nvim";
+                VISUAL = "nvim";
+            };
+            shellAliases = lib.mkIf cfg.vimdiffAlias {
+                vimdiff = "nvim -d";
+            };
+        };
+    };
+}

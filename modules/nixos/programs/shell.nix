@@ -1,23 +1,31 @@
 {
-  inputs,
-  config,
-  lib,
-  ...
+    inputs,
+    pkgs,
+    config,
+    lib,
+    ...
 }: let
-  cfg = config.shellix.programs.shell;
+    cfg = config.shellix.programs.shell;
 in {
-  imports = [
-    inputs.shell.nixosModules.default
-  ];
+    config = lib.mkIf cfg.enable {
+        systemd.user.services.quickshell-shell = {
+            description = "vast-shell widget built on quickshell";
+            wantedBy = ["graphical-session.target"];
+            after = ["graphical-session.target"];
+            partOf = ["graphical-session.target"];
 
-  options.shellix.programs.shell = {
-    enable = lib.mkEnableOption "Enable shell widgets";
-  };
-
-  config = lib.mkIf cfg.enable {
-    programs.quickshell-shell = {
-      enable = true;
-      installFonts = false;
+            serviceConfig = {
+                Type = "simple";
+                ExecStart = "${inputs.shell.packages.${pkgs.stdenv.hostPlatform.system}.default}/bin/shell";
+                Restart = "on-failure";
+                RestartSec = "5s";
+                Environment = [
+                    "WAYLAND_DISPLAY=wayland-1"
+                    "XDG_RUNTIME_DIR=/run/user/%U"
+                    "QT_QPA_PLATFORM=wayland"
+                    "DISPLAY=:0"
+                ];
+            };
+        };
     };
-  };
 }

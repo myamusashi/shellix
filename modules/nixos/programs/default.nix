@@ -8,14 +8,16 @@
         ./lazygit.nix
         ./mpv.nix
         ./neovide.nix
-        ./neovim.nix
         ./quickshell.nix
         ./shell.nix
         ./spicetify.nix
-		./virt-manager.nix
+        ./steam.nix
+        ./virt-manager.nix
         ./vscode.nix
+        ./wireshark.nix
         ./fish/default.nix
         ./matugen/default.nix
+        ./neovim/default.nix
         ./yazi/default.nix
     ];
 
@@ -29,13 +31,28 @@
         lazygit.enable = mkEnableOption "Enable TUI git management";
         mpv.enable = mkEnableOption "Enable lightweight and feature rich video player";
         neovide.enable = mkEnableOption "Enable neovim client built onRust";
-        neovim.enable = mkEnableOption "Enable neovim, lightweight terminal editor";
+        neovim = {
+            enable = lib.mkEnableOption "Enable Neovim with treesitter and LSP tools";
+
+            viAlias = lib.mkEnableOption "vi alias";
+            vimAlias = lib.mkEnableOption "vim alias";
+            vimdiffAlias = lib.mkEnableOption "vimdiff alias";
+            defaultEditor = lib.mkEnableOption "default editor" // {default = true;};
+
+            extraPackages = lib.mkOption {
+                type = lib.types.listOf lib.types.package;
+                default = [];
+                description = "LSP servers, formatters, and tools available to nvim";
+            };
+        };
         quickshell.enable = mkEnableOption "Enable quickshell wrapper";
         shell.enable = mkEnableOption "Enable shell for wm GUI";
         spicetify.enable = mkEnableOption "Enable spotify mod";
+        steam.enable = mkEnableOption "Enable steam client";
         vscode.enable = mkEnableOption "Enable electron code editor";
         matugen.enable = mkEnableOption "Enable auto color generation based on wallpaper";
         yazi.enable = mkEnableOption "Enable Yazi terminal file manager built on Rust";
-		virt-manager.enable = mkEnableOption "Enable libvirt for virtualization using Qemu";
+        virt-manager.enable = mkEnableOption "Enable libvirt for virtualization using Qemu";
+        wireshark.enable = mkEnableOption "Enable network listener";
     };
 }

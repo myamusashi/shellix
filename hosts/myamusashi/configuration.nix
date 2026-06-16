@@ -15,9 +15,6 @@
 in {
     imports = [
         inputs.qtengine.nixosModules.default
-        ../../modules/nixos/programs/default.nix
-        ../../modules/nixos/services/default.nix
-        ../../modules/server/default.nix
     ];
 
     fonts = {
@@ -30,7 +27,7 @@ in {
     };
 
     sops = {
-        age.keyFile = lib.mkForce userConfig + "/sops/age/keys1.txt";
+        age.keyFile = lib.mkForce (userConfig + "/sops/age/keys1.txt");
     };
 
     i18n.defaultLocale = "en_US.UTF-8";
@@ -70,130 +67,8 @@ in {
         session   include       login
     '';
 
-    shellix = {
-        services.server.phpmyadmin.enable = true;
-
-        services.nixos = {
-            audio.enable = true;
-            backup.myamusashi.enable = true;
-            earlyoom.enable = false;
-            plasma.enable = true;
-            resolver.enable = true;
-            scx.enable = true;
-            display-manager = {
-                sddm = {
-                    enable = true;
-                    wayland = {
-                        enable = true;
-                        compositor = "weston";
-                    };
-                    auto-login = {
-                        enable = false;
-                        user = "myamusashi";
-                        session = "hyprland.desktop";
-                    };
-                };
-            };
-        };
-
-        programs.nixos = {
-            fish.enable = true;
-            steam.enable = true;
-            virt-manager.enable = false;
-            wireshark.enable = true;
-            xonsh.enable = false;
-        };
-
-        packages.nixos = {
-            enable = true;
-
-            system = true;
-            network = true;
-            security = true;
-            android = true;
-
-            development = {
-                containers = true;
-                tools = true;
-            };
-
-            wayland = {
-                core = true;
-            };
-
-            multimedia = {
-                office = true;
-                apps = true;
-            };
-
-            media = {
-                screen_recorder = true;
-            };
-
-            theming = {
-                icons = true;
-            };
-
-            customPackages = with pkgs; [
-                starship
-                darkly
-                stylua
-                # kdePackages.qtmultimedia
-                # distrobox
-                git-credential-manager
-                sops
-                libva-utils
-                bat
-                duf
-                unzip
-                zip
-                unrar
-                sqlite
-                # lxqt.pcmanfm-qt
-                kdePackages.dolphin
-                inputs.shell.packages.${pkgs.stdenv.hostPlatform.system}.default
-                lxqt.pavucontrol-qt
-                wl-screenrec
-                gvfs
-                wget2
-                mysql-workbench
-                # (wrapElectron drawio "drawio")
-                home-manager
-                iptables
-                greetd
-                qbittorrent-enhanced-nox
-                arduino
-                strawberry
-                ddcutil
-                # (wrapElectron mendeley "mendeley-reference-manager")
-                virtualgl
-                vulkan-tools
-                libva-utils
-                maple-mono.NF
-                # (pkgs.callPackage ../../modules/packages/custom/spotiFLAC.nix {})
-                flutter
-                # android-studio
-                netbeans
-                # android-tools
-                # spotify
-                noto-fonts-cjk-sans
-                # virtio-win
-                virt-viewer
-                freerdp
-                pv
-                rclone
-                rclone-browser
-                mprisence
-                inputs.hypr-scroll-overview.packages.${pkgs.stdenv.hostPlatform.system}.default
-            ];
-            excludePackages = [
-            ];
-        };
-    };
-
     programs = {
         starship.enable = true;
-        fish.enable = true;
         dconf.enable = true;
         mtr.enable = true;
         git = {
@@ -221,6 +96,9 @@ in {
         hyprland = {
             enable = true;
             package = pkgs.hyprland;
+            systemd.setPath.enable = true;
+            portalPackage = pkgs.xdg-desktop-portal-hyprland;
+            xwayland.enable = true;
         };
         ccache.enable = true;
         java = {
