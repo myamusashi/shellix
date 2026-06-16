@@ -19,7 +19,7 @@ in {
             };
 
             shellInit = ''
-                ${builtins.readFile ./shell.fish}
+                ${builtins.readFile ./config.fish}
 
                 function ws
                     ${pkgs.quickshell}/bin/qs -c lock ipc call img set "$argv[1]"

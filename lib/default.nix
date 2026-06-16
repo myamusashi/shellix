@@ -21,9 +21,9 @@ in rec {
 
     forAllSystems = lib.genAttrs supportedSystems;
 
-    shellix-lib = import ./modules.nix { inherit lib; };
+    shellix-lib = import ./modules.nix {inherit lib;};
 
-    shellix-pkgs = system: import ./pkgs.nix { pkgs = mkPkgs { inherit system; }; };
+    shellix-pkgs = system: import ./pkgs.nix {pkgs = mkPkgs {inherit system;};};
 
     mkPkgs = {
         system,

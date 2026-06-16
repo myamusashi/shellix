@@ -4,7 +4,7 @@
     pkgs,
     ...
 }: let
-    cfg = config.shellix.programs.nixos.wireshark;
+    cfg = config.shellix.programs.wireshark;
 in {
     config = lib.mkIf cfg.enable {
         programs.wireshark = {

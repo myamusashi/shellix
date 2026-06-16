@@ -1,6 +1,12 @@
 {
+    imports = [
+        ../../modules/nixos/programs/default.nix
+        ../../modules/nixos/services/default.nix
+        ../../modules/server/default.nix
+    ];
+
     shellix = {
-        services.server.phpmyadmin.enable = false;
+        server.phpmyadmin.enable = false;
 
         services = {
             audio.enable = true;
@@ -31,7 +37,7 @@
             };
             hypridle.enable = true;
             kdeconnect.enable = true;
-            mpd.enable = true;
+            mpd.enable = false;
             systemd.nm-applet.enable = true;
         };
 
@@ -40,7 +46,6 @@
             steam.enable = true;
             virt-manager.enable = false;
             wireshark.enable = true;
-            xonsh.enable = false;
             btop.enable = true;
             fastfetch.enable = true;
             foot.enable = true;

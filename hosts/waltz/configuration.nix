@@ -47,10 +47,6 @@
 
         programs = {
             fish.enable = true;
-            steam.enable = false;
-            virt-manager.enable = false;
-            wireshark.enable = false;
-            xonsh.enable = false;
         };
     };
 

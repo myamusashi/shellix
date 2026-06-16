@@ -29,35 +29,6 @@
         "*/.direnv"
     ];
 in {
-    options.shellix.services.backup = {
-        user = lib.mkOption {
-            default = "";
-            description = "Username for your backup name";
-            type = lib.types.str;
-        };
-
-        settings = lib.mkOption {
-            default = {};
-            description = "Configuration for your backup";
-            type = lib.types.attrsOf (
-                lib.types.submodule (
-                    {name, ...}: {
-                        options = {
-                            repo = lib.mkOption {
-                                default = "";
-                                description = "Directory for your backup, you can use ssh connection to backup your files/directory";
-                                example = ''
-                                    repo = "waltz@10.0.0.10:/backup/myamusashi";
-                                '';
-                                type = lib.types.str;
-                            };
-                        };
-                    }
-                )
-            );
-        };
-    };
-
     config = {
         services.borgbackup.jobs = {
             myamusashi = lib.mkIf cfg.myamusashi.enable {

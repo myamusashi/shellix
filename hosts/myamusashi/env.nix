@@ -2,7 +2,24 @@
     pkgs,
     inputs,
     ...
-}: {
+}: let
+    electron-flags = [
+        "--enable-features=Vulkan,VaapiVideoDecodeLinuxGL,VaapiIgnoreDriverChecks,VaapiVideoDecoder,VaapiVideoEncoder,AcceleratedVideoEncoder,UseMultiPlaneFormatForHardwareVideo,SkiaGraphite"
+        "--ignore-gpu-blocklist"
+        "--enable-zero-copy"
+    ];
+
+    wrapElectron = pkg: binary:
+        pkgs.symlinkJoin {
+            name = "${pkg.pname or pkg.name}-wrapped";
+            paths = [
+                (pkgs.writeShellScriptBin binary ''
+                    exec ${pkg}/bin/${binary} ${builtins.concatStringsSep " " electron-flags} "$@"
+                '')
+                pkg
+            ];
+        };
+in {
     environment = {
         systemPackages = with pkgs; [
             # darkly <-- code editor qol here
@@ -74,7 +91,7 @@
             noto-fonts
             weather-icons
             (import
-            ../../modules/packages/custom/google-sans-flex.nix
+            ../../modules/nixos/packages/custom/google-sans-flex.nix
             {inherit (pkgs) stdenv lib unzip;})
 
             ## Sharing file tools
@@ -105,8 +122,8 @@
             gtk4
             morewaita-icon-theme
             qt6Packages.qt6ct
-            (import ../../modules/packages/custom/future-cursor.nix {inherit (pkgs) stdenvNoCC lib fetchFromGitHub;})
-            (import ../../modules/packages/custom/future-cyan-hyprcursor.nix {inherit (pkgs) stdenvNoCC lib fetchFromGitHub;})
+            (import ../../modules/nixos/packages/custom/future-cursor.nix {inherit (pkgs) stdenvNoCC lib fetchFromGitHub;})
+            (import ../../modules/nixos/packages/custom/future-cyan-hyprcursor.nix {inherit (pkgs) stdenvNoCC lib fetchFromGitLab;})
 
             ## screen recorder and screenshot tools
             grim
@@ -117,7 +134,6 @@
             ## Password managers
             pass-wayland
             bitwarden-cli
-            (wrapElectron bitwarden-desktop "bitwarden")
             wine-wayland
             winetricks
             wineWow64Packages.waylandFull
@@ -134,15 +150,16 @@
 
             ## Apps
             (wrapElectron vesktop "vesktop")
-            helium
+            (wrapElectron inputs.helium.packages.${stdenv.hostPlatform.system}.default "helium")
 
             ## Misc
+            darkly
             git-credential-manager
             gh
             git
             curl
             kdiff3
-            (import ../../modules/packages/custom/app2unit.nix {inherit (pkgs) lib stdenvNoCC fetchFromGithub makeWrapper bash systemd coreutils findutils gnugrep git gnused scdoc gawk libnotify;})
+            (import ../../modules/nixos/packages/custom/app2unit.nix {inherit (pkgs) lib stdenvNoCC fetchFromGitHub makeWrapper bash systemd coreutils findutils gnugrep git gnused scdoc gawk libnotify;})
             sops
             wl-screenrec
             gvfs
@@ -150,6 +167,11 @@
             inputs.antigravity-flakes.packages.${stdenv.hostPlatform.system}.default
             vim
             polkit
+            inputs.hypr-scroll-overview.packages.${stdenv.hostPlatform.system}.default
+            inputs.zen-browser.packages.${stdenv.hostPlatform.system}.default
+            (wrapElectron onlyoffice-desktopeditors "onlyoffice-desktopeditors")
+            qbittorrent-enhanced-nox
+            patchelf
 
             ## Nix tools
             nil
