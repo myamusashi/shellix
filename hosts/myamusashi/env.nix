@@ -177,7 +177,6 @@ in {
             nil
             alejandra
             statix
-            nh
         ];
 
         sessionVariables = {
