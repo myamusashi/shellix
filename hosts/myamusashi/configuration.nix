@@ -71,6 +71,10 @@ in {
         starship.enable = true;
         dconf.enable = true;
         mtr.enable = true;
+        nh = {
+            enable = true;
+            clean.enable = true;
+        };
         git = {
             enable = true;
             config = {
