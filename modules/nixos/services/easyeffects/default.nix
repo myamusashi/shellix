@@ -28,7 +28,7 @@ in {
             "L+ %h/.config/easyeffects/output/gentle-dynamics.json - - - - ${pkgs.writeText "gentle-dynamics.json" (builtins.toJSON presets.gentle-dynamics)}"
         ];
 
-        systemd.services.easyeffects = {
+        systemd.user.services.easyeffects = {
             description = "EasyEffects daemon";
             wantedBy = ["graphical-session.target"];
             after = ["graphical-session.target"];

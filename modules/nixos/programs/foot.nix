@@ -11,7 +11,7 @@ in {
             enable = true;
         };
 
-        systemd.services.foot-server = {
+        systemd.user.services.foot-server = {
             description = "running foot terminal server";
             wantedBy = ["graphical-session.target"];
             environment = {
