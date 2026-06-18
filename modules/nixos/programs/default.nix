@@ -8,7 +8,6 @@
         ./lazygit.nix
         ./mpv.nix
         ./neovide.nix
-        ./quickshell.nix
         ./shell.nix
         ./spicetify.nix
         ./steam.nix
@@ -45,7 +44,6 @@
                 description = "LSP servers, formatters, and tools available to nvim";
             };
         };
-        quickshell.enable = mkEnableOption "Enable quickshell wrapper";
         shell.enable = mkEnableOption "Enable shell for wm GUI";
         spicetify.enable = mkEnableOption "Enable spotify mod";
         steam.enable = mkEnableOption "Enable steam client";

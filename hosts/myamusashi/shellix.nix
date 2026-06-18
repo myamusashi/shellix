@@ -55,7 +55,6 @@
             mpv.enable = true;
             neovide.enable = false;
             neovim.enable = true;
-            quickshell.enable = true;
             shell.enable = true;
             spicetify.enable = false;
             vscode.enable = true;
