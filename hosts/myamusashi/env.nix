@@ -56,6 +56,7 @@ in {
 
             ## Qt packages
             kdePackages.dolphin
+            inputs.quickshell.packages.${pkgs.stdenv.hostPlatform.system}.default
             inputs.shell.packages.${pkgs.stdenv.hostPlatform.system}.default
             lxqt.pavucontrol-qt
             pinentry-qt

@@ -1,6 +1,4 @@
 {
-    inputs,
-    pkgs,
     config,
     lib,
     ...
@@ -16,7 +14,7 @@ in {
 
             serviceConfig = {
                 Type = "simple";
-                ExecStart = "${inputs.shell.packages.${pkgs.stdenv.hostPlatform.system}.default}/bin/shell";
+                ExecStart = "/run/current-system/sw/bin/shell";
                 Restart = "on-failure";
                 RestartSec = "5s";
                 Environment = [
