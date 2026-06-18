@@ -38,7 +38,7 @@ in {
             "L+ %h/.config/hypr/hypridle.conf - - - - ${pkgs.writeText "hypridle.conf" hypridleConf}"
         ];
 
-        systemd.services.hypridle = {
+        systemd.user.services.hypridle = {
             description = "Hyprland idle daemon";
             after = ["graphical-session.target"];
             partOf = ["graphical-session.target"];
