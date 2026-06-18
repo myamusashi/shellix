@@ -15,6 +15,7 @@
 in {
     imports = [
         inputs.qtengine.nixosModules.default
+        inputs.hyprland.nixosModules.default
     ];
 
     fonts = {
@@ -99,10 +100,11 @@ in {
         };
         hyprland = {
             enable = true;
-            package = pkgs.hyprland;
-            systemd.setPath.enable = true;
-            portalPackage = pkgs.xdg-desktop-portal-hyprland;
             xwayland.enable = true;
+            package = inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.hyprland.override {
+                withSystemd = true;
+            };
+            portalPackage = inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.xdg-desktop-portal-hyprland;
         };
         ccache.enable = true;
         java = {
@@ -144,7 +146,6 @@ in {
         extraPortals = with pkgs; [
             xdg-desktop-portal
             kdePackages.xdg-desktop-portal-kde
-            xdg-desktop-portal-hyprland
         ];
         config = {
             common.default = "hyprland;kde";

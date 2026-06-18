@@ -106,7 +106,6 @@ in {
             ## video and document tools
             ffmpeg-full
             imagemagick
-            ffmpeg
             ffmpegthumbnailer
             poppler-utils
             mpv
@@ -141,7 +140,6 @@ in {
 
             ## gayming
             steam
-            (wrapElectron heroic "heroic")
             gamemode
 
             ## Office
@@ -167,11 +165,14 @@ in {
             inputs.antigravity-flakes.packages.${stdenv.hostPlatform.system}.default
             vim
             polkit
-            inputs.hypr-scroll-overview.packages.${stdenv.hostPlatform.system}.default
             inputs.zen-browser.packages.${stdenv.hostPlatform.system}.default
             (wrapElectron onlyoffice-desktopeditors "onlyoffice-desktopeditors")
             qbittorrent-enhanced-nox
             patchelf
+
+            ## Hyprland plugins
+            inputs.hypr-scroll-overview.packages.${stdenv.hostPlatform.system}.default
+            inputs.hypr-dynamic-cursors.packages.${pkgs.system}.hypr-dynamic-cursors
 
             ## Nix tools
             nil
