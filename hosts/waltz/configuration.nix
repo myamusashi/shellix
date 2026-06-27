@@ -3,33 +3,7 @@
     pkgs-stable,
     lib,
     ...
-}: let
-    # simasetApp = pkgs-stable.stdenv.mkDerivation {
-    #     name = "simaset";
-    #     version = "1.0.0";
-    #
-    #     src = pkgs-stable.fetchFromGitHub {
-    #         owner = "REDACTED_OWNER";
-    #         repo = "REDACTED_REPO";
-    #         rev = "92508d1f25a983fad758e79002b3ed111d2196ab";
-    #         hash = "sha256-xcP4YBR3N4AhGlwRJgopfifhBm3GC8XQKXTmExOLCXs=";
-    #     };
-    #
-    #     patches = [
-    #         ./pathshit.patch
-    #     ];
-    #
-    #     installPhase = ''
-    #         mkdir -p $out
-    #         cp -r . $out/
-    #         chmod -R a+rX $out
-    #     '';
-    #
-    #     dontBuild = true;
-    #     dontConfigure = true;
-    #     dontFixup = true;
-    # };
-in {
+}: {
     imports = [
         ./hardware/default.nix
         ../../shared/Variable.nix
@@ -141,49 +115,7 @@ in {
                     '';
                 };
             };
-
-            # "example.com" = {
-            #     listen = [
-            #         {
-            #             addr = "127.0.0.1";
-            #             port = 8800;
-            #         }
-            #     ];
-            #     root = "${simasetApp}";
-            #     locations."~ \\.php$" = {
-            #         extraConfig = ''
-            #             fastcgi_pass unix:${config.services.phpfpm.pools.simasetApp.socket};
-            #             fastcgi_index index.php;
-            #             include ${pkgs-stable.nginx}/conf/fastcgi_params;
-            #             fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
-            #         '';
-            #     };
-            #     locations."/" = {
-            #         tryFiles = "$uri $uri/ /index.php?$query_string";
-            #     };
-            # };
         };
-
-        # phpfpm.pools.simasetApp = {
-        #     user = "simaset";
-        #     group = "simaset";
-        #     phpPackage = pkgs-stable.php;
-        #
-        #     settings = {
-        #         "listen.owner" = config.services.nginx.user;
-        #         "pm" = "dynamic";
-        #         "pm.max_children" = 5;
-        #         "pm.start_servers" = 2;
-        #         "pm.min_spare_servers" = 1;
-        #         "pm.max_spare_servers" = 3;
-        #     };
-        #
-        #     phpOptions = ''
-        #         upload_max_filesize = 64M
-        #         post_max_size = 64M
-        #         memory_limit = 256M
-        #     '';
-        # };
         vaultwarden.config.ROCKET_PORT = lib.mkForce config.shellix.variables.port.VAULTWARDEN;
     };
 
@@ -255,12 +187,6 @@ in {
         shell = pkgs-stable.fish;
         extraGroups = ["networkmanager" "wheel" "vsftpd" "docker" "podman"];
     };
-
-    # users.users.simaset = {
-    #     isSystemUser = true;
-    #     group = "simaset";
-    # };
-    # users.groups.simaset = {};
 
     users.groups.cloudflared = {};
     users.users.cloudflared = {
