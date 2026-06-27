@@ -6,7 +6,7 @@
 }: let
     cfg = config.shellix.server.wireguard;
 in {
-    options.shellix.services.server.wireguard = {
+    options.shellix.server.wireguard = {
         pathPrivateKeyFile = lib.mkOption {
             type = lib.types.path;
             default = "";
