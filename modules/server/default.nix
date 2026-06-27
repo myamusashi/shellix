@@ -9,6 +9,7 @@
         ./phpmyadmin.nix
         ./vaultwarden.nix
         ./vsftpd.nix
+        ./php-app.nix
     ];
 
     options.shellix.server = {
