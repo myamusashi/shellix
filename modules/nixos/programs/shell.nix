@@ -1,11 +1,16 @@
 {
     config,
     lib,
+    pkgs,
+    inputs,
     ...
 }: let
     cfg = config.shellix.programs.shell;
+    shellPkg = inputs.shell.packages.${pkgs.stdenv.hostPlatform.system}.default;
 in {
     config = lib.mkIf cfg.enable {
+        environment.systemPackages = [shellPkg];
+
         systemd.user.services.quickshell-shell = {
             description = "vast-shell widget built on quickshell";
             wantedBy = ["graphical-session.target"];
@@ -14,7 +19,7 @@ in {
 
             serviceConfig = {
                 Type = "simple";
-                ExecStart = "/run/current-system/sw/bin/shell";
+                ExecStart = "${shellPkg}/bin/shell";
                 Restart = "on-failure";
                 RestartSec = "5s";
                 Environment = [

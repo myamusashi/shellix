@@ -6,7 +6,7 @@
     ];
 
     shellix = {
-        server.phpmyadmin.enable = false;
+        server.phpmyadmin.enable = true;
 
         services = {
             audio.enable = true;
