@@ -23,7 +23,7 @@
                 pathPrivateKeyFile = "/etc/wireguard-keys/private.key";
                 peers = [
                     {
-                        publicKey = "FOw44zb+Efuxud+s75EN0ySC4dnagHHCTBRn0LKzPxM=";
+                        publicKey = "DwqntR+HaHhiTST1MxZOYBKa0inDiUKN4HNo4UTeRHo=";
                         allowedIPs = ["10.88.0.2/32"];
                     }
                     {
