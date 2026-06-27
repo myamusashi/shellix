@@ -1,4 +1,4 @@
-{pkgs, ...}: {
+{pkgs-stable, ...}: {
     imports = [
         ./hardware-configuration.nix
     ];
@@ -7,20 +7,20 @@
             efi.canTouchEfiVariables = true;
             systemd-boot.enable = true;
         };
-        kernelPackages = pkgs.cachyosKernels.linuxPackages-cachyos-server-lto;
+        kernelPackages = pkgs-stable.cachyosKernels.linuxPackages-cachyos-server-lto;
     };
 
     hardware.graphics = {
         enable = true;
         enable32Bit = true;
-        extraPackages = with pkgs; [
+        extraPackages = with pkgs-stable; [
             intel-media-driver
             intel-vaapi-driver
             libva-vdpau-driver
             libva
             libvdpau-va-gl
         ];
-        extraPackages32 = with pkgs.pkgsi686Linux; [
+        extraPackages32 = with pkgs-stable.pkgsi686Linux; [
             intel-media-driver
             intel-vaapi-driver
         ];
