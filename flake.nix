@@ -164,6 +164,7 @@
             inputs.nixpkgs.follows = "nixpkgs";
         };
 
+        apple-fonts.url = "github:Lyndeno/apple-fonts.nix";
         sops-nix.url = "github:Mic92/sops-nix";
         nix-cachyos-kernel.url = "github:xddxdd/nix-cachyos-kernel/release";
         neovim-nightly-overlay.url = "github:nix-community/neovim-nightly-overlay";
