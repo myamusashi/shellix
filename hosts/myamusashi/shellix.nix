@@ -6,13 +6,13 @@
     ];
 
     shellix = {
-        server.phpmyadmin.enable = true;
+        server.phpmyadmin.enable = false;
 
         services = {
             audio.enable = true;
             backup.myamusashi.enable = true;
             earlyoom.enable = false;
-            plasma.enable = true;
+            plasma.enable = false;
             resolver.enable = true;
             scx.enable = true;
             display-manager = {
@@ -55,7 +55,7 @@
             mpv.enable = true;
             neovide.enable = false;
             neovim.enable = true;
-            shell.enable = true;
+            shell.enable = false;
             spicetify.enable = false;
             vscode.enable = true;
             matugen.enable = true;
