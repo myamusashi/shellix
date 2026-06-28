@@ -19,11 +19,22 @@ in {
     ];
 
     fonts = {
+        packages = [
+            inputs.apple-fonts.packages.${pkgs.stdenv.hostPlatform.system}.sf-pro
+            inputs.apple-fonts.packages.${pkgs.stdenv.hostPlatform.system}.sf-mono
+            inputs.apple-fonts.packages.${pkgs.stdenv.hostPlatform.system}.ny
+            pkgs.maple-mono.NF
+            pkgs.noto-fonts
+            pkgs.weather-icons
+            (import
+            ../../modules/nixos/packages/custom/google-sans-flex.nix
+            {inherit (pkgs) stdenv lib unzip;})
+        ];
         enableDefaultPackages = true;
         fontconfig.defaultFonts = {
-            serif = ["Segoe UI"];
-            monospace = ["Maple Mono NF"];
-            sansSerif = ["Segoe UI"];
+            serif = ["New York"];
+            monospace = ["SF Mono"];
+            sansSerif = ["SF Pro"];
         };
     };
 
@@ -115,12 +126,12 @@ in {
 
             config = {
                 theme = {
-                    colorScheme = "/run/current-system/sw/share/color-schemes/Aero.colors";
-                    iconTheme = "Windows 7 Aero";
-                    style = "MS Windows 9x";
+                    colorScheme = "/run/current-system/sw/share/color-schemes/Darkly.colors";
+                    iconTheme = "MoreWaita";
+                    style = "qtengine";
 
                     font = {
-                        family = "Segoe UI";
+                        family = "SF Pro";
                         size = 11;
                         weight = -1;
                     };
