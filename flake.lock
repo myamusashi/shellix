@@ -29,15 +29,15 @@
         ]
       },
       "locked": {
-        "lastModified": 1780325566,
-        "narHash": "sha256-VFPUOpXX6u3amwm77VogCqRpnniWAv+T/n5PrjBxhOs=",
-        "owner": "nyakase",
+        "lastModified": 1782576345,
+        "narHash": "sha256-/2ByOFuUWTcdWeXKuhbvTfDLcweI8LipU5Kzg+lk1Z8=",
+        "owner": "FurkanDemirhan",
         "repo": "aerothemeplasma-nix",
-        "rev": "2d80b3832bdc28b413a1b259e0d7223e357309f7",
+        "rev": "735dcbc377631a63608d548b6d5c935e3476144f",
         "type": "github"
       },
       "original": {
-        "owner": "nyakase",
+        "owner": "FurkanDemirhan",
         "repo": "aerothemeplasma-nix",
         "type": "github"
       }
