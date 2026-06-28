@@ -57,7 +57,7 @@ in {
             ## Qt packages
             kdePackages.dolphin
             inputs.quickshell.packages.${pkgs.stdenv.hostPlatform.system}.default
-            # inputs.shell.packages.${pkgs.stdenv.hostPlatform.system}.default
+            inputs.shell.packages.${pkgs.stdenv.hostPlatform.system}.default
             lxqt.pavucontrol-qt
             pinentry-qt
             media-downloader
@@ -86,14 +86,6 @@ in {
             strawberry
             # (pkgs.callPackage ../../modules/packages/custom/spotiFLAC.nix {})
             # spotify
-
-            ## Fonts
-            maple-mono.NF
-            noto-fonts
-            weather-icons
-            (import
-            ../../modules/nixos/packages/custom/google-sans-flex.nix
-            {inherit (pkgs) stdenv lib unzip;})
 
             ## Sharing file tools
             rclone
