@@ -7,7 +7,7 @@
             efi.canTouchEfiVariables = true;
             systemd-boot.enable = true;
         };
-        kernelPackages = pkgs-stable.cachyosKernels.linuxPackages-cachyos-server-lto;
+        kernelPackages = pkgs-stable.cachyosKernels.linuxPackages-cachyos-server;
     };
 
     hardware.graphics = {
