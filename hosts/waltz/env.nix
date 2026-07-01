@@ -42,4 +42,7 @@
         gh
         curl
     ];
+    environment.sessionVariables = {
+        EDITOR = "vim";
+    };
 }
