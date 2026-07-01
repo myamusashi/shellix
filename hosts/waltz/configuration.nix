@@ -44,7 +44,7 @@
                     enable = true;
                     version = "1.0.0";
 
-                    domain = "simaset.local";
+                    domain = "example.com";
                     listenAddress = "127.0.0.1";
                     port = 8800;
 
