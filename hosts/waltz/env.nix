@@ -41,6 +41,8 @@
         git
         gh
         curl
+
+        cloudflared
     ];
     environment.sessionVariables = {
         EDITOR = "vim";
