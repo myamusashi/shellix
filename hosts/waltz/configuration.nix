@@ -40,6 +40,40 @@
             nix-serve.enable = false;
             phpApps = {
                 enable = true;
+
+                apps.example = {
+                    enable = true;
+                    version = "1.0.0";
+
+                    domain = "example.com";
+                    listenAddress = "127.0.0.1";
+                    port = 8801;
+
+                    src = pkgs-stable.fetchFromForgejo {
+			domain = "git.myamusashi.cc";
+                        owner = "myamusashi";
+                        repo = "REDACTED_REPO";
+                        rev = "7c00e04be3df87d10607be9840f2880c918a1274";
+                        hash = "sha256-aAvrxBeLrZdh8TGNvH7PHd3czOeStA4XSPXmZnc9puY=";
+                    };
+
+                    phpPackage = pkgs-stable.php83;
+                    phpExtensions = all: with all; [pdo pdo_mysql mysqli mbstring gd curl zip];
+
+                    phpOptions = {
+                        upload_max_filesize = "16M";
+                        post_max_size = "16M";
+                        memory_limit = "128M";
+                    };
+
+                    fpmSettings = {
+                        "pm" = "dynamic";
+                        "pm.max_children" = "10";
+                        "pm.start_servers" = "3";
+                        "pm.min_spare_servers" = "2";
+                        "pm.max_spare_servers" = "5";
+                    };
+                };
                 apps.example = {
                     enable = true;
                     version = "1.0.0";
