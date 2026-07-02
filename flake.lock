@@ -611,15 +611,15 @@
         "nixpkgs": "nixpkgs_2"
       },
       "locked": {
-        "lastModified": 1781564676,
-        "narHash": "sha256-knAT4UBayK1UE8Nz47439QYyTUovF1n5R1Ej2OoJVQU=",
-        "owner": "VirtCode",
+        "lastModified": 1782951988,
+        "narHash": "sha256-edTwf7+5SP8ndeLYx/0dFeBbAGHR6sWsr2H3WDrIDVg=",
+        "owner": "myamusashi",
         "repo": "hypr-dynamic-cursors",
-        "rev": "112ae605ee43784bb22a16e03a88224495d171e6",
+        "rev": "421fb6d9b3d195e872bae88374e106f96fac7e7f",
         "type": "github"
       },
       "original": {
-        "owner": "VirtCode",
+        "owner": "myamusashi",
         "repo": "hypr-dynamic-cursors",
         "type": "github"
       }
@@ -633,11 +633,11 @@
         "nixpkgs": "nixpkgs_3"
       },
       "locked": {
-        "lastModified": 1782602715,
-        "narHash": "sha256-1mdHYq6vrmWALESC0SnR0QvUoYpXgNsCXpPtLsJbf2M=",
+        "lastModified": 1782901686,
+        "narHash": "sha256-k8gy3jCyGNyBkn2oyPQ4VH2BjM3uISGyDYf3DgEJXtc=",
         "owner": "myamusashi",
         "repo": "hyprland-scroll-overview",
-        "rev": "f67dedf5754bd6757212487b0c655d7b5cf0f6a9",
+        "rev": "bcd9eb999cf155050d2e8f398b86e32265b171f7",
         "type": "github"
       },
       "original": {
@@ -937,11 +937,11 @@
         "xdph": "xdph"
       },
       "locked": {
-        "lastModified": 1782587939,
-        "narHash": "sha256-dPhX+yKiDRZGZpjsKy+pByenJic05BNhsyJumlkQD0c=",
+        "lastModified": 1782893559,
+        "narHash": "sha256-l92uUHanb7vX8ss30kkM+oX5vc2T4zwa+NY4sjYcIUE=",
         "owner": "hyprwm",
         "repo": "Hyprland",
-        "rev": "f048359d223fd83fc849c86bb40b36ec734be240",
+        "rev": "1b63ceecdfc6c33b68b677b8285ac621fc2b058f",
         "type": "github"
       },
       "original": {
@@ -2044,11 +2044,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1782035033,
-        "narHash": "sha256-pUtCphVzH1iNUTMGdJr4+e/yzUXA6/DZwsn+cyfIVJU=",
+        "lastModified": 1782639496,
+        "narHash": "sha256-mjt47Xun3jPcGrXpGpYU85lzUnqvJ2rXLbQjVI1yvLo=",
         "owner": "hyprwm",
         "repo": "hyprutils",
-        "rev": "9d8bf6e810597152eef8906c670b96679af2faec",
+        "rev": "d2b40ffe7bfcb001bbf5888bb56ff646de53e7db",
         "type": "github"
       },
       "original": {

@@ -215,6 +215,9 @@ in {
             QT_AUTO_SCREEN_SCALE_FACTOR = 1;
             QT_ENABLE_HIGHDPI_SCALING = 1;
             QT_WAYLAND_FORCE_DPI = "physical";
+
+			# It should fixes youtube lagging on helium browser
+			NIXOS_OZONE_WL = 1;
         };
     };
 
