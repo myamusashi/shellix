@@ -57,6 +57,7 @@
 
                     patches = [./pathshit.patch];
                     phpPackage = pkgs-stable.php83;
+                    phpExtensions = all: with all; [pdo pdo_mysql mysqli mbstring gd curl zip];
 
                     phpOptions = {
                         upload_max_filesize = "16M";
