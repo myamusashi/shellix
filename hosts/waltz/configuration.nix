@@ -45,12 +45,13 @@
                     enable = true;
                     version = "1.0.0";
 
-                    domain = "example.com";
+                    vHostDomain = "example.com";
+                    subdomain = "example";
                     listenAddress = "127.0.0.1";
                     port = 8801;
 
                     src = pkgs-stable.fetchFromForgejo {
-			domain = "git.myamusashi.cc";
+                        domain = "git.myamusashi.cc";
                         owner = "myamusashi";
                         repo = "REDACTED_REPO";
                         rev = "7c00e04be3df87d10607be9840f2880c918a1274";
@@ -78,7 +79,8 @@
                     enable = true;
                     version = "1.0.0";
 
-                    domain = "example.com";
+                    vHostDomain = "example.com";
+                    subdomain = "example";
                     listenAddress = "127.0.0.1";
                     port = 8800;
 
