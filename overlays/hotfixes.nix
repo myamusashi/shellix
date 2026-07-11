@@ -104,6 +104,47 @@ final: prev: {
     });
 
     python3Packages = prev.python3Packages.overrideScope (self: super: {
+        # starlette = super.starlette.overrideAttrs (oldAttrs: rec {
+        #     version = "0.52.1";
+        #
+        #     src = final.fetchFromGitHub {
+        #         owner = "Kludex";
+        #         repo = "starlette";
+        #         tag = version;
+        #         hash = "sha256-xpaernh9a0a1/5vgzzzgqbhlbsih1vr8qmfdkxg5cqe=";
+        #     };
+        # });
+        rembg = super.rembg.overridePythonAttrs (oldAttrs: {
+            optional-dependencies =
+                oldAttrs.optional-dependencies
+                // {
+                    cli = map (
+                        dep:
+                            if dep.pname == "gradio"
+                            then
+                                dep.overridePythonAttrs (gradioOldAttrs: {
+                                    dependencies = map (
+                                        gradDep:
+                                            if gradDep.pname == "starlette"
+                                            then
+                                                super.starlette.overridePythonAttrs (starletteOldAttrs: rec {
+                                                    version = "0.52.1";
+                                                    src = super.fetchFromGitHub {
+                                                        owner = "encode";
+                                                        repo = "starlette";
+                                                        tag = version;
+                                                        hash = "sha256-xpaernh9a0a1/5vgzzzgqbhlbsih1vr8qmfdkxg5cqe=";
+                                                    };
+                                                })
+                                            else gradDep
+                                    )
+                                    gradioOldAttrs.dependencies;
+                                })
+                            else dep
+                    )
+                    oldAttrs.optional-dependencies.cli;
+                };
+        });
         tree-sitter = super.tree-sitter.overrideAttrs (oldAttrs: rec {
             version = "0.25.2";
 
