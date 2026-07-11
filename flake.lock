@@ -2793,11 +2793,11 @@
     },
     "nixpkgs_7": {
       "locked": {
-        "lastModified": 1782467914,
-        "narHash": "sha256-pGvFkM8N0xEkIIXDe5YYfbEAvHrk4IxBrjB/x8OomhE=",
+        "lastModified": 1783522502,
+        "narHash": "sha256-iffAls3iaNTyJC2faYcUXSI+Gp02cDjYl+MygxKl2GI=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "e73de5be04e0eff4190a1432b946d469c794e7b4",
+        "rev": "0bb7ec54c8483066ec9d7720e780a5caa71f8612",
         "type": "github"
       },
       "original": {
@@ -2898,11 +2898,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1781847791,
-        "narHash": "sha256-Mo2YtNEGlcySnbq0YuP3nUKMAQCMAfE+TcCffo5vzD8=",
+        "lastModified": 1783673918,
+        "narHash": "sha256-cFG5vnmjJcZRVCSUaqQLOdwkX6iqF6bY8IvvmBSGSRs=",
         "ref": "refs/heads/master",
-        "rev": "68c2c85c33845385f7ab8147b32f1450b1e468e0",
-        "revCount": 824,
+        "rev": "4df562dfb2475a9057f0f33a8db75808efad8670",
+        "revCount": 830,
         "type": "git",
         "url": "https://git.outfoxxed.me/outfoxxed/quickshell"
       },
@@ -2912,27 +2912,6 @@
       }
     },
     "quickshell_2": {
-      "inputs": {
-        "nixpkgs": [
-          "shell",
-          "nixpkgs"
-        ]
-      },
-      "locked": {
-        "lastModified": 1781053488,
-        "narHash": "sha256-P4WEBaKgl8flRckHxXGHzT0potPvB3x8ZFIp9gLEAMY=",
-        "ref": "refs/heads/master",
-        "rev": "d99d87d5e5ec4e696815348692fdaaf0b6be1b2c",
-        "revCount": 822,
-        "type": "git",
-        "url": "https://git.outfoxxed.me/outfoxxed/quickshell"
-      },
-      "original": {
-        "type": "git",
-        "url": "https://git.outfoxxed.me/outfoxxed/quickshell"
-      }
-    },
-    "quickshell_3": {
       "inputs": {
         "nixpkgs": [
           "shell-greeter",
@@ -3087,14 +3066,16 @@
         "nixpkgs": [
           "nixpkgs"
         ],
-        "quickshell": "quickshell_2"
+        "quickshell": [
+          "quickshell"
+        ]
       },
       "locked": {
-        "lastModified": 1781821469,
-        "narHash": "sha256-i91gJ7CL+APp+cQazLzTzhNSWRWn8T/BL0f4+r1oTHI=",
+        "lastModified": 1783729274,
+        "narHash": "sha256-Xy5Z07LOkhOkPxaqYkk9rpLLttWBE61OHnQ35aphTWQ=",
         "ref": "refs/heads/master",
-        "rev": "de1065757522d29f7a8f085db510d865f9b940c4",
-        "revCount": 1120,
+        "rev": "1bf9319f646d7f3157ad53d24d6113960f3c0b1b",
+        "revCount": 1160,
         "type": "git",
         "url": "https://git.myamusashi.cc/myamusashi/vast-shell"
       },
@@ -3108,7 +3089,7 @@
         "nixpkgs": [
           "nixpkgs"
         ],
-        "quickshell": "quickshell_3"
+        "quickshell": "quickshell_2"
       },
       "locked": {
         "lastModified": 1773305658,

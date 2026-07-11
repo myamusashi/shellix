@@ -54,6 +54,7 @@
             inputs.nixpkgs.follows = "nixpkgs";
         };
 
+        # Hyprland plugins
         hy3 = {
             url = "github:outfoxxed/hy3";
             inputs.hyprland.follows = "hyprland";
@@ -73,6 +74,7 @@
             url = "github:myamusashi/Hyprspace";
             inputs.hyprland.follows = "hyprland";
         };
+        # End
 
         hyprlock = {
             url = "github:hyprwm/hyprlock";
@@ -131,7 +133,10 @@
 
         shell = {
             url = "git+https://git.myamusashi.cc/myamusashi/vast-shell";
-            inputs.nixpkgs.follows = "nixpkgs";
+            inputs = {
+                nixpkgs.follows = "nixpkgs";
+                quickshell.follows = "quickshell";
+            };
         };
 
         shell-greeter = {
