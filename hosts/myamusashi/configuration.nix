@@ -14,6 +14,7 @@
     userConfig = userHome + "/.config";
 in {
     imports = [
+        inputs.shell.nixosModules.default
         inputs.qtengine.nixosModules.default
         inputs.hyprland.nixosModules.default
     ];
@@ -48,12 +49,6 @@ in {
     # Nuh uh, don't fucking changing it
     system.stateVersion = "24.11"; # Did you read the comment?
 
-    systemd.services.greetd.environment = {
-        QML2_IMPORT_PATH = lib.concatStringsSep ":" [
-            "${inputs.shell-greeter.packages.${pkgs.stdenv.hostPlatform.system}.default}/${pkgs.qt6.qtbase.qtQmlPrefix}"
-        ];
-    };
-
     sops.secrets.myamusashi-password = {
         neededForUsers = true;
         owner = config.users.users.myamusashi.name;
@@ -80,6 +75,10 @@ in {
     '';
 
     programs = {
+        quickshell-shell = {
+            enable = true;
+            installFonts = true;
+        };
         starship.enable = true;
         dconf.enable = true;
         mtr.enable = true;

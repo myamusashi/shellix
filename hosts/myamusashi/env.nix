@@ -1,4 +1,5 @@
 {
+    lib,
     pkgs,
     inputs,
     ...
@@ -8,6 +9,25 @@
         "--ignore-gpu-blocklist"
         "--enable-zero-copy"
     ];
+
+    quickshell-wrapped = pkgs.runCommand "quickshell-wrapped" {
+        nativeBuildInputs = [pkgs.makeWrapper];
+    } ''
+        mkdir -p $out/bin
+        mkdir -p $out/lib
+        cp -r ${inputs.quickshell.packages.${pkgs.stdenv.hostPlatform.system}.default}/lib/qt-6/qml/Quickshell $out/lib/Quickshell
+
+        makeWrapper ${inputs.quickshell.packages.${pkgs.stdenv.hostPlatform.system}.default}/bin/qs $out/bin/qs \
+          --prefix PATH : ${lib.makeBinPath [pkgs.fd pkgs.coreutils pkgs.qt6.qt5compat]} \
+          --prefix QML2_IMPORT_PATH : "${pkgs.qt6.qt5compat}/${pkgs.qt6.qtbase.qtQmlPrefix}" \
+          --prefix QML2_IMPORT_PATH : "${pkgs.qt6.qtgraphs}/${pkgs.qt6.qtbase.qtQmlPrefix}" \
+
+
+        makeWrapper ${inputs.quickshell.packages.${pkgs.stdenv.hostPlatform.system}.default}/bin/quickshell $out/bin/quickshell \
+          --prefix PATH : ${lib.makeBinPath [pkgs.fd pkgs.coreutils]} \
+          --prefix QML2_IMPORT_PATH : "${pkgs.qt6.qt5compat}/${pkgs.qt6.qtbase.qtQmlPrefix}" \
+          --prefix QML2_IMPORT_PATH : "${pkgs.qt6.qtgraphs}/${pkgs.qt6.qtbase.qtQmlPrefix}" \
+    '';
 
     wrapElectron = pkg: binary:
         pkgs.symlinkJoin {
@@ -22,10 +42,10 @@
 in {
     environment = {
         systemPackages = with pkgs; [
-            # darkly <-- code editor qol here
-            # stylua
             # flutter
-            netbeans # <-- tell me when this fuckass semester ends so i can remove this fuckass apps
+            # stylua
+            darkly
+            opencode
 
             ## QoL for terminal
             bat
@@ -56,15 +76,17 @@ in {
 
             ## Qt packages
             kdePackages.dolphin
-            inputs.quickshell.packages.${pkgs.stdenv.hostPlatform.system}.default
+            kdePackages.ark ## Enable extract and archive for dolphin
+            kdePackages.kde-cli-tools ## Enable change file opener in dolphin
+            kdePackages.kwallet
+            kdePackages.kwalletmanager
+            quickshell-wrapped
             inputs.shell.packages.${pkgs.stdenv.hostPlatform.system}.default
             lxqt.pavucontrol-qt
             pinentry-qt
             media-downloader
             qtcreator
             telegram-desktop
-            kdePackages.kwallet
-            kdePackages.kwalletmanager
             # qt6.qt5compat
             # qt6.qtgraphs
             # kdePackages.qtcharts
@@ -117,10 +139,7 @@ in {
             (import ../../modules/nixos/packages/custom/future-cursor.nix {inherit (pkgs) stdenvNoCC lib fetchFromGitHub;})
             (import ../../modules/nixos/packages/custom/future-cyan-hyprcursor.nix {inherit (pkgs) stdenvNoCC lib fetchFromGitLab;})
 
-            ## screen recorder and screenshot tools
-            grim
-            slurp
-            hyprshot
+            ## screen recorder
             wl-screenrec
 
             ## Password managers
@@ -165,7 +184,7 @@ in {
 
             ## Hyprland plugins
             inputs.hypr-scroll-overview.packages.${stdenv.hostPlatform.system}.default
-            inputs.hypr-dynamic-cursors.packages.${pkgs.system}.hypr-dynamic-cursors
+            inputs.hypr-dynamic-cursors.packages.${stdenv.hostPlatform.system}.hypr-dynamic-cursors
 
             ## Nix tools
             nil
@@ -216,8 +235,8 @@ in {
             QT_ENABLE_HIGHDPI_SCALING = 1;
             QT_WAYLAND_FORCE_DPI = "physical";
 
-			# It should fixes youtube lagging on helium browser
-			NIXOS_OZONE_WL = 1;
+            # It should fixes youtube lagging on helium browser
+            NIXOS_OZONE_WL = 1;
         };
     };
 
