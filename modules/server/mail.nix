@@ -1,0 +1,113 @@
+{
+    config,
+    lib,
+    ...
+}: let
+    domain = "myamusashi.cc";
+    hostname = "mail.${domain}";
+in {
+    config = lib.mkIf config.shellix.server.mail.enable {
+        services.stalwart = {
+            enable = true;
+            stateVersion = "26.05";
+            openFirewall = true;
+
+            credentials = {
+                cloudflare_api_token = config.sops.secrets.stalwart_cloudflare_token.path;
+                brevo_user = config.sops.secrets.stalwart_brevo_user.path;
+                brevo_key = config.sops.secrets.stalwart_brevo_key.path;
+                admin_password = config.sops.secrets.stalwart_admin_password.path;
+            };
+
+            settings = {
+                server = {
+                    inherit hostname;
+
+                    listener = {
+                        smtp = {
+                            bind = ["[::]:25"];
+                            protocol = "smtp";
+                        };
+                        submission = {
+                            bind = ["[::]:587"];
+                            protocol = "smtp";
+                        };
+                        submissions = {
+                            bind = ["[::]:465"];
+                            protocol = "smtp";
+                            tls.implicit = true;
+                        };
+                        imaps = {
+                            bind = ["[::]:993"];
+                            protocol = "imap";
+                            tls.implicit = true;
+                        };
+                        http = {
+                            bind = ["[::]:80"];
+                            protocol = "http";
+                        };
+                    };
+                };
+
+                certificate.acme = {
+                    acme = true;
+                    domain = hostname;
+                    dns-provider = "cloudflare";
+                };
+
+                server.tls = {
+                    certificate = "acme";
+                    enable = true;
+                };
+
+                lookup.dns.cloudflare = {
+                    type = "cloudflare";
+                    token = "%{file:/run/credentials/stalwart.service/cloudflare_api_token}%";
+                };
+
+                session.auth = {
+                    mechanisms = ["plain"];
+                    directory = "internal";
+                };
+
+                session.rcpt.directory = "internal";
+
+                queue.strategy.route = {
+                    local = "local";
+                    "*" = "brevo";
+                };
+
+                queue.outbound.brevo = {
+                    host = "smtp-relay.brevo.com";
+                    port = 587;
+                    auth = {
+                        mechanism = "login";
+                        user = "%{file:/run/credentials/stalwart.service/brevo_user}%";
+                        password = "%{file:/run/credentials/stalwart.service/brevo_key}%";
+                    };
+                };
+            };
+        };
+
+        sops.secrets = {
+            stalwart_cloudflare_token = {};
+            stalwart_brevo_user = {};
+            stalwart_brevo_key = {};
+            stalwart_admin_password = {};
+        };
+
+        security.acme = {
+            acceptTerms = true;
+            defaults.email = "security@myamusashi.cc";
+        };
+
+        services.nginx.virtualHosts."mail.${domain}" = {
+            enableACME = true;
+            forceSSL = true;
+            locations."/" = {
+                proxyPass = "http://127.0.0.1:80";
+                proxyWebsockets = true;
+            };
+        };
+    };
+}

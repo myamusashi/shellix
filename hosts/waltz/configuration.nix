@@ -14,6 +14,7 @@
 
     shellix = {
         server = {
+            mail.enable = false;
             database.enable = true;
             forgejo.enable = true;
             wireguard = {
@@ -38,6 +39,7 @@
             vsftpd.enable = true;
             nextcloud.enable = true;
             nix-serve.enable = false;
+            cloudflared.enable = true;
             phpApps = {
                 enable = true;
 
@@ -74,6 +76,11 @@
                         "pm.min_spare_servers" = "2";
                         "pm.max_spare_servers" = "5";
                     };
+
+                    database = {
+                        enable = true;
+                        name = "REDACTED_DB";
+                    };
                 };
                 apps.example = {
                     enable = true;
@@ -108,6 +115,11 @@
                         "pm.min_spare_servers" = "2";
                         "pm.max_spare_servers" = "5";
                     };
+
+                    database = {
+                        enable = true;
+                        name = "REDACTED_DB";
+                    };
                 };
             };
         };
@@ -128,7 +140,7 @@
                         uuid = "19d73e81-9b87-4a79-8506-b10ee242d13f";
                         tokenFile = config.sops.secrets.forgejo_runner_pgs_token.path;
                     };
-					vast-shell = {
+                    vast-shell = {
                         url = "https://git.myamusashi.cc";
                         uuid = "7ea74882-6220-45d4-9738-25cc5ff3fdf2";
                         tokenFile = config.sops.secrets.forgejo_runner_vast_token.path;
@@ -202,6 +214,12 @@
             enp1s0.ipv4.addresses = [
                 {
                     address = "192.168.18.14";
+                    prefixLength = 28;
+                }
+            ];
+            wlp2s0.ipv4.addresses = [
+                {
+                    address = "192.168.18.16";
                     prefixLength = 28;
                 }
             ];

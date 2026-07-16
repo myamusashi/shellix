@@ -179,20 +179,13 @@ in {
                     }
                 ];
             };
-
-            cloudflared = {
-                enable = true;
-                tunnels."REDACTED_TUNNEL_UUID" = {
-                    credentialsFile = config.sops.secrets.cloudflare_creds.path;
-                    default = "http_status:404";
-                    ingress = lib.mapAttrs' (
-                        _: app:
-                            lib.nameValuePair "${app.subdomain}.myamusashi.cc"
-                            "http://${app.listenAddress}:${toString app.port}"
-                    ) (lib.filterAttrs (_: app: app.enable && app.subdomain != "") cfg.apps);
-                };
-            };
         };
+
+        shellix.server.cloudflared.ingress = lib.mapAttrs' (
+            _: app:
+                lib.nameValuePair "${app.subdomain}.myamusashi.cc"
+                "http://${app.listenAddress}:${toString app.port}"
+        ) (lib.filterAttrs (_: app: app.enable && app.subdomain != "") cfg.apps);
 
         systemd.services = lib.mapAttrs' (name: app:
             lib.nameValuePair "phpapp-db-init-${name}" (lib.mkIf (

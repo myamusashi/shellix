@@ -10,6 +10,8 @@
         ./vaultwarden.nix
         ./vsftpd.nix
         ./php-app.nix
+        ./cloudflared.nix
+        ./mail.nix
     ];
 
     options.shellix.server = {
@@ -22,5 +24,7 @@
         vsftpd.enable = lib.mkEnableOption "Enable vsftpd for transfer file (ssh)";
         nextcloud.enable = lib.mkEnableOption "Enable nextcloud for cloud services";
         nix-serve.enable = lib.mkEnableOption "Enable nix-serve for serving nix objects";
+        mail.enable = lib.mkEnableOption "Enable stalwart mail server";
+        cloudflared.enable = lib.mkEnableOption "Enable Cloudflare Tunnel";
     };
 }
