@@ -39,7 +39,14 @@
             vsftpd.enable = true;
             nextcloud.enable = true;
             nix-serve.enable = false;
-            cloudflared.enable = true;
+            cloudflared = {
+                enable = true;
+                ingress = {
+                    "git.myamusashi.cc" = "unix:/run/forgejo/forgejo.sock";
+                    "vault.myamusashi.cc" = "http://127.0.0.1:${toString config.shellix.variables.port.VAULTWARDEN}";
+                    "ssh.myamusashi.cc" = "ssh://localhost:22";
+                };
+            };
             phpApps = {
                 enable = true;
 
