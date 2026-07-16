@@ -65,6 +65,13 @@ in {
                     token = "%{file:/run/credentials/stalwart.service/cloudflare_api_token}%";
                 };
 
+                authentication.fallback-admin = {
+                    user = "admin";
+                    secret = "%{file:/run/credentials/stalwart.service/admin_password}%";
+                };
+
+                storage.directory = "'internal'";
+
                 directory.internal.bootstrap = [
                     {
                         class = "individual";
