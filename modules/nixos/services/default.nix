@@ -19,6 +19,7 @@
         ./kdeconnect.nix
         ./clipse.nix
         ./easyeffects/default.nix
+        ./kbuildsycoca6.nix
         ./hypridle.nix
         ./mpd.nix
         ./systemd/nm-applet.nix
@@ -147,6 +148,7 @@
         };
         kdeconnect.enable = lib.mkEnableOption "Enable kde-connect";
         clipse.enable = lib.mkEnableOption "Enable clipboard manager";
+        kbuildsycoca6.enable = lib.mkEnableOption "Enable KDE build system cache (fixes Dolphin Open With)";
         hypridle.enable = lib.mkEnableOption "Enable idle manager";
         mpd.enable = lib.mkEnableOption "Enable MPD players services";
 

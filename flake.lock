@@ -519,28 +519,6 @@
         "type": "github"
       }
     },
-    "gitignore": {
-      "inputs": {
-        "nixpkgs": [
-          "hyprland",
-          "pre-commit-hooks",
-          "nixpkgs"
-        ]
-      },
-      "locked": {
-        "lastModified": 1709087332,
-        "narHash": "sha256-HG2cCnktfHsKV0s4XW83gU3F57gaTljL9KNSuG6bnQs=",
-        "owner": "hercules-ci",
-        "repo": "gitignore.nix",
-        "rev": "637db329424fd7e46cf4185293b9cc8c88c95394",
-        "type": "github"
-      },
-      "original": {
-        "owner": "hercules-ci",
-        "repo": "gitignore.nix",
-        "type": "github"
-      }
-    },
     "helium": {
       "inputs": {
         "nixpkgs": [
@@ -611,11 +589,11 @@
         "nixpkgs": "nixpkgs_2"
       },
       "locked": {
-        "lastModified": 1782951988,
-        "narHash": "sha256-edTwf7+5SP8ndeLYx/0dFeBbAGHR6sWsr2H3WDrIDVg=",
+        "lastModified": 1783141162,
+        "narHash": "sha256-CihuLSp7WNZWrus6dva/0wqmpdVNaTjp3WsYmSzDfkU=",
         "owner": "myamusashi",
         "repo": "hypr-dynamic-cursors",
-        "rev": "421fb6d9b3d195e872bae88374e106f96fac7e7f",
+        "rev": "29d10069fb288dd6c63971b772542be18f6a38de",
         "type": "github"
       },
       "original": {
@@ -633,11 +611,11 @@
         "nixpkgs": "nixpkgs_3"
       },
       "locked": {
-        "lastModified": 1782901686,
-        "narHash": "sha256-k8gy3jCyGNyBkn2oyPQ4VH2BjM3uISGyDYf3DgEJXtc=",
+        "lastModified": 1784102014,
+        "narHash": "sha256-3Q7LmDphubClj+k2Mupu/wszza7wJPz0G3CQ9X9et1c=",
         "owner": "myamusashi",
         "repo": "hyprland-scroll-overview",
-        "rev": "bcd9eb999cf155050d2e8f398b86e32265b171f7",
+        "rev": "52c467d3de36fa5b28c3534746c87ced6e9fe9fc",
         "type": "github"
       },
       "original": {
@@ -937,11 +915,11 @@
         "xdph": "xdph"
       },
       "locked": {
-        "lastModified": 1782893559,
-        "narHash": "sha256-l92uUHanb7vX8ss30kkM+oX5vc2T4zwa+NY4sjYcIUE=",
+        "lastModified": 1784043142,
+        "narHash": "sha256-vd4VSlddmDAToJv/twyr0O8Siq4U/sOIXeo6DFZIolc=",
         "owner": "hyprwm",
         "repo": "Hyprland",
-        "rev": "1b63ceecdfc6c33b68b677b8285ac621fc2b058f",
+        "rev": "79bc0ca16e7cca40c247a9200634d150fa8193d1",
         "type": "github"
       },
       "original": {
@@ -2044,11 +2022,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1782639496,
-        "narHash": "sha256-mjt47Xun3jPcGrXpGpYU85lzUnqvJ2rXLbQjVI1yvLo=",
+        "lastModified": 1783002634,
+        "narHash": "sha256-xGqHIUK0wIZoW7SiMalwvO6uGOO/VrlQwoRobpE7dDI=",
         "owner": "hyprwm",
         "repo": "hyprutils",
-        "rev": "d2b40ffe7bfcb001bbf5888bb56ff646de53e7db",
+        "rev": "41fb809557abd29a57151b6e1aaeabd05f9437e1",
         "type": "github"
       },
       "original": {
@@ -2851,18 +2829,17 @@
     "pre-commit-hooks": {
       "inputs": {
         "flake-compat": "flake-compat",
-        "gitignore": "gitignore",
         "nixpkgs": [
           "hyprland",
           "nixpkgs"
         ]
       },
       "locked": {
-        "lastModified": 1781733627,
-        "narHash": "sha256-U3yTuGBnmXvXoQI3qkpfEDsn9RovQPAjN7ndRco+3u0=",
+        "lastModified": 1783008725,
+        "narHash": "sha256-jGiy6+sxjNWXSjp25uoJuNfyH9zBK1PEDY0lVoL4ibQ=",
         "owner": "cachix",
         "repo": "git-hooks.nix",
-        "rev": "3bbec39bc90eadfa031e6f3b77272f3f60803e39",
+        "rev": "bca82caa46d5ec0f5d422c61fb1e30bc51313cbe",
         "type": "github"
       },
       "original": {
@@ -3071,11 +3048,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1783729274,
-        "narHash": "sha256-Xy5Z07LOkhOkPxaqYkk9rpLLttWBE61OHnQ35aphTWQ=",
+        "lastModified": 1784121088,
+        "narHash": "sha256-37hNBmFRA0fmCmg4XyXPul1x0lwFaty6mVFPRetzC1E=",
         "ref": "refs/heads/master",
-        "rev": "1bf9319f646d7f3157ad53d24d6113960f3c0b1b",
-        "revCount": 1160,
+        "rev": "0a6869ba54e9b261be9c6434915bfb7740bcd36c",
+        "revCount": 1179,
         "type": "git",
         "url": "https://git.myamusashi.cc/myamusashi/vast-shell"
       },
@@ -3566,11 +3543,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1782311043,
-        "narHash": "sha256-07zLc2M3/ax+JsjxGTft17/Joua41LHE9/9AC/F9zeU=",
+        "lastModified": 1782644412,
+        "narHash": "sha256-/iSa/bL1QQFLv+uJ9gI0N87J8gOeZXvca7EjoPGKE6w=",
         "owner": "hyprwm",
         "repo": "xdg-desktop-portal-hyprland",
-        "rev": "882ad01e195ce201b07c618bbee44a0cad8b9e5a",
+        "rev": "c01c99fc278ec68c82e9865923088f043c7c1621",
         "type": "github"
       },
       "original": {

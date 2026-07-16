@@ -61,6 +61,7 @@ in {
         nginx.enable = true;
         gnome.gnome-keyring.enable = false;
         gvfs.enable = true;
+        upower.enable = true;
         mysql = {
             enable = true;
             package = pkgs.mariadb;
@@ -111,10 +112,13 @@ in {
         hyprland = {
             enable = true;
             xwayland.enable = true;
-            package = inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.hyprland.override {
-                withSystemd = true;
-            };
-            portalPackage = inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.xdg-desktop-portal-hyprland;
+            package = inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.hyprland.overrideAttrs (old: {
+                patches =
+                    (old.patches or [])
+                    ++ [
+                        ../../overlays/patch/hyprland-patch/fix-loss-focus-window-on-closed-layer.patch
+                    ];
+            });
         };
         ccache.enable = true;
         java = {

@@ -35,6 +35,7 @@
                 enable = true;
                 preset = "gentle-dynamics";
             };
+            kbuildsycoca6.enable = true;
             hypridle.enable = true;
             kdeconnect.enable = true;
             mpd.enable = false;

@@ -21,11 +21,10 @@ in {
         environment.systemPackages = [pkgs.easyeffects];
 
         systemd.user.tmpfiles.rules = [
-            "d %h/.config 0755 myamusashi users - -"
-            "d %h/.config/easyeffects 0755 myamusashi users - -"
-            "d %h/.config/easyeffects/output 0755 myamusashi users - -"
-            "L+ %h/.config/easyeffects/output/earphone-wired.json - - - - ${pkgs.writeText "earphone-wired.json" (builtins.toJSON presets.earphone-wired)}"
-            "L+ %h/.config/easyeffects/output/gentle-dynamics.json - - - - ${pkgs.writeText "gentle-dynamics.json" (builtins.toJSON presets.gentle-dynamics)}"
+            "d %h/.local/share/easyeffects 0755 myamusashi users - -"
+            "d %h/.local/share/easyeffects/output 0755 myamusashi users - -"
+            "L+ %h/.local/share/easyeffects/output/earphone-wired.json - - - - ${pkgs.writeText "earphone-wired.json" (builtins.toJSON presets.earphone-wired)}"
+            "L+ %h/.local/share/easyeffects/output/gentle-dynamics.json - - - - ${pkgs.writeText "gentle-dynamics.json" (builtins.toJSON presets.gentle-dynamics)}"
         ];
 
         systemd.user.services.easyeffects = {
@@ -35,10 +34,22 @@ in {
             partOf = ["graphical-session.target"];
 
             serviceConfig = {
-                BusName = "com.github.wwmm.easyeffects";
+                Type = "simple";
                 ExecStart = "${pkgs.easyeffects}/bin/easyeffects --gapplication-service";
-                ExecStartPost = "${pkgs.coreutils}/bin/sleep 2.0; ${pkgs.easyeffects}/bin/easyeffects -l ${cfg.preset}";
+                ExecStartPost = "${pkgs.coreutils}/bin/sleep 2";
                 Restart = "on-failure";
+            };
+        };
+
+        systemd.user.services.easyeffects-load-preset = {
+            description = "Load EasyEffects preset";
+            after = ["easyeffects.service"];
+            bindsTo = ["easyeffects.service"];
+            wantedBy = ["graphical-session.target"];
+
+            serviceConfig = {
+                Type = "oneshot";
+                ExecStart = "${pkgs.easyeffects}/bin/easyeffects -l ${cfg.preset}";
             };
         };
     };
