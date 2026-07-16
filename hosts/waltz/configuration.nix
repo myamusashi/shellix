@@ -14,7 +14,7 @@
 
     shellix = {
         server = {
-            mail.enable = false;
+            mail.enable = true;
             database.enable = true;
             forgejo.enable = true;
             wireguard = {
