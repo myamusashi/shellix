@@ -96,18 +96,6 @@ in {
             stalwart_admin_password = {};
         };
 
-        security.acme = {
-            acceptTerms = true;
-            defaults.email = "security@myamusashi.cc";
-        };
-
-        services.nginx.virtualHosts."mail.${domain}" = {
-            enableACME = true;
-            forceSSL = true;
-            locations."/" = {
-                proxyPass = "http://127.0.0.1:80";
-                proxyWebsockets = true;
-            };
-        };
+        shellix.server.cloudflared.ingress."mail.${domain}" = "http://localhost:80";
     };
 }
