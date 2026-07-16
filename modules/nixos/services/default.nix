@@ -17,6 +17,7 @@
         ./systemd/stirling.nix
         ./systemd/cloudflare-tunnels.nix
         ./kdeconnect.nix
+        ./forgejo-runner.nix
         ./clipse.nix
         ./easyeffects/default.nix
         ./kbuildsycoca6.nix
@@ -147,6 +148,7 @@
             enable = lib.mkEnableOption "Enable audio I/O manager";
         };
         kdeconnect.enable = lib.mkEnableOption "Enable kde-connect";
+        forgejo-runner.enable = lib.mkEnableOption "Enable Forgejo runners";
         clipse.enable = lib.mkEnableOption "Enable clipboard manager";
         kbuildsycoca6.enable = lib.mkEnableOption "Enable KDE build system cache (fixes Dolphin Open With)";
         hypridle.enable = lib.mkEnableOption "Enable idle manager";
