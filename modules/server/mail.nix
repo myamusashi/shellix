@@ -17,7 +17,6 @@ in {
                 brevo_user = config.sops.secrets.stalwart_brevo_user.path;
                 brevo_key = config.sops.secrets.stalwart_brevo_key.path;
                 admin_password = config.sops.secrets.stalwart_admin_password.path;
-                gilang_password = config.sops.secrets.stalwart_gilang_password.path;
             };
 
             settings = {
@@ -54,7 +53,6 @@ in {
                     acme = true;
                     domain = hostname;
                     dns-provider = "cloudflare";
-                    dns-api-token = "%{file:/run/credentials/stalwart.service/cloudflare_api_token}%";
                 };
 
                 server.tls = {
@@ -62,30 +60,23 @@ in {
                     enable = true;
                 };
 
+                lookup.dns.cloudflare = {
+                    type = "cloudflare";
+                    token = "%{file:/run/credentials/stalwart.service/cloudflare_api_token}%";
+                };
+
                 authentication.fallback-admin = {
                     user = "admin";
                     secret = "%{file:/run/credentials/stalwart.service/admin_password}%";
                 };
 
-                directory.internal.bootstrap = [
-                    {
-                        class = "individual";
-                        name = "admin";
-                        description = "System Administrator";
-                        secret = "%{file:/run/credentials/stalwart.service/admin_password}%";
-                        email = ["admin@${domain}"];
-                    }
-                    {
-                        class = "individual";
-                        name = "user";
-                        description = "User";
-                        secret = "%{file:/run/credentials/stalwart.service/gilang_password}%";
-                        email = [
-                            "user@${domain}"
-                            "me@${domain}"
-                        ];
-                    }
-                ];
+                directory.internal.bootstrap = {
+                    class = "individual";
+                    name = "admin";
+                    description = "System Administrator";
+                    secret = "%{file:/run/credentials/stalwart.service/admin_password}%";
+                    email = ["admin@${domain}"];
+                };
 
                 session.auth = {
                     mechanisms = "[plain]";
@@ -94,24 +85,24 @@ in {
 
                 session.rcpt.directory = "'internal'";
 
-                queue.outbound.next-hop = "'brevo'";
+                # 0.13+ outbound strategy: select route by expression
+                queue.strategy.route = "if is_local_domain('', rcpt_domain) { 'local' } else { 'brevo' }";
 
-                remote.brevo = {
+                # Local delivery route (for internal recipients)
+                route.local."@type" = "Local";
+
+                # Brevo relay route for all outbound mail
+                route.brevo = {
+                    "@type" = "Relay";
                     address = "smtp-relay.brevo.com";
                     port = 587;
                     protocol = "smtp";
-                    tls = {
-                        enable = true;
-                        implicit = false; # STARTTLS on 587
-                    };
-                    auth = {
-                        mechanisms = "[plain]";
-                        credentials = [
-                            {
-                                username = "%{file:/run/credentials/stalwart.service/brevo_user}%";
-                                secret = "%{file:/run/credentials/stalwart.service/brevo_key}%";
-                            }
-                        ];
+                    implicitTls = false;
+                    allowInvalidCerts = false;
+                    authUsername = "%{file:/run/credentials/stalwart.service/brevo_user}%";
+                    authSecret = {
+                        "@type" = "File";
+                        path = "/run/credentials/stalwart.service/brevo_key";
                     };
                 };
             };
@@ -122,7 +113,6 @@ in {
             stalwart_brevo_user = {};
             stalwart_brevo_key = {};
             stalwart_admin_password = {};
-            stalwart_gilang_password = {};
         };
 
         shellix.server.cloudflared.ingress."mail.${domain}" = "http://localhost:8080";
