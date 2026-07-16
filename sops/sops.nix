@@ -24,6 +24,19 @@
                 path = "/var/lib/cloudflared/creds";
             };
 
+            forgejo_runner_helium_token = {
+                path = "/var/lib/forgejo-runner/token/helium";
+            };
+            forgejo_runner_pgs_token = {
+                path = "/var/lib/forgejo-runner/token/pgs";
+            };
+            forgejo_runner_vast_token = {
+                path = "/var/lib/forgejo-runner/token/vast-shell";
+            };
+            forgejo_runner_yaziplgs_token = {
+                path = "/var/lib/forgejo-runner/token/yaziplgs";
+            };
+
             myamusashi-password = {
                 path = "/var/lib/myamusashi/pass";
             };
