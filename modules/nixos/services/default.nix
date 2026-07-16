@@ -15,7 +15,6 @@
         ./minidlna.nix
         ./systemd/cachix.nix
         ./systemd/stirling.nix
-        ./systemd/cloudflare-tunnels.nix
         ./kdeconnect.nix
         ./forgejo-runner.nix
         ./clipse.nix
@@ -157,7 +156,6 @@
         systemd = {
             cachix.enable = lib.mkEnableOption "Enable cachix daemon";
             stirling.enable = lib.mkEnableOption "Enable stirling PDF services";
-            cloudflare-tunnels.enable = lib.mkEnableOption "Enable cloudflare-tunnels keys for running cloudflare services";
             nm-applet.enable = lib.mkEnableOption "Enable network manger applet tray widgets";
         };
     };
