@@ -43,7 +43,7 @@ in {
                             tls.implicit = true;
                         };
                         http = {
-                            bind = ["[::]:80"];
+                            bind = ["[::]:8080"];
                             protocol = "http";
                         };
                     };
@@ -66,16 +66,13 @@ in {
                 };
 
                 session.auth = {
-                    mechanisms = ["plain"];
-                    directory = "internal";
+                    mechanisms = "[plain]";
+                    directory = "'internal'";
                 };
 
-                session.rcpt.directory = "internal";
+                session.rcpt.directory = "'internal'";
 
-                queue.strategy.route = {
-                    local = "local";
-                    "*" = "brevo";
-                };
+                queue.strategy.route = "'brevo'";
 
                 queue.outbound.brevo = {
                     host = "smtp-relay.brevo.com";
@@ -96,6 +93,6 @@ in {
             stalwart_admin_password = {};
         };
 
-        shellix.server.cloudflared.ingress."mail.${domain}" = "http://localhost:80";
+        shellix.server.cloudflared.ingress."mail.${domain}" = "http://localhost:8080";
     };
 }

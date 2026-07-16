@@ -51,7 +51,7 @@
                 enable = true;
 
                 apps.example = {
-                    enable = true;
+                    enable = false;
                     version = "1.0.0";
 
                     vHostDomain = "example.com";
@@ -90,7 +90,7 @@
                     };
                 };
                 apps.example = {
-                    enable = true;
+                    enable = false;
                     version = "1.0.0";
 
                     vHostDomain = "example.com";
