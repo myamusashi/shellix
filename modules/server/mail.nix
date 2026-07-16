@@ -65,6 +65,16 @@ in {
                     token = "%{file:/run/credentials/stalwart.service/cloudflare_api_token}%";
                 };
 
+                directory.internal.bootstrap = [
+                    {
+                        class = "individual";
+                        name = "admin";
+                        description = "System Administrator";
+                        secret = "%{file:/run/credentials/stalwart.service/admin_password}%";
+                        email = ["admin@${domain}"];
+                    }
+                ];
+
                 session.auth = {
                     mechanisms = "[plain]";
                     directory = "'internal'";
