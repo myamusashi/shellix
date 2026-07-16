@@ -115,6 +115,31 @@
             earlyoom.enable = false;
             backup.waltz.enable = true;
             resolver.enable = true;
+            forgejo-runner = {
+                enable = true;
+                runners = {
+                    helium = {
+                        url = "https://git.myamusashi.cc";
+                        uuid = "41acf651-7136-420b-ab95-5ea4ae2b7b50";
+                        tokenFile = config.sops.secrets.forgejo_runner_helium_token.path;
+                    };
+                    presensi-guru-dan-siswa = {
+                        url = "https://git.myamusashi.cc";
+                        uuid = "19d73e81-9b87-4a79-8506-b10ee242d13f";
+                        tokenFile = config.sops.secrets.forgejo_runner_pgs_token.path;
+                    };
+					vast-shell = {
+                        url = "https://git.myamusashi.cc";
+                        uuid = "7ea74882-6220-45d4-9738-25cc5ff3fdf2";
+                        tokenFile = config.sops.secrets.forgejo_runner_vast_token.path;
+                    };
+                    yazi-plugins = {
+                        url = "https://git.myamusashi.cc";
+                        uuid = "736956a8-7da5-4476-bd2e-fe3a396816a0";
+                        tokenFile = config.sops.secrets.forgejo_runner_yaziplgs_token.path;
+                    };
+                };
+            };
         };
 
         programs = {
