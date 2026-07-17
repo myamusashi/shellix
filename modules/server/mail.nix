@@ -14,8 +14,8 @@ in {
 
             credentials = {
                 cloudflare_api_token = config.sops.secrets.stalwart_cloudflare_token.path;
-                brevo_user = config.sops.secrets.stalwart_brevo_user.path;
-                brevo_key = config.sops.secrets.stalwart_brevo_key.path;
+                # brevo_user = config.sops.secrets.stalwart_brevo_user.path;
+                # brevo_key = config.sops.secrets.stalwart_brevo_key.path;
                 admin_password = config.sops.secrets.stalwart_admin_password.path;
             };
 
