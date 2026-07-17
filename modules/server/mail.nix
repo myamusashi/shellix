@@ -14,8 +14,8 @@ in {
 
             credentials = {
                 cloudflare_api_token = config.sops.secrets.stalwart_cloudflare_token.path;
-                # brevo_user = config.sops.secrets.stalwart_brevo_user.path;
-                # brevo_key = config.sops.secrets.stalwart_brevo_key.path;
+                brevo_user = config.sops.secrets.stalwart_brevo_user.path;
+                brevo_key = config.sops.secrets.stalwart_brevo_key.path;
                 admin_password = config.sops.secrets.stalwart_admin_password.path;
             };
 
@@ -87,25 +87,23 @@ in {
 
                 session.rcpt.directory = "'internal'";
 
-                # queue.strategy.route = "'brevo'";
-                #
-                # # Local delivery route (for internal recipients)
-                # route.local."@type" = "Local";
-                #
-                # # Brevo relay route for all outbound mail
-                # route.brevo = {
-                #     "@type" = "Relay";
-                #     address = "smtp-relay.brevo.com";
-                #     port = 587;
-                #     protocol = "smtp";
-                #     implicitTls = false;
-                #     allowInvalidCerts = false;
-                #     authUsername = "%{file:/run/credentials/stalwart.service/brevo_user}%";
-                #     authSecret = {
-                #         "@type" = "File";
-                #         path = "/run/credentials/stalwart.service/brevo_key";
-                #     };
-                # };
+                queue.strategy.route = "'brevo'";
+
+                route.local."@type" = "Local";
+
+                route.brevo = {
+                    "@type" = "Relay";
+                    address = "smtp-relay.brevo.com";
+                    port = 587;
+                    protocol = "smtp";
+                    implicitTls = false;
+                    allowInvalidCerts = false;
+                    authUsername = "%{file:/run/credentials/stalwart.service/brevo_user}%";
+                    authSecret = {
+                        "@type" = "File";
+                        path = "/run/credentials/stalwart.service/brevo_key";
+                    };
+                };
             };
         };
 
