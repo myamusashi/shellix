@@ -63,6 +63,13 @@ in {
                     enable = true;
                 };
 
+                resolver = {
+                    type = "cloudflare";
+                    preserve-intermediates = true;
+                    timeout = "5s";
+                    attempts = 2;
+                };
+
                 lookup.default = {
                     inherit hostname domain;
                 };
