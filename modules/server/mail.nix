@@ -49,20 +49,22 @@ in {
                     };
                 };
 
-                certificate.acme = {
-                    acme = true;
-                    domain = hostname;
-                    dns-provider = "cloudflare";
+                acme."letsencrypt" = {
+                    directory = "https://acme-v02.api.letsencrypt.org/directory";
+                    challenge = "dns-01";
+                    contact = "postmaster@${domain}";
+                    domains = [hostname domain];
+                    provider = "cloudflare";
+                    secret = "%{file:/run/credentials/stalwart.service/cloudflare_api_token}%";
                 };
 
                 server.tls = {
-                    certificate = "acme";
+                    certificate = "letsencrypt";
                     enable = true;
                 };
 
-                lookup.dns.cloudflare = {
-                    type = "cloudflare";
-                    token = "%{file:/run/credentials/stalwart.service/cloudflare_api_token}%";
+                lookup.default = {
+                    inherit hostname domain;
                 };
 
                 authentication.fallback-admin = {
@@ -85,8 +87,7 @@ in {
 
                 session.rcpt.directory = "'internal'";
 
-                # 0.13+ outbound strategy: select route by expression
-                queue.strategy.route = "if is_local_domain('', rcpt_domain) { 'local' } else { 'brevo' }";
+		queue.strategy.route = "'brevo'";
 
                 # Local delivery route (for internal recipients)
                 route.local."@type" = "Local";
@@ -115,6 +116,6 @@ in {
             stalwart_admin_password = {};
         };
 
-        shellix.server.cloudflared.ingress."mail.${domain}" = "http://localhost:8080";
+        shellix.server.cloudflared.ingress."webmail.${domain}" = "http://localhost:8080";
     };
 }
