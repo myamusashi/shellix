@@ -8,6 +8,7 @@
             systemd-boot.enable = true;
         };
         kernelPackages = pkgs-stable.cachyosKernels.linuxPackages-cachyos-server;
+        supportedFilesystems = ["ntfs3"];
     };
 
     hardware.graphics = {
@@ -40,7 +41,7 @@
 
     fileSystems."/home/waltz/external" = {
         device = "/dev/disk/by-label/BACKUP";
-        fsType = "ntfs-3g";
+        fsType = "ntfs3";
         options = ["noatime" "rw" "uid=1000" "gid=100"];
     };
     fileSystems."/opt/backup" = {

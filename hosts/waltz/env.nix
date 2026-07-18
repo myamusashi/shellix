@@ -16,7 +16,6 @@
         alejandra
         statix
         unzip
-        ntfs3g
         jq
         btop
         htop

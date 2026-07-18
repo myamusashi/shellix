@@ -20,7 +20,7 @@
             enable = true;
         };
 
-        supportedFilesystems = ["ntfs"];
+        supportedFilesystems = ["ntfs3"];
 
         kernelModules = [
             "kvm-intel"
