@@ -89,7 +89,7 @@
         wrappers.intel_gpu_top = {
             source = "${pkgs.intel-gpu-tools}/bin/intel_gpu_top";
             capabilities = "cap_perfmon+ep";
-            owner = "root";
+            owner = "myamusashi";
             group = "root";
         };
 

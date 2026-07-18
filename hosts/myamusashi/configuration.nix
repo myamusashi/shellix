@@ -82,6 +82,7 @@ in {
         };
         starship.enable = true;
         dconf.enable = true;
+        thunderbird.enable = true;
         mtr.enable = true;
         nh = {
             enable = true;
