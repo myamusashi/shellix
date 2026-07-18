@@ -18,11 +18,12 @@ in {
             };
         };
 
-        users.users.minidlna = {
-            isSystemUser = true;
-            group = "minidlna";
+        users = {
+            users.minidlna = {
+                isSystemUser = true;
+                group = "minidlna";
+            };
+            groups.minidlna = {};
         };
-
-        users.groups.minidlna = {};
     };
 }

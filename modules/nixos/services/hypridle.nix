@@ -32,22 +32,23 @@ in {
     config = lib.mkIf cfg.enable {
         environment.systemPackages = [pkgs.hypridle];
 
-        systemd.user.tmpfiles.rules = [
-            "d %h/.config 0755 myamusashi users - -"
-            "d %h/.config/hypr 0755 myamusashi users - -"
-            "L+ %h/.config/hypr/hypridle.conf - - - - ${pkgs.writeText "hypridle.conf" hypridleConf}"
-        ];
+        systemd.user = {
+            tmpfiles.rules = [
+                "d %h/.config 0755 myamusashi users - -"
+                "d %h/.config/hypr 0755 myamusashi users - -"
+                "L+ %h/.config/hypr/hypridle.conf - - - - ${pkgs.writeText "hypridle.conf" hypridleConf}"
+            ];
+            services.hypridle = {
+                description = "Hyprland idle daemon";
+                after = ["graphical-session.target"];
+                partOf = ["graphical-session.target"];
+                wantedBy = ["graphical-session.target"];
 
-        systemd.user.services.hypridle = {
-            description = "Hyprland idle daemon";
-            after = ["graphical-session.target"];
-            partOf = ["graphical-session.target"];
-            wantedBy = ["graphical-session.target"];
-
-            serviceConfig = {
-                ExecStart = "${pkgs.hypridle}/bin/hypridle";
-                Restart = "on-failure";
-                Slice = "app-graphical.slice";
+                serviceConfig = {
+                    ExecStart = "${pkgs.hypridle}/bin/hypridle";
+                    Restart = "on-failure";
+                    Slice = "app-graphical.slice";
+                };
             };
         };
     };

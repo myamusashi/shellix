@@ -24,25 +24,26 @@ in {
             ];
         };
 
-        systemd.user.services.kdeconnect = {
-            description = "KDE Connect daemon";
-            after = ["graphical-session.target"];
-            partOf = ["graphical-session.target"];
-            wantedBy = ["graphical-session.target"];
-            serviceConfig = {
-                ExecStart = "${pkgs.kdePackages.kdeconnect-kde}/bin/kdeconnectd";
-                Restart = "on-abort";
+        systemd.user.services = {
+            kdeconnect = {
+                description = "KDE Connect daemon";
+                after = ["graphical-session.target"];
+                partOf = ["graphical-session.target"];
+                wantedBy = ["graphical-session.target"];
+                serviceConfig = {
+                    ExecStart = "${pkgs.kdePackages.kdeconnect-kde}/bin/kdeconnectd";
+                    Restart = "on-abort";
+                };
             };
-        };
-
-        systemd.user.services.kdeconnect-indicator = {
-            description = "KDE Connect indicator";
-            after = ["graphical-session.target"];
-            partOf = ["graphical-session.target"];
-            wantedBy = ["graphical-session.target"];
-            serviceConfig = {
-                ExecStart = "${pkgs.kdePackages.kdeconnect-kde}/bin/kdeconnect-indicator";
-                Restart = "on-abort";
+            kdeconnect-indicator = {
+                description = "KDE Connect indicator";
+                after = ["graphical-session.target"];
+                partOf = ["graphical-session.target"];
+                wantedBy = ["graphical-session.target"];
+                serviceConfig = {
+                    ExecStart = "${pkgs.kdePackages.kdeconnect-kde}/bin/kdeconnect-indicator";
+                    Restart = "on-abort";
+                };
             };
         };
     };

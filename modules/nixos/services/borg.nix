@@ -94,7 +94,10 @@ in {
                     ];
             };
             waltz-server = lib.mkIf cfg.waltz.enable {
-                encryption.mode = "repokey-blake2";
+                encryption = {
+                    mode = "repokey-blake2";
+                    passCommand = "${pkgs-stable.coreutils}/bin/cat ${config.sops.secrets.waltz-borg.path}";
+                };
                 compression = "auto,zstd";
                 startAt = "01:00";
                 prune.keep = {
@@ -130,7 +133,6 @@ in {
                     "/home/forgejo-runner"
                     "/tmp/pg_db-dump"
                 ];
-                encryption.passCommand = "${pkgs-stable.coreutils}/bin/cat ${config.sops.secrets.waltz-borg.path}";
                 preHook = ''
                     ${pkgs-stable.sudo}/bin/sudo -u postgres ${pkgs-stable.postgresql}/bin/pg_dumpall > /tmp/pg_db-dump
                 '';

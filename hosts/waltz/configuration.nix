@@ -178,8 +178,10 @@
         xserver.xkb.layout = "us";
         logind.lidSwitch = "ignore";
         forgejo.settings.server.HTTP_PORT = lib.mkForce config.shellix.variables.port.FORGEJO;
-        prometheus.port = lib.mkForce config.shellix.variables.port.PROMETHEUS;
-        prometheus.exporters.node.port = lib.mkForce config.shellix.variables.port.PROMETHEUS-EXPORTERS;
+        prometheus = {
+            port = lib.mkForce config.shellix.variables.port.PROMETHEUS;
+            exporters.node.port = lib.mkForce config.shellix.variables.port.PROMETHEUS-EXPORTERS;
+        };
         nginx.virtualHosts = {
             "dash.myamusashi.com".locations."/".proxyPass = lib.mkForce "http://127.0.0.1:${toString config.shellix.variables.port.GRAFANA}";
             "cloud.myamusashi.com".listen = [
@@ -262,50 +264,51 @@
         };
     };
 
-    sops.secrets.waltz-password.neededForUsers = false;
-    sops.age.keyFile = lib.mkForce "/home/waltz/.config/sops/age/keys.txt";
-
-    users.users.nginx.extraGroups = ["simaset"];
-
-    users.users.waltz = {
-        isNormalUser = true;
-        # hashedPasswordFile = config.sops.secrets.waltz-password.path;
-        description = "waltz";
-        shell = pkgs-stable.fish;
-        extraGroups = ["networkmanager" "wheel" "vsftpd" "docker" "podman"];
+    sops = {
+        secrets.waltz-password.neededForUsers = false;
+        age.keyFile = lib.mkForce "/home/waltz/.config/sops/age/keys.txt";
     };
 
-    users.groups.cloudflared = {};
-    users.users.cloudflared = {
-        isSystemUser = true;
-        group = "cloudflared";
-        description = "Cloudflare Tunnel service user";
-        extraGroups = ["forgejo"];
-    };
-
-    users.groups.nextcloud = {};
-    users.users.nextcloud = {
-        isSystemUser = true;
-        group = "nextcloud";
-    };
-
-    users.groups.netdata = {};
-    users.users.netdata = {
-        isSystemUser = true;
-        group = "netdata";
-    };
-
-    users.groups.atticd = {};
-    users.users.atticd = {
-        isSystemUser = true;
-        group = "atticd";
-    };
-
-    users.groups.runner = {};
-    users.users.runner = {
-        isNormalUser = true;
-        group = "runner";
-        extraGroups = ["forgejo" "docker" "podman"];
+    users = {
+        users = {
+            nginx.extraGroups = ["simaset"];
+            waltz = {
+                isNormalUser = true;
+                description = "waltz";
+                shell = pkgs-stable.fish;
+                extraGroups = ["networkmanager" "wheel" "vsftpd" "docker" "podman"];
+            };
+            cloudflared = {
+                isSystemUser = true;
+                group = "cloudflared";
+                description = "Cloudflare Tunnel service user";
+                extraGroups = ["forgejo"];
+            };
+            nextcloud = {
+                isSystemUser = true;
+                group = "nextcloud";
+            };
+            netdata = {
+                isSystemUser = true;
+                group = "netdata";
+            };
+            atticd = {
+                isSystemUser = true;
+                group = "atticd";
+            };
+            runner = {
+                isNormalUser = true;
+                group = "runner";
+                extraGroups = ["forgejo" "docker" "podman"];
+            };
+        };
+        groups = {
+            cloudflared = {};
+            nextcloud = {};
+            netdata = {};
+            atticd = {};
+            runner = {};
+        };
     };
 
     services.chrony = {

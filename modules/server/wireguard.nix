@@ -74,8 +74,10 @@ in {
                 externalInterface = cfg.externalInterfaces;
                 internalInterfaces = [cfg.wireguardInterfaces];
             };
-            firewall.allowedTCPPorts = [53];
-            firewall.allowedUDPPorts = [53 cfg.allowedUDPPorts];
+            firewall = {
+                allowedTCPPorts = [53];
+                allowedUDPPorts = [53 cfg.allowedUDPPorts];
+            };
 
             wg-quick.interfaces = {
                 ${cfg.wireguardInterfaces} = {

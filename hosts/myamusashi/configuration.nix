@@ -41,6 +41,10 @@ in {
 
     sops = {
         age.keyFile = lib.mkForce (userConfig + "/sops/age/keys1.txt");
+        secrets.myamusashi-password = {
+            neededForUsers = true;
+            owner = config.users.users.myamusashi.name;
+        };
     };
 
     i18n.defaultLocale = "en_US.UTF-8";
@@ -48,11 +52,6 @@ in {
 
     # Nuh uh, don't fucking changing it
     system.stateVersion = "24.11"; # Did you read the comment?
-
-    sops.secrets.myamusashi-password = {
-        neededForUsers = true;
-        owner = config.users.users.myamusashi.name;
-    };
 
     services = {
         cloudflare-warp.enable = true;
@@ -91,8 +90,10 @@ in {
         git = {
             enable = true;
             config = {
-                user.name = "myamusashi";
-                user.email = "myamusashi@users.noreply.github.com";
+                user = {
+                    name = "myamusashi";
+                    email = "myamusashi@users.noreply.github.com";
+                };
                 credential.helper = "store";
                 alias = {
                     ci = "commit";

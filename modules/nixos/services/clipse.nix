@@ -42,26 +42,27 @@ in {
     config = lib.mkIf cfg.enable {
         environment.systemPackages = [clipsePkg];
 
-        # Write the config JSON for the user
-        systemd.user.tmpfiles.rules = [
-            "d %h/.config 0755 myamusashi users - -"
-            "d %h/.config/clipse 0755 myamusashi users - -"
-            "L+ %h/.config/clipse/config.json - - - - ${pkgs.writeText "clipse-config" configJson}"
-        ];
+        systemd.user = {
+            tmpfiles.rules = [
+                "d %h/.config 0755 myamusashi users - -"
+                "d %h/.config/clipse 0755 myamusashi users - -"
+                "L+ %h/.config/clipse/config.json - - - - ${pkgs.writeText "clipse-config" configJson}"
+            ];
 
-        systemd.user.services.clipse = {
-            Unit = {
-                Description = "Clipboard history listener";
-                After = ["graphical-session.target"];
-            };
-            Service = {
-                Type = "simple";
-                ExecStart = "${clipsePkg}/bin/clipse -listen";
-                Restart = "on-failure";
-                Slice = "app-graphical.slice";
-            };
-            Install = {
-                WantedBy = ["graphical-session.target"];
+            services.clipse = {
+                Unit = {
+                    Description = "Clipboard history listener";
+                    After = ["graphical-session.target"];
+                };
+                Service = {
+                    Type = "simple";
+                    ExecStart = "${clipsePkg}/bin/clipse -listen";
+                    Restart = "on-failure";
+                    Slice = "app-graphical.slice";
+                };
+                Install = {
+                    WantedBy = ["graphical-session.target"];
+                };
             };
         };
     };
