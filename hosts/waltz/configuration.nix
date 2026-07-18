@@ -33,7 +33,7 @@
                     }
                 ];
             };
-            monitoring.enable = false;
+            monitoring.enable = true;
             phpmyadmin.enable = false;
             vaultwarden.enable = true;
             vsftpd.enable = true;
@@ -186,7 +186,7 @@
             "dash.myamusashi.com".locations."/".proxyPass = lib.mkForce "http://127.0.0.1:${toString config.shellix.variables.port.GRAFANA}";
             "cloud.myamusashi.com".listen = [
                 {
-                    addr = "127.0.0.1";
+                    addr = "0.0.0.0";
                     port = lib.mkForce config.shellix.variables.port.NEXTCLOUD;
                 }
             ];
@@ -259,8 +259,12 @@
         };
         firewall = {
             enable = true;
-            allowedTCPPorts = [20 21 22 80 433 2408 5432 3001 3002];
-            allowedUDPPorts = [5432 3001 3002];
+            allowedTCPPorts = [
+                20 21 22 25 53 80 443 465 587 993
+                2408 3306 5432 3001 3002
+                4531 6764 6753 7597 7916 8080 8131
+            ];
+            allowedUDPPorts = [53 5432 3001 3002 51820];
         };
     };
 

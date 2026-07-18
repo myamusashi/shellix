@@ -12,7 +12,7 @@
                 enable = true;
                 settings = {
                     server = {
-                        http_addr = "127.0.0.1";
+                        http_addr = "0.0.0.0";
                         http_port = config.shellix.variables.port.GRAFANA;
                         domain = "dash.myamusashi.com";
                     };
@@ -29,7 +29,7 @@
                         job_name = "node";
                         static_configs = [
                             {
-                                targets = ["localhost:${toString config.shellix.variables.port.PROMETHEUS}"];
+                                targets = ["localhost:${toString config.shellix.variables.port.PROMETHEUS-EXPORTERS}"];
                             }
                         ];
                     }

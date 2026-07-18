@@ -30,7 +30,7 @@
 
         services.nginx.virtualHosts."cloud.myamusashi.com".listen = [
             {
-                addr = "127.0.0.1";
+                addr = "0.0.0.0";
                 port = 9010;
             }
         ];
