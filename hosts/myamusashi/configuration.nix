@@ -111,17 +111,7 @@ in {
             enableSSHSupport = true;
             pinentryPackage = pinentryQtWrapped;
         };
-        hyprland = {
-            enable = true;
-            xwayland.enable = true;
-            package = inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.hyprland.overrideAttrs (old: {
-                patches =
-                    (old.patches or [])
-                    ++ [
-                        ../../overlays/patch/hyprland-patch/fix-loss-focus-window-on-closed-layer.patch
-                    ];
-            });
-        };
+        hyprland.enable = true;
         ccache.enable = true;
         java = {
             enable = true;
