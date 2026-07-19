@@ -177,13 +177,20 @@
         openssh.enable = true;
         xserver.xkb.layout = "us";
         logind.lidSwitch = "ignore";
+        cloudflare-warp.enable = true;
+        kmscon = {
+            enable = true;
+            config.font-name = "Hack";
+            autologinUser = "waltz";
+        };
+        vaultwarden.config.ROCKET_PORT = lib.mkForce config.shellix.variables.port.VAULTWARDEN;
         forgejo.settings.server.HTTP_PORT = lib.mkForce config.shellix.variables.port.FORGEJO;
         prometheus = {
             port = lib.mkForce config.shellix.variables.port.PROMETHEUS;
             exporters.node.port = lib.mkForce config.shellix.variables.port.PROMETHEUS-EXPORTERS;
         };
         nginx.virtualHosts = {
-            "dash.myamusashi.com".locations."/".proxyPass = lib.mkForce "http://127.0.0.1:${toString config.shellix.variables.port.GRAFANA}";
+            "dash.myamusashi.com".locations."/".proxyPass = lib.mkForce "http://0.0.0.0:${toString config.shellix.variables.port.GRAFANA}";
             "cloud.myamusashi.com".listen = [
                 {
                     addr = "0.0.0.0";
@@ -199,7 +206,15 @@
                 };
             };
         };
-        vaultwarden.config.ROCKET_PORT = lib.mkForce config.shellix.variables.port.VAULTWARDEN;
+        chrony = {
+            enable = true;
+            servers = ["pool.ntp.org"];
+            enableRTCTrimming = false;
+            extraConfig = ''
+                makestep 1 -1
+                rtcsync
+            '';
+        };
     };
 
     systemd.tmpfiles.rules = [
@@ -260,13 +275,36 @@
         firewall = {
             enable = true;
             allowedTCPPorts = [
-                20 21 22 25 53 80 443 465 587 993
-                2408 3306 5432 3001 3002
-                4531 6764 6753 7597 7916 8080 8131
+                20
+                21
+                22
+                25
+                53
+                80
+                443
+                465
+                587
+                993
+                2408
+                3306
+                5432
+                3001
+                3002
+                4531
+                6764
+                6753
+                7597
+                7916
+                8080
+                8131
             ];
             allowedUDPPorts = [53 5432 3001 3002 51820];
         };
     };
+
+    fonts.packages = [
+        pkgs-stable.nerd-fonts.hack
+    ];
 
     sops = {
         secrets.waltz-password.neededForUsers = false;
@@ -313,16 +351,6 @@
             atticd = {};
             runner = {};
         };
-    };
-
-    services.chrony = {
-        enable = true;
-        servers = ["pool.ntp.org"];
-        enableRTCTrimming = false;
-        extraConfig = ''
-            makestep 1 -1
-            rtcsync
-        '';
     };
 
     time.timeZone = "Asia/Jakarta";
@@ -387,11 +415,4 @@
             ];
         };
     };
-    fonts.packages = [
-        pkgs-stable.nerd-fonts.hack
-    ];
-    services.kmscon.enable = true;
-    services.kmscon.config.font-name = "Hack";
-
-    services.cloudflare-warp.enable = true;
 }
