@@ -41,9 +41,11 @@ in {
 
             script = let
                 cf = "${lib.getBin pkgs.cloudflared}/bin/cloudflared";
-            in lib.concatStringsSep "\n" (map (domain:
-                "${cf} tunnel route dns --overwrite --credentials-file ${credsFile} home-server ${domain}"
-            ) domains);
+            in
+                lib.concatStringsSep "\n" (map (
+                    domain: "${cf} tunnel route dns --overwrite --credentials-file ${credsFile} home-server ${domain}"
+                )
+                domains);
         };
     };
 }

@@ -181,6 +181,9 @@
         kmscon = {
             enable = true;
             config.font-name = "Hack";
+        };
+        services.getty = {
+            enable = true;
             autologinUser = "waltz";
         };
         vaultwarden.config.ROCKET_PORT = lib.mkForce config.shellix.variables.port.VAULTWARDEN;
