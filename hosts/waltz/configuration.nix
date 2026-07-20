@@ -182,7 +182,7 @@
             enable = true;
             config.font-name = "Hack";
         };
-        services.getty = {
+        getty = {
             enable = true;
             autologinUser = "waltz";
         };
