@@ -168,7 +168,6 @@
     };
 
     programs = {
-        kdeconnect.enable = true;
         wireshark.enable = lib.mkForce false;
         xonsh.enable = lib.mkForce false;
         steam.enable = lib.mkForce false;
@@ -176,7 +175,6 @@
 
     services = {
         openssh.enable = true;
-        xserver.xkb.layout = "us";
         logind.lidSwitch = "ignore";
         cloudflare-warp.enable = true;
         kmscon = {
