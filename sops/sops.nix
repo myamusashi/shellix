@@ -11,7 +11,6 @@
             user1-mail.mode = "0440";
 
             github_token = {
-                owner = "myamusashi";
                 path = "/home/myamusashi/.config/sops-nix/secrets/github_token";
             };
 
