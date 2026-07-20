@@ -5,6 +5,10 @@
     ...
 }: let
     cfg = config.shellix.server.wireguard;
+    wgAddressParts = lib.splitString "/" cfg.wireguardAddress;
+    wgAddressIP = lib.head wgAddressParts;
+    wgAddressPrefix = lib.last wgAddressParts;
+    wgSubnet = "${lib.concatStringsSep "." (lib.init (lib.splitString "." wgAddressIP))}.0/${wgAddressPrefix}";
 in {
     options.shellix.server.wireguard = {
         pathPrivateKeyFile = lib.mkOption {
@@ -24,6 +28,12 @@ in {
             default = "wg0";
             example = "wireguard-67";
             description = "Name your wireguard interfaces";
+        };
+        wireguardAddress = lib.mkOption {
+            type = lib.types.str;
+            default = "10.88.0.1/24";
+            example = "10.88.0.1/24";
+            description = "WireGuard interface address";
         };
         allowedUDPPorts = lib.mkOption {
             type = lib.types.port;
@@ -61,7 +71,7 @@ in {
             settings = {
                 interface = cfg.wireguardInterfaces;
                 bind-interfaces = true;
-                listen-address = "127.0.0.1,10.88.0.1";
+                listen-address = "127.0.0.1,${wgAddressIP}";
                 no-resolv = true;
                 server = ["1.1.1.1"];
             };
@@ -81,18 +91,18 @@ in {
 
             wg-quick.interfaces = {
                 ${cfg.wireguardInterfaces} = {
-                    address = ["10.88.0.1/24"];
+                    address = [cfg.wireguardAddress];
                     listenPort = cfg.allowedUDPPorts;
                     privateKeyFile = cfg.pathPrivateKeyFile;
 
                     postUp = ''
                         ${pkgs-stable.iptables}/bin/iptables -A FORWARD -i ${cfg.wireguardInterfaces} -j ACCEPT
-                        ${pkgs-stable.iptables}/bin/iptables -t nat -A POSTROUTING -s 10.88.0.0/24 -o ${cfg.externalInterfaces} -j MASQUERADE
+                        ${pkgs-stable.iptables}/bin/iptables -t nat -A POSTROUTING -s ${wgSubnet} -o ${cfg.externalInterfaces} -j MASQUERADE
                     '';
 
                     preDown = ''
                         ${pkgs-stable.iptables}/bin/iptables -D FORWARD -i ${cfg.wireguardInterfaces} -j ACCEPT
-                        ${pkgs-stable.iptables}/bin/iptables -t nat -D POSTROUTING -s 10.88.0.0/24 -o ${cfg.externalInterfaces} -j MASQUERADE
+                        ${pkgs-stable.iptables}/bin/iptables -t nat -D POSTROUTING -s ${wgSubnet} -o ${cfg.externalInterfaces} -j MASQUERADE
                     '';
 
                     inherit (cfg) peers;

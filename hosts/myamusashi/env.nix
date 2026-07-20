@@ -244,9 +244,10 @@ in {
         enable = true;
         defaultApplications = {
             "x-scheme-handler/tonsite" = "org.telegram.desktop.desktop";
-            "text/plain" = "org.neovim.nvim.desktop";
+            "text/plain" = "vim.desktop";
             "inode/directory" = "org.kde.dolphin.desktop";
             "application/x-gnome-saved-search" = "org.kde.dolphin.desktop";
+			"application/pdf" = "zen-beta.desktop";
             "image/png" = "lximage-qt.desktop.in";
             "x-scheme-handler/tg" = "org.telegram.desktop.desktop";
             "image/jpeg" = "lximage-qt.desktop.in";
@@ -256,13 +257,13 @@ in {
             "application/vnd.openxmlformats-officedocument.wordprocessingml.document" = ["draw.desktop"];
             "application/vnd.openxmlformats-officedocument.presentationml.presentation" = ["impress.desktop"];
             "image/png" = ["lximage-qt.desktop.in" "yazi.desktop"];
-            "text/x-log" = ["org.neovim.nvim.desktop"];
+            "text/x-log" = ["vim.desktop"];
             "image/svg+xml" = ["lximage-qt.desktop.in"];
             "x-scheme-handler/tg" = ["org.telegram.desktop.desktop"];
-            "text/x-java-source" = ["org.neovim.nvim.desktop"];
+            "text/x-java-source" = ["vim.desktop"];
             "image/jpeg" = ["lximage-qt.desktop.in"];
-            "text/plain" = ["org.neovim.nvim.desktop"];
-            "text/x-shellscript" = ["org.neovim.nvim.desktop"];
+            "text/plain" = ["vim.desktop"];
+            "text/x-shellscript" = ["vim.desktop"];
         };
     };
 }

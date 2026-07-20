@@ -21,6 +21,7 @@
                 enable = true;
                 externalInterfaces = "enp1s0";
                 wireguardInterfaces = "wg0";
+                wireguardAddress = "10.88.0.1/24";
                 pathPrivateKeyFile = "/etc/wireguard-keys/private.key";
                 peers = [
                     {

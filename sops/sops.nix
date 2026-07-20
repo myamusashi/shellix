@@ -10,6 +10,11 @@
             smtp_app_password.mode = "0440";
             user1-mail.mode = "0440";
 
+            github_token = {
+                owner = "myamusashi";
+                path = "/home/myamusashi/.config/sops-nix/secrets/github_token";
+            };
+
             weatherapi = {
                 path = "/home/myamusashi/.config/sops-nix/secrets/weatherapi";
             };
