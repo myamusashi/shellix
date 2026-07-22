@@ -46,37 +46,37 @@ final: prev: {
         vendorHash = "sha256-ie+/48dVU3r+tx/sQBWRIZEWSNWwMBANCqQLnv96JXs=";
     });
 
-    wl-screenrec = prev.wl-screenrec.overrideAttrs (oldAttrs: rec {
-        version = "unstable-1-12-25";
-
-        src = final.fetchFromGitHub {
-            owner = "russelltg";
-            repo = "wl-screenrec";
-            rev = "09252908c6304f0b71a5af9ddddf587559fbc471";
-            hash = "sha256-8JZEOcHcP+q4KPsTOghwwFFQzZ9OEGSLG00o7W2uUoQ=";
-        };
-
-        cargoDeps = final.rustPlatform.fetchCargoVendor {
-            inherit src;
-            hash = "sha256-XvvZBB6lg7YByNAI5QDFy5OR2rDcIzMhYkf5QTMtPxk=";
-        };
-
-        cargoBuildFlags = ["--all-features"];
-
-        buildInputs =
-            (final.lib.remove final.ffmpeg_6 oldAttrs.buildInputs)
-            ++ [
-                final.ffmpeg-full
-                final.vulkan-loader
-                final.vulkan-headers
-            ];
-
-        nativeBuildInputs =
-            (oldAttrs.nativeBuildInputs or [])
-            ++ [
-                final.makeWrapper
-            ];
-    });
+    # wl-screenrec = prev.wl-screenrec.overrideAttrs (oldAttrs: rec {
+    #     version = "unstable-1-12-25";
+    #
+    #     src = final.fetchFromGitHub {
+    #         owner = "russelltg";
+    #         repo = "wl-screenrec";
+    #         rev = "09252908c6304f0b71a5af9ddddf587559fbc471";
+    #         hash = "sha256-8JZEOcHcP+q4KPsTOghwwFFQzZ9OEGSLG00o7W2uUoQ=";
+    #     };
+    #
+    #     cargoDeps = final.rustPlatform.fetchCargoVendor {
+    #         inherit src;
+    #         hash = "sha256-XvvZBB6lg7YByNAI5QDFy5OR2rDcIzMhYkf5QTMtPxk=";
+    #     };
+    #
+    #     cargoBuildFlags = ["--all-features"];
+    #
+    #     buildInputs =
+    #         (final.lib.remove final.ffmpeg_6 oldAttrs.buildInputs)
+    #         ++ [
+    #             final.ffmpeg-full
+    #             final.vulkan-loader
+    #             final.vulkan-headers
+    #         ];
+    #
+    #     nativeBuildInputs =
+    #         (oldAttrs.nativeBuildInputs or [])
+    #         ++ [
+    #             final.makeWrapper
+    #         ];
+    # });
 
     tree-sitter = prev.tree-sitter.overrideAttrs (oldAttrs: rec {
         version = "0.26.5";
