@@ -3,6 +3,7 @@
         nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
         nixpkgs-stable.url = "github:NixOS/nixpkgs/release-25.11";
         flake-parts.url = "github:hercules-ci/flake-parts";
+        myamusashi-pkgs.url = "github:myamusashi/nix-myamusashi-packages";
 
         aquamarine = {
             url = "github:hyprwm/aquamarine";
