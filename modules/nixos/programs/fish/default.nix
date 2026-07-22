@@ -21,6 +21,8 @@ in {
             shellInit = ''
                 ${builtins.readFile ./config.fish}
 
+                set -gx GITHUB_TOKEN (cat ${config.sops.secrets.github_token.path})
+
                 function ws
                     ${pkgs.quickshell}/bin/qs -c lock ipc call img set "$argv[1]"
                 end
