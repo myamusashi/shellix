@@ -33,10 +33,6 @@
                 "https://attic.xuyh0120.win/lantian"
             ];
 
-            extra-substituters = [
-                # "https://cache.myamusashi.cc"
-            ];
-
             trusted-public-keys = [
                 "myamusashi.cachix.org-1:ra4PbY6yqM1pSvkGqJ78CZse3WWgjk4rOXBMtjD9YrY="
                 "chaotic-nyx.cachix.org-1:HfnXSw4pj95iI/n17rIDy40agHj12WfF+Gqk6SonIT8="

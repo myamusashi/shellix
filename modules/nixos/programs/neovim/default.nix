@@ -22,7 +22,7 @@
         oxlint
         oxfmt
         vscode-langservers-extracted
-        (callPackage ./plugins/csskit.nix {})
+        inputs.myamusashi-pkgs.packages.${pkgs.stdenv.hostPlatform.system}.csskit
         docker-language-server
         cmake-language-server
         clang-tools
@@ -42,7 +42,7 @@
         pnpm
     ];
     neovimWrapped = pkgs.wrapNeovimUnstable
-    inputs.neovim-nightly-overlay.packages.${pkgs.stdenv.hostPlatform.system}.default
+    inputs.myamusashi-pkgs.packages.${pkgs.stdenv.hostPlatform.system}.neovim
     {
         plugins = [
             (pkgs.vimPlugins.nvim-treesitter.withPlugins (p: [

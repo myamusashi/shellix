@@ -15,15 +15,15 @@
     } ''
         mkdir -p $out/bin
         mkdir -p $out/lib
-        cp -r ${inputs.quickshell.packages.${pkgs.stdenv.hostPlatform.system}.default}/lib/qt-6/qml/Quickshell $out/lib/Quickshell
+        cp -r ${inputs.myamusashi-pkgs.packages.${pkgs.stdenv.hostPlatform.system}.quickshell}/lib/qt-6/qml/Quickshell $out/lib/Quickshell
 
-        makeWrapper ${inputs.quickshell.packages.${pkgs.stdenv.hostPlatform.system}.default}/bin/qs $out/bin/qs \
+        makeWrapper ${inputs.myamusashi-pkgs.packages.${pkgs.stdenv.hostPlatform.system}.quickshell}/bin/qs $out/bin/qs \
           --prefix PATH : ${lib.makeBinPath [pkgs.fd pkgs.coreutils pkgs.qt6.qt5compat]} \
           --prefix QML2_IMPORT_PATH : "${pkgs.qt6.qt5compat}/${pkgs.qt6.qtbase.qtQmlPrefix}" \
           --prefix QML2_IMPORT_PATH : "${pkgs.qt6.qtgraphs}/${pkgs.qt6.qtbase.qtQmlPrefix}" \
 
 
-        makeWrapper ${inputs.quickshell.packages.${pkgs.stdenv.hostPlatform.system}.default}/bin/quickshell $out/bin/quickshell \
+        makeWrapper ${inputs.myamusashi-pkgs.packages.${pkgs.stdenv.hostPlatform.system}.quickshell}/bin/quickshell $out/bin/quickshell \
           --prefix PATH : ${lib.makeBinPath [pkgs.fd pkgs.coreutils]} \
           --prefix QML2_IMPORT_PATH : "${pkgs.qt6.qt5compat}/${pkgs.qt6.qtbase.qtQmlPrefix}" \
           --prefix QML2_IMPORT_PATH : "${pkgs.qt6.qtgraphs}/${pkgs.qt6.qtbase.qtQmlPrefix}" \
@@ -34,6 +34,8 @@
             name = "${pkg.pname or pkg.name}-wrapped";
             paths = [
                 (pkgs.writeShellScriptBin binary ''
+                    export FONTCONFIG_FILE="${pkgs.fontconfig.out}/etc/fonts/fonts.conf"
+                    export FONTCONFIG_PATH="${pkgs.fontconfig.out}/etc/fonts"
                     exec ${pkg}/bin/${binary} ${builtins.concatStringsSep " " electron-flags} "$@"
                 '')
                 pkg
@@ -66,6 +68,7 @@ in {
             antiprism
             fzf
             jq
+            dragon-drop
             # yt-dlp
 
             ## Archive and extraction
@@ -140,7 +143,7 @@ in {
             (import ../../modules/nixos/packages/custom/future-cyan-hyprcursor.nix {inherit (pkgs) stdenvNoCC lib fetchFromGitLab;})
 
             ## screen recorder
-            wl-screenrec
+            inputs.myamusashi-pkgs.packages.${pkgs.stdenv.hostPlatform.system}.wl-screenrec-fork
 
             ## Password managers
             pass-wayland
@@ -171,13 +174,12 @@ in {
             kdiff3
             (import ../../modules/nixos/packages/custom/app2unit.nix {inherit (pkgs) lib stdenvNoCC fetchFromGitHub makeWrapper bash systemd coreutils findutils gnugrep git gnused scdoc gawk libnotify;})
             sops
-            wl-screenrec
             gvfs
             wget2
             inputs.antigravity-flakes.packages.${stdenv.hostPlatform.system}.default
             vim
             polkit
-            inputs.zen-browser.packages.${stdenv.hostPlatform.system}.default
+            (wrapElectron inputs.zen-browser.packages.${stdenv.hostPlatform.system}.default "zen-beta")
             (wrapElectron onlyoffice-desktopeditors "onlyoffice-desktopeditors")
             qbittorrent-enhanced-nox
             patchelf
@@ -247,7 +249,7 @@ in {
             "text/plain" = "vim.desktop";
             "inode/directory" = "org.kde.dolphin.desktop";
             "application/x-gnome-saved-search" = "org.kde.dolphin.desktop";
-			"application/pdf" = "zen-beta.desktop";
+            "application/pdf" = "zen-beta.desktop";
             "image/png" = "lximage-qt.desktop.in";
             "x-scheme-handler/tg" = "org.telegram.desktop.desktop";
             "image/jpeg" = "lximage-qt.desktop.in";
