@@ -73,9 +73,10 @@
     '';
 
     keymapToml = ''
-        [manager]
+        [mgr]
         show_symlink = true
         prepend_keymap = [
+            { on = ["X"], run = "shell -- dragon-drop -x -i -T %h" },
             { on = [ "'", ";" ], run = "plugin custom-shell -- fish --interactive" },
             { on = [ "<C-s>" ], run = "plugin kdeconnect-send", desc = "Send selected files via KDE Connect" },
             { on = [ "E" ], run = "plugin eza-preview", desc = "Toggle tree/list dir preview" },
@@ -105,7 +106,7 @@ in {
             "d %h/.config/yazi/flavors 0755 myamusashi users - -"
             "L+ %h/.config/yazi/yazi.toml - - - - ${pkgs.writeText "yazi.toml" yaziToml}"
             "L+ %h/.config/yazi/keymap.toml - - - - ${pkgs.writeText "keymap.toml" keymapToml}"
-            "L+ %h/.config/yazi/init.lua - - - - ./init.lua"
+            "L+ %h/.config/yazi/init.lua - - - - ${./init.lua}"
 
             # Plugins symlinks
             "L+ %h/.config/yazi/plugins/chmod.yazi - - - - ${yazi-plugins.official-plugins}/chmod.yazi"
