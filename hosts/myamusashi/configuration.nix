@@ -41,9 +41,12 @@ in {
 
     sops = {
         age.keyFile = lib.mkForce (userConfig + "/sops/age/keys1.txt");
-        secrets.myamusashi-password = {
-            neededForUsers = true;
-            owner = config.users.users.myamusashi.name;
+        secrets = {
+            github_token.owner = config.users.users.myamusashi.name;
+            myamusashi-password = {
+                neededForUsers = true;
+                owner = config.users.users.myamusashi.name;
+            };
         };
     };
 
