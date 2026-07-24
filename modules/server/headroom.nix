@@ -37,7 +37,8 @@ in {
             };
 
             preStart = ''
-                if [ ! -d "${stateDir}/venv" ]; then
+                if [ ! -f "${stateDir}/venv/bin/pip" ]; then
+                    rm -rf ${stateDir}/venv
                     ${python}/bin/python -m venv ${stateDir}/venv
                 fi
                 ${stateDir}/venv/bin/pip install --quiet "headroom-ai[proxy]"

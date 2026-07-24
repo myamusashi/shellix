@@ -63,7 +63,7 @@ in {
                 RestartSec = 10;
                 User = "9router";
                 Group = "9router";
-                WorkingDirectory = appDir;
+                WorkingDirectory = stateDir;
                 StateDirectory = "9router";
                 AmbientCapabilities = "";
                 CapabilityBoundingSet = "";
