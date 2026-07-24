@@ -36,14 +36,11 @@ in {
                 PIP_NO_CACHE_DIR = "1";
             };
 
-            preStart = let
-                pip = "${python}/bin/pip";
-                py = "${python}/bin/python";
-            in ''
+            preStart = ''
                 if [ ! -d "${stateDir}/venv" ]; then
-                    ${py} -m venv ${stateDir}/venv
+                    ${python}/bin/python -m venv ${stateDir}/venv
                 fi
-                ${stateDir}/venv/bin/${pip} install --quiet "headroom-ai[proxy]"
+                ${stateDir}/venv/bin/pip install --quiet "headroom-ai[proxy]"
             '';
 
             script = ''

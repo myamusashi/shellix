@@ -6,7 +6,9 @@
 }: let
     cfg = config.shellix.server."9router";
     port = toString config.shellix.variables.port.NINEROUTER;
+    baseUrl = "http://localhost:${port}";
     stateDir = "/var/lib/9router";
+    appDir = "${stateDir}/app";
 in {
     config = lib.mkIf cfg.enable {
         users.users."9router" = {
@@ -26,6 +28,7 @@ in {
 
             path = with pkgs; [
                 nodejs
+                git
                 bash
             ];
 
@@ -36,14 +39,22 @@ in {
             };
 
             preStart = ''
-                if [ ! -f "${stateDir}/node_modules/.bin/9router" ]; then
-                    chown 9router:9router ${stateDir}
-                    ${pkgs.nodejs}/bin/npm install --omit=dev 9router
+                if [ ! -f "${stateDir}/.built" ]; then
+                    cd ${stateDir}
+                    rm -rf app
+                    git clone --depth 1 https://github.com/decolua/9router app
+                    cd ${appDir}
+                    cp .env.example .env
+                    sed -i "s#NEXT_PUBLIC_BASE_URL=.*#NEXT_PUBLIC_BASE_URL=${baseUrl}#" .env
+                    ${pkgs.nodejs}/bin/npm install
+                    ${pkgs.nodejs}/bin/npm run build
+                    touch ${stateDir}/.built
                 fi
             '';
 
             script = ''
-                ${pkgs.nodejs}/bin/node ${stateDir}/node_modules/.bin/9router
+                cd ${appDir}
+                ${pkgs.nodejs}/bin/npm run start
             '';
 
             serviceConfig = {
@@ -52,7 +63,7 @@ in {
                 RestartSec = 10;
                 User = "9router";
                 Group = "9router";
-                WorkingDirectory = stateDir;
+                WorkingDirectory = appDir;
                 StateDirectory = "9router";
                 AmbientCapabilities = "";
                 CapabilityBoundingSet = "";
