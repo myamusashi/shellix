@@ -40,12 +40,16 @@
             vsftpd.enable = true;
             nextcloud.enable = true;
             nix-serve.enable = false;
+            "9router".enable = true;
+            headroom.enable = true;
             cloudflared = {
                 enable = true;
                 ingress = {
                     "git.myamusashi.cc" = "unix:/run/forgejo/forgejo.sock";
                     "vault.myamusashi.cc" = "http://127.0.0.1:${toString config.shellix.variables.port.VAULTWARDEN}";
                     "ssh.myamusashi.cc" = "ssh://localhost:22";
+                    "router.myamusashi.cc" = "http://127.0.0.1:${toString config.shellix.variables.port.NINEROUTER}";
+                    "headroom.myamusashi.cc" = "http://127.0.0.1:${toString config.shellix.variables.port.HEADROOM}";
                 };
             };
             phpApps = {
@@ -299,6 +303,8 @@
                 7916
                 8080
                 8131
+                8787
+                20128
             ];
             allowedUDPPorts = [53 5432 3001 3002 51820];
         };
