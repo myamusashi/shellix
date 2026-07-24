@@ -43,7 +43,7 @@ in {
                 cf = "${lib.getBin pkgs.cloudflared}/bin/cloudflared";
             in
                 lib.concatStringsSep "\n" (map (
-                    domain: "${cf} tunnel route dns --overwrite --credentials-file ${credsFile} home-server ${domain}"
+                    domain: "${cf} tunnel route dns home-server ${domain}"
                 )
                 domains);
         };
