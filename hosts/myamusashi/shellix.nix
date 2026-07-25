@@ -6,7 +6,7 @@
     ];
 
     shellix = {
-        server.phpmyadmin.enable = false;
+        server."9router".enable = true;
 
         services = {
             audio.enable = true;

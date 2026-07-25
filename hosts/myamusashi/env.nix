@@ -200,7 +200,7 @@ in {
             HYPRCURSOR_SIZE = "50";
             QS_ICON_THEME = "Papirus";
             QT_QPA_PLATFORMTHEME = "qtengine";
-            XCURSOR_THEME = "Future-Cyan-Hyprcursor_Theme";
+            XCURSOR_THEME = "Future-cursors";
             XCURSOR_SIZE = "35";
 
             # Wayland and Graphics
