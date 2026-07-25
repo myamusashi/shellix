@@ -40,7 +40,7 @@
             vsftpd.enable = true;
             nextcloud.enable = true;
             nix-serve.enable = false;
-            "9router".enable = true;
+            "9router".enable = false;
             headroom.enable = true;
             cloudflared = {
                 enable = true;

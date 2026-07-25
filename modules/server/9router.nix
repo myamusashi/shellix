@@ -38,17 +38,13 @@ in {
                 NEXT_PUBLIC_BASE_URL = baseUrl;
             };
 
-            script = ''
-                cd ${pkg}
-                ${pkgs.nodejs}/bin/npm run start
-            '';
-
             serviceConfig = {
                 Type = "simple";
                 Restart = "always";
                 RestartSec = 10;
                 User = "9router";
                 Group = "9router";
+                ExecStart = "${pkg}/bin/9router";
                 WorkingDirectory = stateDir;
                 StateDirectory = "9router";
                 AmbientCapabilities = "";
