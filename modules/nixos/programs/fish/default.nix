@@ -14,8 +14,8 @@ in {
                 kiss = "${pkgs.kitty}/bin/kitty + kitten ssh";
                 img = "${pkgs.libsixel}/bin/img2sixel";
                 icat = "${pkgs.kitty}/bin/kitten icat";
-                ls = "${pkgs.eza}/bin/eza --icons";
-                lla = "${pkgs.eza}/bin/eza -a --icons";
+                ls = "${pkgs.eza}/bin/eza --icons always";
+                lla = "${pkgs.eza}/bin/eza -a --icons always";
             };
 
             shellInit = ''
