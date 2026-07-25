@@ -17,6 +17,7 @@
         ./fish/default.nix
         ./matugen/default.nix
         ./neovim/default.nix
+        ./nushell/default.nix
         ./yazi/default.nix
     ];
 
@@ -50,6 +51,10 @@
         vscode.enable = mkEnableOption "Enable electron code editor";
         matugen.enable = mkEnableOption "Enable auto color generation based on wallpaper";
         yazi.enable = mkEnableOption "Enable Yazi terminal file manager built on Rust";
+        nushell = {
+            enable = lib.mkEnableOption "Enable nushell";
+            setAsDefaultShell = lib.mkEnableOption "Set nushell as the default user shell";
+        };
         virt-manager.enable = mkEnableOption "Enable libvirt for virtualization using Qemu";
         wireshark.enable = mkEnableOption "Enable network listener";
     };

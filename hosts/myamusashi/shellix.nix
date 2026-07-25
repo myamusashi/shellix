@@ -43,6 +43,10 @@
         };
 
         programs = {
+            nushell = {
+                enable = true;
+                setAsDefaultShell = true;
+            };
             fish.enable = true;
             steam.enable = true;
             virt-manager.enable = false;
