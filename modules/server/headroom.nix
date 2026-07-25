@@ -2,12 +2,13 @@
     lib,
     config,
     pkgs,
+    inputs,
     ...
 }: let
     cfg = config.shellix.server.headroom;
     port = toString config.shellix.variables.port.HEADROOM;
     stateDir = "/var/lib/headroom";
-    python = pkgs.python313;
+    pkg = inputs.myamusashi-pkgs.packages.${pkgs.system}.headroom-ai;
 in {
     config = lib.mkIf cfg.enable {
         users.users.headroom = {
@@ -25,27 +26,13 @@ in {
             wants = ["network-online.target"];
             wantedBy = ["multi-user.target"];
 
-            path = with pkgs; [
-                python
-                python.pkgs.pip
-                bash
-            ];
-
             environment = {
                 HOME = stateDir;
-                PIP_NO_CACHE_DIR = "1";
+                HEADROOM_HOME = stateDir;
             };
 
-            preStart = ''
-                if [ ! -f "${stateDir}/venv/bin/pip" ]; then
-                    rm -rf ${stateDir}/venv
-                    ${python}/bin/python -m venv ${stateDir}/venv
-                fi
-                ${stateDir}/venv/bin/pip install --quiet "headroom-ai[proxy]"
-            '';
-
             script = ''
-                ${stateDir}/venv/bin/headroom proxy --port ${port}
+                ${pkg}/bin/headroom proxy --port ${port} --host 0.0.0.0
             '';
 
             serviceConfig = {
@@ -60,8 +47,7 @@ in {
                 CapabilityBoundingSet = "";
                 NoNewPrivileges = true;
                 PrivateTmp = true;
-                ProtectSystem = "strict";
-                ProtectHome = true;
+                ProtectSystem = "full";
                 ReadWritePaths = stateDir;
             };
         };
