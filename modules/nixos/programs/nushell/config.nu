@@ -7,7 +7,7 @@ alias lg = lazygit
 alias cat = bat
 alias df = duf
 alias top = btop
-alias mkdir = mkdir -p
+# mkdir in nu already creates parents, no -p needed
 alias cp = cp -iv
 alias mv = mv -iv
 alias rm = rm -iv
@@ -81,10 +81,8 @@ def vidtogif [
     width: int = 800
 ] {
     let output = ($input | str replace --regex '\.[^.]+$' '.gif')
-    ^ffmpeg -hwaccel vaapi -hwaccel_output_format vaapi \
-        -ss $start -t $dur -i $input \
-        -vf $"hwdownload,format=nv12,fps=($fps),scale=($width):-1:flags=lanczos,split[s0][s1];[s0]palettegen[p];[s1][p]paletteuse" \
-        -loop 0 $output
+    let vf = $"hwdownload,format=nv12,fps=($fps),scale=($width):-1:flags=lanczos,split[s0][s1];[s0]palettegen[p];[s1][p]paletteuse"
+    ^ffmpeg -hwaccel vaapi -hwaccel_output_format vaapi -ss $start -t $dur -i $input -vf $vf -loop 0 $output
     print $"→ ($output)"
 }
 
@@ -207,19 +205,19 @@ def --env mkcd [dir: string] {
 # --- kde connect via fzf ---
 
 def kc [] {
-    let device = (^kdeconnect-cli -l --id-only 2> /dev/null
+    let device = (^kdeconnect-cli -l --id-only err> /dev/null
         | lines | str trim | where {|l| $l != ""}
-        | input list --prompt "device > " --fuzzy)
+        | input list --fuzzy "device > ")
     if ($device | is-empty) { return }
 
     let action = (["send file" "send clipboard"]
-        | input list --prompt "action > " --fuzzy)
+        | input list --fuzzy "action > ")
     if ($action | is-empty) { return }
 
     match $action {
         "send file" => {
             let file = (ls -a **/* | where type == file | get name
-                | input list --prompt "file > " --fuzzy)
+                | input list --fuzzy "file > ")
             if ($file | is-empty) { return }
             ^kdeconnect-cli -d $device --share $file
             print $"sent: ($file)"
@@ -264,3 +262,16 @@ if (which starship | is-not-empty) {
     mkdir ($nu.data-dir | path join "vendor/autoload")
     ^starship init nu | save -f ($nu.data-dir | path join "vendor/autoload/starship.nu")
 }
+
+# --- direnv ---
+
+use std/config *
+
+$env.config.hooks.env_change.PWD = (
+    $env.config.hooks.env_change.PWD? | default []
+    | append {||
+        if (which direnv | is-empty) { return }
+        ^direnv export json | from json | default {} | load-env
+        $env.PATH = do (env-conversions).path.from_string $env.PATH
+    }
+)
