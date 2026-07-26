@@ -69,6 +69,7 @@ in {
             fzf
             jq
             dragon-drop
+            codegraph
             # yt-dlp
 
             ## Archive and extraction

@@ -124,9 +124,9 @@ in {
 
             config = {
                 theme = {
-                    colorScheme = "/run/current-system/sw/share/color-schemes/Darkly.colors";
+                    colorScheme = "/home/myamusashi/.local/share/color-schemes/Shellix.colors";
                     iconTheme = "MoreWaita";
-                    style = "qtengine";
+                    style = "darkly";
 
                     font = {
                         family = "SF Pro";
