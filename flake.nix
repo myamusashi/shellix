@@ -56,11 +56,6 @@
         };
 
         # Hyprland plugins
-        hy3 = {
-            url = "github:outfoxxed/hy3";
-            inputs.hyprland.follows = "hyprland";
-        };
-
         hypr-dynamic-cursors = {
             url = "github:myamusashi/hypr-dynamic-cursors";
             inputs.hyprland.follows = "hyprland";
@@ -71,16 +66,7 @@
             inputs.hyprland.follows = "hyprland";
         };
 
-        Hyprspace = {
-            url = "github:myamusashi/Hyprspace";
-            inputs.hyprland.follows = "hyprland";
-        };
         # End
-
-        hyprlock = {
-            url = "github:hyprwm/hyprlock";
-            inputs.nixpkgs.follows = "nixpkgs";
-        };
 
         hypridle = {
             url = "github:hyprwm/hypridle";
@@ -140,16 +126,6 @@
             };
         };
 
-        shell-greeter = {
-            url = "git+https://git.myamusashi.cc/myamusashi/vast-greeter.git";
-            inputs.nixpkgs.follows = "nixpkgs";
-        };
-
-        m3shapes = {
-            url = "github:myamusashi/m3shapes";
-            inputs.nixpkgs.follows = "nixpkgs";
-        };
-
         qtengine = {
             url = "github:kossLAN/qtengine";
             inputs.nixpkgs.follows = "nixpkgs";
@@ -173,9 +149,7 @@
         apple-fonts.url = "github:Lyndeno/apple-fonts.nix";
         sops-nix.url = "github:Mic92/sops-nix";
         nix-cachyos-kernel.url = "github:xddxdd/nix-cachyos-kernel/release";
-        neovim-nightly-overlay.url = "github:nix-community/neovim-nightly-overlay";
         spicetify-nix.url = "github:Gerg-L/spicetify-nix";
-        matugen.url = "github:/InioX/Matugen/v2.4.1";
     };
 
     outputs = inputs @ {flake-parts, ...}:
