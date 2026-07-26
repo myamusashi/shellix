@@ -172,6 +172,12 @@
     };
 
     programs = {
+        git = {
+            enable = true;
+            config = {
+                credential.helper = "store";
+            };
+        };
         wireshark.enable = lib.mkForce false;
         xonsh.enable = lib.mkForce false;
         steam.enable = lib.mkForce false;

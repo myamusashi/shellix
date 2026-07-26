@@ -40,11 +40,6 @@
         mode = "Dark"
         output_path = "${HOME}/.config/gtk-4.0/gtk.css"
 
-        [templates.hyprland]
-        input_path = "${toString ./templates/hyprland/colors.conf}"
-        mode = "Dark"
-        output_path = "${HOME}/.config/hypr/colors.conf"
-
         [templates.hyprland_lua_colors]
         input_path = "${toString ./templates/hyprland/colors.lua}"
         mode = "Dark"
