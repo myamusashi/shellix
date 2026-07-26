@@ -6,7 +6,7 @@
 }: let
     cfg = config.shellix.programs.nushell;
 
-    envNu = pkgs.writeText "env.nu" (builtins.readFile ./env.nu);
+    envNu = pkgs.writeText "env.nu" (builtins.readFile ./env.nu + ''$env.GITHUB_TOKEN = (cat ${config.sops.secrets.github_token.path})'');
     configNu = pkgs.writeText "config.nu" (builtins.readFile ./config.nu);
 in {
     config = lib.mkIf cfg.enable {
