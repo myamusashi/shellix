@@ -24,7 +24,10 @@
     options.shellix.programs = with lib; {
         btop.enable = mkEnableOption "Enable btop resource monitoring";
         fastfetch.enable = mkEnableOption "Enable terminal system info";
-        fish.enable = mkEnableOption "Enable fish shell";
+        fish = {
+            enable = mkEnableOption "Enable fish shell";
+            setAsDefaultShell = lib.mkEnableOption "Set fish as the default user shell";
+        };
         foot.enable = mkEnableOption "Enable lightweight foot terminal";
         htop.enable = mkEnableOption "Enable htop resource monitoring";
         kitty.enable = mkEnableOption "Enable GPU accelerated kitty terminal";

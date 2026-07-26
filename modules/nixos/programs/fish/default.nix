@@ -7,6 +7,9 @@
     cfg = config.shellix.programs.fish;
 in {
     config = lib.mkIf cfg.enable {
+        users.users.myamusashi = lib.mkIf cfg.setAsDefaultShell {
+            shell = lib.mkDefault pkgs.fish;
+        };
         programs.fish = {
             enable = lib.mkDefault true;
 
