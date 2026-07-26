@@ -7,7 +7,6 @@
 }: let
     cfg = config.shellix.server."9router";
     port = toString config.shellix.variables.port.NINEROUTER;
-    baseUrl = "http://localhost:${port}";
     stateDir = "/var/lib/9router";
     pkg = inputs.myamusashi-pkgs.packages.${pkgs.system}."9router";
 in {
@@ -21,10 +20,6 @@ in {
         };
         users.groups."9router" = {};
 
-        environment.sessionVariables = {
-            NEXT_PUBLIC_BASE_URL = baseUrl;
-        };
-
         systemd.services."9router" = {
             description = "9Router AI LLM Proxy Router";
             after = ["network-online.target"];
@@ -35,8 +30,19 @@ in {
                 PORT = port;
                 HOSTNAME = "0.0.0.0";
                 NODE_ENV = "production";
-                NEXT_PUBLIC_BASE_URL = baseUrl;
+                NEXT_TELEMETRY_DISABLED = "1";
+                DATA_DIR = "${stateDir}/data";
             };
+
+            preStart = ''
+                mkdir -p ${stateDir}/data
+                chown -R 9router:9router ${stateDir}
+            '';
+
+            script = ''
+                cd ${pkg}/lib/9router/app
+                exec ${pkgs.nodejs}/bin/node custom-server.js
+            '';
 
             serviceConfig = {
                 Type = "simple";
@@ -44,14 +50,14 @@ in {
                 RestartSec = 10;
                 User = "9router";
                 Group = "9router";
-                ExecStart = "${pkg}/bin/9router";
-                WorkingDirectory = stateDir;
+                WorkingDirectory = "${pkg}/lib/9router/app";
                 StateDirectory = "9router";
                 AmbientCapabilities = "";
                 CapabilityBoundingSet = "";
                 NoNewPrivileges = true;
                 PrivateTmp = true;
                 ProtectSystem = "full";
+                ProtectHome = true;
                 ReadWritePaths = stateDir;
             };
         };
