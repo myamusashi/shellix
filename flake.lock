@@ -4754,11 +4754,11 @@
         "wl-screenrec-fork": "wl-screenrec-fork"
       },
       "locked": {
-        "lastModified": 1785018060,
-        "narHash": "sha256-b+8+nZAVZ8wBPxCIH/gEkAoIHimf05V+lQDL/AdMLAE=",
+        "lastModified": 1785025718,
+        "narHash": "sha256-vRdSeMzZAiUIXy80kpdsEKGmIVs7tHA8aaQCOxW4otw=",
         "owner": "myamusashi",
         "repo": "nix-myamusashi-packages",
-        "rev": "896f318475aa6fd2008a25abce4c754850df6aec",
+        "rev": "1a1b4066ba3d0e7a58f9aa0eb27fa272560da63c",
         "type": "github"
       },
       "original": {
