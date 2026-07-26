@@ -47,7 +47,10 @@
                 enable = true;
                 setAsDefaultShell = true;
             };
-            fish.enable = true;
+            fish = {
+                enable = true;
+                setAsDefaultShell = false;
+            };
             steam.enable = true;
             virt-manager.enable = false;
             wireshark.enable = true;

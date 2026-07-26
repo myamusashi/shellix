@@ -1,8 +1,4 @@
-{
-    config,
-    pkgs,
-    ...
-}: let
+{config, ...}: let
     sopss = config.sops.secrets;
 in {
     users = {
@@ -10,7 +6,6 @@ in {
             myamusashi = {
                 isNormalUser = true;
                 hashedPasswordFile = sopss.myamusashi-password.path;
-                shell = pkgs.fish;
                 home = "/home/myamusashi";
                 extraGroups = [
                     "networkmanager"
