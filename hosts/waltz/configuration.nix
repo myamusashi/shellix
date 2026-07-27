@@ -167,6 +167,7 @@
         };
 
         programs = {
+            neovim.enable = true;
             fish.enable = true;
         };
     };
