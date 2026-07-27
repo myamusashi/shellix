@@ -81,9 +81,9 @@ in {
                 ]
                 ++ runtimePackages;
 
-            variables = lib.mkIf cfg.defaultEditor {
-                EDITOR = "nvim";
-                VISUAL = "nvim";
+            sessionVariables = lib.mkIf cfg.defaultEditor {
+                EDITOR = lib.mkForce "nvim";
+                VISUAL = lib.mkForce "nvim";
             };
             shellAliases = lib.mkIf cfg.vimdiffAlias {
                 vimdiff = "nvim -d";

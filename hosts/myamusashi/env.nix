@@ -227,7 +227,6 @@ in {
 
             # Application specific settings
             FREETYPE_PROPERTIES = "cff:no-stem-darkening=0 autofitter:no-stem-darkening=O";
-            EDITOR = "nvim";
             MOZ_DISABLE_RDD_SANDBOX = 1;
             MOZ_X11_EGL = "1";
             MOZ_ENABLE_WAYLAND = "1";

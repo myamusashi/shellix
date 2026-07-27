@@ -44,8 +44,5 @@
 
             cloudflared
         ];
-        sessionVariables = {
-            EDITOR = "vim";
-        };
     };
 }
