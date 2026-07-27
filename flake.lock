@@ -5041,11 +5041,11 @@
         "wl-screenrec-fork": "wl-screenrec-fork_2"
       },
       "locked": {
-        "lastModified": 1784843145,
-        "narHash": "sha256-yRFron9DjjeSF6m2sOuThaNpwnRVOgCAYs9VCB9kWBs=",
+        "lastModified": 1785138190,
+        "narHash": "sha256-EJsoX4B8pWbzF5n5u/EmDT4bhuhRiGwQipMung4Q6R0=",
         "ref": "refs/heads/master",
-        "rev": "d27f65beb7f9774ff082113dc989e2e2d3840e9b",
-        "revCount": 1240,
+        "rev": "c7925465844737cbb55e37e4fd4312fa0dd4d380",
+        "revCount": 1246,
         "type": "git",
         "url": "https://git.myamusashi.cc/myamusashi/vast-shell"
       },
