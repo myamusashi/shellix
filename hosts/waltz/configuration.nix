@@ -35,11 +35,9 @@
                 ];
             };
             monitoring.enable = true;
-            phpmyadmin.enable = false;
             vaultwarden.enable = true;
             vsftpd.enable = true;
             nextcloud.enable = true;
-            nix-serve.enable = false;
             "9router".enable = false;
             headroom.enable = true;
             cloudflared = {
@@ -179,14 +177,11 @@
                 credential.helper = "store";
             };
         };
-        wireshark.enable = lib.mkForce false;
-        xonsh.enable = lib.mkForce false;
-        steam.enable = lib.mkForce false;
     };
 
     services = {
         openssh.enable = true;
-        logind.lidSwitch = "ignore";
+        logind.settings.Login.HandleLidSwitch = "ignore";
         cloudflare-warp.enable = true;
         kmscon = {
             enable = true;
