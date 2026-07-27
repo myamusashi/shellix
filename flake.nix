@@ -1,7 +1,7 @@
 {
     inputs = {
         nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
-        nixpkgs-stable.url = "github:NixOS/nixpkgs/release-25.11";
+        nixpkgs-stable.url = "github:NixOS/nixpkgs/release-26.05";
         flake-parts.url = "github:hercules-ci/flake-parts";
         myamusashi-pkgs.url = "github:myamusashi/nix-myamusashi-packages";
 
@@ -169,7 +169,6 @@
                     waltz = mkHost {
                         hostname = "waltz";
                         username = null;
-                        useStable = true;
                     };
                 };
             };
