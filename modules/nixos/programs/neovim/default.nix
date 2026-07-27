@@ -28,7 +28,6 @@
         clang-tools
         fish-lsp
 
-        stylua
         shfmt
         shellcheck
 
