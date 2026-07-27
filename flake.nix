@@ -169,6 +169,7 @@
                     waltz = mkHost {
                         hostname = "waltz";
                         username = null;
+                        useStable = true;
                     };
                 };
             };
