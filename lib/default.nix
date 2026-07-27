@@ -59,7 +59,6 @@ in rec {
         username ? null,
         homeFile ? "home.nix",
         extraModules ? [],
-        useStable ? false,
     }:
         inputs.nixpkgs.lib.nixosSystem {
             inherit system;
@@ -85,12 +84,6 @@ in rec {
                             ]
                             ++ hyprland-ecosystem;
                     }
-                    ({lib, ...}: {
-                        config = lib.mkIf useStable {
-                            nixpkgs.hostPlatform = lib.mkDefault system;
-                            nixpkgs.pkgs = lib.mkDefault (mkPkgsStable {inherit system;});
-                        };
-                    })
                 ]
                 ++ extraModules;
         };
