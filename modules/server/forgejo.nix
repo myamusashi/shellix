@@ -28,7 +28,7 @@
                 "markup.jupyter" = {
                     ENABLED = true;
                     FILE_EXTENSIONS = ".ipynb";
-                    RENDER_COMMAND = "${pkgs-stable.python312Packages.nbconvert}/bin/jupyter-nbconvert --to html --stdout";
+                    RENDER_COMMAND = "${pkgs-stable.python314Packages.nbconvert}/bin/jupyter-nbconvert --to html --stdout";
                     IS_INPUT_FILE = true;
                 };
                 security = {
