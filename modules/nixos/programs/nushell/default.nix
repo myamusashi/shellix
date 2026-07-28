@@ -10,7 +10,7 @@
     configNu = pkgs.writeText "config.nu" (builtins.readFile ./config.nu);
 in {
     config = lib.mkIf cfg.enable {
-        environment.systemPackages = [pkgs.nushell];
+        environment.systemPackages = [pkgs.nushell pkgs.zoxide pkgs.carapace];
 
         systemd.user.tmpfiles.rules = [
             "d %h/.config/nushell 0755 myamusashi users - -"

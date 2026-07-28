@@ -1,3 +1,5 @@
+source ($nu.cache-dir | path join "carapace.nu")
+
 alias ls = eza --icons always
 alias lla = eza -a --icons always
 
@@ -233,6 +235,13 @@ def kc [] {
         }
     }
 }
+
+# --- zoxide (cd replacement) ---
+
+zoxide init nushell | save -f ($nu.home-path | path join ".zoxide.nu")
+source ($nu.home-path | path join ".zoxide.nu")
+
+alias z = zoxide query --interactive --
 
 # --- keybindings ---
 
