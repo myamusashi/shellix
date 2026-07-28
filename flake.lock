@@ -849,11 +849,11 @@
         "nixpkgs": "nixpkgs_3"
       },
       "locked": {
-        "lastModified": 1785105301,
-        "narHash": "sha256-Y6NLiZnEXX83UVYMsU41+hq+q0xabvQbmi4LOXI+pZU=",
+        "lastModified": 1785190051,
+        "narHash": "sha256-5HT+Xvr+CsVBoEtW9K3asIATHq6T3WhWFq2SYX3pciU=",
         "owner": "myamusashi",
         "repo": "hyprland-scroll-overview",
-        "rev": "44a4b6511cad7a55711b2b99c42fb06005d1a901",
+        "rev": "34242a3c032a73af55276fc41be3b3c597a6f4f1",
         "type": "github"
       },
       "original": {
