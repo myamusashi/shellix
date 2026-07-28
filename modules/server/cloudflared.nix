@@ -22,6 +22,7 @@ in {
             enable = true;
             tunnels."home-server" = {
                 credentialsFile = credsFile;
+                originRequest.noTLSVerify = true;
                 default = "http_status:404";
                 inherit (cfg) ingress;
             };

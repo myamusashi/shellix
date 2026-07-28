@@ -7,13 +7,7 @@
     config = lib.mkIf config.shellix.server.database.enable {
         services.postgresql = {
             enable = true;
-            ensureDatabases = ["nextcloud" "forgejo"];
-            ensureUsers = [
-                {
-                    name = "nextcloud";
-                    ensureDBOwnership = true;
-                }
-            ];
+            ensureDatabases = ["forgejo"];
         };
 
         services.mysql = {

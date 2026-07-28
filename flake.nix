@@ -146,6 +146,11 @@
             inputs.nixpkgs.follows = "nixpkgs";
         };
 
+        sesame = {
+            url = "git+https://git.myamusashi.cc/myamusashi/sesame.git";
+            inputs.nixpkgs.follows = "nixpkgs";
+        };
+
         apple-fonts.url = "github:Lyndeno/apple-fonts.nix";
         sops-nix.url = "github:Mic92/sops-nix";
         nix-cachyos-kernel.url = "github:xddxdd/nix-cachyos-kernel/release";

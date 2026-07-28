@@ -51,10 +51,10 @@
                 default = 1298;
                 description = "Port number for Stirling PDF manipulation";
             };
-            NEXTCLOUD = lib.mkOption {
+            OCIS = lib.mkOption {
                 type = lib.types.port;
-                default = 4531;
-                description = "Port number for Nextcloud self-hosted cloud machines";
+                default = 9200;
+                description = "Port number for ownCloud Infinite Scale (oCIS)";
             };
             VAULTWARDEN = lib.mkOption {
                 type = lib.types.port;

@@ -3,7 +3,7 @@
         ./database.nix
         ./forgejo.nix
         ./wireguard.nix
-        ./nextcloud.nix
+        ./ocis.nix
         ./nix-serve.nix
         ./monitoring.nix
         ./phpmyadmin.nix
@@ -24,7 +24,7 @@
         phpmyadmin.enable = lib.mkEnableOption "Enable database management using phpmyadmin";
         vaultwarden.enable = lib.mkEnableOption "Enable vaultwarden for password management";
         vsftpd.enable = lib.mkEnableOption "Enable vsftpd for transfer file (ssh)";
-        nextcloud.enable = lib.mkEnableOption "Enable nextcloud for cloud services";
+        ocis.enable = lib.mkEnableOption "Enable ownCloud Infinite Scale (oCIS)";
         nix-serve.enable = lib.mkEnableOption "Enable nix-serve for serving nix objects";
         mail.enable = lib.mkEnableOption "Enable stalwart mail server";
         cloudflared.enable = lib.mkEnableOption "Enable Cloudflare Tunnel";

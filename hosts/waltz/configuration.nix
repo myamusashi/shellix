@@ -14,7 +14,7 @@
 
     shellix = {
         server = {
-            mail.enable = true;
+            mail.enable = false;
             database.enable = true;
             forgejo.enable = true;
             wireguard = {
@@ -34,10 +34,10 @@
                     }
                 ];
             };
-            monitoring.enable = true;
+            monitoring.enable = false;
             vaultwarden.enable = true;
             vsftpd.enable = true;
-            nextcloud.enable = true;
+            ocis.enable = true;
             "9router".enable = false;
             headroom.enable = true;
             cloudflared = {
@@ -45,6 +45,7 @@
                 ingress = {
                     "git.myamusashi.cc" = "unix:/run/forgejo/forgejo.sock";
                     "vault.myamusashi.cc" = "http://127.0.0.1:${toString config.shellix.variables.port.VAULTWARDEN}";
+                    "cloud.myamusashi.cc" = "https://localhost:${toString config.shellix.variables.port.OCIS}";
                     "ssh.myamusashi.cc" = "ssh://localhost:22";
                     "router.myamusashi.cc" = "http://127.0.0.1:${toString config.shellix.variables.port.NINEROUTER}";
                     "headroom.myamusashi.cc" = "http://127.0.0.1:${toString config.shellix.variables.port.HEADROOM}";
@@ -183,7 +184,16 @@
                     markdown = false;
                 };
             };
-            fish.enable = true;
+            nushell = {
+                enable = true;
+                username = "waltz";
+                setAsDefaultShell = true;
+            };
+            fish = {
+                enable = true;
+                username = "waltz";
+                setAsDefaultShell = false;
+            };
         };
     };
 
@@ -195,6 +205,8 @@
             };
         };
     };
+
+    security.acme.defaults.email = "security@myamusashi.cc";
 
     services = {
         openssh.enable = true;
@@ -216,12 +228,6 @@
         };
         nginx.virtualHosts = {
             "dash.myamusashi.com".locations."/".proxyPass = lib.mkForce "http://0.0.0.0:${toString config.shellix.variables.port.GRAFANA}";
-            "cloud.myamusashi.com".listen = [
-                {
-                    addr = "0.0.0.0";
-                    port = lib.mkForce config.shellix.variables.port.NEXTCLOUD;
-                }
-            ];
             "static.myamusashi.cc" = {
                 root = "/var/www/static";
                 locations."/" = {
@@ -315,7 +321,7 @@
                 5432
                 3001
                 3002
-                4531
+                9200
                 6764
                 6753
                 7597
@@ -344,7 +350,6 @@
             waltz = {
                 isNormalUser = true;
                 description = "waltz";
-                shell = pkgs-stable.fish;
                 extraGroups = ["networkmanager" "wheel" "vsftpd" "docker" "podman"];
             };
             cloudflared = {
@@ -353,9 +358,9 @@
                 description = "Cloudflare Tunnel service user";
                 extraGroups = ["forgejo"];
             };
-            nextcloud = {
+            ocis = {
                 isSystemUser = true;
-                group = "nextcloud";
+                group = "ocis";
             };
             netdata = {
                 isSystemUser = true;
@@ -373,7 +378,7 @@
         };
         groups = {
             cloudflared = {};
-            nextcloud = {};
+            ocis = {};
             netdata = {};
             atticd = {};
             runner = {};

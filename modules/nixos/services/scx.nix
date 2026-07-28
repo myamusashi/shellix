@@ -6,7 +6,7 @@
     config = lib.mkIf config.shellix.services.scx.enable {
         services.scx = {
             enable = true;
-            scheduler = "scx_rusty";
+            scheduler = "scx_bpfland";
         };
     };
 }

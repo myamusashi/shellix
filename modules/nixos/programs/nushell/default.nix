@@ -6,10 +6,17 @@
 }: let
     cfg = config.shellix.programs.nushell;
 
-    envNu = pkgs.writeText "env.nu" (builtins.readFile ./env.nu + ''$env.GITHUB_TOKEN = (cat ${config.sops.secrets.github_token.path})'');
+    envNu = pkgs.writeText "env.nu" (
+        builtins.readFile ./env.nu
+        + (lib.optionalString (cfg.username == "myamusashi") ''
+            $env.GITHUB_TOKEN = (cat ${config.sops.secrets.github_token.path})
+        '')
+    );
+
     configNu = pkgs.writeText "config.nu" (builtins.readFile ./config.nu);
 in {
     config = lib.mkIf cfg.enable {
+        environment.shells = [pkgs.nushell];
         environment.systemPackages = [pkgs.nushell pkgs.zoxide pkgs.carapace];
 
         systemd.user.tmpfiles.rules = [
@@ -18,6 +25,6 @@ in {
             "L+ %h/.config/nushell/config.nu - - - - ${configNu}"
         ];
 
-        users.users.myamusashi.shell = lib.mkIf cfg.setAsDefaultShell pkgs.nushell;
+        users.users."${cfg.username}".shell = lib.mkIf cfg.setAsDefaultShell pkgs.nushell;
     };
 }

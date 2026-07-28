@@ -45,10 +45,12 @@
         programs = {
             nushell = {
                 enable = true;
+                username = "myamusashi";
                 setAsDefaultShell = true;
             };
             fish = {
                 enable = true;
+                username = "myamusashi";
                 setAsDefaultShell = false;
             };
             steam.enable = true;
