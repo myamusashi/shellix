@@ -62,7 +62,18 @@
             lazygit.enable = true;
             mpv.enable = true;
             neovide.enable = false;
-            neovim.enable = true;
+            neovim = {
+                enable = true;
+
+                languages = {
+                    web = false;
+                    python = false;
+                    docker = false;
+                    dart = false;
+                    sql = false;
+                    lint = false;
+                };
+            };
             shell.enable = false;
             spicetify.enable = false;
             vscode.enable = true;

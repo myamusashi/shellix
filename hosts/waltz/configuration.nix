@@ -165,7 +165,24 @@
         };
 
         programs = {
-            neovim.enable = true;
+            neovim = {
+                enable = true;
+
+                languages = {
+                    web = false;
+                    lua = false;
+                    lint = false;
+                    cpp = false;
+                    sql = false;
+                    fish = false;
+                    python = false;
+                    bash = false;
+                    qml = false;
+                    docker = false;
+                    dart = false;
+                    markdown = false;
+                };
+            };
             fish.enable = true;
         };
     };
