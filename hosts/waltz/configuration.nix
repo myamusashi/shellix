@@ -183,7 +183,14 @@
                     markdown = false;
                 };
             };
-            fish.enable = true;
+            nushell = {
+                enable = true;
+                setAsDefaultShell = true;
+            };
+            fish = {
+                enable = true;
+                setAsDefaultShell = false;
+            };
         };
     };
 
