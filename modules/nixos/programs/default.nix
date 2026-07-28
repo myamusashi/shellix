@@ -26,6 +26,11 @@
         fastfetch.enable = mkEnableOption "Enable terminal system info";
         fish = {
             enable = mkEnableOption "Enable fish shell";
+            username = lib.mkOption {
+                type = lib.types.str;
+                example = "myamusashi";
+                description = "Ther user gonna use this shell of course";
+            };
             setAsDefaultShell = lib.mkEnableOption "Set fish as the default user shell";
         };
         foot.enable = mkEnableOption "Enable lightweight foot terminal";
@@ -80,6 +85,12 @@
         yazi.enable = mkEnableOption "Enable Yazi terminal file manager built on Rust";
         nushell = {
             enable = lib.mkEnableOption "Enable nushell";
+            username = lib.mkOption {
+                type = lib.types.str;
+                example = "myamusashi";
+                description = "Ther user gonna use this shell of course";
+            };
+
             setAsDefaultShell = lib.mkEnableOption "Set nushell as the default user shell";
         };
         virt-manager.enable = mkEnableOption "Enable libvirt for virtualization using Qemu";

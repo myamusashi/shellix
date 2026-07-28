@@ -18,6 +18,6 @@ in {
             "L+ %h/.config/nushell/config.nu - - - - ${configNu}"
         ];
 
-        users.users.myamusashi.shell = lib.mkIf cfg.setAsDefaultShell pkgs.nushell;
+        users.users."${cfg.username}".shell = lib.mkIf cfg.setAsDefaultShell pkgs.nushell;
     };
 }

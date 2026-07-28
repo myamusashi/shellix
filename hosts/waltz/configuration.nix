@@ -185,10 +185,12 @@
             };
             nushell = {
                 enable = true;
+                username = "waltz";
                 setAsDefaultShell = true;
             };
             fish = {
                 enable = true;
+                username = "waltz";
                 setAsDefaultShell = false;
             };
         };
@@ -351,7 +353,6 @@
             waltz = {
                 isNormalUser = true;
                 description = "waltz";
-                shell = pkgs-stable.fish;
                 extraGroups = ["networkmanager" "wheel" "vsftpd" "docker" "podman"];
             };
             cloudflared = {
