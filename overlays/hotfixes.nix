@@ -46,166 +46,26 @@ final: prev: {
         vendorHash = "sha256-ie+/48dVU3r+tx/sQBWRIZEWSNWwMBANCqQLnv96JXs=";
     });
 
-    # wl-screenrec = prev.wl-screenrec.overrideAttrs (oldAttrs: rec {
-    #     version = "unstable-1-12-25";
-    #
-    #     src = final.fetchFromGitHub {
-    #         owner = "russelltg";
-    #         repo = "wl-screenrec";
-    #         rev = "09252908c6304f0b71a5af9ddddf587559fbc471";
-    #         hash = "sha256-8JZEOcHcP+q4KPsTOghwwFFQzZ9OEGSLG00o7W2uUoQ=";
-    #     };
-    #
-    #     cargoDeps = final.rustPlatform.fetchCargoVendor {
-    #         inherit src;
-    #         hash = "sha256-XvvZBB6lg7YByNAI5QDFy5OR2rDcIzMhYkf5QTMtPxk=";
-    #     };
-    #
-    #     cargoBuildFlags = ["--all-features"];
-    #
-    #     buildInputs =
-    #         (final.lib.remove final.ffmpeg_6 oldAttrs.buildInputs)
-    #         ++ [
-    #             final.ffmpeg-full
-    #             final.vulkan-loader
-    #             final.vulkan-headers
-    #         ];
-    #
-    #     nativeBuildInputs =
-    #         (oldAttrs.nativeBuildInputs or [])
-    #         ++ [
-    #             final.makeWrapper
-    #         ];
-    # });
+    python313Packages = prev.python313Packages.overrideScope (pyFinal: pyPrev: {
+        gradio-client = pyPrev.gradio-client.overridePythonAttrs (old: {
+            dontCheckPythonMetadata = true;
+        });
 
-    # tree-sitter = prev.tree-sitter.overrideAttrs (oldAttrs: rec {
-    #     version = "0.26.5";
-    #
-    #     src = final.fetchFromGitHub {
-    #         owner = "tree-sitter";
-    #         repo = "tree-sitter";
-    #         tag = "v${version}";
-    #         hash = "sha256-tnZ8VllRRYPL8UhNmrda7IjKSeFmmOnW/2/VqgJFLgU=";
-    #         fetchSubmodules = true;
-    #     };
-    #
-    #     patches = [
-    #         ./patch/tree-sitter-patch/remove-web-interface.patch
-    #     ];
-    #
-    #     cargoDeps = prev.rustPlatform.fetchCargoVendor {
-    #         inherit src;
-    #         hash = "sha256-EU8kdG2NT3NvrZ1AqvaJPLpDQQwUhYG3Gj5TAjPYRsY=";
-    #     };
-    #
-    #     nativeBuildInputs =
-    #         (oldAttrs.nativeBuildInputs or [])
-    #         ++ [final.rustPlatform.bindgenHook];
-    # });
+        gradio = pyPrev.gradio.overridePythonAttrs (old: {
+            dontCheckPythonMetadata = true;
+            dontCheckRuntimeDeps = true;
+        });
+
+        gradio-client-sans-reverse-dependencies = pyPrev.gradio-client-sans-reverse-dependencies.overrideAttrs (old: {
+            pythonMetadataCheckPhase = true;
+        });
+
+        hf-gradio = pyPrev.hf-gradio.overrideAttrs (old: {
+            pythonMetadataCheckPhase = true;
+        });
+    });
 
     python3Packages = prev.python3Packages.overrideScope (self: super: {
-        # starlette = super.starlette.overrideAttrs (oldAttrs: rec {
-        #     version = "0.52.1";
-        #
-        #     src = final.fetchFromGitHub {
-        #         owner = "Kludex";
-        #         repo = "starlette";
-        #         tag = version;
-        #         hash = "sha256-xpaernh9a0a1/5vgzzzgqbhlbsih1vr8qmfdkxg5cqe=";
-        #     };
-        # });
-        # For some reason rembg need lowered starlette version and unstable branch just break the gradio and gradio-client, see:
-        # https://github.com/NixOS/nixpkgs/pull/546324
-        # gradio-client = super.gradio-client.overridePythonAttrs (old: {
-        #     dontCheckPythonMetadata = true; # broken due to changed pname — fixes gradio-client-sans-reverse-dependencies
-        # });
-        #
-        # gradio = let
-        #     gradioUnbroken = super.gradio.overridePythonAttrs (old: {
-        #         dependencies =
-        #             map (
-        #                 dep:
-        #                     if dep.pname == "starlette"
-        #                     then
-        #                         super.starlette.overridePythonAttrs (starletteOldAttrs: rec {
-        #                             version = "0.52.1";
-        #                             src = super.fetchFromGitHub {
-        #                                 owner = "encode";
-        #                                 repo = "starlette";
-        #                                 tag = version;
-        #                                 hash = "sha256-xpaernh9a0a1/5vgzzzgqbhlbsih1vr8qmfdkxg5cqe=";
-        #                             };
-        #                         })
-        #                     else dep
-        #             )
-        #             old.dependencies
-        #             ++ [final.python3Packages.urllib3];
-        #         pythonRelaxDeps = (old.pythonRelaxDeps or []) ++ ["tomlkit"]; # pre-emptive upper bound
-        #     });
-        # in
-        #     gradioUnbroken.overridePythonAttrs (old: {
-        #         passthru =
-        #             old.passthru
-        #             // {
-        #                 tests =
-        #                     old.passthru.tests
-        #                     // {
-        #                         client = old.passthru.tests.client.overridePythonAttrs (oldAttrs: {
-        #                             pythonImportsCheck = null;
-        #                             dontCheckRuntimeDeps = true;
-        #                             dontCheckPythonMetadata = true; # broken due to changed pname
-        #                         });
-        #                     };
-        #             };
-        #     });
-        #
-        # rembg = super.rembg.overridePythonAttrs (oldAttrs: {
-        #     optional-dependencies =
-        #         oldAttrs.optional-dependencies
-        #         // {
-        #             cli = map (
-        #                 dep:
-        #                     if dep.pname == "gradio"
-        #                     then final.python3Packages.gradio
-        #                     else dep
-        #             )
-        #             oldAttrs.optional-dependencies.cli;
-        #         };
-        # });
-        # tree-sitter = super.tree-sitter.overrideAttrs (oldAttrs: rec {
-        #     version = "0.25.2";
-        #
-        #     src = final.fetchFromGitHub {
-        #         owner = "tree-sitter";
-        #         repo = "py-tree-sitter";
-        #         tag = "v${version}";
-        #         hash = "sha256-ZDt/8suteaAjGdk71l8eej7jDkkVpVDBIZS63SA8tsU=";
-        #         fetchSubmodules = true;
-        #     };
-        #
-        #     doCheck = false;
-        #     doInstallCheck = false;
-        #
-        #     meta = {
-        #         description = "Python bindings to the Tree-sitter parsing library";
-        #         homepage = "https://github.com/tree-sitter/py-tree-sitter";
-        #         changelog = "https://github.com/tree-sitter/py-tree-sitter/releases/tag/${src.tag}";
-        #         license = final.lib.licenses.mit;
-        #         maintainers = [final.lib.maintainers.fab];
-        #     };
-        # });
-        #
-        # tree-sitter-rust = super.tree-sitter-rust.overrideAttrs (oldAttrs: rec {
-        #     version = "0.24.0";
-        #
-        #     src = final.fetchFromGitHub {
-        #         owner = "tree-sitter";
-        #         repo = "tree-sitter-rust";
-        #         tag = "v${version}";
-        #         hash = "sha256-aT+tlrEKMgWqTEq/NHh8Vj92h6i1aU6uPikDyaP2vfc=";
-        #     };
-        # });
-
         textual = super.textual.overrideAttrs (oldAttrs: {
             meta = oldAttrs.meta // {broken = false;};
             disabledTestPaths = [
