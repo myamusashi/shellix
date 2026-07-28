@@ -11,3 +11,6 @@ $env.EDITOR = ("nvim -u " + ($env.HOME | path join ".config" "nvim" "init.lua"))
 $env.CARAPACE_BRIDGES = 'zsh,fish,bash,inshellisense'
 mkdir ($nu.cache-dir)
 carapace _carapace nushell | save --force ($nu.cache-dir | path join "carapace.nu")
+
+zoxide init nushell | save -f ~/.zoxide.nu
+source ~/.zoxide.nu
