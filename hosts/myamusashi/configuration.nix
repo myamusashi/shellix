@@ -64,18 +64,20 @@ in {
         gnome.gnome-keyring.enable = false;
         gvfs.enable = true;
         upower.enable = true;
+        sesamed = {
+            enable = true;
+            pamModule = "sddm";
+        };
         mysql = {
             enable = true;
             package = pkgs.mariadb;
         };
     };
 
-    security.pam.services.greetd.text = ''
-        auth      substack      login
-        account   include       login
-        password  substack      login
-        session   include       login
-    '';
+    security.polkit = {
+        enable = true;
+        enablePkexecWrapper = true;
+    };
 
     programs = {
         quickshell-shell = {

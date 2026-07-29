@@ -705,6 +705,24 @@
         "type": "github"
       }
     },
+    "flake-parts_8": {
+      "inputs": {
+        "nixpkgs-lib": "nixpkgs-lib_6"
+      },
+      "locked": {
+        "lastModified": 1782949081,
+        "narHash": "sha256-vp6Y/Grm98ESt6ceOkWiHWyZRDV3J1RID4w+6NWK9yA=",
+        "owner": "hercules-ci",
+        "repo": "flake-parts",
+        "rev": "17c9d6cdfc60c64f4ee8d306f9bc0b4ccb51481e",
+        "type": "github"
+      },
+      "original": {
+        "owner": "hercules-ci",
+        "repo": "flake-parts",
+        "type": "github"
+      }
+    },
     "flake-utils": {
       "inputs": {
         "systems": "systems"
@@ -4685,6 +4703,21 @@
         "type": "github"
       }
     },
+    "nixpkgs-lib_6": {
+      "locked": {
+        "lastModified": 1782614948,
+        "narHash": "sha256-ePjCwr1sNm9NYUqywL7QfK3JnlS015msC+eBu2zKlp8=",
+        "owner": "nix-community",
+        "repo": "nixpkgs.lib",
+        "rev": "db3f255737b94216eb71cce308e2912cf6bc2d7c",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nix-community",
+        "repo": "nixpkgs.lib",
+        "type": "github"
+      }
+    },
     "nixpkgs-stable": {
       "locked": {
         "lastModified": 1785158853,
@@ -4939,11 +4972,33 @@
         "nixpkgs-stable": "nixpkgs-stable",
         "qtengine": "qtengine",
         "quickshell": "quickshell",
+        "sesame": "sesame",
         "shell": "shell",
         "sops-nix": "sops-nix",
         "spicetify-nix": "spicetify-nix",
         "yazi-plugins-flakes": "yazi-plugins-flakes",
         "zen-browser": "zen-browser"
+      }
+    },
+    "sesame": {
+      "inputs": {
+        "flake-parts": "flake-parts_8",
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1785284273,
+        "narHash": "sha256-Ply1+K0tj7vqgPby2Roligol+mV1y7sv+ht+MFfZ1a4=",
+        "ref": "refs/heads/master",
+        "rev": "df2fcb0065c28211972b5b9828cd41a597879a94",
+        "revCount": 25,
+        "type": "git",
+        "url": "https://git.myamusashi.cc/myamusashi/sesame.git"
+      },
+      "original": {
+        "type": "git",
+        "url": "https://git.myamusashi.cc/myamusashi/sesame.git"
       }
     },
     "sf-arabic": {
@@ -5041,11 +5096,11 @@
         "wl-screenrec-fork": "wl-screenrec-fork_2"
       },
       "locked": {
-        "lastModified": 1785138190,
-        "narHash": "sha256-EJsoX4B8pWbzF5n5u/EmDT4bhuhRiGwQipMung4Q6R0=",
+        "lastModified": 1785218620,
+        "narHash": "sha256-WpQgHnXt4U0tuxJwu18h/2x8axQ5Ulhh38Bdj+9eXy4=",
         "ref": "refs/heads/master",
-        "rev": "c7925465844737cbb55e37e4fd4312fa0dd4d380",
-        "revCount": 1246,
+        "rev": "a1ca5a6013f5d8c5376439120b6b44a8dac99063",
+        "revCount": 1254,
         "type": "git",
         "url": "https://git.myamusashi.cc/myamusashi/vast-shell"
       },

@@ -79,13 +79,14 @@ in {
             p7zip
 
             ## Qt packages
-            kdePackages.dolphin
+            # kdePackages.dolphin
             kdePackages.ark ## Enable extract and archive for dolphin
             kdePackages.kde-cli-tools ## Enable change file opener in dolphin
-            kdePackages.kwallet
-            kdePackages.kwalletmanager
+            # kdePackages.kwallet
+            # kdePackages.kwalletmanager
             quickshell-wrapped
             inputs.shell.packages.${pkgs.stdenv.hostPlatform.system}.default
+            lxqt.pcmanfm-qt
             lxqt.pavucontrol-qt
             pinentry-qt
             media-downloader
@@ -179,7 +180,6 @@ in {
             wget2
             inputs.antigravity-flakes.packages.${stdenv.hostPlatform.system}.default
             vim
-            polkit
             (wrapElectron inputs.zen-browser.packages.${stdenv.hostPlatform.system}.default "zen-beta")
             (wrapElectron onlyoffice-desktopeditors "onlyoffice-desktopeditors")
             qbittorrent-enhanced-nox
