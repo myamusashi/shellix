@@ -17,6 +17,7 @@ in {
         inputs.shell.nixosModules.default
         inputs.qtengine.nixosModules.default
         inputs.hyprland.nixosModules.default
+        inputs.sesame.nixosModules.default
     ];
 
     fonts = {
@@ -66,6 +67,7 @@ in {
         upower.enable = true;
         sesamed = {
             enable = true;
+            package = inputs.sesame.packages.${pkgs.stdenv.hostPlatform.system}.default;
             pamModule = "sddm";
         };
         mysql = {
