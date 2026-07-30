@@ -45,7 +45,7 @@
                 ingress = {
                     "git.myamusashi.cc" = "unix:/run/forgejo/forgejo.sock";
                     "vault.myamusashi.cc" = "http://127.0.0.1:${toString config.shellix.variables.port.VAULTWARDEN}";
-                    "cloud.myamusashi.cc" = "http://127.0.0.1:${toString config.shellix.variables.port.OCIS}";
+                    "cloud.myamusashi.cc" = "https://127.0.0.1:${toString config.shellix.variables.port.OCIS}";
                     "ssh.myamusashi.cc" = "ssh://localhost:22";
                     "router.myamusashi.cc" = "http://127.0.0.1:${toString config.shellix.variables.port.NINEROUTER}";
                     "headroom.myamusashi.cc" = "http://127.0.0.1:${toString config.shellix.variables.port.HEADROOM}";
@@ -226,12 +226,6 @@
         };
         nginx.virtualHosts = {
             "dash.myamusashi.com".locations."/".proxyPass = lib.mkForce "http://0.0.0.0:${toString config.shellix.variables.port.GRAFANA}";
-            "cloud.myamusashi.com".listen = [
-                {
-                    addr = "0.0.0.0";
-                    port = lib.mkForce config.shellix.variables.port.OCIS;
-                }
-            ];
             "static.myamusashi.cc" = {
                 root = "/var/www/static";
                 locations."/" = {
