@@ -2,7 +2,7 @@
     environment = {
         systemPackages = with pkgs-stable; [
             eza
-	    bat
+            bat
             vim
             pciutils
             fzf

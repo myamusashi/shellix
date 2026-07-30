@@ -13,25 +13,21 @@
 
         security.acme.acceptTerms = true;
 
-        security.acme.certs."cloud.myamusashi.com" = {
-            group = "nginx";
-            webroot = "/var/lib/acme/acme-challenge";
-        };
-
         services.ocis = {
             enable = true;
             package = pkgs.ocis_5-bin;
             configDir = "/var/lib/ocis/config";
-            address = "0.0.0.0";
+            address = "127.0.0.1";
             port = config.shellix.variables.port.OCIS;
-            url = "https://cloud.myamusashi.com";
+            url = "https://cloud.myamusashi.cc";
             stateDir = "/var/lib/ocis";
             environment = {
                 CS3_ALLOW_INSECURE = "true";
                 GATEWAY_STORAGE_USERS_MOUNT_ID = "123";
                 GRAPH_APPLICATION_ID = "1234";
+                IDP_ISS = "https://cloud.myamusashi.cc";
                 IDP_TLS = "false";
-                OCIS_INSECURE = "true";
+                OCIS_INSECURE = "false";
                 OCIS_INSECURE_BACKENDS = "true";
                 OCIS_LOG_LEVEL = "error";
                 OCIS_MACHINE_AUTH_API_KEY = "foo";
@@ -46,25 +42,6 @@
                 WEBDAV_ALLOW_INSECURE = "true";
             };
             environmentFile = config.sops.secrets.ocis_secrets_password.path;
-        };
-
-        services.nginx = {
-            enable = true;
-            virtualHosts."cloud.myamusashi.com" = {
-                forceSSL = true;
-                useACMEHost = "cloud.myamusashi.com";
-                locations."/" = {
-                    proxyPass = "http://127.0.0.1:${toString config.shellix.variables.port.OCIS}";
-                    proxyWebsockets = true;
-                    extraConfig = ''
-                        proxy_set_header Host $host;
-                        proxy_set_header X-Real-IP $remote_addr;
-                        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-                        proxy_set_header X-Forwarded-Proto $scheme;
-                        client_max_body_size 10G;
-                    '';
-                };
-            };
         };
     };
 }
