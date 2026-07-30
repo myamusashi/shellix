@@ -4988,11 +4988,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1785284273,
-        "narHash": "sha256-Ply1+K0tj7vqgPby2Roligol+mV1y7sv+ht+MFfZ1a4=",
+        "lastModified": 1785329104,
+        "narHash": "sha256-Jv448tZcCOf+vMGyU5AeGDCLI73h3Vb2+cvtMBC+eqY=",
         "ref": "refs/heads/master",
-        "rev": "df2fcb0065c28211972b5b9828cd41a597879a94",
-        "revCount": 25,
+        "rev": "4e70d325243a2f75dc9d6458f6afd0a38366fc82",
+        "revCount": 29,
         "type": "git",
         "url": "https://git.myamusashi.cc/myamusashi/sesame.git"
       },

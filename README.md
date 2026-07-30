@@ -57,7 +57,7 @@ NixOS flake-based dotfiles managing two machines.
 | Service | Port | Purpose |
 |---------|------|---------|
 | **forgejo** | 7597 | Self-hosted Git |
-| **nextcloud** | 4531 | Cloud storage |
+| **ocis** | 9200 | Cloud storage (ownCloud Infinite Scale) |
 | **vaultwarden** | 8131 | Password manager |
 | **mail** | 25/587/465 | Stalwart mail server |
 | **vsftpd** | 21 | FTP file transfer |
@@ -106,7 +106,7 @@ NixOS flake-based dotfiles managing two machines.
 │   │   ├── programs/      # fish, neovim, steam, kitty, yazi, matugen, etc.
 │   │   ├── services/      # audio, mpd, hypridle, display-manager, borg, etc.
 │   │   └── packages/custom/ # Custom package derivations (orchis, nordic, etc.)
-│   └── server/            # forgejo, nextcloud, vaultwarden, nginx, wireguard
+│   └── server/            # forgejo, ocis, vaultwarden, nginx, wireguard
 ├── overlays/              # hotfixes, vmware, custom packages
 ├── shared/Variable.nix    # Shared port definitions
 └── sops/                  # sops-nix secrets
@@ -115,7 +115,7 @@ NixOS flake-based dotfiles managing two machines.
 ## Key stacks
 
 - **Desktop**: Hyprland + Quickshell (vast-shell) + qtengine theming
-- **Server**: Forgejo, Nextcloud, Vaultwarden, Stalwart Mail, WireGuard VPN
+- **Server**: Forgejo, ownCloud Infinite Scale, Vaultwarden, Stalwart Mail, WireGuard VPN
 - **Kernel**: CachyOS (bore-lto on laptop, server on server)
 - **Secrets**: sops-nix + age
 - **Caching**: Cachix + various binary caches (chaotic-nyx, nix-community, ezkea, etc.)
