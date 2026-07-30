@@ -1,6 +1,8 @@
 {pkgs-stable, ...}: {
     environment = {
         systemPackages = with pkgs-stable; [
+            eza
+	    bat
             vim
             pciutils
             fzf
