@@ -22,7 +22,7 @@
             enable = true;
             package = pkgs.ocis_5-bin;
             configDir = "/var/lib/ocis/config";
-            address = "127.0.0.1";
+            address = "0.0.0.0";
             port = config.shellix.variables.port.OCIS;
             url = "https://cloud.myamusashi.com";
             stateDir = "/var/lib/ocis";
@@ -30,7 +30,6 @@
                 CS3_ALLOW_INSECURE = "true";
                 GATEWAY_STORAGE_USERS_MOUNT_ID = "123";
                 GRAPH_APPLICATION_ID = "1234";
-                IDP_ISS = "https://cloud.myamusashi.com";
                 IDP_TLS = "false";
                 OCIS_INSECURE = "true";
                 OCIS_INSECURE_BACKENDS = "true";
