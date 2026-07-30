@@ -26,6 +26,7 @@
                 IDP_ISS = "http://localhost:${toString config.shellix.variables.port.OCIS}";
                 IDP_TLS = "false";
                 OCIS_INSECURE = "true";
+                PROXY_TLS = "false";
                 OCIS_INSECURE_BACKENDS = "true";
                 OCIS_LOG_LEVEL = "error";
                 OCIS_MACHINE_AUTH_API_KEY = "foo";
