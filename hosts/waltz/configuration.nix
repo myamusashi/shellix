@@ -34,7 +34,7 @@
                     }
                 ];
             };
-            monitoring.enable = true;
+            monitoring.enable = false;
             vaultwarden.enable = true;
             vsftpd.enable = true;
             ocis.enable = true;
@@ -45,7 +45,7 @@
                 ingress = {
                     "git.myamusashi.cc" = "unix:/run/forgejo/forgejo.sock";
                     "vault.myamusashi.cc" = "http://127.0.0.1:${toString config.shellix.variables.port.VAULTWARDEN}";
-                    "cloud.myamusashi.cc" = "http://127.0.0.1:${toString config.shellix.variables.port.OCIS}";
+                    "cloud.myamusashi.cc" = "https://localhost:${toString config.shellix.variables.port.OCIS}";
                     "ssh.myamusashi.cc" = "ssh://localhost:22";
                     "router.myamusashi.cc" = "http://127.0.0.1:${toString config.shellix.variables.port.NINEROUTER}";
                     "headroom.myamusashi.cc" = "http://127.0.0.1:${toString config.shellix.variables.port.HEADROOM}";
