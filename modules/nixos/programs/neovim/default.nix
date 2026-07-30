@@ -60,7 +60,7 @@
             shfmt
             shellcheck
         ]
-        ++ [tree-sitter pkgs.stdenv.cc];
+        ++ [tree-sitter cargo stdenv.cc];
 
     treesitterParsers = with pkgs.tree-sitter-grammars;
         lib.optionals lang.web [
