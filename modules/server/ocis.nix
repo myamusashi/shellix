@@ -40,6 +40,7 @@
                 TLS_INSECURE = "true";
                 TLS_SKIP_VERIFY_CLIENT_CERT = "true";
                 WEBDAV_ALLOW_INSECURE = "true";
+                NOTIFICATIONS_SMTP_SENDER = "no-reply@myamusashi.cc";
             };
             environmentFile = config.sops.secrets.ocis_secrets_password.path;
         };
