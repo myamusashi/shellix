@@ -22,6 +22,10 @@ in {
             enable = true;
             tunnels."home-server" = {
                 credentialsFile = credsFile;
+                originRequest.noTLSVerify =
+                    if (cfg.ingress == "https://127.0.0.1:${toString config.shellix.variables.port.OCIS}")
+                    then true
+                    else false;
                 default = "http_status:404";
                 inherit (cfg) ingress;
             };
