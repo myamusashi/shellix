@@ -25,7 +25,7 @@
                 GRAPH_APPLICATION_ID = "1234";
                 IDP_ISS = "https://localhost:${toString config.shellix.variables.port.OCIS}";
                 IDP_TLS = "false";
-                OCIS_INSECURE = "false";
+                OCIS_INSECURE = "true";
                 OCIS_INSECURE_BACKENDS = "true";
                 OCIS_LOG_LEVEL = "error";
                 OCIS_MACHINE_AUTH_API_KEY = "foo";
