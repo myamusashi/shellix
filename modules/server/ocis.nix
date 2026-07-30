@@ -17,13 +17,13 @@
             configDir = "/var/lib/ocis/config";
             address = "127.0.0.1";
             port = config.shellix.variables.port.OCIS;
-            url = "https://cloud.myamusashi.com";
+            url = "http://cloud.myamusashi.com";
             stateDir = "/var/lib/ocis";
             environment = {
                 CS3_ALLOW_INSECURE = "true";
                 GATEWAY_STORAGE_USERS_MOUNT_ID = "123";
                 GRAPH_APPLICATION_ID = "1234";
-                IDP_ISS = "https://localhost:${toString config.shellix.variables.port.OCIS}";
+                IDP_ISS = "http://localhost:${toString config.shellix.variables.port.OCIS}";
                 IDP_TLS = "false";
                 OCIS_INSECURE = "true";
                 OCIS_INSECURE_BACKENDS = "true";
