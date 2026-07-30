@@ -206,6 +206,8 @@
         };
     };
 
+    security.acme.defaults.email = "security@myamusashi.cc";
+
     services = {
         openssh.enable = true;
         logind.settings.Login.HandleLidSwitch = "ignore";

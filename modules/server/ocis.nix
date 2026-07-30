@@ -11,6 +11,13 @@
             "d /var/lib/ocis/data 0750 ocis ocis - -"
         ];
 
+        security.acme.acceptTerms = true;
+
+        security.acme.certs."cloud.myamusashi.com" = {
+            group = "nginx";
+            webroot = "/var/lib/acme/acme-challenge";
+        };
+
         services.ocis = {
             enable = true;
             package = pkgs.ocis_5-bin;
@@ -40,6 +47,25 @@
                 WEBDAV_ALLOW_INSECURE = "true";
             };
             environmentFile = config.sops.secrets.ocis_secrets_password.path;
+        };
+
+        services.nginx = {
+            enable = true;
+            virtualHosts."cloud.myamusashi.com" = {
+                forceSSL = true;
+                useACMEHost = "cloud.myamusashi.com";
+                locations."/" = {
+                    proxyPass = "http://127.0.0.1:${toString config.shellix.variables.port.OCIS}";
+                    proxyWebsockets = true;
+                    extraConfig = ''
+                        proxy_set_header Host $host;
+                        proxy_set_header X-Real-IP $remote_addr;
+                        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+                        proxy_set_header X-Forwarded-Proto $scheme;
+                        client_max_body_size 10G;
+                    '';
+                };
+            };
         };
     };
 }
