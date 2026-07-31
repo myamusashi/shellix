@@ -9,6 +9,7 @@
             grafana_secret_key.mode = "0440";
             smtp_app_password.mode = "0440";
             user1-mail.mode = "0440";
+            ocis_secrets_password.mode = "0440";
 
             github_token = {
                 path = "/home/myamusashi/.config/sops-nix/secrets/github_token";
