@@ -94,18 +94,17 @@
         input_path = "${toString ./templates/shell/colors-light.json}"
         mode = "Light"
         output_path = "${HOME}/.config/vast-shell/light-colors.json"
-
-        [templates.zen_usercontent]
-        input_path = "${toString ./templates/zen/userContent.css}"
-        mode = "Dark"
-        output_path = "${HOME}/.zen/kxhdnjqx.zen/chrome/userContent.css"
-
-        [templates.zen_userchrome]
-        input_path = "${toString ./templates/zen/userChrome.css}"
-        mode = "Dark"
-        output_path = "${HOME}/.zen/kxhdnjqx.zen/chrome/userChrome.css"
-
     '';
+    #
+    # [templates.zen_usercontent]
+    # input_path = "${toString ./templates/zen/userContent.css}"
+    # mode = "Dark"
+    # output_path = "${HOME}/.zen/kxhdnjqx.zen/chrome/userContent.css"
+    #
+    # [templates.zen_userchrome]
+    # input_path = "${toString ./templates/zen/userChrome.css}"
+    # mode = "Dark"
+    # output_path = "${HOME}/.zen/kxhdnjqx.zen/chrome/userChrome.css"
 in {
     config = lib.mkIf cfg.enable {
         environment.systemPackages = [pkgs.matugen];
