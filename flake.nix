@@ -155,6 +155,10 @@
         sops-nix.url = "github:Mic92/sops-nix";
         nix-cachyos-kernel.url = "github:xddxdd/nix-cachyos-kernel/release";
         spicetify-nix.url = "github:Gerg-L/spicetify-nix";
+        home-manager = {
+            url = "github:nix-community/home-manager";
+            inputs.nixpkgs.follows = "nixpkgs";
+        };
     };
 
     outputs = inputs @ {flake-parts, ...}:

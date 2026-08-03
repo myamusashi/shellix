@@ -180,7 +180,7 @@ in {
             wget2
             inputs.antigravity-flakes.packages.${stdenv.hostPlatform.system}.default
             vim
-            (wrapElectron inputs.zen-browser.packages.${stdenv.hostPlatform.system}.default "zen-beta")
+
             (wrapElectron onlyoffice-desktopeditors "onlyoffice-desktopeditors")
             qbittorrent-enhanced-nox
             patchelf

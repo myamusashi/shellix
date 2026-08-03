@@ -7,5 +7,6 @@
         ./shellix.nix
         ./users.nix
         ./hardware/default.nix
+        ./zen-browser.nix
     ];
 }
