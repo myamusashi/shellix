@@ -83,7 +83,7 @@
 }
 
 /* ==== Zen browser chrome — Matugen tokens ==== */
-/* Merged in from the Matugen Zen template; reuses the same {{colors.*}}
+/* Merged in from the Matugen Zen template; reuses the same from matugen
    tokens as the Natsumi block above so both stay in sync on re-generation. */
 
 :root {

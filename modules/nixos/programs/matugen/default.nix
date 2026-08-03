@@ -97,12 +97,12 @@
 
         [templates.zen_usercontent]
         input_path = "${toString ./templates/zen/userContent.css}"
-        mode = "dark"
+        mode = "Dark"
         output_path = "${HOME}/.zen/kxhdnjqx.zen/chrome/userContent.css"
 
         [templates.zen_userchrome]
         input_path = "${toString ./templates/zen/userChrome.css}"
-        mode = "dark"
+        mode = "Dark"
         output_path = "${HOME}/.zen/kxhdnjqx.zen/chrome/userChrome.css"
 
     '';
