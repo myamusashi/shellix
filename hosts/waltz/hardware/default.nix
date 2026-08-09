@@ -40,7 +40,7 @@
     };
 
     fileSystems."/home/waltz/external" = {
-        device = "/dev/disk/by-label/BACKUP";
+        device = "/dev/sdb1";
         fsType = "ntfs3";
         options = ["noatime" "nofail" "rw" "uid=1000" "gid=100"];
     };
