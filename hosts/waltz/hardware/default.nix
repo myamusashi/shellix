@@ -42,10 +42,10 @@
     fileSystems."/home/waltz/external" = {
         device = "/dev/disk/by-label/BACKUP";
         fsType = "ntfs3";
-        options = ["noatime" "noauto" "rw" "uid=1000" "gid=100"];
+        options = ["noatime" "nofail" "rw" "uid=1000" "gid=100"];
     };
     fileSystems."/opt/backup" = {
         device = "/home/waltz/external";
-        options = ["bind"];
+        options = ["bind" "nofail" "x-systemd.requires-mounts-for=/home/waltz/external"];
     };
 }

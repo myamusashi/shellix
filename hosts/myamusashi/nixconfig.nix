@@ -28,6 +28,7 @@
                 "https://walker.cachix.org"
                 "https://walker-git.cachix.org"
                 "https://cache.flox.dev"
+                "https://nixpkgs-gha.cachix.org"
                 ## cachyos kernel binary caches
                 "https://cache.xinux.uz"
                 "https://attic.xuyh0120.win/lantian"
@@ -45,6 +46,7 @@
                 "hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc="
                 "walker.cachix.org-1:fG8q+uAaMqhsMxWjwvk0IMb4mFPFLqHjuvfwQxE4oJM="
                 "walker-git.cachix.org-1:vmC0ocfPWh0S/vRAQGtChuiZBTAe4wiKDeyyXM0/7pM="
+                "nixpkgs-gha.cachix.org-1:nql7LDP4+LkTdc9kZ+JUb7KQ8VymRRy39k66xGRwnqA="
                 "cache.xinux.uz:BXCrtqejFjWzWEB9YuGB7X2MV4ttBur1N8BkwQRdH+0="
                 "lantian:EeAUQ+W+6r7EtwnmYjeVwx5kOGEBpjlBfPlzGlTNvHc="
             ];
