@@ -22,12 +22,8 @@ in {
                     "seat"
                     "wireshark"
                     "i2c"
+                    "greeter"
                 ];
-            };
-
-            greeter = {
-                isSystemUser = true;
-                group = "greeter";
             };
 
             docker = {
@@ -42,7 +38,6 @@ in {
         };
         groups = {
             docker = {};
-            greeter = {};
             nginx = {};
         };
     };
