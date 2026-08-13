@@ -22,6 +22,11 @@ alias emu = emulator -avd pixel_api35 -no-snapshot -gpu host
 
 # --- functions ---
 
+def prefetch-hash [url: string] {
+    let result = (nix store prefetch-file --unpack --hash-type sha256 --json $url | from json)
+    $result.hash
+}
+
 def kiss [host: string] {
     ^kitty + kitten ssh $host
 }
