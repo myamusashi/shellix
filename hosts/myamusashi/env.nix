@@ -48,6 +48,8 @@ in {
             # stylua
             darkly
             opencode
+            greetd
+            inputs.shell.packages.${pkgs.stdenv.hostPlatform.system}.default
 
             ## QoL for terminal
             bat

@@ -84,6 +84,10 @@ in {
     programs = {
         quickshell-shell = {
             enable = true;
+            greetd = {
+                enable = true;
+                user = "myamusashi";
+            };
             installFonts = true;
         };
         starship.enable = true;

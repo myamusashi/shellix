@@ -17,7 +17,7 @@
             scx.enable = true;
             display-manager = {
                 sddm = {
-                    enable = true;
+                    enable = false;
                     wayland = {
                         enable = true;
                         compositor = "weston";
