@@ -8,7 +8,7 @@
     cfg = config.shellix.server.headroom;
     port = toString config.shellix.variables.port.HEADROOM;
     stateDir = "/var/lib/headroom";
-    pkg = inputs.myamusashi-pkgs.packages.${pkgs.system}.headroom-ai;
+    pkg = inputs.myamusashi-pkgs.packages.${pkgs.stdenv.hostPlatform.system}.headroom-ai;
 in {
     config = lib.mkIf cfg.enable {
         users.users.headroom = {

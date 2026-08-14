@@ -8,7 +8,7 @@
     cfg = config.shellix.server."9router";
     port = toString config.shellix.variables.port.NINEROUTER;
     stateDir = "/var/lib/9router";
-    pkg = inputs.myamusashi-pkgs.packages.${pkgs.system}."9router";
+    pkg = inputs.myamusashi-pkgs.packages.${pkgs.stdenv.hostPlatform.system}."9router";
 in {
     config = lib.mkIf cfg.enable {
         users.users."9router" = {
