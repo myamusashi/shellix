@@ -100,6 +100,7 @@ in {
         };
         git = {
             enable = true;
+            lfs.enable = true;
             config = {
                 user = {
                     name = "myamusashi";
