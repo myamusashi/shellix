@@ -292,7 +292,7 @@ $env.config.hooks.env_change.PWD ++= [{||
 # -- zoxide --
 
 def "nu-complete zoxide path" [context: string] {
-    let parts = $context | str trim --left | split row " " | skip 1 | each { str downcase }
+    let parts = $context | str trim --left | split row " " | skip 1 | each { str lowercase }
     let completions = (
         ^zoxide query --list --exclude $env.PWD -- ...$parts
             | lines
