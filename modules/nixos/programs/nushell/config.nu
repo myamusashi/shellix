@@ -300,7 +300,7 @@ def "nu-complete zoxide path" [context: string] {
                 if ($parts | length) <= 1 {
                     $dir
                 } else {
-                    let dir_lower = $dir | str downcase
+                    let dir_lower = $dir | str lowercase
                     let rem_start = $parts | drop 1 | reduce --fold 0 { |part, rem_start|
                         ($dir_lower | str index-of --range $rem_start.. $part) + ($part | str length)
                     }
