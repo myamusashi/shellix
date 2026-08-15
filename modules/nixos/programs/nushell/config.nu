@@ -274,11 +274,48 @@ if (which starship | is-not-empty) {
 
 use std/config *
 
-$env.config.hooks.env_change.PWD = (
-    $env.config.hooks.env_change.PWD? | default []
-    | append {||
-        if (which direnv | is-empty) { return }
-        ^direnv export json | from json | default {} | load-env
-        $env.PATH = do (env-conversions).path.from_string $env.PATH
+# Initialize the PWD hook as an empty list if it doesn't exist
+$env.config.hooks.env_change.PWD = $env.config.hooks.env_change.PWD? | default []
+
+$env.config.hooks.env_change.PWD ++= [{||
+  if (which direnv | is-empty) {
+    # If direnv isn't installed, do nothing
+    return
+  }
+
+  direnv export json | from json | default {} | update cells --columns [ PATH ] {
+    # If direnv changes the PATH, it will become a string and we need to re-convert it to a list
+    do (env-conversions).path.from_string $in
+  } | load-env
+}]
+
+# -- zoxide --
+
+def "nu-complete zoxide path" [context: string] {
+    let parts = $context | str trim --left | split row " " | skip 1 | each { str downcase }
+    let completions = (
+        ^zoxide query --list --exclude $env.PWD -- ...$parts
+            | lines
+            | each { |dir|
+                if ($parts | length) <= 1 {
+                    $dir
+                } else {
+                    let dir_lower = $dir | str downcase
+                    let rem_start = $parts | drop 1 | reduce --fold 0 { |part, rem_start|
+                        ($dir_lower | str index-of --range $rem_start.. $part) + ($part | str length)
+                    }
+                    {
+                        value: ($dir | str substring $rem_start..),
+                        description: $dir
+                    }
+                }
+            })
+    {
+        options: {
+            sort: false,
+            completion_algorithm: substring,
+            case_sensitive: false,
+        },
+        completions: $completions,
     }
-)
+}
