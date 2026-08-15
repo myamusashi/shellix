@@ -97,7 +97,7 @@
     '';
 in {
     config = lib.mkIf cfg.enable {
-        environment.systemPackages = [pkgs.yazi];
+        environment.systemPackages = [inputs.myamusashi-pkgs.packages.${pkgs.stdenv.hostPlatform.system}.yazi];
 
         systemd.user.tmpfiles.rules = [
             "d %h/.config 0755 myamusashi users - -"
