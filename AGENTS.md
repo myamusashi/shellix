@@ -8,3 +8,8 @@ In repositories indexed by CodeGraph (a `.codegraph/` directory exists at the re
 
 If there is no `.codegraph/` directory, skip CodeGraph entirely — indexing is the user's decision.
 <!-- CODEGRAPH_END -->
+
+# Nix code style
+- Always formatting with experimental configs at .alejandra.toml
+- Always run statix everytime you change the code
+- Always test eval toplevel everytime you change the code
