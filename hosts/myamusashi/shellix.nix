@@ -35,11 +35,11 @@
                 enable = true;
                 preset = "gentle-dynamics";
             };
-            kbuildsycoca6.enable = true;
+            kbuildsycoca6.enable = false;
             hypridle.enable = false;
             kdeconnect.enable = true;
             mpd.enable = false;
-            systemd.nm-applet.enable = true;
+            systemd.nm-applet.enable = false;
         };
 
         programs = {
@@ -55,7 +55,7 @@
             };
             steam.enable = true;
             virt-manager.enable = false;
-            wireshark.enable = true;
+            wireshark.enable = false;
             btop.enable = true;
             fastfetch.enable = true;
             foot.enable = true;
@@ -78,7 +78,7 @@
             };
             shell.enable = false;
             spicetify.enable = false;
-            vscode.enable = true;
+            vscode.enable = false;
             matugen.enable = true;
             yazi.enable = true;
         };
