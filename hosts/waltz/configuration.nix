@@ -52,7 +52,7 @@
                 };
             };
             phpApps = {
-                enable = true;
+                enable = false;
 
                 apps.example = {
                     enable = false;
@@ -72,7 +72,16 @@
                     };
 
                     phpPackage = pkgs-stable.php83;
-                    phpExtensions = all: with all; [pdo pdo_mysql mysqli mbstring gd curl zip];
+                    phpExtensions = all:
+                        with all; [
+                            pdo
+                            pdo_mysql
+                            mysqli
+                            mbstring
+                            gd
+                            curl
+                            zip
+                        ];
 
                     phpOptions = {
                         upload_max_filesize = "16M";
@@ -111,7 +120,16 @@
 
                     patches = [./pathshit.patch];
                     phpPackage = pkgs-stable.php83;
-                    phpExtensions = all: with all; [pdo pdo_mysql mysqli mbstring gd curl zip];
+                    phpExtensions = all:
+                        with all; [
+                            pdo
+                            pdo_mysql
+                            mysqli
+                            mbstring
+                            gd
+                            curl
+                            zip
+                        ];
 
                     phpOptions = {
                         upload_max_filesize = "16M";
@@ -208,10 +226,32 @@
 
     security.acme.defaults.email = "security@myamusashi.cc";
 
+    boot.kernel.sysctl."net.ipv4.ip_forward" = lib.mkForce 1;
+    networking.nftables = {
+        enable = true;
+        ruleset = ''
+            table ip nat {
+              chain postrouting {
+                type nat hook postrouting priority srcnat; policy accept;
+                oifname "enp1s0" masquerade
+              }
+            }
+        '';
+    };
+
     services = {
         openssh.enable = true;
         logind.settings.Login.HandleLidSwitch = "ignore";
         cloudflare-warp.enable = true;
+        create_ap = {
+            enable = true;
+            settings = {
+                INTERNET_IFACE = "enp1s0";
+                PASSPHRASE = "12345678";
+                SSID = "nixos waltz";
+                WIFI_IFACE = "wlp2s0";
+            };
+        };
         kmscon = {
             enable = true;
             config.font-name = "Hack";
@@ -227,7 +267,8 @@
             exporters.node.port = lib.mkForce config.shellix.variables.port.PROMETHEUS-EXPORTERS;
         };
         nginx.virtualHosts = {
-            "dash.myamusashi.com".locations."/".proxyPass = lib.mkForce "http://0.0.0.0:${toString config.shellix.variables.port.GRAFANA}";
+            "dash.myamusashi.com".locations."/".proxyPass =
+                lib.mkForce "http://0.0.0.0:${toString config.shellix.variables.port.GRAFANA}";
             "static.myamusashi.cc" = {
                 root = "/var/www/static";
                 locations."/" = {
@@ -256,6 +297,7 @@
         networkmanager = {
             enable = true;
             dns = "systemd-resolved";
+            unmanaged = ["interface-name:wlp2s0"];
             insertNameservers = [
                 "1.1.1.1#one.one.one.one"
                 "1.0.0.1#one.one.one.one"
@@ -269,12 +311,6 @@
             enp1s0.ipv4.addresses = [
                 {
                     address = "192.168.18.14";
-                    prefixLength = 28;
-                }
-            ];
-            wlp2s0.ipv4.addresses = [
-                {
-                    address = "192.168.18.16";
                     prefixLength = 28;
                 }
             ];
@@ -331,7 +367,16 @@
                 8787
                 20128
             ];
-            allowedUDPPorts = [53 5432 3001 3002 51820];
+            allowedUDPPorts = [
+                53
+                67
+                68
+                5353
+                5432
+                3001
+                3002
+                51820
+            ];
         };
     };
 
@@ -350,7 +395,13 @@
             waltz = {
                 isNormalUser = true;
                 description = "waltz";
-                extraGroups = ["networkmanager" "wheel" "vsftpd" "docker" "podman"];
+                extraGroups = [
+                    "networkmanager"
+                    "wheel"
+                    "vsftpd"
+                    "docker"
+                    "podman"
+                ];
             };
             cloudflared = {
                 isSystemUser = true;
@@ -373,7 +424,11 @@
             runner = {
                 isNormalUser = true;
                 group = "runner";
-                extraGroups = ["forgejo" "docker" "podman"];
+                extraGroups = [
+                    "forgejo"
+                    "docker"
+                    "podman"
+                ];
             };
         };
         groups = {
