@@ -13,3 +13,6 @@ If there is no `.codegraph/` directory, skip CodeGraph entirely — indexing is 
 - Always formatting with experimental configs at .alejandra.toml: `alejandra --experimental-config .alejandra.toml`
 - Always run statix everytime you change the code
 - Always test eval toplevel everytime you change the code
+
+# Resources
+zen-browser programns options: `https://zen-browser-flake.nshard.com`
