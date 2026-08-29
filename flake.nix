@@ -45,6 +45,11 @@
             inputs.nixpkgs.follows = "nixpkgs";
         };
 
+        xdg-desktop-portal-hyprland = {
+            url = "github:hyprwm/xdg-desktop-portal-hyprland";
+            inputs.nixpkgs.follows = "nixpkgs";
+        };
+
         hyprwayland-scanner = {
             url = "github:hyprwm/hyprland-guiutils";
             inputs.nixpkgs.follows = "nixpkgs";
@@ -62,7 +67,7 @@
         };
 
         hypr-scroll-overview = {
-            url = "github:myamusashi/hyprland-scroll-overview";
+            url = "github:yayuuu/hyprland-scroll-overview/new-release";
             inputs.hyprland.follows = "hyprland";
         };
 
@@ -108,11 +113,6 @@
             inputs.nixpkgs.follows = "nixpkgs";
         };
 
-        quickshell = {
-            url = "git+https://git.outfoxxed.me/outfoxxed/quickshell";
-            inputs.nixpkgs.follows = "nixpkgs";
-        };
-
         kwin-effects-forceblur = {
             url = "github:taj-ny/kwin-effects-forceblur";
             inputs.nixpkgs.follows = "nixpkgs";
@@ -122,7 +122,6 @@
             url = "git+https://git.myamusashi.cc/myamusashi/vast-shell";
             inputs = {
                 nixpkgs.follows = "nixpkgs";
-                quickshell.follows = "quickshell";
             };
         };
 
@@ -151,6 +150,7 @@
             inputs.nixpkgs.follows = "nixpkgs";
         };
 
+        omp.url = "github:can1357/oh-my-pi";
         apple-fonts.url = "github:Lyndeno/apple-fonts.nix";
         sops-nix.url = "github:Mic92/sops-nix";
         nix-cachyos-kernel.url = "github:xddxdd/nix-cachyos-kernel/release";
