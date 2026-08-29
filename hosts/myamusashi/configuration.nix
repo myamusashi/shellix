@@ -17,7 +17,8 @@ in {
         inputs.shell.nixosModules.default
         inputs.qtengine.nixosModules.default
         inputs.hyprland.nixosModules.default
-        inputs.sesame.nixosModules.default
+        inputs.omp.nixosModules.default
+        # inputs.sesame.nixosModules.default
     ];
 
     fonts = {
@@ -44,6 +45,8 @@ in {
         age.keyFile = lib.mkForce (userConfig + "/sops/age/keys1.txt");
         secrets = {
             github_token.owner = config.users.users.myamusashi.name;
+            firecrawl_api.owner = config.users.users.myamusashi.name;
+            commandcode_api.owner = config.users.users.myamusashi.name;
             myamusashi-password = {
                 neededForUsers = true;
                 owner = config.users.users.myamusashi.name;
@@ -62,14 +65,14 @@ in {
         openssh.enable = true;
         xserver.xkb.layout = "us";
         nginx.enable = true;
-        gnome.gnome-keyring.enable = false;
+        gnome.gnome-keyring.enable = true;
         gvfs.enable = true;
         upower.enable = true;
-        sesamed = {
-            enable = true;
-            package = inputs.sesame.packages.${pkgs.stdenv.hostPlatform.system}.default;
-            pamModule = "sddm";
-        };
+        # sesamed = {
+        #     enable = true;
+        #     package = inputs.sesame.packages.${pkgs.stdenv.hostPlatform.system}.default;
+        #     pamModule = "sddm";
+        # };
         mysql = {
             enable = true;
             package = pkgs.mariadb;
@@ -98,6 +101,18 @@ in {
             enable = true;
             clean.enable = true;
         };
+        omp = {
+            enable = true;
+            package = inputs.omp.packages.${pkgs.stdenv.hostPlatform.system}.default.overrideAttrs (oldAttrs: {
+                postFixup =
+                    (oldAttrs.postFixup or "")
+                    + ''
+                        wrapProgram $out/bin/omp \
+                          --run 'export MINIMAX_API_KEY="$(cat ${config.sops.secrets.commandcode_api.path})"'
+                    '';
+                nativeBuildInputs = (oldAttrs.nativeBuildInputs or []) ++ [pkgs.makeWrapper];
+            });
+        };
         git = {
             enable = true;
             lfs.enable = true;
@@ -123,7 +138,10 @@ in {
             enableSSHSupport = true;
             pinentryPackage = pinentryQtWrapped;
         };
-        hyprland.enable = true;
+        hyprland = {
+            enable = true;
+            portalPackage = inputs.xdg-desktop-portal-hyprland.packages.${pkgs.stdenv.hostPlatform.system}.default;
+        };
         ccache.enable = true;
         java = {
             enable = true;
@@ -162,12 +180,20 @@ in {
     xdg.portal = {
         enable = true;
         extraPortals = with pkgs; [
-            xdg-desktop-portal
-            kdePackages.xdg-desktop-portal-kde
+            xdg-desktop-portal-gtk
         ];
         config = {
-            common.default = "hyprland;kde";
-            pantheon.default = "kde";
+            common = {
+                default = ["gtk"];
+            };
+
+            hyprland = {
+                default = ["hyprland"];
+                "org.freedesktop.impl.portal.FileChooser" = ["gtk"];
+                "org.freedesktop.impl.portal.Secret" = ["gnome-keyring"];
+                "org.freedesktop.impl.portal.ScreenCast" = ["hyprland"];
+                "org.freedesktop.impl.portal.Screenshot" = ["hyprland"];
+            };
         };
     };
 

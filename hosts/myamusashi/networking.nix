@@ -2,11 +2,6 @@
     networking = {
         enableIPv6 = true;
         hostName = "nixos";
-        defaultGateway = {
-            address = "192.168.18.1";
-            interface = "enp0s31f6";
-        };
-        dhcpcd.enable = false;
         networkmanager = {
             enable = true;
             dns = "systemd-resolved";
@@ -16,29 +11,49 @@
                 "94.140.14.14" # adGuard
                 "94.140.15.15"
             ];
+            ensureProfiles.profiles = {
+                # caveat: even if you set permissions to "user:myamusashi:"
+                # NetworkManager will have read/write access to these files
+                enp0s31f6 = {
+                    connection = {
+                        id = "enp0s31f6";
+                        type = "ethernet";
+                        interface-name = "enp0s31f6";
+                        autoconnect = true;
+                    };
+                    ipv4 = {
+                        method = "manual";
+                        gateway = "192.168.18.1";
+                        address1 = "192.168.18.2/28";
+                        dns = "192.168.18.4;1.1.1.1;1.0.0.1";
+                    };
+                    ipv6 = {
+                        method = "auto";
+                    };
+                };
+                myamusashi = {
+                    connection = {
+                        id = "myamusashi";
+                        type = "vlan";
+                        interface-name = "myamusashi";
+                        autoconnect = true;
+                    };
+                    vlan = {
+                        id = 2;
+                        parent = "enp0s31f6";
+                    };
+                    ipv4 = {
+                        method = "manual";
+                        address1 = "10.10.10.1/24";
+                    };
+                    ipv6 = {
+                        method = "link-local";
+                    };
+                };
+            };
         };
         domain = "home.myamusashi.dev";
         search = ["home.myamusashi.dev"];
-        interfaces = {
-            enp0s31f6.ipv4.addresses = [
-                {
-                    address = "192.168.18.2";
-                    prefixLength = 28;
-                }
-            ];
-            myamusashi.ipv4.addresses = [
-                {
-                    address = "10.10.10.1";
-                    prefixLength = 24;
-                }
-            ];
-        };
-        vlans = {
-            myamusashi = {
-                id = 2;
-                interface = "enp0s31f6";
-            };
-        };
         nameservers = [
             "192.168.18.4"
             "1.1.1.1#one.one.one.one"
