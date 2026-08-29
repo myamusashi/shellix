@@ -391,7 +391,7 @@
 
     users = {
         users = {
-            nginx.extraGroups = ["simaset"];
+            # nginx.extraGroups = ["simaset"];
             waltz = {
                 isNormalUser = true;
                 description = "waltz";
@@ -412,6 +412,10 @@
             ocis = {
                 isSystemUser = true;
                 group = "ocis";
+            };
+            nginx = {
+                isSystemUser = true;
+                group = "nginx";
             };
             netdata = {
                 isSystemUser = true;
@@ -436,6 +440,7 @@
             ocis = {};
             netdata = {};
             atticd = {};
+            nginx = {};
             runner = {};
         };
     };
