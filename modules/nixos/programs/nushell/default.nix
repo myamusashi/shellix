@@ -10,6 +10,8 @@
         builtins.readFile ./env.nu
         + (lib.optionalString (cfg.username == "myamusashi") ''
             $env.GITHUB_TOKEN = (cat ${config.sops.secrets.github_token.path})
+            $env.FIRECRAWL_API_KEY = (cat ${config.sops.secrets.firecrawl_api.path})
+            $env.MINIMAX_API_KEY = (cat ${config.sops.secrets.commandcode_api.path})
         '')
     );
 

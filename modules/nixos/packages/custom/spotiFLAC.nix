@@ -10,24 +10,27 @@
     ...
 }: let
     pname = "SpotiFLAC";
-    version = "7.1.4";
+    version = "7.2.2";
 
     extracted = stdenv.mkDerivation {
         pname = "${pname}-extracted";
         inherit version;
 
         src = fetchurl {
-            url = "https://github.com/spotbye/SpotiFLAC/releases/download/v${version}/spotiflac-linux-bundle.tar.gz";
-            hash = "sha256-5L+okTBF4nJ+60O6y8YrPeSrpcNN3gxjFPVKdEyR8QU=";
+            url = "https://github.com/spotbye/spotiflac/releases/download/v${version}/SpotiFLAC.AppImage";
+            hash = "sha256-e8S4uRnMEQE31RF8jnlonI7Q2WDVRtPE6xYuSvjcD04=";
         };
+
+        dontUnpack = true;
 
         nativeBuildInputs = [makeWrapper];
 
         installPhase = ''
             runHook preInstall
 
-            chmod +x SpotiFLAC-amd64.AppImage
-            ./SpotiFLAC-amd64.AppImage --appimage-extract
+            cp $src ./SpotiFLAC.AppImage
+            chmod +x SpotiFLAC.AppImage
+            ./SpotiFLAC.AppImage --appimage-extract
 
             mkdir -p $out/{lib/${pname},share/applications,share/icons/hicolor/256x256/apps}
 

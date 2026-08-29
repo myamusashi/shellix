@@ -22,9 +22,42 @@ alias emu = emulator -avd pixel_api35 -no-snapshot -gpu host
 
 # --- functions ---
 
-def prefetch-hash [url: string] {
-    let result = (nix store prefetch-file --unpack --hash-type sha256 --json $url | from json)
-    $result.hash
+def url-looks-like-archive [url: string]: nothing -> bool {
+    let path = ($url | split row "?" | first | split row "#" | first)
+    let lower = ($path | str lowercase)
+
+    let archive_exts = [
+        ".tar" ".tar.gz" ".tgz" ".tar.bz2" ".tbz2" ".tar.xz" ".txz"
+        ".tar.zst" ".tzst" ".zip" ".7z"
+    ]
+
+    # Single-file formats that must NEVER be unpacked, checked first so
+    # they short-circuit before archive-extension logic below.
+    let single_file_exts = [".appimage"]
+
+    if ($single_file_exts | any {|ext| $lower | str ends-with $ext }) {
+        return false
+    }
+
+    if ($archive_exts | any {|ext| $lower | str ends-with $ext }) {
+        return true
+    }
+
+    let is_github_host = (
+        ($lower | str starts-with "https://codeload.github.com/")
+        or ($lower | str starts-with "http://codeload.github.com/")
+        or ($lower | str starts-with "https://github.com/")
+        or ($lower | str starts-with "http://github.com/")
+    )
+
+    if not $is_github_host {
+        return false
+    }
+
+    let is_codeload_archive = ($lower =~ 'codeload\.github\.com/[^/]+/[^/]+/(tar\.gz|zip|legacy\.tar\.gz|legacy\.zip)/')
+    let is_github_archive_path = ($lower =~ 'github\.com/[^/]+/[^/]+/archive/')
+
+    $is_codeload_archive or $is_github_archive_path
 }
 
 def kiss [host: string] {
