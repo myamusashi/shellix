@@ -53,7 +53,6 @@ in {
             fzf
             jq
             codegraph
-            opencode
             firecrawl-mcp
             # yt-dlp
 
@@ -65,13 +64,13 @@ in {
 
             ## Qt packages
             # kdePackages.dolphin
-            kdePackages.ark ## Enable extract and archive for dolphin
-            kdePackages.kde-cli-tools ## Enable change file opener in dolphin
+            # kdePackages.ark ## Enable extract and archive for dolphin
             # kdePackages.kwallet
             # kdePackages.kwalletmanager
             inputs.shell.packages.${stdenv.hostPlatform.system}.default
             lxqt.pcmanfm-qt
             lxqt.pavucontrol-qt
+            lxqt.lxqt-archiver
             pinentry-qt
             media-downloader
             qtcreator
@@ -90,7 +89,7 @@ in {
             inetutils
             # networkmanagerapplet
             # bluez
-            cloudflared
+            # cloudflared
             # iw
 
             ## Music apps
@@ -113,7 +112,7 @@ in {
             zathura
 
             ## Themes
-            kdePackages.qtstyleplugin-kvantum
+            # kdePackages.qtstyleplugin-kvantum
             gtk3
             gtk4
             morewaita-icon-theme
@@ -136,7 +135,7 @@ in {
             gamemode
 
             ## Office
-            libreoffice
+            # libreoffice
             unoconv
 
             ## Apps
@@ -144,7 +143,6 @@ in {
             (wrapElectron inputs.helium.packages.${stdenv.hostPlatform.system}.default "helium")
 
             ## Misc
-            darkly
             git-credential-manager
             gh
             git
@@ -154,7 +152,7 @@ in {
             sops
             gvfs
             wget2
-            inputs.antigravity-flakes.packages.${stdenv.hostPlatform.system}.default
+            # inputs.antigravity-flakes.packages.${stdenv.hostPlatform.system}.default
             vim
 
             (wrapElectron onlyoffice-desktopeditors "onlyoffice-desktopeditors")
