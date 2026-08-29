@@ -1,5 +1,4 @@
 {
-    lib,
     pkgs,
     inputs,
     ...
@@ -9,25 +8,6 @@
         "--ignore-gpu-blocklist"
         "--enable-zero-copy"
     ];
-
-    quickshell-wrapped = pkgs.runCommand "quickshell-wrapped" {
-        nativeBuildInputs = [pkgs.makeWrapper];
-    } ''
-        mkdir -p $out/bin
-        mkdir -p $out/lib
-        cp -r ${inputs.myamusashi-pkgs.packages.${pkgs.stdenv.hostPlatform.system}.quickshell}/lib/qt-6/qml/Quickshell $out/lib/Quickshell
-
-        makeWrapper ${inputs.myamusashi-pkgs.packages.${pkgs.stdenv.hostPlatform.system}.quickshell}/bin/qs $out/bin/qs \
-          --prefix PATH : ${lib.makeBinPath [pkgs.fd pkgs.coreutils pkgs.qt6.qt5compat]} \
-          --prefix QML2_IMPORT_PATH : "${pkgs.qt6.qt5compat}/${pkgs.qt6.qtbase.qtQmlPrefix}" \
-          --prefix QML2_IMPORT_PATH : "${pkgs.qt6.qtgraphs}/${pkgs.qt6.qtbase.qtQmlPrefix}" \
-
-
-        makeWrapper ${inputs.myamusashi-pkgs.packages.${pkgs.stdenv.hostPlatform.system}.quickshell}/bin/quickshell $out/bin/quickshell \
-          --prefix PATH : ${lib.makeBinPath [pkgs.fd pkgs.coreutils]} \
-          --prefix QML2_IMPORT_PATH : "${pkgs.qt6.qt5compat}/${pkgs.qt6.qtbase.qtQmlPrefix}" \
-          --prefix QML2_IMPORT_PATH : "${pkgs.qt6.qtgraphs}/${pkgs.qt6.qtbase.qtQmlPrefix}" \
-    '';
 
     wrapElectron = pkg: binary:
         pkgs.symlinkJoin {
@@ -47,9 +27,11 @@ in {
             # flutter
             # stylua
             darkly
-            opencode
             greetd
-            inputs.shell.packages.${pkgs.stdenv.hostPlatform.system}.default
+
+            # CCNA
+            webex
+            (callPackage ./packet_tracer.nix {})
 
             ## QoL for terminal
             bat
@@ -70,8 +52,9 @@ in {
             antiprism
             fzf
             jq
-            dragon-drop
             codegraph
+            opencode
+            firecrawl-mcp
             # yt-dlp
 
             ## Archive and extraction
@@ -86,14 +69,13 @@ in {
             kdePackages.kde-cli-tools ## Enable change file opener in dolphin
             # kdePackages.kwallet
             # kdePackages.kwalletmanager
-            quickshell-wrapped
-            inputs.shell.packages.${pkgs.stdenv.hostPlatform.system}.default
+            inputs.shell.packages.${stdenv.hostPlatform.system}.default
             lxqt.pcmanfm-qt
             lxqt.pavucontrol-qt
             pinentry-qt
             media-downloader
             qtcreator
-            telegram-desktop
+            inputs.myamusashi-pkgs.packages.${stdenv.hostPlatform.system}.telegram
             # qt6.qt5compat
             # qt6.qtgraphs
             # kdePackages.qtcharts
@@ -106,19 +88,15 @@ in {
             ## Networking
             iptables
             inetutils
-            networkmanagerapplet
-            bluez
+            # networkmanagerapplet
+            # bluez
             cloudflared
             # iw
 
             ## Music apps
             strawberry
-            # (pkgs.callPackage ../../modules/packages/custom/spotiFLAC.nix {})
+            (pkgs.callPackage ../../modules/nixos/packages/custom/spotiFLAC.nix {})
             # spotify
-
-            ## Sharing file tools
-            rclone
-            rclone-browser
 
             ## Wayland
             wl-clipboard
@@ -126,16 +104,13 @@ in {
             hyprsunset
 
             ## video and document tools
-            ffmpeg-full
+            ffmpeg
             imagemagick
             ffmpegthumbnailer
             poppler-utils
             mpv
             lxqt.lximage-qt
             zathura
-            playerctl
-            cava
-            mpg123
 
             ## Themes
             kdePackages.qtstyleplugin-kvantum
@@ -151,7 +126,6 @@ in {
 
             ## Password managers
             pass-wayland
-            bitwarden-cli
             wine-wayland
             winetricks
             wineWow64Packages.waylandFull
@@ -249,7 +223,7 @@ in {
         defaultApplications = {
             "x-scheme-handler/tonsite" = "org.telegram.desktop.desktop";
             "text/plain" = "vim.desktop";
-            "inode/directory" = "org.kde.dolphin.desktop";
+            "inode/directory" = "pcmanfm-qt.desktop";
             "application/x-gnome-saved-search" = "org.kde.dolphin.desktop";
             "application/pdf" = "zen-beta.desktop";
             "image/png" = "lximage-qt.desktop.in";

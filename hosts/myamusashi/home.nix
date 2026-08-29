@@ -144,19 +144,6 @@
             "no-updates" = true;
             enabled = true;
         };
-        "BetterCtrlTab" = {
-            id = "BetterCtrlTab";
-            name = "Better Ctrl+Tab";
-            description = "Improves the Ctrl+Tab cycle panel.";
-            homepage = "https://github.com/psu/zen-mods/tree/main/better-ctrl-tab";
-            version = "1.0.0";
-            style = {
-                chrome = "chrome.css";
-            };
-            preferences = "preferences.json";
-            "no-updates" = true;
-            enabled = true;
-        };
         "ff-better-findbar" = {
             id = "ff-better-findbar";
             name = "Better Find Bar";
@@ -251,9 +238,10 @@ in {
                 inputs.zen-browser.homeModules.default
             ];
 
-            home.stateVersion = "24.11";
-
-            home.sessionPath = ["/etc/profiles/per-user/myamusashi/bin"];
+            home = {
+                stateVersion = "24.11";
+                sessionPath = ["/etc/profiles/per-user/myamusashi/bin"];
+            };
 
             xdg.desktopEntries.zen-beta = {
                 name = "Zen Browser";
@@ -267,6 +255,8 @@ in {
                     "x-scheme-handler/https"
                 ];
             };
+
+            wayland.windowManager.hyprland.enable = true;
 
             programs.zen-browser = {
                 enable = true;
@@ -304,6 +294,88 @@ in {
                 profiles.${zen-profile} = {
                     id = 0;
                     isDefault = true;
+
+                    handlers = {
+                        mimeTypes = {
+                            "application/pdf" = {
+                                action = 2;
+                                ask = false;
+                                extensions = ["pdf"];
+                                handlers = [
+                                    {
+                                        name = "Zathura";
+                                        path = "${pkgs.zathura}/bin/zathura";
+                                    }
+                                ];
+                            };
+                            "image/png" = {
+                                action = 2;
+                                ask = false;
+                                extensions = ["png"];
+                                handlers = [
+                                    {
+                                        name = "lximage-qt";
+                                        path = "${pkgs.lxqt.lximage-qt}/bin/lximage-qt";
+                                    }
+                                ];
+                            };
+                            "image/jpeg" = {
+                                action = 2;
+                                ask = false;
+                                extensions = ["jpg" "jpeg"];
+                                handlers = [
+                                    {
+                                        name = "lximage-qt";
+                                        path = "${pkgs.lxqt.lximage-qt}/bin/lximage-qt";
+                                    }
+                                ];
+                            };
+                            "video/mp4" = {
+                                action = 2;
+                                ask = false;
+                                extensions = ["mp4"];
+                                handlers = [
+                                    {
+                                        name = "mpv";
+                                        path = "${pkgs.mpv}/bin/mpv";
+                                    }
+                                ];
+                            };
+                            "video/webm" = {
+                                action = 2;
+                                ask = false;
+                                extensions = ["webm"];
+                                handlers = [
+                                    {
+                                        name = "mpv";
+                                        path = "${pkgs.mpv}/bin/mpv";
+                                    }
+                                ];
+                            };
+                            "audio/mpeg" = {
+                                action = 2;
+                                ask = false;
+                                extensions = ["mp3"];
+                                handlers = [
+                                    {
+                                        name = "mpv";
+                                        path = "${pkgs.mpv}/bin/mpv";
+                                    }
+                                ];
+                            };
+                        };
+
+                        schemes."mailto" = {
+                            action = 2;
+                            ask = false;
+                            handlers = [
+                                {
+                                    name = "Thunderbird";
+                                    path = "${pkgs.thunderbird}/bin/thunderbird";
+                                }
+                            ];
+                        };
+                    };
                 };
             };
 
@@ -316,7 +388,6 @@ in {
                 "${chromeDir}/sine-mods/SuperPins".source = superPins-src;
                 "${chromeDir}/sine-mods/NewTabIconUrlBar".source = newtabicon-src;
                 "${chromeDir}/sine-mods/AudioIndicatorEnhanced".source = "${kaedriz-src}/AudioIndicatorEnhanced";
-                "${chromeDir}/sine-mods/BetterCtrlTab".source = "${psu-mods-src}/better-ctrl-tab";
                 "${chromeDir}/sine-mods/ff-better-findbar".source = findbar-src;
                 "${chromeDir}/sine-mods/CustomizeFontsSize".source = customize-fonts-src;
                 "${chromeDir}/sine-mods/TabPreviewEnhanced".source = "${kaedriz-src}/TabPreviewEnhanced";
