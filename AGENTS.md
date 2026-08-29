@@ -10,6 +10,6 @@ If there is no `.codegraph/` directory, skip CodeGraph entirely — indexing is 
 <!-- CODEGRAPH_END -->
 
 # Nix code style
-- Always formatting with experimental configs at .alejandra.toml
+- Always formatting with experimental configs at .alejandra.toml: `alejandra --experimental-config .alejandra.toml`
 - Always run statix everytime you change the code
 - Always test eval toplevel everytime you change the code
