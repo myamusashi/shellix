@@ -39,7 +39,7 @@
             vsftpd.enable = true;
             ocis.enable = true;
             "9router".enable = false;
-            headroom.enable = true;
+            headroom.enable = false;
             cloudflared = {
                 enable = true;
                 ingress = {
