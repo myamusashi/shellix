@@ -240,7 +240,6 @@
     };
 
     qt.platformTheme = "lxqt";
-    xdg.portal.lxqt.styles = pkgs-stable.breeze-qt5;
     xdg.portal.lxqt.enable = true;
     programs.gnupg.agent.pinentryPackage = pkgs-stable.pinentry-qt;
 
