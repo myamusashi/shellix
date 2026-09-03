@@ -1,4 +1,8 @@
-{pkgs-stable, ...}: {
+{
+    pkgs-stable, 
+    inputs, 
+    ...
+}: {
     environment = {
         systemPackages = with pkgs-stable; [
             eza
@@ -30,6 +34,7 @@
             gh
             curl
             cloudflared
+            inputs.helium.packages.${stdenv.hostPlatform.system}.default
         ];
     };
 }
