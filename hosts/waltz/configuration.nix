@@ -240,13 +240,21 @@
     };
 
     qt.platformTheme = "lxqt";
-    xdg.portal.lxqt.styles = pkgs-stable.breeze-qt5;
     xdg.portal.lxqt.enable = true;
     programs.gnupg.agent.pinentryPackage = pkgs-stable.pinentry-qt;
 
     services = {
         openssh.enable = true;
-        xserver.desktopManager.lxqt.enable = true;
+        xserver = {
+            enable = true;
+            desktopManager.lxqt.enable = true;
+            displayManager.lightdm.enable = true;
+        };
+        displayManager = {
+            autoLogin.enable = true;
+            autoLogin.user = "waltz";
+            defaultSession = "lxqt";
+        };
         logind.settings.Login.HandleLidSwitch = "ignore";
         cloudflare-warp.enable = true;
         create_ap = {
