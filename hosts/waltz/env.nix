@@ -1,6 +1,6 @@
 {
-    pkgs-stable, 
-    inputs, 
+    pkgs-stable,
+    inputs,
     ...
 }: {
     environment = {

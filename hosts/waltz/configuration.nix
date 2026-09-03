@@ -244,6 +244,13 @@
     programs.gnupg.agent.pinentryPackage = pkgs-stable.pinentry-qt;
 
     services = {
+        xrdp = {
+            enable = true;
+            port = 3389;
+            openFirewall = true;
+            defaultWindowManager = "startlxqt";
+            # audio.enable = true; # requires PulseAudio on waltz; enable if you use PulseAudio instead of PipeWire
+        };
         openssh.enable = true;
         xserver = {
             enable = true;
