@@ -5,6 +5,10 @@
     ...
 }: let
     cfg = config.shellix.server.pihole;
+    wgEnabled = config.shellix.server.wireguard.enable or false;
+    wgIf = config.shellix.server.wireguard.wireguardInterfaces or "wg0";
+    wgAddress = config.shellix.server.wireguard.wireguardAddress or "10.88.0.1/24";
+    wgIp = lib.head (lib.splitString "/" wgAddress);
 in {
     options.shellix.server.pihole = {
         webPort = lib.mkOption {
@@ -30,8 +34,23 @@ in {
             description = "Pi-hole dns.listeningMode — LOCAL = only local subnets (safe for LAN/WG), ALL = open resolver (firewall it!)";
         };
     };
-
     config = lib.mkIf cfg.enable {
+        warnings =
+            lib.optional (wgEnabled && cfg.interface != "" && cfg.interface != wgIf)
+            "shellix.server.pihole.interface='${cfg.interface}' does not include WireGuard interface '${wgIf}': WG peers at ${wgIp} may not reach Pi-hole. Set interface=\"\" or interface=\"${wgIf}\" or use listeningMode=LOCAL with interface=\"\"."
+            ++ lib.optional (wgEnabled && cfg.listeningMode == "SINGLE")
+            "shellix.server.pihole.listeningMode=SINGLE will only answer on one interface — WG DNS from ${wgIf} will be REFUSED. Use LOCAL or ALL for WireGuard integration."
+            ++ lib.optional (wgEnabled && cfg.listeningMode == "BIND" && cfg.interface == "")
+            "shellix.server.pihole.listeningMode=BIND with interface=\"\" will bind all interfaces but BIND requires explicit interface — Pi-hole may fail to start. Set interface=\"${wgIf}\" or switch to LOCAL.";
+
+        assertions = [
+            {
+                assertion =
+                    !(wgEnabled && cfg.listeningMode == "SINGLE" && cfg.interface != wgIf && cfg.interface != "");
+                message = "Pi-hole SINGLE mode with interface=${cfg.interface} cannot serve WireGuard ${wgIf} (${wgIp}). Fix: listeningMode=LOCAL or interface=${wgIf}/\"\"";
+            }
+        ];
+
         # Pi-hole owns port 53, disable conflicting resolvers
         services.resolved.enable = lib.mkForce false;
         services.dnsmasq.enable = lib.mkForce false;
@@ -41,7 +60,6 @@ in {
         networking.nameservers = lib.mkForce ["127.0.0.1"];
         networking.networkmanager.dns = lib.mkForce "default";
 
-        # Persistent state
         environment.systemPackages = with pkgs-stable; [
             pihole
         ];
@@ -114,13 +132,28 @@ in {
         };
 
         # Firewall — DNS + web dashboard
-        networking.firewall = {
-            allowedTCPPorts = [
-                53
-                cfg.webPort
-            ];
-            allowedUDPPorts = [53];
-        };
+        # When WireGuard is enabled, explicitly allow DNS on wg interface so peers
+        # at 10.88.0.0/24 can reach Pi-hole even if global firewall is tightened.
+        # WireGuard peers should set DNS=${wgIp} (e.g. DNS=10.88.0.1 in wg-quick).
+        networking.firewall =
+            {
+                allowedTCPPorts = [
+                    53
+                    cfg.webPort
+                ];
+                allowedUDPPorts = [53];
+            }
+            // lib.optionalAttrs wgEnabled {
+                interfaces.${wgIf} = {
+                    allowedTCPPorts = [53];
+                    allowedUDPPorts = [53];
+                };
+            };
+
+        # Ensure Pi-hole starts after WG interface exists when BIND/SINGLE pin to wgIf,
+        # and generally prefer WG up before DNS (harmless for LOCAL/ALL).
+        systemd.services.pihole-ftl.after = lib.optional wgEnabled "wg-quick-${wgIf}.service";
+        systemd.services.pihole-ftl.wants = lib.optional wgEnabled "wg-quick-${wgIf}.service";
 
         # Ensure gravity DB is populated on first boot; optional timer
         systemd.services.pihole-gravity-update = {
