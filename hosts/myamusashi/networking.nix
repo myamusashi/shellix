@@ -1,16 +1,10 @@
-{lib, ...}: {
+{...}: {
     networking = {
         enableIPv6 = true;
         hostName = "nixos";
         networkmanager = {
             enable = true;
             dns = "systemd-resolved";
-            insertNameservers = [
-                "1.1.1.1#one.one.one.one"
-                "1.0.0.1#one.one.one.one"
-                "94.140.14.14" # adGuard
-                "94.140.15.15"
-            ];
             ensureProfiles.profiles = {
                 # caveat: even if you set permissions to "user:myamusashi:"
                 # NetworkManager will have read/write access to these files
@@ -24,8 +18,8 @@
                     ipv4 = {
                         method = "manual";
                         gateway = "192.168.18.1";
-                        address1 = "192.168.18.2/28";
-                        dns = "192.168.18.4;1.1.1.1;1.0.0.1";
+                        address1 = "192.168.18.4/28";
+                        dns = "192.168.18.14";
                     };
                     ipv6 = {
                         method = "auto";
@@ -55,10 +49,10 @@
         domain = "home.myamusashi.dev";
         search = ["home.myamusashi.dev"];
         nameservers = [
-            "192.168.18.4"
+            "192.168.18.14" # pi-hole
             "1.1.1.1#one.one.one.one"
             "1.0.0.1#one.one.one.one"
-            "94.140.14.14"
+            "94.140.14.14" # adGuard
             "94.140.15.15"
         ];
         extraHosts = ''
