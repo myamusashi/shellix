@@ -16,8 +16,6 @@
                 stateVersion = "24.11";
                 sessionPath = ["/etc/profiles/per-user/myamusashi/bin"];
             };
-
-            wayland.windowManager.hyprland.enable = true;
         };
     };
 }

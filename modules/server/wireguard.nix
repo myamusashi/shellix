@@ -11,6 +11,7 @@
     wgSubnet = "${lib.concatStringsSep "." (lib.init (lib.splitString "." wgAddressIP))}.0/${wgAddressPrefix}";
     # Auto-detect Pi-hole: when enabled, Pi-hole owns :53 and becomes WG DNS
     piholeEnabled = config.shellix.server.pihole.enable or false;
+
     # Effective DNS for WireGuard peers — always the WG gateway IP, but
     # upstream differs: Pi-hole (filtered) vs dnsmasq → 1.1.1.1
     wgDnsIp = wgAddressIP;

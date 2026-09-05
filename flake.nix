@@ -62,7 +62,7 @@
 
         # Hyprland plugins
         hypr-dynamic-cursors = {
-            url = "github:myamusashi/hypr-dynamic-cursors";
+            url = "github:VirtCode/hypr-dynamic-cursors";
             inputs.hyprland.follows = "hyprland";
         };
 

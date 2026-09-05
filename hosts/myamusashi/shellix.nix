@@ -6,7 +6,7 @@
     ];
 
     shellix = {
-        server."9router".enable = true;
+        server."9router".enable = false;
 
         services = {
             audio.enable = true;
