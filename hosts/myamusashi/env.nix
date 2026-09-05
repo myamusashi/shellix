@@ -155,6 +155,11 @@ in {
             # inputs.antigravity-flakes.packages.${stdenv.hostPlatform.system}.default
             vim
 
+            # remote desktop
+            virt-viewer
+            freerdp
+            remmina
+
             (wrapElectron onlyoffice-desktopeditors "onlyoffice-desktopeditors")
             qbittorrent-enhanced-nox
             patchelf
@@ -211,7 +216,6 @@ in {
             QT_ENABLE_HIGHDPI_SCALING = 1;
             QT_WAYLAND_FORCE_DPI = "physical";
 
-            # It should fixes youtube lagging on helium browser
             NIXOS_OZONE_WL = 1;
         };
     };

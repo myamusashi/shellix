@@ -9,8 +9,6 @@
             };
         };
         systemPackages = with pkgs; [
-            intel-gpu-tools
-            iio-sensor-proxy
             podman-compose
             libva-utils
             virtualgl
@@ -18,12 +16,6 @@
             pciutils
             udisks
             udiskie
-            gparted
-            ddcutil
-            wl-gammactl
-            virt-viewer
-            freerdp
-            wlr-randr
         ];
     };
 }
