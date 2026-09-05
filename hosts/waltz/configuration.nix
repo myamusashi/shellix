@@ -35,10 +35,10 @@
                 ];
             };
             monitoring.enable = false;
+            pihole.enable = true; # -> 192.168.18.14:8080 + :53 (LOCAL mode, host uses 127.0.0.1)
             vaultwarden.enable = true;
             vsftpd.enable = true;
             ocis.enable = true;
-            "9router".enable = false;
             headroom.enable = false;
             cloudflared = {
                 enable = true;

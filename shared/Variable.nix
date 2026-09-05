@@ -81,6 +81,11 @@
                 default = 8787;
                 description = "Port number for headroom-ai context compression proxy";
             };
+            PIHOLE = lib.mkOption {
+                type = lib.types.port;
+                default = 8080;
+                description = "Port number for Pi-hole web dashboard";
+            };
         };
     };
 }

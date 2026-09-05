@@ -14,6 +14,7 @@
         ./mail.nix
         ./9router.nix
         ./headroom.nix
+        ./pihole.nix
     ];
 
     options.shellix.server = {
@@ -30,5 +31,6 @@
         cloudflared.enable = lib.mkEnableOption "Enable Cloudflare Tunnel";
         "9router".enable = lib.mkEnableOption "Enable 9Router AI LLM proxy router";
         headroom.enable = lib.mkEnableOption "Enable headroom-ai context compression proxy";
+        pihole.enable = lib.mkEnableOption "Pi-hole adblocker (FTL + web dashboard)";
     };
 }
