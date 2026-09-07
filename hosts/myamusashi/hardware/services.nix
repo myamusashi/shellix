@@ -51,9 +51,9 @@
 
         irqbalance.enable = true;
 
-        journald.extraConfig = ''
-            SystemMaxUse=100M
-            MaxRetentionSec=7day
-        '';
+        journald.settings.Journal = {
+            SystemMaxUse = "100M";
+            MaxRetentionSec = "7day";
+        };
     };
 }
