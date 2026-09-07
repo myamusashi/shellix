@@ -60,6 +60,31 @@ def url-looks-like-archive [url: string]: nothing -> bool {
     $is_codeload_archive or $is_github_archive_path
 }
 
+def prefetch-hash [
+    url: string
+    --unpack (-u)      # force --unpack on
+    --no-unpack (-n)   # force --unpack off, overrides detection
+] {
+    let should_unpack = if $no_unpack {
+        false
+    } else if $unpack {
+        true
+    } else {
+        (url-looks-like-archive $url)
+    }
+
+    let args = if $should_unpack {
+        [--unpack --hash-type sha256 --json $url]
+    } else {
+        [--hash-type sha256 --json $url]
+    }
+
+    print $"(ansi grey)prefetching ($url) \(unpack: ($should_unpack)\)(ansi reset)"
+
+    let result = (nix store prefetch-file ...$args | from json)
+    $result.hash
+}
+
 def kiss [host: string] {
     ^kitty + kitten ssh $host
 }
