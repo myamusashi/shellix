@@ -18,8 +18,8 @@
     arc20-src = pkgs.fetchFromGitHub {
         owner = "YashjitPal";
         repo = "Arc-2.0";
-        rev = "70c6eb5d205cca4b4595e93a895020d3ff362dca";
-        sha256 = "sha256-gXR4fiXJuwSZZ2lDWCVb8V/5BYZEmPvT9muc8vtkGko=";
+        rev = "88e08ae65c22d9ec92f5c995284c1181ffd7abaa";
+        sha256 = "sha256-FM6lWtN1HJ7QbNvO4BbkdhpdwTb8ecH7R5qtw4q7bLI=";
     };
 
     superPins-src =
