@@ -1,4 +1,4 @@
-{lib, ...}: {
+{...}: {
     networking = {
         enableIPv6 = true;
         hostName = "nixos";
@@ -85,15 +85,14 @@
         };
         wg-quick.interfaces = {
             wg0 = {
-                address = lib.mkDefault ["10.88.0.3/32"];
-                listenPort = 51820;
-                dns = ["192.168.18.14"];
+                address = ["10.88.0.3/32"];
+                dns = ["10.88.0.1"];
                 privateKeyFile = "/etc/wireguard-keys/private.key";
                 peers = [
                     {
                         publicKey = "IzirsljupeFXLusg6CooDzjSfc/xGVehBuJetADkaEU=";
                         allowedIPs = ["0.0.0.0/0"];
-                        endpoint = "192.168.18.14:51820";
+                        endpoint = "192.168.18.14:51820"; # LAN; TODO: public IP/DDNS for roaming
                     }
                 ];
             };
