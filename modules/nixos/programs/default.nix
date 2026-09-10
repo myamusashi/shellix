@@ -49,6 +49,7 @@
 
             languages = {
                 web = lib.mkEnableOption "web dev (TS/JS/HTML/CSS/Svelte/Tailwind)" // {default = true;};
+                php = lib.mkEnableOption "Php dev" // {default = true;};
                 lua = lib.mkEnableOption "Lua dev" // {default = true;};
                 nix = lib.mkEnableOption "Nix dev" // {default = true;};
                 python = lib.mkEnableOption "Python dev" // {default = true;};

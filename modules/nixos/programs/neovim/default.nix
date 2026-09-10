@@ -7,6 +7,8 @@
 }: let
     cfg = config.shellix.programs.neovim;
     lang = cfg.languages;
+    csskit = inputs.myamusashi-pkgs.packages.${pkgs.stdenv.hostPlatform.system}.csskit;
+    php-lsp = inputs.myamusashi-pkgs.packages.${pkgs.stdenv.hostPlatform.system}.php-lsp;
 
     runtimePackages = with pkgs;
         lib.optionals lang.web [
@@ -15,18 +17,20 @@
             svelte-language-server
             tailwindcss-language-server
             vscode-langservers-extracted
-            inputs.myamusashi-pkgs.packages.${pkgs.stdenv.hostPlatform.system}.csskit
+            csskit
             typescript
             nodejs
             yarn
             pnpm
+        ]
+        ++ lib.optionals lang.php [
+            php-lsp
         ]
         ++ lib.optionals lang.lua [
             lua-language-server
         ]
         ++ lib.optionals lang.markdown [
             marksman
-            ltex-ls-plus
         ]
         ++ lib.optionals lang.python [
             pyright
@@ -70,6 +74,9 @@
             tree-sitter-html
             tree-sitter-css
             tree-sitter-svelte
+        ]
+        ++ lib.optionals lang.php [
+            tree-sitter-php
         ]
         ++ lib.optionals lang.lua [
             tree-sitter-lua
@@ -125,6 +132,7 @@ in {
             systemPackages =
                 [
                     neovimWrapped
+                    pkgs.php
                 ]
                 ++ lib.subtractLists cfg.excludePackages runtimePackages;
 
