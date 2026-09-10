@@ -23,6 +23,74 @@
         ;
 
     zen-profile = "kxhdnjqx.zen";
+
+    # Entire Zen profile cached in RAM via tmpfs.
+    # Adapted from https://wiki.archlinux.org/title/Firefox/Profile_on_RAM ("Place profile in RAM manually"):
+    # Zen keeps its profile at ~/.zen/<profile> and its disk cache at ~/.cache/zen/<profile>.
+    # On first run each location is moved to a static-* backup on disk and replaced with a
+    # symlink into /dev/shm; later runs write RAM back to disk (.unpacked marks a populated copy).
+    zen-profile-sync = pkgs.writeShellApplication {
+        name = "zen-profile-sync";
+        runtimeInputs = [
+            pkgs.rsync
+            pkgs.coreutils
+            pkgs.procps
+        ];
+        text = ''
+            set -efu
+            IFS=
+
+            if [ "$#" -ne 1 ]; then
+                echo "usage: zen-profile-sync <profile>" >&2
+                exit 1
+            fi
+
+            PROFILE="$1"
+
+            sync_one() {
+                base="$1"
+                name="$2"
+                voltag="$3"
+                link="$base/$name"
+                static="$base/static-$name"
+                volatile="/dev/shm/zen-$voltag-$name-$(id -un)"
+
+                mkdir -p "$base"
+
+                if [ ! -e "$link" ] && [ ! -h "$link" ] && [ ! -e "$static" ]; then
+                    mkdir -p "$link"
+                fi
+
+                if [ ! -d "$volatile" ]; then
+                    mkdir -p "$volatile"
+                    chmod 0700 "$volatile"
+                fi
+
+                if [ "$(readlink "$link" 2>/dev/null || true)" != "$volatile" ]; then
+                    if [ -e "$static" ]; then
+                        echo "error: $link is not the tmpfs copy but $static already exists; refusing to move (restore manually)" >&2
+                        exit 1
+                    fi
+                    if pgrep -f "zen-beta|zen-bin" >/dev/null; then
+                        echo "error: Zen is running; close it before the first migration of $link into RAM" >&2
+                        exit 1
+                    fi
+                    mv "$link" "$static"
+                    ln -s "$volatile" "$link"
+                fi
+
+                if [ -e "$link/.unpacked" ]; then
+                    rsync -av --delete --exclude .unpacked --exclude lock --exclude .parentlock "$link"/ "$static"/
+                else
+                    rsync -av "$static"/ "$link"/
+                    touch "$link/.unpacked"
+                fi
+            }
+
+            sync_one "$HOME/.zen" "$PROFILE" "profile"
+            sync_one "$HOME/.cache/zen" "$PROFILE" "cache"
+        '';
+    };
 in {
     imports = [
         inputs.zen-browser.homeModules.default
@@ -48,6 +116,7 @@ in {
         enable = true;
 
         extraPrefs = ''
+            ${builtins.readFile ./general-smooth-scrolling.pref}
             user_pref("sine.engine.auto-update", false);
             user_pref("browser.tabs.allow_transparent_browser", true);
             user_pref("browser.urlbar.openintab", true);
@@ -214,6 +283,54 @@ in {
         "${chromeDir}/sine-mods/TabTitleFix".source = "${psu-mods-src}/tab-title-fix";
         "${chromeDir}/sine-mods/TrackpadAnimation".source = "${fury7425-src}/trackpad-animation";
         "${chromeDir}/sine-mods/VerticalSplitTabGroups".source = "${tobinio-src}/vertical-split-tab-groups";
+    };
+
+    # Entire Zen profile on tmpfs, per https://wiki.archlinux.org/title/Firefox/Profile_on_RAM.
+    # The oneshot service populates /dev/shm on login and writes back on logout/stop;
+    # the timer resyncs every 30 minutes so a crash loses at most 30 minutes of profile data.
+    # Close Zen before the first activation: moving a live profile corrupts it.
+    systemd.user = {
+        services."zen-profile-sync" = {
+            Unit = {
+                Description = "Sync Zen browser profile to RAM (tmpfs)";
+                Documentation = ["https://wiki.archlinux.org/title/Firefox/Profile_on_RAM"];
+            };
+            Service = {
+                Type = "oneshot";
+                RemainAfterExit = true;
+                ExecStart = "${zen-profile-sync}/bin/zen-profile-sync ${zen-profile}";
+                ExecStop = "${zen-profile-sync}/bin/zen-profile-sync ${zen-profile}";
+            };
+            Install = {
+                WantedBy = ["default.target"];
+            };
+        };
+
+        services."zen-profile-sync-resync" = {
+            Unit = {
+                Description = "Write back Zen browser profile from RAM to disk";
+                After = ["zen-profile-sync.service"];
+                BindsTo = ["zen-profile-sync.service"];
+            };
+            Service = {
+                Type = "oneshot";
+                ExecStart = "${zen-profile-sync}/bin/zen-profile-sync ${zen-profile}";
+            };
+        };
+
+        timers."zen-profile-sync-resync" = {
+            Unit = {
+                Description = "Periodic write-back of Zen browser profile from RAM to disk";
+            };
+            Timer = {
+                OnBootSec = "10min";
+                OnUnitActiveSec = "30min";
+                Unit = "zen-profile-sync-resync.service";
+            };
+            Install = {
+                WantedBy = ["timers.target"];
+            };
+        };
     };
 
     home.activation.seedSineMods = config.lib.dag.entryAfter ["writeBoundary"] ''
