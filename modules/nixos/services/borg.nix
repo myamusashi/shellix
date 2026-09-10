@@ -63,6 +63,8 @@ in {
                     "/home/myamusashi/Pictures"
                     "/home/myamusashi/.config"
                     "/home/myamusashi/.zen/h2lo302h.zen"
+                    # On-disk backing of the tmpfs Zen profile (the live profile path is a symlink into /dev/shm)
+                    "/home/myamusashi/.zen/static-kxhdnjqx.zen"
                     "/home/myamusashi/.android"
                     "/home/myamusashi/.cloudflared"
                     "/home/myamusashi/.password-store"
