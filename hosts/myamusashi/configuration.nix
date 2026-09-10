@@ -34,10 +34,23 @@ in {
             {inherit (pkgs) stdenv lib unzip;})
         ];
         enableDefaultPackages = true;
-        fontconfig.defaultFonts = {
-            serif = ["New York"];
-            monospace = ["SF Mono"];
-            sansSerif = ["SF Pro"];
+        fontconfig = {
+            enable = true;
+            antialias = true;
+            hinting = {
+                enable = true;
+                style = "slight"; # hintslight
+                autohint = false;
+            };
+            subpixel = {
+                rgba = "rgb"; # or "bgr" if your panel's subpixels are ordered that way
+                lcdfilter = "default"; # lcddefault
+            };
+            defaultFonts = {
+                serif = ["New York"];
+                monospace = ["SF Mono"];
+                sansSerif = ["SF Pro"];
+            };
         };
     };
 
