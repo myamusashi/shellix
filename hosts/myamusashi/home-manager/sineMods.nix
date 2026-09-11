@@ -71,19 +71,6 @@
         "no-updates" = true;
         enabled = true;
     };
-    "TabPreviewEnhanced" = {
-        id = "TabPreviewEnhanced";
-        name = "Tab Preview Enhanced";
-        description = "Enhanced tab previews.";
-        homepage = "https://github.com/Kaedriz/ZenMods/tree/main/TabPreviewEnhanced";
-        version = "1.0.0";
-        style = {
-            chrome = "TabPreviewEnhanced.css";
-        };
-        preferences = "preferences.json";
-        "no-updates" = true;
-        enabled = true;
-    };
     "TabTitleFix" = {
         id = "TabTitleFix";
         name = "Tab Title Fix";

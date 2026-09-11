@@ -270,14 +270,24 @@ in {
     home.file = let
         chromeDir = ".zen/${zen-profile}/chrome";
     in {
-        "${chromeDir}/JS".source = sine-engine;
-        "${chromeDir}/utils".source = sine-profile;
+        # Sine mutates JS/ and utils/ at runtime (engine self-update), so a whole-dir
+        # symlink gets replaced by a real dir and the next activation clashes.
+        # Per-file symlinks (upstream sine.nix pattern) let Sine write alongside.
+        "${chromeDir}/JS" = {
+            source = sine-engine;
+            recursive = true;
+            force = true;
+        };
+        "${chromeDir}/utils" = {
+            source = sine-profile;
+            recursive = true;
+            force = true;
+        };
         "${chromeDir}/sine-mods/Arc-2.0".source = arc20-src;
         "${chromeDir}/sine-mods/SuperPins".source = superPins-src;
         "${chromeDir}/sine-mods/NewTabIconUrlBar".source = newtabicon-src;
         "${chromeDir}/sine-mods/AudioIndicatorEnhanced".source = "${kaedriz-src}/AudioIndicatorEnhanced";
         "${chromeDir}/sine-mods/CustomizeFontsSize".source = customize-fonts-src;
-        "${chromeDir}/sine-mods/TabPreviewEnhanced".source = "${kaedriz-src}/TabPreviewEnhanced";
         "${chromeDir}/sine-mods/TabTitleFix".source = "${psu-mods-src}/tab-title-fix";
         "${chromeDir}/sine-mods/TrackpadAnimation".source = "${fury7425-src}/trackpad-animation";
         "${chromeDir}/sine-mods/VerticalSplitTabGroups".source = "${tobinio-src}/vertical-split-tab-groups";
