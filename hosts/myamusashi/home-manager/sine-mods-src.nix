@@ -18,8 +18,8 @@
     arc20-src = pkgs.fetchFromGitHub {
         owner = "YashjitPal";
         repo = "Arc-2.0";
-        rev = "88e08ae65c22d9ec92f5c995284c1181ffd7abaa";
-        sha256 = "sha256-FM6lWtN1HJ7QbNvO4BbkdhpdwTb8ecH7R5qtw4q7bLI=";
+        rev = "9c4bda364589e7a00381cda19ac800f25b15d3c0";
+        sha256 = "sha256-CPbXkw+0oWqSD9lR/6AnUdUAHYFMBfBLOr1ue5IMKxk=";
     };
 
     superPins-src =
@@ -50,13 +50,6 @@
         repo = "zen-mods";
         rev = "8a3505a98e37db57b51a11f19e18695f9e417bb0";
         sha256 = "sha256-LwKxT62wSb0wMdZz7Oh0LuXG/2zE8ztdJRD0SZcltLk=";
-    };
-
-    findbar-src = pkgs.fetchFromGitHub {
-        owner = "RobotoSkunk";
-        repo = "ff-better-findbar";
-        rev = "e4781eca01ac4e84a1c3f452bd74d99eac889cec";
-        sha256 = "sha256-Kgspv819xbo4jMvJ5Rg8JGKqjigfCAEnbCJYPhdzlMQ=";
     };
 
     customize-fonts-src = pkgs.fetchFromGitHub {

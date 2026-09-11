@@ -16,7 +16,6 @@
         newtabicon-src
         kaedriz-src
         psu-mods-src
-        findbar-src
         customize-fonts-src
         fury7425-src
         tobinio-src
@@ -277,7 +276,6 @@ in {
         "${chromeDir}/sine-mods/SuperPins".source = superPins-src;
         "${chromeDir}/sine-mods/NewTabIconUrlBar".source = newtabicon-src;
         "${chromeDir}/sine-mods/AudioIndicatorEnhanced".source = "${kaedriz-src}/AudioIndicatorEnhanced";
-        "${chromeDir}/sine-mods/ff-better-findbar".source = findbar-src;
         "${chromeDir}/sine-mods/CustomizeFontsSize".source = customize-fonts-src;
         "${chromeDir}/sine-mods/TabPreviewEnhanced".source = "${kaedriz-src}/TabPreviewEnhanced";
         "${chromeDir}/sine-mods/TabTitleFix".source = "${psu-mods-src}/tab-title-fix";

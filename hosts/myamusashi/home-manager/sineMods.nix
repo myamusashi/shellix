@@ -58,19 +58,6 @@
         "no-updates" = true;
         enabled = true;
     };
-    "ff-better-findbar" = {
-        id = "ff-better-findbar";
-        name = "Better Find Bar";
-        description = "Improves the find bar, making it floating with theme match and customization.";
-        homepage = "https://github.com/RobotoSkunk/ff-better-findbar";
-        version = "1.7.0";
-        style = {
-            chrome = "userChrome.css";
-        };
-        preferences = "preferences.json";
-        "no-updates" = true;
-        enabled = true;
-    };
     "CustomizeFontsSize" = {
         id = "CustomizeFontsSize";
         name = "Customize Fonts Size";
