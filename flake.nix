@@ -67,7 +67,7 @@
         };
 
         hypr-scroll-overview = {
-            url = "github:yayuuu/hyprland-scroll-overview/new-release";
+            url = "github:silicalet/hyprland-scroll-overview/fix/hyprland-workspace-api-2026-09-09";
             inputs.hyprland.follows = "hyprland";
         };
 
