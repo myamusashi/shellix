@@ -38,7 +38,10 @@
                                 "rt.time.soft" = 200000;
                                 "rt.time.hard" = 200000;
                             };
-                            flags = ["ifexists" "nofail"];
+                            flags = [
+                                "ifexists"
+                                "nofail"
+                            ];
                         }
                     ];
                 };
@@ -56,6 +59,30 @@
                         "node.latency" = "2048/48000";
                         "resample.quality" = 4;
                     };
+                };
+
+                pipewire-pulse."92-zen-rename" = {
+                    # pulse.rules only rewrites the PA *client* object, not the
+                    # per-stream properties Zen re-sets on every playback stream.
+                    # stream.rules operates on the actual stream/Node properties,
+                    # which is what pw-dump / mixers / shells actually read.
+                    "stream.rules" = [
+                        {
+                            matches = [
+                                {
+                                    "application.process.binary" = "zen";
+                                }
+                            ];
+                            actions = {
+                                "update-props" = {
+                                    "application.name" = "Zen";
+                                    "node.description" = "Zen";
+                                    "node.name" = "Zen";
+                                    "application.icon-name" = "zen-browser";
+                                };
+                            };
+                        }
+                    ];
                 };
             };
         };
