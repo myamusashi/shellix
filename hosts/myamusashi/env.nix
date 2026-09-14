@@ -140,7 +140,7 @@ in {
             unoconv
 
             ## Apps
-            (callPackage ./serein.nix {})
+            inputs.myamusashi-pkgs.packages.${stdenv.hostPlatform.system}.serenin
             (wrapElectron vesktop "vesktop")
             (wrapElectron inputs.helium.packages.${stdenv.hostPlatform.system}.default "helium")
 
