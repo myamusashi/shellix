@@ -4,9 +4,10 @@
     ...
 }: let
     electron-flags = [
-        "--enable-features=Vulkan,VaapiVideoDecodeLinuxGL,VaapiIgnoreDriverChecks,VaapiVideoDecoder,VaapiVideoEncoder,AcceleratedVideoEncoder,UseMultiPlaneFormatForHardwareVideo,SkiaGraphite"
+        "--enable-features=Vulkan,VaapiIgnoreDriverChecks,VaapiVideoDecoder,VaapiVideoEncoder,AcceleratedVideoEncoder,AcceleratedVideoDecodeLinuxGL,AcceleratedVideoDecodeLinuxZeroCopyGL,UseMultiPlaneFormatForHardwareVideo"
         "--ignore-gpu-blocklist"
         "--enable-zero-copy"
+        "--ozone-platform=wayland"
     ];
 
     wrapElectron = pkg: binary:
@@ -80,7 +81,7 @@ in {
             # kdePackages.qtcharts
 
             ## Android tools
-            adb-sync
+            better-adb-sync
             scrcpy
             android-tools
 
@@ -139,6 +140,7 @@ in {
             unoconv
 
             ## Apps
+            (callPackage ./serein.nix {})
             (wrapElectron vesktop "vesktop")
             (wrapElectron inputs.helium.packages.${stdenv.hostPlatform.system}.default "helium")
 

@@ -116,15 +116,7 @@ in {
         };
         omp = {
             enable = true;
-            package = inputs.omp.packages.${pkgs.stdenv.hostPlatform.system}.default.overrideAttrs (oldAttrs: {
-                postFixup =
-                    (oldAttrs.postFixup or "")
-                    + ''
-                        wrapProgram $out/bin/omp \
-                          --run 'export MINIMAX_API_KEY="$(cat ${config.sops.secrets.commandcode_api.path})"'
-                    '';
-                nativeBuildInputs = (oldAttrs.nativeBuildInputs or []) ++ [pkgs.makeWrapper];
-            });
+            package = inputs.myamusashi-pkgs.packages.${pkgs.stdenv.hostPlatform.system}.omp;
         };
         git = {
             enable = true;
