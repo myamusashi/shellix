@@ -35,7 +35,10 @@
                 ];
             };
             monitoring.enable = false;
-            pihole.enable = true; # -> 192.168.18.14:8080 + :53 (LOCAL mode, host uses 127.0.0.1)
+            pihole = {
+                enable = true; # -> 192.168.18.14:8080 + :53 (BIND mode: per-interface bind so podman/aardvark keeps its own :53; host uses 127.0.0.1)
+                listeningMode = "BIND";
+            };
             vaultwarden.enable = true;
             vsftpd.enable = true;
             ocis.enable = true;

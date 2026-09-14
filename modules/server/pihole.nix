@@ -31,7 +31,13 @@ in {
                 "BIND"
             ];
             default = "LOCAL";
-            description = "Pi-hole dns.listeningMode — LOCAL = only local subnets (safe for LAN/WG), ALL = open resolver (firewall it!)";
+            description = "Pi-hole dns.listeningMode — LOCAL = only local subnets (safe for LAN/WG), ALL = open resolver (firewall it!). BIND = per-interface bind, no wildcard :53 — REQUIRED on container hosts so aardvark-dns/libvirt can bind their own :53 on podman/bridge interfaces.";
+        };
+        extraDnsmasqLines = lib.mkOption {
+            type = lib.types.listOf lib.types.str;
+            default = [];
+            example = ["except-interface=podman0"];
+            description = "Extra dnsmasq lines appended to Pi-hole FTL misc.dnsmasq_lines (escape hatch, e.g. except-interface for container bridges).";
         };
     };
     config = lib.mkIf cfg.enable {
@@ -40,8 +46,8 @@ in {
             "shellix.server.pihole.interface='${cfg.interface}' does not include WireGuard interface '${wgIf}': WG peers at ${wgIp} may not reach Pi-hole. Set interface=\"\" or interface=\"${wgIf}\" or use listeningMode=LOCAL with interface=\"\"."
             ++ lib.optional (wgEnabled && cfg.listeningMode == "SINGLE")
             "shellix.server.pihole.listeningMode=SINGLE will only answer on one interface — WG DNS from ${wgIf} will be REFUSED. Use LOCAL or ALL for WireGuard integration."
-            ++ lib.optional (wgEnabled && cfg.listeningMode == "BIND" && cfg.interface == "")
-            "shellix.server.pihole.listeningMode=BIND with interface=\"\" will bind all interfaces but BIND requires explicit interface — Pi-hole may fail to start. Set interface=\"${wgIf}\" or switch to LOCAL.";
+            ++ lib.optional (wgEnabled && cfg.listeningMode == "BIND" && cfg.interface != "")
+            "shellix.server.pihole.listeningMode=BIND pins to interface='${cfg.interface}' only — WG DNS from ${wgIf} will be REFUSED unless that is ${wgIf}. Use interface=\"\" (auto-detect, needs WG up first) to serve LAN+WG.";
 
         assertions = [
             {
@@ -76,7 +82,8 @@ in {
                         "1.1.1.1#53"
                         "1.0.0.1#53"
                     ];
-                    # LOCAL = only queries from local subnets (enp1s0 192.168.18.0/28, waltz vlan 10.11.11.0/24, wg0 10.88.0.0/24, lo)
+                    # waltz: BIND = per-interface bind (no wildcard :53) so container bridges keep their own :53.
+                    # Answers queries from local subnets (enp1s0 192.168.18.0/28, waltz vlan 10.11.11.0/24, wg0 10.88.0.0/24, lo).
                     listeningMode = cfg.listeningMode;
                     interface = cfg.interface;
                     domainNeeded = true;
@@ -92,6 +99,7 @@ in {
                 };
                 misc = {
                     privacylevel = 0;
+                    dnsmasq_lines = cfg.extraDnsmasqLines;
                 };
                 dhcp.active = false;
             };

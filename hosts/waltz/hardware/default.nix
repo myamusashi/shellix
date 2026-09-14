@@ -35,17 +35,38 @@
             enable = true;
             dockerCompat = true;
             dockerSocket.enable = true;
-            defaultNetwork.settings = {dns_enabled = true;};
+            # Default podman subnet 10.88.0.0/16 collides with WireGuard 10.88.0.0/24 (wg0 = 10.88.0.1).
+            # Move podman0 far away so it never claims the WG gateway IP; per-job
+            # bridges (10.89.x) are unaffected. BIND-mode Pi-hole then leaves their :53 free.
+            defaultNetwork.settings = {
+                dns_enabled = true;
+                subnets = [
+                    {
+                        gateway = "10.94.0.1";
+                        subnet = "10.94.0.0/16";
+                    }
+                ];
+            };
         };
     };
 
     fileSystems."/home/waltz/external" = {
         device = "/dev/sdb1";
         fsType = "ntfs3";
-        options = ["noatime" "nofail" "rw" "uid=1000" "gid=100"];
+        options = [
+            "noatime"
+            "nofail"
+            "rw"
+            "uid=1000"
+            "gid=100"
+        ];
     };
     fileSystems."/opt/backup" = {
         device = "/home/waltz/external";
-        options = ["bind" "nofail" "x-systemd.requires-mounts-for=/home/waltz/external"];
+        options = [
+            "bind"
+            "nofail"
+            "x-systemd.requires-mounts-for=/home/waltz/external"
+        ];
     };
 }
