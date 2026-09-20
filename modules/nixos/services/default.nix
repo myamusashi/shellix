@@ -6,6 +6,7 @@
     imports = [
         ./audio.nix
         ./earlyoom.nix
+        ./oom.nix
         ./geoclue2.nix
         ./resolver.nix
         ./scx.nix
@@ -27,6 +28,7 @@
 
     options.shellix.services = {
         audio.enable = lib.mkEnableOption "Enable audio using pipewire";
+        oom.enable = lib.mkEnableOption "Enable systemd-oomd and ananicy";
         earlyoom.enable = lib.mkEnableOption "Enable kill early OOM scheduler";
         geoclue2.enable = lib.mkEnableOption "Enable locations";
         resolver.enable = lib.mkEnableOption "Enable resolver using Cloudflare";
