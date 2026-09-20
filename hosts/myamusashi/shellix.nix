@@ -11,7 +11,7 @@
         services = {
             audio.enable = true;
             backup.myamusashi.enable = true;
-            earlyoom.enable = false;
+            oom.enable = true;
             plasma.enable = false;
             resolver.enable = true;
             scx.enable = true;
