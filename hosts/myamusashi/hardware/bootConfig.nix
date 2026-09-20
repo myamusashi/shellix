@@ -60,6 +60,8 @@
             "intel_pstate=active"
             "nmi_watchdog=0"
             "nowatchdog"
+            "sched_bore=1"
+            "transparent_hugepage=always"
 
             # Disable mitigations (kinda risky tbh)
             "noibrs"
