@@ -30,10 +30,6 @@ in {
             darkly
             greetd
 
-            # CCNA
-            webex
-            (callPackage ./packet_tracer.nix {})
-
             ## QoL for terminal
             bat
             duf
@@ -134,6 +130,7 @@ in {
             ## gayming
             steam
             gamemode
+            pcsx2
 
             ## Office
             # libreoffice
@@ -141,10 +138,11 @@ in {
 
             ## Apps
             inputs.myamusashi-pkgs.packages.${stdenv.hostPlatform.system}.serenin
-            (wrapElectron vesktop "vesktop")
+            inputs.myamusashi-pkgs.packages.${stdenv.hostPlatform.system}.zapfast
             (wrapElectron inputs.helium.packages.${stdenv.hostPlatform.system}.default "helium")
 
             ## Misc
+            inputs.myamusashi-pkgs.packages.${stdenv.hostPlatform.system}.omp
             git-credential-manager
             gh
             git
