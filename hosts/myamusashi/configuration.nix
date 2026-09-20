@@ -17,7 +17,6 @@ in {
         inputs.shell.nixosModules.default
         inputs.qtengine.nixosModules.default
         inputs.hyprland.nixosModules.default
-        inputs.omp.nixosModules.default
         # inputs.sesame.nixosModules.default
     ];
 
@@ -113,10 +112,6 @@ in {
         nh = {
             enable = true;
             clean.enable = true;
-        };
-        omp = {
-            enable = true;
-            package = inputs.myamusashi-pkgs.packages.${pkgs.stdenv.hostPlatform.system}.omp;
         };
         git = {
             enable = true;
