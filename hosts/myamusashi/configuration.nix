@@ -28,9 +28,14 @@ in {
             pkgs.maple-mono.NF
             pkgs.noto-fonts
             pkgs.weather-icons
-            (import
-            ../../modules/nixos/packages/custom/google-sans-flex.nix
-            {inherit (pkgs) stdenv lib unzip;})
+            (
+                pkgs.callPackage
+                ../../modules/nixos/packages/custom/switzer-font.nix {}
+            )
+            (
+                pkgs.callPackage
+                ../../modules/nixos/packages/custom/google-sans-flex.nix {}
+            )
         ];
         enableDefaultPackages = true;
         fontconfig = {
