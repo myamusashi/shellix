@@ -60,6 +60,16 @@ def url-looks-like-archive [url: string]: nothing -> bool {
     $is_codeload_archive or $is_github_archive_path
 }
 
+def nbc [
+    file: path           
+    --args (-a): string  
+] {
+    let path = ($file | path expand)
+    let call_args = ($args | default "{}")
+
+    ^nix-build -E $"with import <nixpkgs> {}; callPackage ($path) ($call_args)"
+}
+
 def prefetch-hash [
     url: string
     --unpack (-u)      # force --unpack on
