@@ -57,11 +57,9 @@
             "acpi_backlight=native"
 
             # Performance tweaks
-            "intel_pstate=active"
+            "intel_pstate=passive"
             "nmi_watchdog=0"
             "nowatchdog"
-            "sched_bore=1"
-            "transparent_hugepage=always"
 
             # Disable mitigations (kinda risky tbh)
             "noibrs"
