@@ -242,13 +242,13 @@
         '';
     };
 
-    qt.platformTheme = "lxqt";
-    xdg.portal.lxqt.enable = true;
-    programs.gnupg.agent.pinentryPackage = pkgs-stable.pinentry-qt;
+    # qt.platformTheme = "lxqt";
+    # xdg.portal.lxqt.enable = true;
+    # programs.gnupg.agent.pinentryPackage = pkgs-stable.pinentry-qt;
 
     services = {
         xrdp = {
-            enable = true;
+            enable = false;
             port = 3389;
             openFirewall = true;
             defaultWindowManager = "startlxqt";
@@ -256,12 +256,12 @@
         };
         openssh.enable = true;
         xserver = {
-            enable = true;
-            desktopManager.lxqt.enable = true;
-            displayManager.lightdm.enable = true;
+            enable = false;
+            desktopManager.lxqt.enable = false;
+            displayManager.lightdm.enable = false;
         };
         displayManager = {
-            autoLogin.enable = true;
+            autoLogin.enable = false;
             autoLogin.user = "waltz";
             defaultSession = "lxqt";
         };
