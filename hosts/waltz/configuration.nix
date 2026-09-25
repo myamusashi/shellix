@@ -423,7 +423,6 @@
                     "networkmanager"
                     "wheel"
                     "vsftpd"
-                    "docker"
                     "podman"
                 ];
             };

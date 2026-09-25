@@ -57,7 +57,7 @@
             "acpi_backlight=native"
 
             # Performance tweaks
-            "intel_pstate=active"
+            "intel_pstate=passive"
             "nmi_watchdog=0"
             "nowatchdog"
 

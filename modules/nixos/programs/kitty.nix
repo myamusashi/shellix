@@ -28,8 +28,8 @@
         strip_trailing_spaces never
         focus_follows_mouse false
         default_pointer_shape beam
-        repaint_delay 1
-        input_delay 1
+        repaint_delay 10
+        input_delay 3
         sync_to_monitor false
         enable_audio_bell false
         enabled_layouts fat
@@ -45,7 +45,8 @@
         hide_window_decorations false
         tab_bar_style powerline
         tab_separator  ┇
-        background_opacity 1
+        background_opacity 0.85
+        background_blur 32
         background_image none
         background_image_layout tiled
         background_image_linear false

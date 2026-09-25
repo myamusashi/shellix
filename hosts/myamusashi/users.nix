@@ -10,7 +10,6 @@ in {
                 extraGroups = [
                     "networkmanager"
                     "wheel"
-                    "docker"
                     "podman"
                     "libvirtd"
                     "qemu-libvirtd"
@@ -24,11 +23,6 @@ in {
                     "i2c"
                     "greeter"
                 ];
-            };
-
-            docker = {
-                isSystemUser = true;
-                group = "docker";
             };
 
             nginx = {

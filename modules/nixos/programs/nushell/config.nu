@@ -60,6 +60,16 @@ def url-looks-like-archive [url: string]: nothing -> bool {
     $is_codeload_archive or $is_github_archive_path
 }
 
+def nbc [
+    file: path           
+    --args (-a): string  
+] {
+    let path = ($file | path expand)
+    let call_args = ($args | default "{}")
+
+    ^nix-build -E $"with import <nixpkgs> {}; callPackage ($path) ($call_args)"
+}
+
 def prefetch-hash [
     url: string
     --unpack (-u)      # force --unpack on
@@ -375,5 +385,114 @@ def "nu-complete zoxide path" [context: string] {
             case_sensitive: false,
         },
         completions: $completions,
+    }
+}
+
+# -- process table --
+
+def clean-name [name: string, cmd: string] {
+    let base = $name
+        | str replace --regex '^\.' ''
+        | str replace --regex '-wrapped$|-wrapper$|_wrapped$' ''
+        | str replace --regex '-bin$' ''
+
+    let generic = [qs quickshell node bun python python3 electron chrome bash zsh nu sh]
+    if ($base | str lowercase) in $generic {
+        let args = $cmd | split row ' ' | skip 1
+        let hint = if ($args | is-empty) {
+            null
+        } else if ($args | any { |a| $a == "-c" }) {
+            let i = $args | enumerate | where item == "-c" | first | get index
+            $args | get -o ($i + 1)
+        } else {
+            $args | where { |a| not ($a | str starts-with "-") } | first | default null
+        }
+
+        if $hint != null {
+            $"($base) \(($hint | path basename)\)"
+        } else {
+            $base
+        }
+    } else {
+        $base
+    }
+}
+
+def memu [
+    ...targets: any               # PIDs (ints) and/or process name patterns (strings)
+    --sort (-s): string = "real"  # Sort by: real, resident, virtual (old names pss/rss/vsz also work)
+    --total (-t)                  # Append a total row
+    --raw (-r)                    # Show the raw process name from ps
+] {
+    let sort_col = match $sort {
+        "real" | "pss" => "Real Memory",
+        "resident" | "rss" => "Resident",
+        "virtual" | "vsz" => "Virtual",
+        _ => "Real Memory",
+    }
+
+    if ($targets | is-empty) {
+        error make { msg: "Give at least one PID or process name" }
+    }
+
+    let procs = ps --long
+
+    let matched = $targets | each { |t|
+        match ($t | describe) {
+            "int" => ($procs | where pid == $t),
+            _ => {
+                let needle = $t | into string
+                $procs | where { |p|
+                    ($p.name | str contains --ignore-case $needle) or ($p.command | str contains --ignore-case $needle)
+                }
+            },
+        }
+    } | flatten | uniq-by pid
+
+    if ($matched | is-empty) {
+        error make { msg: $"No process found for: ($targets | str join ', ')" }
+    }
+
+    let rows = $matched | each { |p|
+        let smaps = $"/proc/($p.pid)/smaps_rollup"
+
+        let real = if ($smaps | path exists) {
+            try {
+                open --raw $smaps
+                | lines
+                | where $it =~ '^Pss:'
+                | first
+                | parse --regex '(\d+)'
+                | get capture0.0
+                | into int
+                | $in * 1024
+                | into filesize
+            } catch { 0b }
+        } else { 0b }
+
+        {
+            PID: $p.pid
+            Name: (if $raw { $p.name } else { clean-name $p.name $p.command })
+            "Real Memory": $real
+            Resident: $p.mem
+            Virtual: $p.virtual
+            "CPU %": $p.cpu
+        }
+    }
+
+    let sorted = $rows | sort-by { |r| $r | get $sort_col } --reverse
+
+    if $total {
+        let sum = {
+            PID: "-"
+            Name: $"TOTAL \(($sorted | length) procs\)"
+            "Real Memory": ($sorted | get Memory | math sum)
+            Resident: ($sorted | get Resident | math sum)
+            Virtual: ($sorted | get Virtual | math sum)
+            "CPU %": ($sorted | get "CPU %" | math sum)
+        }
+        $sorted | append $sum
+    } else {
+        $sorted
     }
 }

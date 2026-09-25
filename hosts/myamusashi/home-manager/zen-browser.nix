@@ -1,26 +1,8 @@
 {
     pkgs,
     inputs,
-    config,
     ...
 }: let
-    sineMods = import ./sineMods.nix;
-    sine-mods-json = pkgs.writeText "sine-mods.json" (builtins.toJSON sineMods);
-    inherit
-        (import ./sine-mods-src.nix {inherit pkgs;})
-        sine-engine
-        sine-profile
-        sine-program
-        arc20-src
-        superPins-src
-        newtabicon-src
-        kaedriz-src
-        psu-mods-src
-        customize-fonts-src
-        fury7425-src
-        tobinio-src
-        ;
-
     zen-profile = "kxhdnjqx.zen";
 
     # Entire Zen profile cached in RAM via tmpfs.
@@ -114,40 +96,56 @@ in {
     programs.zen-browser = {
         enable = true;
 
-        extraPrefs = ''
-            ${builtins.readFile ./general-smooth-scrolling.pref}
-            user_pref("sine.engine.auto-update", false);
-            user_pref("browser.tabs.allow_transparent_browser", true);
-            user_pref("browser.urlbar.openintab", true);
-            user_pref("zen.widget.windows.acrylic", false);
-            user_pref("browser.urlbar.trimURLs", true);
-            user_pref("browser.tabs.groups.enabled", true);
-            user_pref("arc-nogaps-compact-mod", true);
-            user_pref("arc-nogaps-mod", true);
-            user_pref("arc-pinned-extensions-mod", true);
-            user_pref("arc-remove-workspace-indicator", true);
-            user_pref("arc-workspace-style", 2);
-            user_pref("arc-tabs-no-shadow", true);
-            user_pref("arc-compact-mode-no-sidebar-bg", true);
-        '';
-
-        unwrappedPackage = inputs.zen-browser.packages.${pkgs.stdenv.hostPlatform.system}.beta-unwrapped.overrideAttrs
-        (old: {
-            postInstall =
-                (old.postInstall or "")
-                + ''
-                    for libdir in "$out/lib/zen-bin-"*; do
-                      chmod -R u+w "$libdir"
-                      cp ${sine-program}/config.js "$libdir/config.js"
-                      mkdir -p "$libdir/defaults/pref"
-                      cp ${sine-program}/defaults/pref/config-prefs.js "$libdir/defaults/pref/config-prefs.js"
-                    done
-                '';
-        });
+        # HM defaults to ~/.config/zen, but the live profile runs from
+        # ~/.zen/<profile> (tmpfs-backed, see zen-profile-sync below).
+        # Point configPath there so the flake's Sine engine files and
+        # activation fragments land where Zen actually reads them.
+        configPath = ".zen";
 
         profiles.${zen-profile} = {
             id = 0;
             isDefault = true;
+
+            sine.enable = true;
+            # Resolved from the Sine store, falling back to the Zen theme store
+            # (theme UUIDs). Previous manual GitHub pins mapped to equivalents:
+            sine.mods = [
+                "Arc-2.0" # Arc-2.0 (Sine store)
+                "ad97bb70-0066-4e42-9b5f-173a5e42c6fc" # SuperPins (Sine store)
+                "378ba8b9-cd36-45f5-88df-595df5288795" # NewTabIconUrlBar (theme-store fallback)
+                "2317fd93-c3ed-4f37-b55a-304c1816819e" # AudioIndicatorEnhanced (theme-store fallback)
+                "d23733fa-983e-4680-8869-bf5b292d4fe6" # CustomizeFontsSize (theme-store fallback)
+                "7190e4e9-bead-4b40-8f57-95d852ddc941" # TabTitleFix (theme-store fallback)
+                "8039de3b-72e1-41ea-83b3-5077cf0f98d1" # TrackpadAnimation (theme-store fallback, same author)
+                "4c2bec61-7f6c-4e5c-bdc6-c9ad1aba1827" # VerticalSplitTabGroups (theme-store fallback)
+            ];
+
+            # Replaces the old extraPrefs block: sine.enable forbids extraPrefs
+            # (both claim general.config.filename; the bootloader wins), and the
+            # flake force-sets sine.engine.auto-update = false itself.
+            settings = {
+                "general.smoothScroll.lines.durationMaxMS" = 125;
+                "general.smoothScroll.lines.durationMinMS" = 125;
+                "general.smoothScroll.mouseWheel.durationMaxMS" = 200;
+                "general.smoothScroll.mouseWheel.durationMinMS" = 100;
+                "general.smoothScroll.msdPhysics.enabled" = true;
+                "general.smoothScroll.other.durationMaxMS" = 125;
+                "general.smoothScroll.other.durationMinMS" = 125;
+                "general.smoothScroll.pages.durationMaxMS" = 125;
+                "general.smoothScroll.pages.durationMinMS" = 125;
+                "browser.tabs.allow_transparent_browser" = true;
+                "browser.urlbar.openintab" = true;
+                "zen.widget.windows.acrylic" = false;
+                "browser.urlbar.trimURLs" = true;
+                "browser.tabs.groups.enabled" = true;
+                "arc-nogaps-compact-mod" = true;
+                "arc-nogaps-mod" = true;
+                "arc-pinned-extensions-mod" = true;
+                "arc-remove-workspace-indicator" = true;
+                "arc-workspace-style" = 2;
+                "arc-tabs-no-shadow" = true;
+                "arc-compact-mode-no-sidebar-bg" = true;
+            };
 
             handlers = {
                 mimeTypes = {
@@ -267,32 +265,6 @@ in {
         };
     };
 
-    home.file = let
-        chromeDir = ".zen/${zen-profile}/chrome";
-    in {
-        # Sine mutates JS/ and utils/ at runtime (engine self-update), so a whole-dir
-        # symlink gets replaced by a real dir and the next activation clashes.
-        # Per-file symlinks (upstream sine.nix pattern) let Sine write alongside.
-        "${chromeDir}/JS" = {
-            source = sine-engine;
-            recursive = true;
-            force = true;
-        };
-        "${chromeDir}/utils" = {
-            source = sine-profile;
-            recursive = true;
-            force = true;
-        };
-        "${chromeDir}/sine-mods/Arc-2.0".source = arc20-src;
-        "${chromeDir}/sine-mods/SuperPins".source = superPins-src;
-        "${chromeDir}/sine-mods/NewTabIconUrlBar".source = newtabicon-src;
-        "${chromeDir}/sine-mods/AudioIndicatorEnhanced".source = "${kaedriz-src}/AudioIndicatorEnhanced";
-        "${chromeDir}/sine-mods/CustomizeFontsSize".source = customize-fonts-src;
-        "${chromeDir}/sine-mods/TabTitleFix".source = "${psu-mods-src}/tab-title-fix";
-        "${chromeDir}/sine-mods/TrackpadAnimation".source = "${fury7425-src}/trackpad-animation";
-        "${chromeDir}/sine-mods/VerticalSplitTabGroups".source = "${tobinio-src}/vertical-split-tab-groups";
-    };
-
     # Entire Zen profile on tmpfs, per https://wiki.archlinux.org/title/Firefox/Profile_on_RAM.
     # The oneshot service populates /dev/shm on login and writes back on logout/stop;
     # the timer resyncs every 30 minutes so a crash loses at most 30 minutes of profile data.
@@ -340,18 +312,4 @@ in {
             };
         };
     };
-
-    home.activation.seedSineMods = config.lib.dag.entryAfter ["writeBoundary"] ''
-        CHROME="$HOME/.zen/${zen-profile}/chrome"
-        MODS="$CHROME/sine-mods/mods.json"
-        mkdir -p "$CHROME/sine-mods"
-        if [ ! -e "$MODS" ]; then
-            cp ${sine-mods-json} "$MODS"
-        else
-            TMP="$MODS.tmp.$$"
-            ${pkgs.jq}/bin/jq -s '.[0] * .[1]' "$MODS" ${sine-mods-json} > "$TMP"
-            mv "$TMP" "$MODS"
-        fi
-        chmod u+w "$MODS"
-    '';
 }

@@ -17,7 +17,6 @@ in {
         inputs.shell.nixosModules.default
         inputs.qtengine.nixosModules.default
         inputs.hyprland.nixosModules.default
-        inputs.omp.nixosModules.default
         # inputs.sesame.nixosModules.default
     ];
 
@@ -29,9 +28,14 @@ in {
             pkgs.maple-mono.NF
             pkgs.noto-fonts
             pkgs.weather-icons
-            (import
-            ../../modules/nixos/packages/custom/google-sans-flex.nix
-            {inherit (pkgs) stdenv lib unzip;})
+            (
+                pkgs.callPackage
+                ../../modules/nixos/packages/custom/switzer-font.nix {}
+            )
+            (
+                pkgs.callPackage
+                ../../modules/nixos/packages/custom/google-sans-flex.nix {}
+            )
         ];
         enableDefaultPackages = true;
         fontconfig = {
@@ -113,10 +117,6 @@ in {
         nh = {
             enable = true;
             clean.enable = true;
-        };
-        omp = {
-            enable = true;
-            package = inputs.myamusashi-pkgs.packages.${pkgs.stdenv.hostPlatform.system}.omp;
         };
         git = {
             enable = true;
