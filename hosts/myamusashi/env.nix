@@ -114,8 +114,8 @@ in {
             gtk4
             morewaita-icon-theme
             qt6Packages.qt6ct
-            (import ../../modules/nixos/packages/custom/future-cursor.nix {inherit (pkgs) stdenvNoCC lib fetchFromGitHub;})
-            (import ../../modules/nixos/packages/custom/future-cyan-hyprcursor.nix {inherit (pkgs) stdenvNoCC lib fetchFromGitLab;})
+            (callPackage ../../modules/nixos/packages/custom/future-cursor.nix {})
+            (callPackage ../../modules/nixos/packages/custom/future-cyan-hyprcursor.nix {})
 
             ## screen recorder
             inputs.myamusashi-pkgs.packages.${pkgs.stdenv.hostPlatform.system}.wl-screenrec-fork
@@ -138,6 +138,7 @@ in {
 
             ## Apps
             inputs.myamusashi-pkgs.packages.${stdenv.hostPlatform.system}.serenin
+            (wrapElectron vesktop "vesktop")
             inputs.myamusashi-pkgs.packages.${stdenv.hostPlatform.system}.zapfast
             (wrapElectron inputs.helium.packages.${stdenv.hostPlatform.system}.default "helium")
 
@@ -148,7 +149,7 @@ in {
             git
             curl
             kdiff3
-            (import ../../modules/nixos/packages/custom/app2unit.nix {inherit (pkgs) lib stdenvNoCC fetchFromGitHub makeWrapper bash systemd coreutils findutils gnugrep git gnused scdoc gawk libnotify;})
+            (callPackage ../../modules/nixos/packages/custom/app2unit.nix {})
             sops
             gvfs
             wget2
@@ -172,6 +173,9 @@ in {
             nil
             alejandra
             statix
+
+            ## LLM Model runtime
+            ollama-vulkan
         ];
 
         sessionVariables = {
