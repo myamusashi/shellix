@@ -1,7 +1,6 @@
 {
     lib,
     config,
-    pkgs-stable,
     ...
 }: {
     config = lib.mkIf config.shellix.server.forgejo.enable {
@@ -24,12 +23,6 @@
                 };
                 session = {
                     COOKIE_SECURE = true;
-                };
-                "markup.jupyter" = {
-                    ENABLED = true;
-                    FILE_EXTENSIONS = ".ipynb";
-                    RENDER_COMMAND = "${pkgs-stable.python314Packages.nbconvert}/bin/jupyter-nbconvert --to html --stdout";
-                    IS_INPUT_FILE = true;
                 };
                 security = {
                     ALLOWED_DOMAINS = "github.com,*.github.com,raw.githubusercontent.com,objects.githubusercontent.com";
