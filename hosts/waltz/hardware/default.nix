@@ -8,7 +8,7 @@
             systemd-boot.enable = true;
         };
         kernelPackages = pkgs-stable.cachyosKernels.linuxPackages-cachyos-server;
-        supportedFilesystems = ["ntfs3"];
+        supportedFilesystems = ["ntfs"];
     };
 
     hardware.graphics = {
@@ -50,24 +50,29 @@
         };
     };
 
-    #fileSystems."/home/waltz/external" = {
-    #    device = "/dev/sdb1";
-    #    fsType = "ntfs";
-    #    options = [
-    #        "noatime"
-    #        "nofail"
-    #        "rw"
-    #        "uid=1000"
-    #        "gid=100"
-    #    ];
-    #};
-    #fileSystems."/opt/backup" = {
-    #    device = "/home/waltz/external";
-    #    fsType = "notype";
-    #    options = [
-    #        "bind"
-    #        "nofail"
-    #        "x-systemd.requires-mounts-for=/home/waltz/external"
-    #    ];
-    #};
+    fileSystems."/home/waltz/external" = {
+        device = "/dev/disk/by-label/BACKUP";
+        fsType = "ntfs";
+        options = [
+            "noatime"
+            "nofail"
+            "rw"
+            "uid=1000"
+            "gid=100"
+        ];
+    };
+
+    fileSystems."/opt/backup" = {
+        depends = [
+            "/home/waltz/external"
+        ];
+        fsType = "none";
+        options = [
+            "bind"
+            "nofail"
+            "x-systemd.requires-mounts-for=/home/waltz/external"
+        ];
+    };
+
+    fileSystems."/".options = [ "noatime" ];
 }
