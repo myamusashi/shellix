@@ -1,6 +1,7 @@
 {lib, ...}: {
     imports = [
         ./btop.nix
+        ./eza.nix
         ./fastfetch.nix
         ./foot.nix
         ./htop.nix
@@ -10,10 +11,12 @@
         ./neovide.nix
         ./shell.nix
         ./spicetify.nix
+        ./starship.nix
         ./steam.nix
         ./virt-manager.nix
         ./vscode.nix
         ./wireshark.nix
+        ./zoxide.nix
         ./fish/default.nix
         ./matugen/default.nix
         ./neovim/default.nix
@@ -22,6 +25,7 @@
     ];
 
     options.shellix.programs = with lib; {
+        eza.enable = mkEnableOption "Enable eza modern ls replacement";
         btop.enable = mkEnableOption "Enable btop resource monitoring";
         fastfetch.enable = mkEnableOption "Enable terminal system info";
         fish = {
@@ -45,25 +49,93 @@
             viAlias = lib.mkEnableOption "vi alias";
             vimAlias = lib.mkEnableOption "vim alias";
             vimdiffAlias = lib.mkEnableOption "vimdiff alias";
-            defaultEditor = lib.mkEnableOption "default editor" // {default = true;};
+            defaultEditor =
+                lib.mkEnableOption "default editor"
+                // {
+                    default = true;
+                };
 
             languages = {
-                web = lib.mkEnableOption "web dev (TS/JS/HTML/CSS/Svelte/Tailwind)" // {default = true;};
-                php = lib.mkEnableOption "Php dev" // {default = true;};
-                lua = lib.mkEnableOption "Lua dev" // {default = true;};
-                nix = lib.mkEnableOption "Nix dev" // {default = true;};
-                python = lib.mkEnableOption "Python dev" // {default = true;};
-                cpp = lib.mkEnableOption "C/C++ dev" // {default = true;};
-                bash = lib.mkEnableOption "Bash dev" // {default = true;};
-                fish = lib.mkEnableOption "Fish dev" // {default = true;};
-                docker = lib.mkEnableOption "Docker dev" // {default = true;};
-                markdown = lib.mkEnableOption "Markdown & LaTeX" // {default = true;};
-                data = lib.mkEnableOption "JSON / YAML / TOML" // {default = true;};
-                qml = lib.mkEnableOption "QML dev" // {default = true;};
-                dart = lib.mkEnableOption "Dart dev" // {default = true;};
-                sql = lib.mkEnableOption "SQL dev" // {default = true;};
-                meson = lib.mkEnableOption "Meson build system" // {default = true;};
-                lint = lib.mkEnableOption "oxlint / oxfmt linting" // {default = true;};
+                web =
+                    lib.mkEnableOption "web dev (TS/JS/HTML/CSS/Svelte/Tailwind)"
+                    // {
+                        default = true;
+                    };
+                php =
+                    lib.mkEnableOption "Php dev"
+                    // {
+                        default = true;
+                    };
+                lua =
+                    lib.mkEnableOption "Lua dev"
+                    // {
+                        default = true;
+                    };
+                nix =
+                    lib.mkEnableOption "Nix dev"
+                    // {
+                        default = true;
+                    };
+                python =
+                    lib.mkEnableOption "Python dev"
+                    // {
+                        default = true;
+                    };
+                cpp =
+                    lib.mkEnableOption "C/C++ dev"
+                    // {
+                        default = true;
+                    };
+                bash =
+                    lib.mkEnableOption "Bash dev"
+                    // {
+                        default = true;
+                    };
+                fish =
+                    lib.mkEnableOption "Fish dev"
+                    // {
+                        default = true;
+                    };
+                docker =
+                    lib.mkEnableOption "Docker dev"
+                    // {
+                        default = true;
+                    };
+                markdown =
+                    lib.mkEnableOption "Markdown & LaTeX"
+                    // {
+                        default = true;
+                    };
+                data =
+                    lib.mkEnableOption "JSON / YAML / TOML"
+                    // {
+                        default = true;
+                    };
+                qml =
+                    lib.mkEnableOption "QML dev"
+                    // {
+                        default = true;
+                    };
+                dart =
+                    lib.mkEnableOption "Dart dev"
+                    // {
+                        default = true;
+                    };
+                sql =
+                    lib.mkEnableOption "SQL dev"
+                    // {
+                        default = true;
+                    };
+                meson =
+                    lib.mkEnableOption "Meson build system"
+                    // {
+                        default = true;
+                    };
+                lint =
+                    lib.mkEnableOption "oxlint / oxfmt linting"
+                    // {
+                        default = true;
+                    };
             };
 
             extraPackages = lib.mkOption {
@@ -83,6 +155,7 @@
         steam.enable = mkEnableOption "Enable steam client";
         vscode.enable = mkEnableOption "Enable electron code editor";
         matugen.enable = mkEnableOption "Enable auto color generation based on wallpaper";
+        starship.enable = mkEnableOption "Enable starship cross-shell prompt";
         yazi.enable = mkEnableOption "Enable Yazi terminal file manager built on Rust";
         nushell = {
             enable = lib.mkEnableOption "Enable nushell";
@@ -96,5 +169,6 @@
         };
         virt-manager.enable = mkEnableOption "Enable libvirt for virtualization using Qemu";
         wireshark.enable = mkEnableOption "Enable network listener";
+        zoxide.enable = mkEnableOption "Enable zoxide smarter cd with immutable shell init";
     };
 }

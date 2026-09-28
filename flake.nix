@@ -5,6 +5,11 @@
         flake-parts.url = "github:hercules-ci/flake-parts";
         myamusashi-pkgs.url = "github:myamusashi/nix-myamusashi-packages";
 
+        home-manager = {
+            url = "github:nix-community/home-manager";
+            inputs.nixpkgs.follows = "nixpkgs";
+        };
+
         aquamarine = {
             url = "github:hyprwm/aquamarine";
             inputs.nixpkgs.follows = "nixpkgs";
@@ -67,7 +72,7 @@
         };
 
         hypr-scroll-overview = {
-            url = "github:silicalet/hyprland-scroll-overview/fix/hyprland-workspace-api-2026-09-09";
+            url = "github:yayuuu/hyprland-scroll-overview/new-release";
             inputs.hyprland.follows = "hyprland";
         };
 
@@ -103,14 +108,12 @@
             inputs.nixpkgs.follows = "nixpkgs";
         };
 
-        antigravity-flakes = {
-            url = "github:jacopone/antigravity-nix";
-            inputs.nixpkgs.follows = "nixpkgs";
-        };
-
         zen-browser = {
             url = "github:0xc000022070/zen-browser-flake";
-            inputs.nixpkgs.follows = "nixpkgs";
+            inputs = {
+                nixpkgs.follows = "nixpkgs";
+                home-manager.follows = "home-manager";
+            };
         };
 
         kwin-effects-forceblur = {
@@ -155,10 +158,6 @@
         sops-nix.url = "github:Mic92/sops-nix";
         nix-cachyos-kernel.url = "github:xddxdd/nix-cachyos-kernel/release";
         spicetify-nix.url = "github:Gerg-L/spicetify-nix";
-        home-manager = {
-            url = "github:nix-community/home-manager";
-            inputs.nixpkgs.follows = "nixpkgs";
-        };
     };
 
     outputs = inputs @ {flake-parts, ...}:
