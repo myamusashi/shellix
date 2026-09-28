@@ -12,6 +12,7 @@
         users.myamusashi = {
             imports = [
                 ./zen-browser.nix
+                ./fetch.nix
             ];
             home = {
                 stateVersion = "24.11";
