@@ -28,14 +28,8 @@ in {
             pkgs.maple-mono.NF
             pkgs.noto-fonts
             pkgs.weather-icons
-            (
-                pkgs.callPackage
-                ../../modules/nixos/packages/custom/switzer-font.nix {}
-            )
-            (
-                pkgs.callPackage
-                ../../modules/nixos/packages/custom/google-sans-flex.nix {}
-            )
+            (pkgs.callPackage ../../modules/nixos/packages/custom/switzer-font.nix {})
+            (pkgs.callPackage ../../modules/nixos/packages/custom/google-sans-flex.nix {})
         ];
         enableDefaultPackages = true;
         fontconfig = {
@@ -110,13 +104,15 @@ in {
             };
             installFonts = true;
         };
-        starship.enable = true;
         dconf.enable = true;
         thunderbird.enable = true;
         mtr.enable = true;
         nh = {
             enable = true;
-            clean.enable = true;
+            clean = {
+                enable = true;
+                extraArgs = "--quiet";
+            };
         };
         git = {
             enable = true;
@@ -145,7 +141,8 @@ in {
         };
         hyprland = {
             enable = true;
-            portalPackage = inputs.xdg-desktop-portal-hyprland.packages.${pkgs.stdenv.hostPlatform.system}.default;
+            portalPackage =
+                inputs.xdg-desktop-portal-hyprland.packages.${pkgs.stdenv.hostPlatform.system}.default;
         };
         ccache.enable = true;
         java = {
@@ -201,6 +198,8 @@ in {
             };
         };
     };
+
+    systemd.timers."nh-clean".timerConfig.RandomizedDelaySec = "6h";
 
     # broken ass
     # services.kmscon.enable = true;
