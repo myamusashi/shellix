@@ -56,10 +56,12 @@
             steam.enable = true;
             virt-manager.enable = false;
             wireshark.enable = false;
-            btop.enable = true;
-            fastfetch.enable = true;
             foot.enable = true;
+            btop.enable = true;
             htop.enable = true;
+            eza.enable = true;
+            zoxide.enable = true;
+            starship.enable = true;
             kitty.enable = true;
             lazygit.enable = true;
             mpv.enable = true;
