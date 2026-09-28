@@ -187,6 +187,9 @@
         };
 
         programs = {
+            eza.enable = true;
+            zoxide.enable = true;
+            starship.enable = true;
             neovim = {
                 enable = true;
 
