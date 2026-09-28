@@ -39,7 +39,6 @@ in {
             ueberzugpp
             fd
             zellij
-            eza
             ripgrep
             rich-cli
             mediainfo
@@ -51,6 +50,7 @@ in {
             jq
             codegraph
             firecrawl-mcp
+            fastfetch
             # yt-dlp
 
             ## Archive and extraction
@@ -153,7 +153,6 @@ in {
             sops
             gvfs
             wget2
-            # inputs.antigravity-flakes.packages.${stdenv.hostPlatform.system}.default
             vim
 
             # remote desktop
@@ -231,7 +230,7 @@ in {
             "text/plain" = "vim.desktop";
             "inode/directory" = "pcmanfm-qt.desktop";
             "application/x-gnome-saved-search" = "org.kde.dolphin.desktop";
-            "application/pdf" = "zen-beta.desktop";
+            "application/pdf" = "zen-twilight.desktop";
             "image/png" = "lximage-qt.desktop.in";
             "x-scheme-handler/tg" = "org.telegram.desktop.desktop";
             "image/jpeg" = "lximage-qt.desktop.in";
@@ -240,7 +239,10 @@ in {
         addedAssociations = {
             "application/vnd.openxmlformats-officedocument.wordprocessingml.document" = ["draw.desktop"];
             "application/vnd.openxmlformats-officedocument.presentationml.presentation" = ["impress.desktop"];
-            "image/png" = ["lximage-qt.desktop.in" "yazi.desktop"];
+            "image/png" = [
+                "lximage-qt.desktop.in"
+                "yazi.desktop"
+            ];
             "text/x-log" = ["vim.desktop"];
             "image/svg+xml" = ["lximage-qt.desktop.in"];
             "x-scheme-handler/tg" = ["org.telegram.desktop.desktop"];
