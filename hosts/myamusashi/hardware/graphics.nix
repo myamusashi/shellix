@@ -4,6 +4,9 @@
         enable32Bit = true;
         extraPackages = with pkgs; [
             vulkan-loader
+            libGLX
+            libGL
+            libva
             intel-media-driver
         ];
         extraPackages32 = with pkgs.pkgsi686Linux; [
