@@ -123,9 +123,7 @@
 
         shell = {
             url = "git+https://git.myamusashi.cc/myamusashi/vast-shell";
-            inputs = {
-                nixpkgs.follows = "nixpkgs";
-            };
+            inputs.nixpkgs.follows = "nixpkgs";
         };
 
         qtengine = {

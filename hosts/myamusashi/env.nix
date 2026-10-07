@@ -25,8 +25,6 @@
 in {
     environment = {
         systemPackages = with pkgs; [
-            # flutter
-            # stylua
             darkly
             greetd
 
@@ -51,7 +49,6 @@ in {
             codegraph
             firecrawl-mcp
             fastfetch
-            # yt-dlp
 
             ## Archive and extraction
             unzip
@@ -60,10 +57,6 @@ in {
             p7zip
 
             ## Qt packages
-            # kdePackages.dolphin
-            # kdePackages.ark ## Enable extract and archive for dolphin
-            # kdePackages.kwallet
-            # kdePackages.kwalletmanager
             inputs.shell.packages.${stdenv.hostPlatform.system}.default
             lxqt.pcmanfm-qt
             lxqt.pavucontrol-qt
@@ -72,9 +65,6 @@ in {
             media-downloader
             qtcreator
             inputs.myamusashi-pkgs.packages.${stdenv.hostPlatform.system}.telegram
-            # qt6.qt5compat
-            # qt6.qtgraphs
-            # kdePackages.qtcharts
 
             ## Android tools
             better-adb-sync
@@ -84,15 +74,10 @@ in {
             ## Networking
             iptables
             inetutils
-            # networkmanagerapplet
-            # bluez
-            # cloudflared
-            # iw
 
             ## Music apps
             strawberry
             (pkgs.callPackage ../../modules/nixos/packages/custom/spotiFLAC.nix {})
-            # spotify
 
             ## Wayland
             wl-clipboard
@@ -109,7 +94,6 @@ in {
             zathura
 
             ## Themes
-            # kdePackages.qtstyleplugin-kvantum
             gtk3
             gtk4
             morewaita-icon-theme
@@ -133,13 +117,14 @@ in {
             pcsx2
 
             ## Office
-            # libreoffice
             unoconv
 
             ## Apps
-            inputs.myamusashi-pkgs.packages.${stdenv.hostPlatform.system}.serenin
+            inputs.myamusashi-pkgs.packages.${stdenv.hostPlatform.system}.serein
             (wrapElectron vesktop "vesktop")
             inputs.myamusashi-pkgs.packages.${stdenv.hostPlatform.system}.zapfast
+            inputs.myamusashi-pkgs.packages.${stdenv.hostPlatform.system}.qmlformat-rs
+            inputs.myamusashi-pkgs.packages.${stdenv.hostPlatform.system}.mangaDesk
             (wrapElectron inputs.helium.packages.${stdenv.hostPlatform.system}.default "helium")
 
             ## Misc
@@ -165,7 +150,11 @@ in {
             patchelf
 
             ## Hyprland plugins
-            inputs.hypr-scroll-overview.packages.${stdenv.hostPlatform.system}.default
+            (inputs.hypr-scroll-overview.packages.${stdenv.hostPlatform.system}.default.overrideAttrs (oldAttrs: {
+                patches = [
+                    ./overview.patch
+                ];
+            }))
             inputs.hypr-dynamic-cursors.packages.${stdenv.hostPlatform.system}.hypr-dynamic-cursors
 
             ## Nix tools
@@ -175,13 +164,16 @@ in {
 
             ## LLM Model runtime
             ollama-vulkan
+
+            ## Graphics
+            libva
         ];
 
         sessionVariables = {
             # Theming (GTK removed)
             HYPRCURSOR_THEME = "Future-Cyan-Hyprcursor_Theme";
             HYPRCURSOR_SIZE = "50";
-            QS_ICON_THEME = "Papirus";
+            QS_ICON_THEME = "MoreWaita";
             QT_QPA_PLATFORMTHEME = "qtengine";
             XCURSOR_THEME = "Future-cursors";
             XCURSOR_SIZE = "35";

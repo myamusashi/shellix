@@ -98,11 +98,11 @@ in {
     programs = {
         quickshell-shell = {
             enable = true;
+            installFonts = true;
             greetd = {
                 enable = true;
                 user = "myamusashi";
             };
-            installFonts = true;
         };
         dconf.enable = true;
         thunderbird.enable = true;
