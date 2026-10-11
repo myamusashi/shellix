@@ -61,27 +61,13 @@
         '';
         firewall = {
             enable = true;
-            allowedTCPPorts = [
-                22
-                80
-                443
-            ];
-            allowedUDPPorts = [
-                22
-                51820
-            ];
-            allowedUDPPortRanges = [
-                {
-                    from = 1714;
-                    to = 1764;
-                }
-            ];
-            allowedTCPPortRanges = [
-                {
-                    from = 1714;
-                    to = 1764;
-                }
-            ];
+            interfaces."enp0s31f6" = {
+                allowedTCPPorts = [
+                    22
+                    80
+                    443
+                ];
+            };
         };
         # wg-quick.interfaces = {
         #     wg0 = {

@@ -1,7 +1,6 @@
 {pkgs-stable, ...}: {
     environment = {
         systemPackages = with pkgs-stable; [
-            eza
             bat
             vim
             pciutils
@@ -23,7 +22,6 @@
             lazysql
             nil
             nh
-            starship
             # podman-compose
             # podman
             git

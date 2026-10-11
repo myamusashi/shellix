@@ -25,8 +25,6 @@
 in {
     environment = {
         systemPackages = with pkgs; [
-            # flutter
-            # stylua
             darkly
             greetd
 
@@ -39,7 +37,6 @@ in {
             ueberzugpp
             fd
             zellij
-            eza
             ripgrep
             rich-cli
             mediainfo
@@ -51,7 +48,7 @@ in {
             jq
             codegraph
             firecrawl-mcp
-            # yt-dlp
+            fastfetch
 
             ## Archive and extraction
             unzip
@@ -60,10 +57,6 @@ in {
             p7zip
 
             ## Qt packages
-            # kdePackages.dolphin
-            # kdePackages.ark ## Enable extract and archive for dolphin
-            # kdePackages.kwallet
-            # kdePackages.kwalletmanager
             inputs.shell.packages.${stdenv.hostPlatform.system}.default
             lxqt.pcmanfm-qt
             lxqt.pavucontrol-qt
@@ -72,9 +65,6 @@ in {
             media-downloader
             qtcreator
             inputs.myamusashi-pkgs.packages.${stdenv.hostPlatform.system}.telegram
-            # qt6.qt5compat
-            # qt6.qtgraphs
-            # kdePackages.qtcharts
 
             ## Android tools
             better-adb-sync
@@ -84,15 +74,10 @@ in {
             ## Networking
             iptables
             inetutils
-            # networkmanagerapplet
-            # bluez
-            # cloudflared
-            # iw
 
             ## Music apps
             strawberry
             (pkgs.callPackage ../../modules/nixos/packages/custom/spotiFLAC.nix {})
-            # spotify
 
             ## Wayland
             wl-clipboard
@@ -109,7 +94,6 @@ in {
             zathura
 
             ## Themes
-            # kdePackages.qtstyleplugin-kvantum
             gtk3
             gtk4
             morewaita-icon-theme
@@ -133,13 +117,14 @@ in {
             pcsx2
 
             ## Office
-            # libreoffice
             unoconv
 
             ## Apps
-            inputs.myamusashi-pkgs.packages.${stdenv.hostPlatform.system}.serenin
+            inputs.myamusashi-pkgs.packages.${stdenv.hostPlatform.system}.serein
             (wrapElectron vesktop "vesktop")
             inputs.myamusashi-pkgs.packages.${stdenv.hostPlatform.system}.zapfast
+            inputs.myamusashi-pkgs.packages.${stdenv.hostPlatform.system}.qmlformat-rs
+            inputs.myamusashi-pkgs.packages.${stdenv.hostPlatform.system}.mangaDesk
             (wrapElectron inputs.helium.packages.${stdenv.hostPlatform.system}.default "helium")
 
             ## Misc
@@ -153,7 +138,6 @@ in {
             sops
             gvfs
             wget2
-            # inputs.antigravity-flakes.packages.${stdenv.hostPlatform.system}.default
             vim
 
             # remote desktop
@@ -166,7 +150,11 @@ in {
             patchelf
 
             ## Hyprland plugins
-            inputs.hypr-scroll-overview.packages.${stdenv.hostPlatform.system}.default
+            (inputs.hypr-scroll-overview.packages.${stdenv.hostPlatform.system}.default.overrideAttrs (oldAttrs: {
+                patches = [
+                    ./overview.patch
+                ];
+            }))
             inputs.hypr-dynamic-cursors.packages.${stdenv.hostPlatform.system}.hypr-dynamic-cursors
 
             ## Nix tools
@@ -176,16 +164,23 @@ in {
 
             ## LLM Model runtime
             ollama-vulkan
+
+            ## Graphics
+            libva
         ];
 
         sessionVariables = {
             # Theming (GTK removed)
             HYPRCURSOR_THEME = "Future-Cyan-Hyprcursor_Theme";
             HYPRCURSOR_SIZE = "50";
-            QS_ICON_THEME = "Papirus";
+            QS_ICON_THEME = "MoreWaita";
             QT_QPA_PLATFORMTHEME = "qtengine";
             XCURSOR_THEME = "Future-cursors";
             XCURSOR_SIZE = "35";
+
+            # Qt env
+            QT_MEDIA_BACKEND = "ffmpeg";
+            QT_FFMPEG_DECODING_HW_DEVICE_TYPES = "vaapi";
 
             # Wayland and Graphics
             QT_QPA_PLATFORM = "wayland";
@@ -231,7 +226,7 @@ in {
             "text/plain" = "vim.desktop";
             "inode/directory" = "pcmanfm-qt.desktop";
             "application/x-gnome-saved-search" = "org.kde.dolphin.desktop";
-            "application/pdf" = "zen-beta.desktop";
+            "application/pdf" = "zen-twilight.desktop";
             "image/png" = "lximage-qt.desktop.in";
             "x-scheme-handler/tg" = "org.telegram.desktop.desktop";
             "image/jpeg" = "lximage-qt.desktop.in";
@@ -240,7 +235,10 @@ in {
         addedAssociations = {
             "application/vnd.openxmlformats-officedocument.wordprocessingml.document" = ["draw.desktop"];
             "application/vnd.openxmlformats-officedocument.presentationml.presentation" = ["impress.desktop"];
-            "image/png" = ["lximage-qt.desktop.in" "yazi.desktop"];
+            "image/png" = [
+                "lximage-qt.desktop.in"
+                "yazi.desktop"
+            ];
             "text/x-log" = ["vim.desktop"];
             "image/svg+xml" = ["lximage-qt.desktop.in"];
             "x-scheme-handler/tg" = ["org.telegram.desktop.desktop"];

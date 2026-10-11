@@ -1,5 +1,6 @@
 {
     services = {
+        openssh.openFirewall = false;
         power-profiles-daemon.enable = false;
         davfs2.enable = true;
         fprintd.enable = false;
@@ -10,32 +11,27 @@
 
         udev.extraRules = ''
             ACTION=="add|change", KERNEL=="sd[a-z]*", ATTR{queue/scheduler}="mq-deadline"
+
+            KERNEL=="uhid", SUBSYSTEM=="misc", OPTIONS+="static_node=uhid", TAG+="uaccess", GROUP="input", MODE="0660"
         '';
 
         tlp = {
             enable = true;
             settings = {
-                CPU_SCALING_GOVERNOR_ON_AC = "schedutil";
-                CPU_SCALING_GOVERNOR_ON_BAT = "schedutil";
+                CPU_SCALING_DRIVER_ON_AC = "intel_pstate";
+                CPU_SCALING_DRIVER_ON_BAT = "intel_pstate";
 
                 CPU_ENERGY_PERF_POLICY_ON_AC = "performance";
-                CPU_ENERGY_PERF_POLICY_ON_BAT = "performance";
-
-                CPU_MIN_PERF_ON_AC = 0;
-                CPU_MAX_PERF_ON_AC = 100;
-                CPU_MIN_PERF_ON_BAT = 0;
-                CPU_MAX_PERF_ON_BAT = 30;
+                CPU_ENERGY_PERF_POLICY_ON_BAT = "power";
 
                 CPU_BOOST_ON_AC = 1;
                 CPU_BOOST_ON_BAT = 0;
-                CPU_HWP_DYN_BOOST_ON_AC = 1;
-                CPU_HWP_DYN_BOOST_ON_BAT = 0;
 
                 PLATFORM_PROFILE_ON_AC = "performance";
-                PLATFORM_PROFILE_ON_BAT = "performance";
+                PLATFORM_PROFILE_ON_BAT = "powersave";
 
                 PCIE_ASPM_ON_AC = "performance";
-                PCIE_ASPM_ON_BAT = "performance";
+                PCIE_ASPM_ON_BAT = "default";
 
                 RUNTIME_PM_ON_AC = "on";
                 RUNTIME_PM_ON_BAT = "auto";
@@ -46,6 +42,11 @@
                 SOUND_POWER_SAVE_ON_AC = 0;
                 SOUND_POWER_SAVE_ON_BAT = 1;
                 USB_AUTOSUSPEND = 0;
+
+                START_CHARGE_THRESH_BAT0 = 80;
+                STOP_CHARGE_THRESH_BAT0 = 80;
+                START_CHARGE_THRESH_BAT1 = 75;
+                STOP_CHARGE_THRESH_BAT1 = 75;
             };
         };
 

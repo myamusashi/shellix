@@ -1,5 +1,7 @@
 source ($nu.cache-dir | path join "carapace.nu")
 
+source ~/.config/nushell/zoxide.nu
+
 alias ls = eza --icons always
 alias lla = eza -a --icons always
 
@@ -330,13 +332,6 @@ $env.config.keybindings = ($env.config.keybindings? | default [] | append [
         }
     }
 ])
-
-# --- starship ---
-
-if (which starship | is-not-empty) {
-    mkdir ($nu.data-dir | path join "vendor/autoload")
-    ^starship init nu | save -f ($nu.data-dir | path join "vendor/autoload/starship.nu")
-}
 
 # --- direnv ---
 

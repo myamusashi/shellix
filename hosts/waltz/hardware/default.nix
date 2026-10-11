@@ -72,5 +72,5 @@
         ];
     };
 
-    fileSystems."/".options = [ "noatime" ];
+    fileSystems."/".options = ["noatime"];
 }

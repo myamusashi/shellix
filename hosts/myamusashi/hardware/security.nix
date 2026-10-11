@@ -20,5 +20,8 @@
             password  substack      login
             session   include       login
         '';
+        apparmor.enable = true;
     };
+
+    services.fwupd.enable = true;
 }

@@ -4,6 +4,17 @@ final: prev: {
         doCheck = false;
     });
 
+    fastfetch-unwrapped = prev.fastfetch-unwrapped.overrideAttrs (oldAttrs: rec {
+        version = "2.69.0";
+
+        src = final.fetchFromGitHub {
+            owner = "fastfetch-cli";
+            repo = "fastfetch";
+            tag = version;
+            hash = "sha256-osfQZEP6t3TdwlO+0agD8fU2z1UECJWLF+WPovwEk64=";
+        };
+    });
+
     stylua = prev.stylua.overrideAttrs (oldAttrs: rec {
         version = "2.5.2";
 
