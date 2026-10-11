@@ -11,6 +11,8 @@
 
         udev.extraRules = ''
             ACTION=="add|change", KERNEL=="sd[a-z]*", ATTR{queue/scheduler}="mq-deadline"
+
+            KERNEL=="uhid", SUBSYSTEM=="misc", OPTIONS+="static_node=uhid", TAG+="uaccess", GROUP="input", MODE="0660"
         '';
 
         tlp = {
