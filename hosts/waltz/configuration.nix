@@ -156,7 +156,9 @@
             };
         };
         services = {
-            earlyoom.enable = false;
+            # 2 GB box: kill the biggest hog early instead of letting the kernel
+            # OOM killer pick a service. systemd-oomd/ananicy stay off here.
+            earlyoom.enable = true;
             backup.waltz.enable = true;
             resolver.enable = true;
             forgejo-runner = {
@@ -233,6 +235,11 @@
     security.acme.defaults.email = "security@myamusashi.cc";
 
     boot.kernel.sysctl."net.ipv4.ip_forward" = lib.mkForce 1;
+
+    # nixpkgs enables systemd-oomd by default. earlyoom is the right killer for this
+    # box; oomd would otherwise sit alongside it judging swap pressure and killing
+    # real services. myamusashi keeps the desktop defaults via shellix.services.oom.
+    systemd.oomd.enable = lib.mkForce false;
     networking.nftables = {
         enable = true;
         ruleset = ''
@@ -257,7 +264,11 @@
             defaultWindowManager = "startlxqt";
             # audio.enable = true; # requires PulseAudio on waltz; enable if you use PulseAudio instead of PipeWire
         };
-        openssh.enable = true;
+        openssh = {
+            enable = true;
+            # port 22 is opened per-interface in the firewall block below.
+            openFirewall = false;
+        };
         xserver = {
             enable = false;
             desktopManager.lxqt.enable = false;
@@ -368,42 +379,98 @@
         };
         firewall = {
             enable = true;
-            allowedTCPPorts = [
-                20
-                21
-                22
-                25
-                53
-                80
-                443
-                465
-                587
-                993
-                2408
-                3306
-                5432
-                3001
-                3002
-                9200
-                6764
-                6753
-                7597
-                7916
-                8080
-                8131
-                8787
-                20128
-            ];
-            allowedUDPPorts = [
-                53
-                67
-                68
-                5353
-                5432
-                3001
-                3002
-                51820
-            ];
+            # pihole (53 + its web port), wireguard (53 + 51820) and cloudflare-warp (2408)
+            # each open ports globally, which would re-open the hotspot. Everything they
+            # need is already listed per-interface below.
+            allowedTCPPorts = lib.mkForce [];
+            allowedUDPPorts = lib.mkForce [];
+            # Hotspot clients get DHCP + DNS only. Every database and app port is
+            # scoped to the LAN and the WireGuard interface, so joining the AP no
+            # longer exposes MariaDB/Postgres/vaultwarden to the world.
+            interfaces = {
+                wlp2s0 = {
+                    allowedTCPPorts = [53];
+                    allowedUDPPorts = [
+                        53
+                        67
+                        68
+                    ];
+                };
+                enp1s0 = {
+                    allowedTCPPorts = [
+                        20
+                        21
+                        22
+                        25
+                        53
+                        80
+                        443
+                        465
+                        587
+                        993
+                        2408
+                        3306
+                        5432
+                        3001
+                        3002
+                        9200
+                        6764
+                        6753
+                        7597
+                        7916
+                        8080
+                        8131
+                        8787
+                        20128
+                    ];
+                    allowedUDPPorts = [
+                        53
+                        67
+                        68
+                        5353
+                        5432
+                        3001
+                        3002
+                        51820
+                    ];
+                };
+                wg0 = {
+                    allowedTCPPorts = [
+                        20
+                        21
+                        22
+                        25
+                        53
+                        80
+                        443
+                        465
+                        587
+                        993
+                        2408
+                        3306
+                        5432
+                        3001
+                        3002
+                        9200
+                        6764
+                        6753
+                        7597
+                        7916
+                        8080
+                        8131
+                        8787
+                        20128
+                    ];
+                    # no DHCP across the tunnel
+                    allowedUDPPorts = [
+                        53
+                        5353
+                        5432
+                        3001
+                        3002
+                    ];
+                };
+            };
         };
     };
 

@@ -9,6 +9,19 @@
         };
         kernelPackages = pkgs-stable.cachyosKernels.linuxPackages-cachyos-server;
         supportedFilesystems = ["ntfs"];
+
+        # 2 GB of RAM hosting ocis + mariadb + forgejo (and 4 runners) + pi-hole +
+        # vaultwarden + vsftpd + podman. Compressed RAM sits above the disk swap
+        # partition so the N3350 spends its 6 W on CPU instead of swap I/O.
+        kernel.sysctl."vm.swappiness" = 180;
+    };
+
+    zramSwap = {
+        enable = true;
+        priority = 100; # outranks the swap partition in hardware-configuration.nix
+        algorithm = "lz4"; # cheapest decompression, which matters on a 6 W dual-core
+        memoryPercent = 50; # 1 GiB of 2 GiB, the rest is left for page cache
+        memoryMax = 1073741824;
     };
 
     hardware.graphics = {
@@ -64,11 +77,13 @@
 
     fileSystems."/opt/backup" = {
         device = "/home/waltz/external";
+        depends = [
+            "/home/waltz/external"
+        ];
         fsType = "none";
         options = [
             "bind"
             "nofail"
-            "x-systemd.requires-mounts-for=/home/waltz/external"
         ];
     };
 
