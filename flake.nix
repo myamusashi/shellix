@@ -116,11 +116,6 @@
             };
         };
 
-        kwin-effects-forceblur = {
-            url = "github:taj-ny/kwin-effects-forceblur";
-            inputs.nixpkgs.follows = "nixpkgs";
-        };
-
         shell = {
             url = "git+https://git.myamusashi.cc/myamusashi/vast-shell";
             inputs.nixpkgs.follows = "nixpkgs";
@@ -138,11 +133,6 @@
 
         yazi-plugins-flakes = {
             url = "git+https://git.myamusashi.cc/myamusashi/yazi_plugins-flake.git";
-            inputs.nixpkgs.follows = "nixpkgs";
-        };
-
-        aerothemeplasma-nix = {
-            url = "github:nyakase/aerothemeplasma-nix";
             inputs.nixpkgs.follows = "nixpkgs";
         };
 
