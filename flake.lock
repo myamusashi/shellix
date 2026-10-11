@@ -5699,11 +5699,11 @@
         "wl-screenrec-fork": "wl-screenrec-fork_2"
       },
       "locked": {
-        "lastModified": 1791690021,
-        "narHash": "sha256-jfQWt7b4mDEVBiMFvcQj3HnXON9IPYjlIm3I5SbiGOU=",
+        "lastModified": 1791755678,
+        "narHash": "sha256-0xtbRt/HdH/VfQWuNylkpGSfXn/IL+cFVJV+6HrYFIo=",
         "ref": "refs/heads/master",
-        "rev": "d52efd7587cc391092839ec8f0b1d0665dd42277",
-        "revCount": 1713,
+        "rev": "fc228f640ea516b0d0677bcc62fb5718a144a1ba",
+        "revCount": 1714,
         "type": "git",
         "url": "https://git.myamusashi.cc/myamusashi/vast-shell"
       },
