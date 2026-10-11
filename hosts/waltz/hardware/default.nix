@@ -63,9 +63,7 @@
     };
 
     fileSystems."/opt/backup" = {
-        depends = [
-            "/home/waltz/external"
-        ];
+        device = "/home/waltz/external";
         fsType = "none";
         options = [
             "bind"
