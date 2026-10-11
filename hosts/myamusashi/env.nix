@@ -178,6 +178,10 @@ in {
             XCURSOR_THEME = "Future-cursors";
             XCURSOR_SIZE = "35";
 
+            # Qt env
+            QT_MEDIA_BACKEND = "ffmpeg";
+            QT_FFMPEG_DECODING_HW_DEVICE_TYPES = "vaapi";
+
             # Wayland and Graphics
             QT_QPA_PLATFORM = "wayland";
             SDL_VIDEODRIVER = "wayland";
