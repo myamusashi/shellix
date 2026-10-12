@@ -1,6 +1,7 @@
 {
     config,
     lib,
+    pkgs,
     pkgs-stable,
     ...
 }: let
@@ -136,7 +137,7 @@ in {
                     "/tmp/pg_db-dump"
                 ];
                 preHook = ''
-                    ${pkgs-stable.sudo}/bin/sudo -u postgres ${pkgs-stable.postgresql}/bin/pg_dumpall > /tmp/pg_db-dump
+                    ${pkgs.sudo}/bin/sudo -u postgres ${pkgs-stable.postgresql}/bin/pg_dumpall > /tmp/pg_db-dump
                 '';
             };
         };
