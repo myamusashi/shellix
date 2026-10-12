@@ -69,19 +69,21 @@
                 ];
             };
         };
-        # wg-quick.interfaces = {
-        #     wg0 = {
-        #         address = ["10.88.0.3/32"];
-        #         dns = ["10.88.0.1"];
-        #         privateKeyFile = "/etc/wireguard-keys/private.key";
-        #         peers = [
-        #             {
-        #                 publicKey = "IzirsljupeFXLusg6CooDzjSfc/xGVehBuJetADkaEU=";
-        #                 allowedIPs = ["0.0.0.0/0"];
-        #                 endpoint = "192.168.18.14:51820"; # LAN; TODO: public IP/DDNS for roaming
-        #             }
-        #         ];
-        #     };
-        # };
+        wg-quick.interfaces = {
+            wg0 = {
+                address = ["10.88.0.3/32"];
+                # Pi-hole BIND mode on waltz binds 192.168.18.14:53 but never
+                # 10.88.0.1:53 (dns.interface takes one iface only, wg0 skipped).
+                dns = ["192.168.18.14"];
+                privateKeyFile = "/etc/wireguard-keys/private.key";
+                peers = [
+                    {
+                        publicKey = "IzirsljupeFXLusg6CooDzjSfc/xGVehBuJetADkaEU=";
+                        allowedIPs = ["0.0.0.0/0"];
+                        endpoint = "192.168.18.14:51820"; # LAN; TODO: public IP/DDNS for roaming
+                    }
+                ];
+            };
+        };
     };
 }
