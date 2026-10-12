@@ -47,7 +47,10 @@
                 enable = true;
                 ingress = {
                     "git.myamusashi.cc" = "unix:/run/forgejo/forgejo.sock";
-                    "vault.myamusashi.cc" = "http://127.0.0.1:${toString config.shellix.variables.port.VAULTWARDEN}";
+                    # Via local nginx so the hardened vault vhost (proxy headers,
+                    # 525M body limit, long sync timeouts, websockets) actually
+                    # applies: cloudflared preserves Host, nginx matches the vhost.
+                    "vault.myamusashi.cc" = "http://127.0.0.1:80";
                     "cloud.myamusashi.cc" = "https://localhost:${toString config.shellix.variables.port.OCIS}";
                     "ssh.myamusashi.cc" = "ssh://localhost:22";
                     "router.myamusashi.cc" = "http://127.0.0.1:${toString config.shellix.variables.port.NINEROUTER}";
@@ -298,7 +301,6 @@
             enable = true;
             autologinUser = "waltz";
         };
-        vaultwarden.config.ROCKET_PORT = lib.mkForce config.shellix.variables.port.VAULTWARDEN;
         forgejo.settings.server.HTTP_PORT = lib.mkForce config.shellix.variables.port.FORGEJO;
         prometheus = {
             port = lib.mkForce config.shellix.variables.port.PROMETHEUS;
