@@ -68,6 +68,7 @@
                     443
                 ];
             };
+            interfaces."wlp3s0" = {};
         };
         wg-quick.interfaces = {
             wg0 = {

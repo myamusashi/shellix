@@ -58,6 +58,7 @@ in {
 
             ## Qt packages
             inputs.shell.packages.${stdenv.hostPlatform.system}.default
+            qt6.qtsvg
             lxqt.pcmanfm-qt
             lxqt.pavucontrol-qt
             lxqt.lxqt-archiver
@@ -120,11 +121,13 @@ in {
             unoconv
 
             ## Apps
+            inputs.myamusashi-pkgs.packages.${stdenv.hostPlatform.system}.wordcraft
             inputs.myamusashi-pkgs.packages.${stdenv.hostPlatform.system}.serein
-            (wrapElectron vesktop "vesktop")
             inputs.myamusashi-pkgs.packages.${stdenv.hostPlatform.system}.zapfast
             inputs.myamusashi-pkgs.packages.${stdenv.hostPlatform.system}.qmlformat-rs
             inputs.myamusashi-pkgs.packages.${stdenv.hostPlatform.system}.mangaDesk
+            (wrapElectron vesktop "vesktop")
+            opencode
             (wrapElectron inputs.helium.packages.${stdenv.hostPlatform.system}.default "helium")
 
             ## Misc
