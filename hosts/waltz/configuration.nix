@@ -381,6 +381,7 @@
         };
         firewall = {
             enable = true;
+            trustedInterfaces = ["wg0"];
             # pihole (53 + its web port), wireguard (53 + 51820) and cloudflare-warp (2408)
             # each open ports globally, which would re-open the hotspot. Everything they
             # need is already listed per-interface below.
