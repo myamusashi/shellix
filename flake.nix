@@ -5,6 +5,11 @@
         flake-parts.url = "github:hercules-ci/flake-parts";
         myamusashi-pkgs.url = "github:myamusashi/nix-myamusashi-packages";
 
+        lightauth = {
+            url = "git+https://git.myamusashi.cc/myamusashi/lightauth";
+            inputs.nixpkgs.follows = "nixpkgs";
+        };
+
         home-manager = {
             url = "github:nix-community/home-manager";
             inputs.nixpkgs.follows = "nixpkgs";
@@ -136,10 +141,10 @@
             inputs.nixpkgs.follows = "nixpkgs";
         };
 
-        sesame = {
-            url = "git+https://git.myamusashi.cc/myamusashi/sesame.git";
-            inputs.nixpkgs.follows = "nixpkgs";
-        };
+        # sesame = {
+        #     url = "git+https://git.myamusashi.cc/myamusashi/sesame.git";
+        #     inputs.nixpkgs.follows = "nixpkgs";
+        # };
 
         areofyl-fetch.url = "github:areofyl/fetch";
         apple-fonts.url = "github:Lyndeno/apple-fonts.nix";

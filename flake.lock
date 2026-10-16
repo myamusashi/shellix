@@ -638,24 +638,6 @@
         "type": "github"
       }
     },
-    "flake-parts_10": {
-      "inputs": {
-        "nixpkgs-lib": "nixpkgs-lib_5"
-      },
-      "locked": {
-        "lastModified": 1782949081,
-        "narHash": "sha256-vp6Y/Grm98ESt6ceOkWiHWyZRDV3J1RID4w+6NWK9yA=",
-        "owner": "hercules-ci",
-        "repo": "flake-parts",
-        "rev": "17c9d6cdfc60c64f4ee8d306f9bc0b4ccb51481e",
-        "type": "github"
-      },
-      "original": {
-        "owner": "hercules-ci",
-        "repo": "flake-parts",
-        "type": "github"
-      }
-    },
     "flake-parts_2": {
       "inputs": {
         "nixpkgs-lib": [
@@ -901,11 +883,11 @@
         "utils": "utils"
       },
       "locked": {
-        "lastModified": 1791504781,
-        "narHash": "sha256-8COkvlZ0G3FcCZBFd6/SfZ+cXKDAlAp92nY/fjkwLUA=",
+        "lastModified": 1792042389,
+        "narHash": "sha256-YwLg00uiWmmnjoGkeNbOOvYv2Fhfn3I/6O+Rs6NEsgw=",
         "ref": "refs/heads/master",
-        "rev": "6e734b95437d1f22c5820fe153ccaad4bebbbfeb",
-        "revCount": 51,
+        "rev": "d83d6cf890327ead0f9ab7838cd1e16ae0bf7110",
+        "revCount": 52,
         "type": "git",
         "url": "https://git.myamusashi.cc/myamusashi/helium-flakes.git"
       },
@@ -985,11 +967,11 @@
         "nixpkgs": "nixpkgs_4"
       },
       "locked": {
-        "lastModified": 1789346277,
-        "narHash": "sha256-2TzMdMGobmWPTeRS4Z305/cjlvHPsyN+rLEF86NsZQg=",
+        "lastModified": 1792026012,
+        "narHash": "sha256-Ptp8MhrPKovr19z4jGqls1DMD4DFM8eMMoXQS4J8gLs=",
         "owner": "yayuuu",
         "repo": "hyprland-scroll-overview",
-        "rev": "f08c5f7de06c1165952cc1c5318cf6f5c87140ff",
+        "rev": "9a658551a962dd788017734bfb8b37c80d11d522",
         "type": "github"
       },
       "original": {
@@ -4848,6 +4830,47 @@
         "type": "github"
       }
     },
+    "lightauth": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1792069360,
+        "narHash": "sha256-I+7rrqFly2Z+D9rBumlzt/ZVM+0I4frpVQseWqJ7Bn4=",
+        "ref": "refs/heads/master",
+        "rev": "1e34e9d9dd7b8c66d074dfa8abeb19ff59020091",
+        "revCount": 28,
+        "type": "git",
+        "url": "https://git.myamusashi.cc/myamusashi/lightauth"
+      },
+      "original": {
+        "type": "git",
+        "url": "https://git.myamusashi.cc/myamusashi/lightauth"
+      }
+    },
+    "lightauth_2": {
+      "inputs": {
+        "nixpkgs": [
+          "myamusashi-pkgs",
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1792069360,
+        "narHash": "sha256-I+7rrqFly2Z+D9rBumlzt/ZVM+0I4frpVQseWqJ7Bn4=",
+        "ref": "refs/heads/master",
+        "rev": "1e34e9d9dd7b8c66d074dfa8abeb19ff59020091",
+        "revCount": 28,
+        "type": "git",
+        "url": "https://git.myamusashi.cc/myamusashi/lightauth"
+      },
+      "original": {
+        "type": "git",
+        "url": "https://git.myamusashi.cc/myamusashi/lightauth"
+      }
+    },
     "m3Shapes": {
       "inputs": {
         "nixpkgs": [
@@ -4913,6 +4936,7 @@
         "hyprwayland-scanner": "hyprwayland-scanner_22",
         "hyprwire": "hyprwire_4",
         "kwin-effects-forceblur": "kwin-effects-forceblur",
+        "lightauth": "lightauth_2",
         "mangaDesk": "mangaDesk",
         "neovim-nightly-overlay": "neovim-nightly-overlay",
         "nixpkgs": "nixpkgs_5",
@@ -4925,11 +4949,11 @@
         "zapfast": "zapfast"
       },
       "locked": {
-        "lastModified": 1792021752,
-        "narHash": "sha256-q0lNT7hlojF5A0M6kGVaveK2zZk5qFkq22arE+U/C8c=",
+        "lastModified": 1792069640,
+        "narHash": "sha256-m/pO0qgkDEim0IKxZOtWlStbobnbGYLOI0KDkpX4lLU=",
         "owner": "myamusashi",
         "repo": "nix-myamusashi-packages",
-        "rev": "54b566081174c0e8d82377b9b5e11170e45b327c",
+        "rev": "40b665c01b00c81efa831dcd0fabda64fdedbe01",
         "type": "github"
       },
       "original": {
@@ -5104,21 +5128,6 @@
         "owner": "nix-community",
         "repo": "nixpkgs.lib",
         "rev": "596e2e3940e09b2abbeb03f75fa1828c57fcd72c",
-        "type": "github"
-      },
-      "original": {
-        "owner": "nix-community",
-        "repo": "nixpkgs.lib",
-        "type": "github"
-      }
-    },
-    "nixpkgs-lib_5": {
-      "locked": {
-        "lastModified": 1782614948,
-        "narHash": "sha256-ePjCwr1sNm9NYUqywL7QfK3JnlS015msC+eBu2zKlp8=",
-        "owner": "nix-community",
-        "repo": "nixpkgs.lib",
-        "rev": "db3f255737b94216eb71cce308e2912cf6bc2d7c",
         "type": "github"
       },
       "original": {
@@ -5502,12 +5511,12 @@
         "hyprutils": "hyprutils_13",
         "hyprwayland-scanner": "hyprwayland-scanner_10",
         "hyprwire": "hyprwire_2",
+        "lightauth": "lightauth",
         "myamusashi-pkgs": "myamusashi-pkgs",
         "nix-cachyos-kernel": "nix-cachyos-kernel",
         "nixpkgs": "nixpkgs_7",
         "nixpkgs-stable": "nixpkgs-stable",
         "qtengine": "qtengine",
-        "sesame": "sesame",
         "shell": "shell",
         "sops-nix": "sops-nix",
         "spicetify-nix": "spicetify-nix",
@@ -5580,27 +5589,6 @@
         "owner": "ViceVerse-cz",
         "repo": "Serein",
         "type": "github"
-      }
-    },
-    "sesame": {
-      "inputs": {
-        "flake-parts": "flake-parts_10",
-        "nixpkgs": [
-          "nixpkgs"
-        ]
-      },
-      "locked": {
-        "lastModified": 1785329104,
-        "narHash": "sha256-Jv448tZcCOf+vMGyU5AeGDCLI73h3Vb2+cvtMBC+eqY=",
-        "ref": "refs/heads/master",
-        "rev": "4e70d325243a2f75dc9d6458f6afd0a38366fc82",
-        "revCount": 29,
-        "type": "git",
-        "url": "https://git.myamusashi.cc/myamusashi/sesame.git"
-      },
-      "original": {
-        "type": "git",
-        "url": "https://git.myamusashi.cc/myamusashi/sesame.git"
       }
     },
     "sf-arabic": {
@@ -5699,11 +5687,11 @@
         "wl-screenrec-fork": "wl-screenrec-fork_2"
       },
       "locked": {
-        "lastModified": 1792019663,
-        "narHash": "sha256-mtyHYiO8LvFiSgsghIhZjFURn1kSWGMcSGAiZYuwvNg=",
+        "lastModified": 1792145640,
+        "narHash": "sha256-F8JKaVaDRPJUvWZ6CSj8GHdYVlsbbYSXpsYJOo2COdY=",
         "ref": "refs/heads/master",
-        "rev": "73fa522e11eb0dd30bd2f792aa1017f581d99d1a",
-        "revCount": 1728,
+        "rev": "a7286be83ba4e3421e5eb8da87e9baeb07e7afc1",
+        "revCount": 1731,
         "type": "git",
         "url": "https://git.myamusashi.cc/myamusashi/vast-shell"
       },
