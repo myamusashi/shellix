@@ -17,6 +17,7 @@ in {
         inputs.shell.nixosModules.default
         inputs.qtengine.nixosModules.default
         inputs.hyprland.nixosModules.default
+        inputs.lightauth.nixosModules.lightauth
         # inputs.sesame.nixosModules.default
     ];
 
@@ -58,6 +59,7 @@ in {
             github_token.owner = config.users.users.myamusashi.name;
             firecrawl_api.owner = config.users.users.myamusashi.name;
             commandcode_api.owner = config.users.users.myamusashi.name;
+            lightauth_configs.owner = config.users.users.myamusashi.name;
             myamusashi-password = {
                 neededForUsers = true;
                 owner = config.users.users.myamusashi.name;
@@ -87,6 +89,11 @@ in {
         mysql = {
             enable = true;
             package = pkgs.mariadb;
+        };
+        lightauth = {
+            enable = true;
+            package = inputs.myamusashi-pkgs.packages.${pkgs.stdenv.hostPlatform.system}.lightauth;
+            configFile = config.sops.secrets.lightauth_configs.path;
         };
     };
 

@@ -11,6 +11,10 @@
             user1-mail.mode = "0440";
             ocis_secrets_password.mode = "0440";
 
+            lightauth_configs = {
+                path = "/home/myamusashi/.config/sops-nix/secrets/lightauth_configs";
+            };
+
             github_token = {
                 path = "/home/myamusashi/.config/sops-nix/secrets/github_token";
             };
