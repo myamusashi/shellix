@@ -126,6 +126,7 @@ in {
             inputs.myamusashi-pkgs.packages.${stdenv.hostPlatform.system}.zapfast
             inputs.myamusashi-pkgs.packages.${stdenv.hostPlatform.system}.qmlformat-rs
             inputs.myamusashi-pkgs.packages.${stdenv.hostPlatform.system}.mangaDesk
+            inputs.myamusashi-pkgs.packages.${stdenv.hostPlatform.system}.lightauth
             (wrapElectron vesktop "vesktop")
             opencode
             (wrapElectron inputs.helium.packages.${stdenv.hostPlatform.system}.default "helium")
@@ -153,11 +154,7 @@ in {
             patchelf
 
             ## Hyprland plugins
-            (inputs.hypr-scroll-overview.packages.${stdenv.hostPlatform.system}.default.overrideAttrs (oldAttrs: {
-                patches = [
-                    ./overview.patch
-                ];
-            }))
+            inputs.hypr-scroll-overview.packages.${stdenv.hostPlatform.system}.default
             inputs.hypr-dynamic-cursors.packages.${stdenv.hostPlatform.system}.hypr-dynamic-cursors
 
             ## Nix tools
