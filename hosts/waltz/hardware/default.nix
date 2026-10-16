@@ -63,29 +63,31 @@
         };
     };
 
-    fileSystems."/home/waltz/external" = {
-        device = "/dev/disk/by-label/BACKUP";
-        fsType = "ntfs";
-        options = [
-            "noatime"
-            "nofail"
-            "rw"
-            "uid=1000"
-            "gid=100"
-        ];
-    };
+    fileSystems = {
+        "/home/waltz/external" = {
+            device = "/dev/disk/by-label/BACKUP";
+            fsType = "ntfs";
+            options = [
+                "noatime"
+                "nofail"
+                "rw"
+                "uid=1000"
+                "gid=100"
+            ];
+        };
 
-    fileSystems."/opt/backup" = {
-        device = "/home/waltz/external";
-        depends = [
-            "/home/waltz/external"
-        ];
-        fsType = "none";
-        options = [
-            "bind"
-            "nofail"
-        ];
-    };
+        "/opt/backup" = {
+            device = "/home/waltz/external";
+            depends = [
+                "/home/waltz/external"
+            ];
+            fsType = "none";
+            options = [
+                "bind"
+                "nofail"
+            ];
+        };
 
-    fileSystems."/".options = ["noatime"];
+        "/".options = ["noatime"];
+    };
 }

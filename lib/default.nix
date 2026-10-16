@@ -18,11 +18,9 @@
     ];
 in rec {
     supportedSystems = ["x86_64-linux" "aarch64-linux"];
-
     forAllSystems = lib.genAttrs supportedSystems;
 
     shellix-lib = import ./modules.nix {inherit lib;};
-
     shellix-pkgs = system: import ./pkgs.nix {pkgs = mkPkgs {inherit system;};};
 
     mkPkgs = {
@@ -63,10 +61,9 @@ in rec {
         inputs.nixpkgs.lib.nixosSystem {
             inherit system;
             specialArgs = {
-                inherit inputs;
+                inherit inputs shellix-lib;
                 pkgs-stable = mkPkgsStable {inherit system;};
                 pkgs-unstable = mkPkgs {inherit system;};
-                shellix-lib = shellix-lib;
                 shellix-pkgs = shellix-pkgs system;
             };
             modules =

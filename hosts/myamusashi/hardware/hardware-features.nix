@@ -1,4 +1,4 @@
-{...}: {
+{
     hardware = {
         sensor.iio.enable = true;
         i2c.enable = true;

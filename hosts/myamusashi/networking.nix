@@ -1,4 +1,4 @@
-{...}: {
+{
     networking = {
         enableIPv6 = true;
         hostName = "nixos";

@@ -24,7 +24,7 @@
         if enableX11
         then "${pname}-x11"
         else pname;
-in (
+in
     assert lib.assertMsg (
         stdenv.hostPlatform.isLinux -> (lib.xor enableX11 enableWayland)
     ) "Exactly one of enableWayland, enableX11 must be true";
@@ -58,4 +58,3 @@ in (
                 maintainers = [lib.maintainers.savedra1];
             };
         }
-)
