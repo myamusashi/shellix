@@ -35,7 +35,7 @@ NixOS flake-based dotfiles managing two machines.
 | **Security** | sops-nix + age, PAM greetd, GPG+SSH agent |
 | **Backup** | Borg to waltz via WireGuard (weekly, encrypted, pruned) |
 | **Services** | networkmanager, systemd-resolved, OpenSSH, Cloudflare WARP, nginx, MySQL (MariaDB) |
-| **Programs** | fish, neovim (nightly), yazi, steam, kitty, vscode, spicetify, fastfetch, matugen, etc. |
+| **Programs** | fish, neovim (nightly), yazi, steam, kitty, vscode, spicetify, fastfetch, color-templates, etc. |
 
 ### waltz (server)
 
@@ -103,7 +103,7 @@ NixOS flake-based dotfiles managing two machines.
 │           └── hardware-configuration.nix
 ├── modules/
 │   ├── nixos/
-│   │   ├── programs/      # fish, neovim, steam, kitty, yazi, matugen, etc.
+│   │   ├── programs/      # fish, neovim, steam, kitty, yazi, color-templates, etc.
 │   │   ├── services/      # audio, mpd, hypridle, display-manager, borg, etc.
 │   │   └── packages/custom/ # Custom package derivations (orchis, nordic, etc.)
 │   └── server/            # forgejo, ocis, vaultwarden, nginx, wireguard
@@ -128,4 +128,4 @@ NixOS flake-based dotfiles managing two machines.
 - Full Hyprland ecosystem (hyprland, hyprlock, hypridle, hyprpicker, hyprsunset, etc.)
 - Hyprland plugins: hy3, hypr-dynamic-cursors, hypr-scroll-overview, Hyprspace
 - Custom shells: vast-shell (Quickshell-based), vast-greeter
-- Services: sops-nix, nix-cachyos-kernel, spicetify-nix, matugen, zen-browser, apple-fonts, helium, and more
+- Services: sops-nix, nix-cachyos-kernel, spicetify-nix, color-templates, zen-browser, apple-fonts, helium, and more

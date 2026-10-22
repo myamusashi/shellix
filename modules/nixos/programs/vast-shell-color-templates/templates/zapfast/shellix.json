@@ -1,0 +1,26 @@
+{
+    "base": "dark",
+    "colors": {
+        "window": "{{colors.background.hex}}",
+        "panel": "{{colors.surface_container_low.hex}}",
+        "surface": "{{colors.surface_container.hex}}",
+        "surface_hover": "{{colors.surface_container_high.hex}}",
+        "surface_active": "{{colors.surface_container_highest.hex}}",
+        "outline": "{{colors.outline_variant.hex}}",
+        "text": "{{colors.on_surface.hex}}",
+        "secondary": "{{colors.on_surface_variant.hex}}",
+        "dim": "{{colors.outline.hex}}",
+        "accent": "{{colors.primary.hex}}",
+        "accent_hover": "{{colors.primary_fixed.hex}}",
+        "on_accent": "{{colors.on_primary.hex}}",
+        "danger": "{{colors.error.hex}}",
+        "warning": "{{colors.tertiary.hex}}",
+        "overlay": "{{colors.surface_bright.hex}}",
+        "shadow": "{{colors.shadow.hex}}",
+        "chat": "{{colors.surface_container_lowest.hex}}",
+        "bubble_in": "{{colors.surface_container_high.hex}}",
+        "bubble_out": "{{colors.primary_container.hex}}",
+        "link": "{{colors.tertiary.hex}}",
+        "read": "{{colors.primary.hex}}"
+    }
+}

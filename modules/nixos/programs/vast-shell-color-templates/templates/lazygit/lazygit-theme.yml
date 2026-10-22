@@ -1,35 +1,35 @@
 gui:
   theme:
     activeBorderColor:
-    - '{{colors.on_background.default.hex}}'
+    - '{{colors.on_background.hex}}'
     - bold
     animateExplosion: true
     border: rounded
     cherryPickedCommitBgColor:
-    - '{{colors.secondary_fixed.default.hex}}'
+    - '{{colors.secondary_fixed.hex}}'
     cherryPickedCommitFgColor:
-    - '{{colors.secondary_fixed_dim.default.hex}}'
+    - '{{colors.secondary_fixed_dim.hex}}'
     defaultFgColor:
     - default
     filterMode: substring
     inactiveBorderColor:
-    - '{{colors.on_surface_variant.default.hex}}'
+    - '{{colors.on_surface_variant.hex}}'
     inactiveViewSelectedLineBgColor:
-    - '{{colors.error.default.hex}}'
+    - '{{colors.error.hex}}'
     - bold
     markedBaseCommitBgColor:
-    - '{{colors.tertiary.default.hex}}'
+    - '{{colors.tertiary.hex}}'
     markedBaseCommitFgColor:
-    - '{{colors.secondary_fixed_dim.default.hex}}'
+    - '{{colors.secondary_fixed_dim.hex}}'
     nerdFontsVersion: ''
     optionsTextColor:
-    - '{{colors.secondary_fixed_dim.default.hex}}'
+    - '{{colors.secondary_fixed_dim.hex}}'
     portraitMode: auto
     screenMode: normal
     searchingActiveBorderColor:
-    - '{{colors.primary.default.hex}}'
+    - '{{colors.primary.hex}}'
     - bold
     selectedLineBgColor:
-    - '{{colors.surface_bright.default.hex}}'
+    - '{{colors.surface_bright.hex}}'
     unstagedChangesColor:
-    - '{{colors.error_container.default.hex}}'
+    - '{{colors.error_container.hex}}'

@@ -17,11 +17,11 @@
         ./vscode.nix
         ./wireshark.nix
         ./zoxide.nix
-        ./fish/default.nix
-        ./matugen/default.nix
-        ./neovim/default.nix
-        ./nushell/default.nix
-        ./yazi/default.nix
+        ./fish
+        ./vast-shell-color-templates
+        ./neovim
+        ./nushell
+        ./yazi
     ];
 
     options.shellix.programs = with lib; {
@@ -154,7 +154,7 @@
         spicetify.enable = mkEnableOption "Enable spotify mod";
         steam.enable = mkEnableOption "Enable steam client";
         vscode.enable = mkEnableOption "Enable electron code editor";
-        matugen.enable = mkEnableOption "Enable auto color generation based on wallpaper";
+        color-templates.enable = mkEnableOption "Enable auto color generation based on wallpaper";
         starship.enable = mkEnableOption "Enable starship cross-shell prompt";
         yazi.enable = mkEnableOption "Enable Yazi terminal file manager built on Rust";
         nushell = {

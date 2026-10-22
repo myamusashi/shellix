@@ -81,7 +81,7 @@
             shell.enable = false;
             spicetify.enable = false;
             vscode.enable = false;
-            matugen.enable = true;
+            color-templates.enable = true;
             yazi.enable = true;
         };
     };
