@@ -1,6 +1,6 @@
-theme[main_bg]="{{colors.surface.hex}}"
+theme[main_bg]="{{colors.background.hex}}"
 
-theme[main_fg]="{{colors.on_surface.hex}}"
+theme[main_fg]="{{colors.on_background.hex}}"
 
 theme[title]="{{colors.primary.hex}}"
 
