@@ -151,7 +151,7 @@ in {
             portalPackage =
                 inputs.xdg-desktop-portal-hyprland.packages.${pkgs.stdenv.hostPlatform.system}.default;
         };
-        ccache.enable = true;
+        ccache.enable = false;
         java = {
             enable = true;
         };
