@@ -1,5 +1,3 @@
-source ($nu.cache-dir | path join "carapace.nu")
-
 source ~/.config/nushell/zoxide.nu
 
 alias ls = eza --icons always
@@ -277,6 +275,10 @@ def lssize [] { ^du -sh * | sort-by size | each {|r| print $r} }
 def --env mkcd [dir: string] {
     mkdir $dir
     cd $dir
+}
+
+def --wrapped background [...command: string] {
+    ^systemd-run --user --collect --quiet ...$command
 }
 
 # --- kde connect via fzf ---

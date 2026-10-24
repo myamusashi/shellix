@@ -18,7 +18,9 @@
         '')
     );
 
-    configNu = pkgs.writeText "config.nu" (builtins.readFile ./config.nu);
+    configNu = pkgs.writeText "config.nu" (
+        "source ${./carapace.nu}\n" + builtins.readFile ./config.nu
+    );
 in {
     config = lib.mkIf cfg.enable {
         environment.shells = [pkgs.nushell];
