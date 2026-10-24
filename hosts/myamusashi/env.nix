@@ -127,6 +127,7 @@ in {
             inputs.myamusashi-pkgs.packages.${stdenv.hostPlatform.system}.qmlformat-rs
             inputs.myamusashi-pkgs.packages.${stdenv.hostPlatform.system}.mangaDesk
             inputs.myamusashi-pkgs.packages.${stdenv.hostPlatform.system}.lightauth
+            inputs.myamusashi-pkgs.packages.${stdenv.hostPlatform.system}.loaf-fm
             (wrapElectron vesktop "vesktop")
             opencode
             (wrapElectron inputs.helium.packages.${stdenv.hostPlatform.system}.default "helium")
@@ -145,16 +146,20 @@ in {
             vim
 
             # remote desktop
-            virt-viewer
-            freerdp
-            remmina
+            # virt-viewer
+            # freerdp
+            # remmina
 
-            (wrapElectron onlyoffice-desktopeditors "onlyoffice-desktopeditors")
+            # (wrapElectron onlyoffice-desktopeditors "onlyoffice-desktopeditors")
             qbittorrent-enhanced-nox
-            patchelf
+            # patchelf
 
             ## Hyprland plugins
-            inputs.hypr-scroll-overview.packages.${stdenv.hostPlatform.system}.default
+            (inputs.hypr-scroll-overview.packages.${stdenv.hostPlatform.system}.default.overrideAttrs (oldAttrs: {
+                patches = [
+                    ./overview.patch
+                ];
+            }))
             inputs.hypr-dynamic-cursors.packages.${stdenv.hostPlatform.system}.hypr-dynamic-cursors
 
             ## Nix tools
