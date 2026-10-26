@@ -1,7 +1,6 @@
 {pkgs, ...}: {
     boot = {
-        kernelPackages = pkgs.cachyosKernels.linuxPackages-cachyos-bore-lto;
-        initrd.verbose = false;
+        kernelPackages = pkgs.cachyosKernels.linuxPackages-cachyos-latest-lto;
         consoleLogLevel = 0;
         initrd.availableKernelModules = [
             "xhci_pci"
