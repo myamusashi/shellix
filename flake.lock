@@ -4791,16 +4791,16 @@
         ]
       },
       "locked": {
-        "lastModified": 1792924058,
-        "narHash": "sha256-9GaQwIPZmW6TrPMZU8yCWCTShCVFv+ccAskRQUo6F+o=",
+        "lastModified": 1792973390,
+        "narHash": "sha256-QeiiM6UDwjoqk401qUlFiAwfEbSo1MnvuHMqaeonujA=",
         "owner": "m-uvex",
         "repo": "loaf-fm",
-        "rev": "5221f3c119ad3fa458e7d9bf5222ce7c8a5ee011",
+        "rev": "a63de4dffc2771af06a309b01ca88ee9d8da5fdb",
         "type": "github"
       },
       "original": {
         "owner": "m-uvex",
-        "ref": "dev",
+        "ref": "main",
         "repo": "loaf-fm",
         "type": "github"
       }
@@ -4883,11 +4883,11 @@
         "zapfast": "zapfast"
       },
       "locked": {
-        "lastModified": 1792972930,
-        "narHash": "sha256-B676wRshhzxfcvhzvuPYee3DoOKK2ZalvGd+U0AVrEU=",
+        "lastModified": 1793058580,
+        "narHash": "sha256-T7adKcaZa057JpYHacX29iRjLj5paaO6HgjoMCUE/Aw=",
         "owner": "myamusashi",
         "repo": "nix-myamusashi-packages",
-        "rev": "1d01ce745f895bcd95219d590831ed396eb6b1c2",
+        "rev": "feed10dcdf4d4aabcf8cdc9911fff0a218713747",
         "type": "github"
       },
       "original": {
@@ -5309,11 +5309,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1791413838,
-        "narHash": "sha256-RABzIViqWRW/9meswTsI0D08hiFIVlm72K+QmuBrCiQ=",
+        "lastModified": 1793058463,
+        "narHash": "sha256-9sK8dKW6/n+fQzoEvjC3ZzLwk+rCgvycYQOJS7LvnYg=",
         "ref": "refs/heads/master",
-        "rev": "a8bc4c6336dadec3aaec8f15303ad34bf6925f4c",
-        "revCount": 26,
+        "rev": "89bf3da68b147004cbbd7829b436da71eb88a772",
+        "revCount": 28,
         "type": "git",
         "url": "https://git.myamusashi.cc/myamusashi/qmlformat-rs"
       },
@@ -5607,11 +5607,11 @@
         "wl-screenrec-fork": "wl-screenrec-fork_2"
       },
       "locked": {
-        "lastModified": 1792896982,
-        "narHash": "sha256-6gfT8d5mOfL9z1tfOlRCj/fduhfTbB2McHj6BRZbUiM=",
+        "lastModified": 1792989498,
+        "narHash": "sha256-BV40jL0GNM8g6aVEFnfuHantGAIqWxgbdRoIjRVVEqM=",
         "ref": "refs/heads/master",
-        "rev": "5355c3e5ab55a7534293d57fc756ce252809bccb",
-        "revCount": 1789,
+        "rev": "d205d16585a877a2a95389d1fa997d4d97b48c25",
+        "revCount": 1791,
         "type": "git",
         "url": "https://git.myamusashi.cc/myamusashi/vast-shell"
       },
