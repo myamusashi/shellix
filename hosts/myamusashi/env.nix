@@ -78,7 +78,7 @@ in {
 
             ## Music apps
             strawberry
-            (pkgs.callPackage ../../modules/nixos/packages/custom/spotiFLAC.nix {})
+            (pkgs.callPackage ../../modules/nixos/packages/custom/Mornye.nix {})
 
             ## Wayland
             wl-clipboard
