@@ -1,0 +1,63 @@
+{
+  "manifest": {
+    "api_version": 1,
+    "id": "local-theme-18e0d5a3e253f1f7-0",
+    "name": "shell",
+    "version": "1.0.0",
+    "author": "m",
+    "license": "CC0-1.0",
+    "source": "",
+    "kind": "theme",
+    "capabilities": [],
+    "actions": []
+  },
+  "theme": {
+    "light": {
+      "colors": {
+        "accent": "#4C5CB8",
+        "accent_text": "#FFFFFF",
+        "base": "#DFE4F4",
+        "border": "#B4C0DB",
+        "chat": "#F5F7FF",
+        "danger": "#B83039",
+        "hover": "#E1E7F6",
+        "link": "#4052AE",
+        "mention_bg": "#DCE3FF",
+        "mention_text": "#35478D",
+        "muted": "#596782",
+        "positive": "#237C48",
+        "raised": "#FFFFFF",
+        "selected": "#CFD9F0",
+        "sidebar": "#E9EDF8",
+        "text": "#36425F",
+        "text_strong": "#202943",
+        "warning": "#966500"
+      },
+      "backdrop": null
+    },
+    "dark": {
+      "colors": {
+        "accent": "{{colors.primary.hex}}",
+        "accent_text": "{{colors.on_primary.hex}}",
+        "base": "{{colors.background.hex}}",
+        "border": "{{colors.outline_variant.hex}}",
+        "chat": "{{colors.surface_container.hex}}",
+        "danger": "{{colors.error.hex}}",
+        "hover": "{{colors.surface_container_highest.hex}}",
+        "link": "{{colors.primary_fixed.hex}}",
+        "mention_bg": "{{colors.primary_container.hex}}",
+        "mention_text": "{{colors.on_primary_container.hex}}",
+        "muted": "{{colors.on_surface_variant.hex}}",
+        "positive": "#80D2A0",
+        "raised": "{{colors.surface_container_high.hex}}",
+        "selected": "{{colors.surface_variant.hex}}",
+        "sidebar": "{{colors.surface_container_low.hex}}",
+        "text": "{{colors.on_surface.hex}}",
+        "text_strong": "{{colors.on_surface.hex}}",
+        "warning": "#F0C674"
+      },
+      "backdrop": null
+    },
+    "style": {}
+  }
+}

@@ -70,6 +70,10 @@
             input = ./templates/zapfast/shellix.json;
             output = ".config/zapfast/Shellix.json";
         }
+        {
+            input = ./templates/serein/shellix.json;
+            output = ".config/serein/shellix.json";
+        }
     ];
 
     outputDirectories = lib.unique (map (template: builtins.dirOf template.output) templates);
