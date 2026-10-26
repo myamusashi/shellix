@@ -6,10 +6,11 @@
 }: let
     cfg = config.shellix.server.phpApps;
 
-    dbApps = lib.filterAttrs (
-        _: app: app.enable && app.database.enable
-    )
-    cfg.apps;
+    dbApps =
+        lib.filterAttrs (
+            _: app: app.enable && app.database.enable
+        )
+        cfg.apps;
 in {
     options.shellix.server.phpApps = {
         enable = lib.mkEnableOption "the Shellix PHP application server hosting layer";
@@ -189,45 +190,45 @@ in {
 
         systemd.services = lib.mapAttrs' (name: app:
             lib.nameValuePair "phpapp-db-init-${name}" (lib.mkIf (
-                app.enable && app.database.enable && app.database.sqlFile != null
-            ) {
-                description = "Initialize MariaDB database for PHP app: ${name}";
-                after = ["mysql.service"];
-                requires = ["mysql.service"];
-                wantedBy = ["multi-user.target"];
+                    app.enable && app.database.enable && app.database.sqlFile != null
+                ) {
+                    description = "Initialize MariaDB database for PHP app: ${name}";
+                    after = ["mysql.service"];
+                    requires = ["mysql.service"];
+                    wantedBy = ["multi-user.target"];
 
-                serviceConfig = {
-                    Type = "oneshot";
-                    RemainAfterExit = true;
-                    # Run as the mysql user so we can use socket auth without a password
-                    User = "mysql";
-                };
+                    serviceConfig = {
+                        Type = "oneshot";
+                        RemainAfterExit = true;
+                        # Run as the mysql user so we can use socket auth without a password
+                        User = "mysql";
+                    };
 
-                script = let
-                    mysql = "${pkgs-stable.mariadb}/bin/mysql";
-                    dbName = app.database.name;
-                    sqlFile = app.database.sqlFile;
-                in ''
-                    # Check if any tables already exist in the database
-                    TABLE_COUNT=$(${mysql} --user="${cfg.database.user}" \
-                        ${lib.optionalString (cfg.database.passwordFile != null)
-                        ''--password="$(cat ${cfg.database.passwordFile})"''} \
-                        --batch --skip-column-names \
-                        --execute="SELECT COUNT(*) FROM information_schema.tables \
-                            WHERE table_schema = '${dbName}';" 2>/dev/null || echo "0")
-
-                    if [ "$TABLE_COUNT" -eq "0" ]; then
-                        echo "phpapp-db-init[${name}]: Database '${dbName}' is empty, importing ${sqlFile}..."
-                        ${mysql} --user="${cfg.database.user}" \
+                    script = let
+                        mysql = "${pkgs-stable.mariadb}/bin/mysql";
+                        dbName = app.database.name;
+                        sqlFile = app.database.sqlFile;
+                    in ''
+                        # Check if any tables already exist in the database
+                        TABLE_COUNT=$(${mysql} --user="${cfg.database.user}" \
                             ${lib.optionalString (cfg.database.passwordFile != null)
-                        ''--password="$(cat ${cfg.database.passwordFile})"''} \
-                            "${dbName}" < "${sqlFile}"
-                        echo "phpapp-db-init[${name}]: Import complete."
-                    else
-                        echo "phpapp-db-init[${name}]: Database '${dbName}' already has $TABLE_COUNT table(s), skipping import."
-                    fi
-                '';
-            }))
+                            ''--password="$(cat ${cfg.database.passwordFile})"''} \
+                            --batch --skip-column-names \
+                            --execute="SELECT COUNT(*) FROM information_schema.tables \
+                                WHERE table_schema = '${dbName}';" 2>/dev/null || echo "0")
+
+                        if [ "$TABLE_COUNT" -eq "0" ]; then
+                            echo "phpapp-db-init[${name}]: Database '${dbName}' is empty, importing ${sqlFile}..."
+                            ${mysql} --user="${cfg.database.user}" \
+                                ${lib.optionalString (cfg.database.passwordFile != null)
+                            ''--password="$(cat ${cfg.database.passwordFile})"''} \
+                                "${dbName}" < "${sqlFile}"
+                            echo "phpapp-db-init[${name}]: Import complete."
+                        else
+                            echo "phpapp-db-init[${name}]: Database '${dbName}' already has $TABLE_COUNT table(s), skipping import."
+                        fi
+                    '';
+                }))
         cfg.apps;
 
         users.users = lib.mapAttrs' (name: app:

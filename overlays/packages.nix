@@ -30,16 +30,17 @@ final: prev: {
             runHook postBuild
         '';
 
-        desktopItems = prev.lib.optional prev.stdenv.hostPlatform.isLinux
-        (prev.makeDesktopItem {
-            name = "vesktop";
-            desktopName = "Vesktop";
-            exec = "vesktop --enable-features=UseOzonePlatform --ozone-platform=wayland %U";
-            icon = "vesktop";
-            startupWMClass = "Vesktop";
-            genericName = "Internet Messenger";
-            keywords = ["discord" "vencord" "electron" "chat"];
-            categories = ["Network" "InstantMessaging" "Chat"];
-        });
+        desktopItems =
+            prev.lib.optional prev.stdenv.hostPlatform.isLinux
+            (prev.makeDesktopItem {
+                name = "vesktop";
+                desktopName = "Vesktop";
+                exec = "vesktop --enable-features=UseOzonePlatform --ozone-platform=wayland %U";
+                icon = "vesktop";
+                startupWMClass = "Vesktop";
+                genericName = "Internet Messenger";
+                keywords = ["discord" "vencord" "electron" "chat"];
+                categories = ["Network" "InstantMessaging" "Chat"];
+            });
     });
 }

@@ -1,9 +1,9 @@
 {lib, ...}: {
     /*
-  ** We actually can use the default port from
-  ** the OG modules through **config function**,
-  ** but i want to change it for no reason
-  */
+    ** We actually can use the default port from
+    ** the OG modules through **config function**,
+    ** but i want to change it for no reason
+    */
     options.shellix.variables = {
         port = {
             SSH = lib.mkOption {

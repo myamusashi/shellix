@@ -117,15 +117,16 @@
             tree-sitter-fish
         ];
 
-    neovimWrapped = pkgs.wrapNeovimUnstable
-    inputs.myamusashi-pkgs.packages.${pkgs.stdenv.hostPlatform.system}.neovim
-    {
-        plugins = [
-            (pkgs.vimPlugins.nvim-treesitter.withPlugins (_: treesitterParsers))
-        ];
-        wrapRc = false;
-        inherit (cfg) viAlias vimAlias vimdiffAlias extraPackages;
-    };
+    neovimWrapped =
+        pkgs.wrapNeovimUnstable
+        inputs.myamusashi-pkgs.packages.${pkgs.stdenv.hostPlatform.system}.neovim
+        {
+            plugins = [
+                (pkgs.vimPlugins.nvim-treesitter.withPlugins (_: treesitterParsers))
+            ];
+            wrapRc = false;
+            inherit (cfg) viAlias vimAlias vimdiffAlias extraPackages;
+        };
 in {
     config = lib.mkIf cfg.enable {
         environment = {
