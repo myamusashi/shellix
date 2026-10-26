@@ -26,8 +26,8 @@
     twolame,
     vo-amrwbenc,
     gst_all_1,
-    jdk,
     xdg-user-dirs,
+    jdk,
 }: let
     pname = "mornye";
     version = "5.2.6";
@@ -54,6 +54,8 @@
         libxkbcommon
         libX11
     ];
+
+    bundledLibraryDirectory = "$out/libexec/${pname}/usr/lib/${pname}/lib";
 in
     stdenv.mkDerivation {
         inherit pname version;
@@ -117,7 +119,7 @@ in
             makeWrapper $out/libexec/${pname}/usr/lib/${pname}/${pname} $out/bin/${pname} \
               "''${gappsWrapperArgs[@]}" \
               --prefix PATH : "${lib.makeBinPath [xdg-user-dirs]}" \
-              --prefix LD_LIBRARY_PATH : "/run/opengl-driver/lib:${lib.makeLibraryPath dlopenLibraries}"
+              --prefix LD_LIBRARY_PATH : "${bundledLibraryDirectory}:/run/opengl-driver/lib:${jdk}/lib/openjdk/lib/server:${lib.makeLibraryPath dlopenLibraries}"
         '';
 
         meta = {
