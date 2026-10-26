@@ -31,7 +31,7 @@
                 "https://nixpkgs-gha.cachix.org"
                 ## cachyos kernel binary caches
                 "https://cache.xinux.uz"
-                # "https://attic.xuyh0120.win/lantian"
+                "https://cache.lantian.pub/lantian"
             ];
 
             trusted-public-keys = [
@@ -48,7 +48,7 @@
                 "walker-git.cachix.org-1:vmC0ocfPWh0S/vRAQGtChuiZBTAe4wiKDeyyXM0/7pM="
                 "nixpkgs-gha.cachix.org-1:nql7LDP4+LkTdc9kZ+JUb7KQ8VymRRy39k66xGRwnqA="
                 "cache.xinux.uz:BXCrtqejFjWzWEB9YuGB7X2MV4ttBur1N8BkwQRdH+0="
-                # "lantian:EeAUQ+W+6r7EtwnmYjeVwx5kOGEBpjlBfPlzGlTNvHc="
+                "lantian:WVGO7vsRMSEN+h7Lp7kv6SAmrkEXgUGbbXm7jMDjBuQ="
             ];
 
             extra-trusted-public-keys = [
