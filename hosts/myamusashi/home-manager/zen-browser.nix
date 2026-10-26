@@ -6,12 +6,12 @@
     zen-profile = "kxhdnjqx.zen";
 in {
     imports = [
-        inputs.zen-browser.homeModules.default
+        inputs.zen-browser.homeModules.twilight
     ];
 
-    xdg.desktopEntries.zen-beta = {
+    xdg.desktopEntries.zen-twilight = {
         name = "Zen Browser";
-        exec = "/etc/profiles/per-user/myamusashi/bin/zen-beta --name zen-beta %u";
+        exec = "/etc/profiles/per-user/myamusashi/bin/zen-twilight --name zen-twilight %u";
         icon = "zen-browser";
         type = "Application";
         categories = [
@@ -34,21 +34,22 @@ in {
             id = 0;
             isDefault = true;
 
-            sine.enable = true;
-            sine.mods = [
-                "Arc-2.0"
-                "ad97bb70-0066-4e42-9b5f-173a5e42c6fc" # SuperPins (Sine store)
-                "378ba8b9-cd36-45f5-88df-595df5288795" # NewTabIconUrlBar (theme-store fallback)
-                "2317fd93-c3ed-4f37-b55a-304c1816819e" # AudioIndicatorEnhanced (theme-store fallback)
-                "d23733fa-983e-4680-8869-bf5b292d4fe6" # CustomizeFontsSize (theme-store fallback)
-                "7190e4e9-bead-4b40-8f57-95d852ddc941" # TabTitleFix (theme-store fallback)
-                "8039de3b-72e1-41ea-83b3-5077cf0f98d1" # TrackpadAnimation (theme-store fallback, same author)
-                "4c2bec61-7f6c-4e5c-bdc6-c9ad1aba1827" # VerticalSplitTabGroups (theme-store fallback)
-            ];
+            sine = {
+                enable = true;
+                mods = [
+                    "Arc-2.0"
+                    "ad97bb70-0066-4e42-9b5f-173a5e42c6fc" # SuperPins (Sine store)
+                    "378ba8b9-cd36-45f5-88df-595df5288795" # NewTabIconUrlBar (theme-store fallback)
+                    "2317fd93-c3ed-4f37-b55a-304c1816819e" # AudioIndicatorEnhanced (theme-store fallback)
+                    "d23733fa-983e-4680-8869-bf5b292d4fe6" # CustomizeFontsSize (theme-store fallback)
+                    "7190e4e9-bead-4b40-8f57-95d852ddc941" # TabTitleFix (theme-store fallback)
+                    "8039de3b-72e1-41ea-83b3-5077cf0f98d1" # TrackpadAnimation (theme-store fallback, same author)
+                    "4c2bec61-7f6c-4e5c-bdc6-c9ad1aba1827" # VerticalSplitTabGroups (theme-store fallback)
+                ];
+            };
 
-            # Replaces the old extraPrefs block: sine.enable forbids extraPrefs
-            # (both claim general.config.filename; the bootloader wins), and the
-            # flake force-sets sine.engine.auto-update = false itself.
+            # sine.enable forbids extraPrefs (both claim general.config.filename; the bootloader wins),
+            # and the flake force-sets sine.engine.auto-update = false itself.
             settings = {
                 "general.smoothScroll.lines.durationMaxMS" = 125;
                 "general.smoothScroll.lines.durationMinMS" = 125;
