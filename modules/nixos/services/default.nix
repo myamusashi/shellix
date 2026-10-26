@@ -14,6 +14,7 @@
         ./plasma.nix
         ./display-manager.nix
         ./minidlna.nix
+        ./samba.nix
         ./systemd/cachix.nix
         ./systemd/stirling.nix
         ./kdeconnect.nix
@@ -35,6 +36,7 @@
         scx.enable = lib.mkEnableOption "Enable scx framework scheduler";
         plasma.enable = lib.mkEnableOption "Enable plasma GUI";
         minidlna.enable = lib.mkEnableOption "Enable MiniDLNA";
+        samba.enable = lib.mkEnableOption "Enable the authenticated Samba share";
         display-manager = {
             greetd.enable = lib.mkEnableOption "Enable greetd display manager";
             sddm.enable = lib.mkEnableOption "Enable SDDM display manager";

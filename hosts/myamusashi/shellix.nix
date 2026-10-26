@@ -14,6 +14,7 @@
             oom.enable = true;
             plasma.enable = false;
             resolver.enable = true;
+            samba.enable = true;
             scx.enable = true;
             display-manager = {
                 sddm = {

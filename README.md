@@ -34,8 +34,18 @@ NixOS flake-based dotfiles managing two machines.
 | **Theming** | qtengine, Kvantum, Future cursor, SF Pro fonts |
 | **Security** | sops-nix + age, PAM greetd, GPG+SSH agent |
 | **Backup** | Borg to waltz via WireGuard (weekly, encrypted, pruned) |
-| **Services** | networkmanager, systemd-resolved, OpenSSH, Cloudflare WARP, nginx, MySQL (MariaDB) |
+| **Services** | networkmanager, systemd-resolved, OpenSSH, Cloudflare WARP, nginx, MySQL (MariaDB), Samba |
 | **Programs** | fish, neovim (nightly), yazi, steam, kitty, vscode, spicetify, fastfetch, color-templates, etc. |
+
+#### Samba
+
+The `public` share exposes `/home/myamusashi/Public` read/write to the authenticated `myamusashi` user. Guest access is disabled. After activation, set its independent SMB password:
+
+```sh
+sudo smbpasswd -a myamusashi
+```
+
+Connect as `smb://nixos/public` or `\\nixos\public`.
 
 ### waltz (server)
 
