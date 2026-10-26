@@ -6,7 +6,7 @@
     ...
 }: let
     cfg = config.shellix.programs.yazi;
-    yazi-pkgs = inputs.myamusashi-pkgs.packages.${pkgs.stdenv.hostPlatform.system}.yazi;
+    yazi-pkgs = pkgs.yazi;
     yazi-plugins = inputs.yazi-plugins-flakes.packages.${pkgs.stdenv.hostPlatform.system};
 
     yaziToml = ''
