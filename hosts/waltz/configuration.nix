@@ -578,7 +578,7 @@
                 "https://cache.flox.dev"
                 ## cachyos kernel binary caches
                 "https://cache.xinux.uz"
-                # "https://attic.xuyh0120.win/lantian"
+                "https://cache.lantian.pub/lantian"
             ];
 
             extra-substituters = [
@@ -598,7 +598,7 @@
                 "walker.cachix.org-1:fG8q+uAaMqhsMxWjwvk0IMb4mFPFLqHjuvfwQxE4oJM="
                 "walker-git.cachix.org-1:vmC0ocfPWh0S/vRAQGtChuiZBTAe4wiKDeyyXM0/7pM="
                 "cache.xinux.uz:BXCrtqejFjWzWEB9YuGB7X2MV4ttBur1N8BkwQRdH+0="
-                # "lantian:EeAUQ+W+6r7EtwnmYjeVwx5kOGEBpjlBfPlzGlTNvHc="
+                "lantian:WVGO7vsRMSEN+h7Lp7kv6SAmrkEXgUGbbXm7jMDjBuQ="
             ];
         };
     };
