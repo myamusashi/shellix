@@ -26,14 +26,9 @@ in {
 
                 set -gx GITHUB_TOKEN (cat ${config.sops.secrets.github_token.path})
 
-                function ws
-                    ${pkgs.quickshell}/bin/qs -c lock ipc call img set "$argv[1]"
-                end
-
                 function fontlist
                     fc-list --format='%{family}\\n' | ${pkgs.ripgrep}/bin/rg "$argv[1]"
                 end
-
             '';
         };
     };
