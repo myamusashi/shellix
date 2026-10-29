@@ -65,8 +65,19 @@ in {
                         example = ["ubuntu-latest:docker://localhost/act-fixed:latest"];
                         description = ''
                             Runner labels. The default points at the locally built act job
-                            image (see forgejo-runner-act-image.service) which works around
-                            nektos/act#6092; the runners only pick jobs that request it.
+                            image which works around nektos/act#6092; the runners only pick jobs 
+                            that request it.
+                        '';
+                    };
+
+                    containerNetwork = lib.mkOption {
+                        type = lib.types.nullOr lib.types.str;
+                        default = null;
+                        example = "podman";
+                        description = ''
+                            Docker/Podman network for job containers. Set to your compose network name
+                            so job containers can resolve the Forgejo instance hostname.
+                            If null, forgejo-runner creates an isolated network per job (default behavior).
                         '';
                     };
                 };
@@ -79,50 +90,88 @@ in {
     config = lib.mkIf cfg.enable {
         environment.systemPackages = [pkgs.forgejo-runner];
 
-        systemd.services = lib.mkMerge (
-            [
-                {
-                    forgejo-runner-act-image = {
-                        description = "Forgejo Runner — build and load act job image";
-                        after = ["network-online.target"];
-                        wants = ["network-online.target"];
-                        wantedBy = ["multi-user.target"];
-                        before = lib.mapAttrsToList (name: _: "forgejo-runner-${name}.service") cfg.runners;
-                        serviceConfig = {
-                            Type = "oneshot";
-                            RemainAfterExit = true;
-                            ExecStart = lib.getExe actImageLoad;
+        systemd.services = (
+            lib.listToAttrs (
+                [
+                    {
+                        name = "forgejo-runner-act-image";
+                        value = {
+                            description = "Forgejo Runner — build and load act job image";
+                            after = ["network-online.target"];
+                            wants = ["network-online.target"];
+                            wantedBy = ["multi-user.target"];
+                            before = lib.mapAttrsToList (name: _: "forgejo-runner-${name}.service") cfg.runners;
+                            serviceConfig = {
+                                Type = "oneshot";
+                                RemainAfterExit = true;
+                                ExecStart = lib.getExe actImageLoad;
+                            };
                         };
-                    };
-                }
-            ]
-            ++ lib.mapAttrsToList (name: runner: {
-                "forgejo-runner-${name}" = {
-                    description = "Forgejo Runner — ${name}";
-                    after = [
-                        "network-online.target"
-                        "forgejo-runner-act-image.service"
-                    ];
-                    wants = [
-                        "network-online.target"
-                        "forgejo-runner-act-image.service"
-                    ];
-                    wantedBy = ["multi-user.target"];
+                    }
+                ]
+                ++ (lib.mapAttrsToList (name: runner: {
+                        name = "forgejo-runner-${name}";
+                        value = {
+                            description = "Forgejo Runner — ${name}";
+                            after = [
+                                "network-online.target"
+                                "forgejo-runner-act-image.service"
+                            ];
+                            wants = [
+                                "network-online.target"
+                                "forgejo-runner-act-image.service"
+                            ];
+                            wantedBy = ["multi-user.target"];
 
-                    serviceConfig = {
-                        Type = "simple";
-                        ExecStart =
-                            "${lib.getExe pkgs.forgejo-runner} daemon"
-                            + " --url ${runner.url}"
-                            + " --uuid ${runner.uuid}"
-                            + " --token-url file://${runner.tokenFile}"
-                            + " --label ${lib.concatStringsSep "," runner.labels}";
-                        Restart = "on-failure";
-                        RestartSec = 5;
-                    };
-                };
-            })
-            cfg.runners
+                            serviceConfig = let
+                                configFile = pkgs.writeText "forgejo-runner-${name}.yaml" ''
+                                    runner:
+                                      file: ".runner"
+                                      capacity: 1
+                                      timeout: "3h"
+                                      shutdown_timeout: "3h"
+                                      insecure: false
+                                      fetch_timeout: "30s"
+                                      fetch_interval: "2s"
+                                      report_interval: "1s"
+                                      labels: ${lib.concatStringsSep "\n  - " (lib.map (l: "- ${l}") runner.labels)}
+                                    cache:
+                                      enabled: true
+                                      port: 0
+                                      proxy_port: 0
+                                    container:
+                                      network: ${
+                                        if runner.containerNetwork == null
+                                        then ""
+                                        else "\"" + runner.containerNetwork + "\""
+                                    }
+                                      enable_ipv6: false
+                                      privileged: false
+                                      workdir_parent: "/workspace"
+                                      valid_volumes: []
+                                      docker_host: "-"
+                                      force_pull: false
+                                      force_rebuild: false
+                                    host:
+                                      workdir_parent: ""
+                                    server:
+                                      connections:
+                                        default:
+                                          url: ${runner.url}
+                                          uuid: ${runner.uuid}
+                                          token_url: file://${runner.tokenFile}
+                                          labels: ${lib.concatStringsSep "\n      - " (lib.map (l: "- ${l}") runner.labels)}
+                                '';
+                            in {
+                                Type = "simple";
+                                ExecStart = "${lib.getExe pkgs.forgejo-runner} daemon" + " --config ${configFile}";
+                                Restart = "on-failure";
+                                RestartSec = 5;
+                            };
+                        };
+                    })
+                    cfg.runners)
+            )
         );
     };
 }
