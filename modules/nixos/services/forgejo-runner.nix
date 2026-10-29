@@ -110,67 +110,68 @@ in {
                     }
                 ]
                 ++ (lib.mapAttrsToList (name: runner: {
-                    name = "forgejo-runner-${name}";
-                    value = {
-                        description = "Forgejo Runner — ${name}";
-                        after = [
-                            "network-online.target"
-                            "forgejo-runner-act-image.service"
-                        ];
-                        wants = [
-                            "network-online.target"
-                            "forgejo-runner-act-image.service"
-                        ];
-                        wantedBy = ["multi-user.target"];
+                        name = "forgejo-runner-${name}";
+                        value = {
+                            description = "Forgejo Runner — ${name}";
+                            after = [
+                                "network-online.target"
+                                "forgejo-runner-act-image.service"
+                            ];
+                            wants = [
+                                "network-online.target"
+                                "forgejo-runner-act-image.service"
+                            ];
+                            wantedBy = ["multi-user.target"];
 
-                        serviceConfig = let
-                            configFile = pkgs.writeText "forgejo-runner-${name}.yaml" ''
-                                runner:
-                                  file: ".runner"
-                                  capacity: 1
-                                  timeout: "3h"
-                                  shutdown_timeout: "3h"
-                                  insecure: false
-                                  fetch_timeout: "30s"
-                                  fetch_interval: "2s"
-                                  report_interval: "1s"
-                                  labels: ${lib.concatStringsSep "\n  - " (lib.map (l: "- ${l}") runner.labels)}
-                                cache:
-                                  enabled: true
-                                  port: 0
-                                  proxy_port: 0
-                                container:
-                                  network: ${
-                                    if runner.containerNetwork == null
-                                    then ""
-                                    else "\"" + runner.containerNetwork + "\""
-                                }
-                                  enable_ipv6: false
-                                  privileged: false
-                                  workdir_parent: "/workspace"
-                                  valid_volumes: []
-                                  docker_host: "-"
-                                  force_pull: false
-                                  force_rebuild: false
-                                host:
-                                  workdir_parent: ""
-                                server:
-                                  connections:
-                                    default:
-                                      url: ${runner.url}
-                                      uuid: ${runner.uuid}
-                                      token_url: file://${runner.tokenFile}
-                                      labels: ${lib.concatStringsSep "\n      - " (lib.map (l: "- ${l}") runner.labels)}
-                            '';
-                        in {
-                            Type = "simple";
-                            ExecStart = "${lib.getExe pkgs.forgejo-runner} daemon" + " --config ${configFile}";
-                            Restart = "on-failure";
-                            RestartSec = 5;
+                            serviceConfig = let
+                                yamlFormat = pkgs.formats.yaml {};
+                                configFile = yamlFormat.generate "forgejo-runner-${name}.yaml" {
+                                    runner = {
+                                        file = ".runner";
+                                        capacity = 1;
+                                        timeout = "3h";
+                                        shutdown_timeout = "3h";
+                                        insecure = false;
+                                        fetch_timeout = "30s";
+                                        fetch_interval = "2s";
+                                        report_interval = "1s";
+                                        labels = runner.labels;
+                                    };
+                                    cache = {
+                                        enabled = true;
+                                        port = 0;
+                                        proxy_port = 0;
+                                    };
+                                    container = {
+                                        network =
+                                            if runner.containerNetwork == null
+                                            then ""
+                                            else runner.containerNetwork;
+                                        enable_ipv6 = false;
+                                        privileged = false;
+                                        workdir_parent = "/workspace";
+                                        valid_volumes = [];
+                                        docker_host = "-";
+                                        force_pull = false;
+                                        force_rebuild = false;
+                                    };
+                                    host.workdir_parent = "";
+                                    server.connections.default = {
+                                        url = runner.url;
+                                        uuid = runner.uuid;
+                                        token_url = "file://${runner.tokenFile}";
+                                        labels = runner.labels;
+                                    };
+                                };
+                            in {
+                                Type = "simple";
+                                ExecStart = "${lib.getExe pkgs.forgejo-runner} daemon --config ${configFile}";
+                                Restart = "on-failure";
+                                RestartSec = 5;
+                            };
                         };
-                    };
-                })
-                cfg.runners)
+                    })
+                    cfg.runners)
             )
         );
     };
