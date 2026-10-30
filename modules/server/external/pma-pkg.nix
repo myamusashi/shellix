@@ -5,11 +5,11 @@
 }:
 stdenvNoCC.mkDerivation rec {
     name = "phpmyadmin-${version}";
-    version = "5.2.2";
+    version = "5.2.3";
 
     src = fetchurl {
         url = "https://files.phpmyadmin.net/phpMyAdmin/${version}/phpMyAdmin-${version}-all-languages.tar.gz";
-        sha256 = "sha256-hVHIvzsWbyMtXPZLrId0cunQy48v4YWPqyT5defXZbY=";
+        sha256 = "sha256-ErocQl+kBxq71OdmjJ696sCwdVpGem1tUCYSK7R8ECs=";
     };
 
     phases = [
