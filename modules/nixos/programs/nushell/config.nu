@@ -22,13 +22,35 @@ alias emu = emulator -avd pixel_api35 -no-snapshot -gpu host
 
 # --- functions ---
 
+def nbc [file: path, --args(-a): string] {
+    let path = $file | path expand
+    let call_args = $args | default "{}"
+
+    ^nix-build -E $"with import <nixpkgs> {}; callPackage ($path) ($call_args)"
+}
+
 def url-looks-like-archive [url: string]: nothing -> bool {
-    let path = ($url | split row "?" | first | split row "#" | first)
-    let lower = ($path | str lowercase)
+    let path = (
+        $url
+        | split row "?"
+        | first
+        | split row "#"
+        | first
+    )
+    let lower = $path | str lowercase
 
     let archive_exts = [
-        ".tar" ".tar.gz" ".tgz" ".tar.bz2" ".tbz2" ".tar.xz" ".txz"
-        ".tar.zst" ".tzst" ".zip" ".7z"
+        ".tar"
+        ".tar.gz"
+        ".tgz"
+        ".tar.bz2"
+        ".tbz2"
+        ".tar.xz"
+        ".txz"
+        ".tar.zst"
+        ".tzst"
+        ".zip"
+        ".7z"
     ]
 
     # Single-file formats that must NEVER be unpacked, checked first so
@@ -44,44 +66,27 @@ def url-looks-like-archive [url: string]: nothing -> bool {
     }
 
     let is_github_host = (
-        ($lower | str starts-with "https://codeload.github.com/")
-        or ($lower | str starts-with "http://codeload.github.com/")
-        or ($lower | str starts-with "https://github.com/")
-        or ($lower | str starts-with "http://github.com/")
-    )
+    ($lower | str starts-with "https://codeload.github.com/")
+    or ($lower | str starts-with "http://codeload.github.com/")
+    or ($lower | str starts-with "https://github.com/")
+    or ($lower | str starts-with "http://github.com/")
+  )
 
     if not $is_github_host {
         return false
     }
 
-    let is_codeload_archive = ($lower =~ 'codeload\.github\.com/[^/]+/[^/]+/(tar\.gz|zip|legacy\.tar\.gz|legacy\.zip)/')
+    let is_codeload_archive = (
+        $lower =~ 'codeload\.github\.com/[^/]+/[^/]+/(tar\.gz|zip|legacy\.tar\.gz|legacy\.zip)/'
+    )
     let is_github_archive_path = ($lower =~ 'github\.com/[^/]+/[^/]+/archive/')
 
     $is_codeload_archive or $is_github_archive_path
 }
 
-def nbc [
-    file: path           
-    --args (-a): string  
-] {
-    let path = ($file | path expand)
-    let call_args = ($args | default "{}")
-
-    ^nix-build -E $"with import <nixpkgs> {}; callPackage ($path) ($call_args)"
-}
-
-def prefetch-hash [
-    url: string
-    --unpack (-u)      # force --unpack on
-    --no-unpack (-n)   # force --unpack off, overrides detection
-] {
-    let should_unpack = if $no_unpack {
-        false
-    } else if $unpack {
-        true
-    } else {
-        (url-looks-like-archive $url)
-    }
+def prefetch-hash [url: string, --fetcher(-f): string = "fetchurl"] {
+    let unpacking_fetchers = ["fetchzip" "fetchFromGitHub" "fetchTarball"]
+    let should_unpack = ($fetcher in $unpacking_fetchers)
 
     let args = if $should_unpack {
         [--unpack --hash-type sha256 --json $url]
@@ -89,10 +94,9 @@ def prefetch-hash [
         [--hash-type sha256 --json $url]
     }
 
-    print $"(ansi grey)prefetching ($url) \(unpack: ($should_unpack)\)(ansi reset)"
+    print $"(ansi grey)prefetching ($url) \(fetcher: ($fetcher), unpack: ($should_unpack)\)(ansi reset)"
 
-    let result = (nix store prefetch-file ...$args | from json)
-    $result.hash
+    (nix store prefetch-file ...$args | from json).hash
 }
 
 def kiss [host: string] {
@@ -107,10 +111,6 @@ def icat [file: string] {
     ^kitten icat $file
 }
 
-def ws [path: string] {
-    ^qs -c lock ipc call img set $path
-}
-
 def fontlist [pattern: string] {
     ^fc-list --format='%{family}\n' | ^rg $pattern
 }
@@ -118,7 +118,7 @@ def fontlist [pattern: string] {
 def --env yy [...args] {
     let tmp = (mktemp -t "yazi-cwd.XXXXX")
     ^yazi ...$args --cwd-file $tmp
-    let cwd = (open $tmp | str trim)
+    let cwd = open $tmp | str trim
     if $cwd != "" and $cwd != $env.PWD {
         cd $cwd
     }
@@ -133,18 +133,14 @@ def --env nvim [...args] {
 
 # --- media compression ---
 
-def vidcompress [
-    input: string
-    crf: int = 28
-    preset: string = "slow"
-] {
-    let output = ($input | str replace --regex '\.[^.]+$' '_compressed.mp4')
+def vidcompress [input: string, crf: int = 28, preset: string = "slow"] {
+    let output = $input | str replace --regex '\.[^.]+$' '_compressed.mp4'
     ^ffmpeg -hwaccel vaapi -hwaccel_output_format vaapi -i $input -c:v h264_vaapi -qp $crf -preset $preset -c:a aac -b:a 128k $output
     print $"→ ($output)"
 }
 
 def vidtowebm [input: string] {
-    let output = ($input | str replace --regex '\.[^.]+$' '.webm')
+    let output = $input | str replace --regex '\.[^.]+$' '.webm'
     ^ffmpeg -hwaccel vaapi -hwaccel_output_format vaapi -i $input -c:v libvpx-vp9 -crf 33 -b:v 0 -c:a libopus $output
 }
 
@@ -155,18 +151,15 @@ def vidtogif [
     fps: int = 15
     width: int = 800
 ] {
-    let output = ($input | str replace --regex '\.[^.]+$' '.gif')
+    let output = $input | str replace --regex '\.[^.]+$' '.gif'
     let vf = $"hwdownload,format=nv12,fps=($fps),scale=($width):-1:flags=lanczos,split[s0][s1];[s0]palettegen[p];[s1][p]paletteuse"
     ^ffmpeg -hwaccel vaapi -hwaccel_output_format vaapi -ss $start -t $dur -i $input -vf $vf -loop 0 $output
     print $"→ ($output)"
 }
 
-def imgcompress [
-    quality: int = 75
-    ...files: string
-] {
+def imgcompress [quality: int = 75, ...files: string] {
     for f in $files {
-        let out = ($f | str replace --regex '\.([^.]+)$' '_compressed.$1')
+        let out = $f | str replace --regex '\.([^.]+)$' '_compressed.$1'
         ^magick $f -quality $quality $out
         print $"($f) → ($out)"
     }
@@ -174,7 +167,7 @@ def imgcompress [
 
 def imgtojpg [...files: string] {
     for f in $files {
-        let out = ($f | str replace --regex '\.[^.]+$' '.jpg')
+        let out = $f | str replace --regex '\.[^.]+$' '.jpg'
         ^magick $f $out
         print $"($f) → ($out)"
     }
@@ -182,7 +175,7 @@ def imgtojpg [...files: string] {
 
 def imgtowebp [...files: string] {
     for f in $files {
-        let out = ($f | str replace --regex '\.[^.]+$' '.webp')
+        let out = $f | str replace --regex '\.[^.]+$' '.webp'
         ^magick $f -quality 85 $out
         print $"($f) → ($out)"
     }
@@ -209,43 +202,49 @@ def extract [file: string] {
         $f if ($f | str ends-with ".7z") => { ^7z x $file }
         $f if ($f | str ends-with ".rar") => { ^unrar x $file }
         $f if ($f | str ends-with ".zst") => {
-            ^pv -s $filesize $file | ^zstd -d - -o ($file | path parse | update extension "" | path join)
+            ^pv -s $filesize $file | ^zstd -d - -o (
+                $file
+                | path parse
+                | update extension ""
+                | path join
+            )
         }
         _ => { print $"Unknown archive: ($file)" }
     }
 }
 
-def compress [
-    fmt: string
-    target: string
-    outname?: string
-] {
-    let name = ($outname | default $target)
-    let size = (^du -sb $target | split row "\t" | get 0 | into int)
+def compress [fmt: string, target: string, outname?: string] {
+    let name = $outname | default $target
+    let size = (
+        ^du -sb $target
+        | split row "\t"
+        | get 0
+        | into int
+    )
 
     match $fmt {
         "tar.xz" | "txz" => {
             let out = $"($name).tar.xz"
             print $"Compressing -> ($out) (xz -9 -T0)"
             ^tar -C ($target | path dirname) -cf - ($target | path basename)
-                | ^pv -s $size
-                | XZ_OPT="-9 -T0" ^xz > $out
+            | ^pv -s $size
+            | XZ_OPT="-9 -T0" ^xz > $out
             print $"Done: ($out) ((^du -sh $out | split row "\t" | get 0))"
         }
         "tar.gz" | "tgz" => {
             let out = $"($name).tar.gz"
             print $"Compressing -> ($out)"
             ^tar -C ($target | path dirname) -cf - ($target | path basename)
-                | ^pv -s $size
-                | ^gzip -9 > $out
+            | ^pv -s $size
+            | ^gzip -9 > $out
             print $"Done: ($out) ((^du -sh $out | split row "\t" | get 0))"
         }
         "tar.zst" | "tzst" => {
             let out = $"($name).tar.zst"
             print $"Compressing -> ($out) (zstd -19 -T0)"
             ^tar -C ($target | path dirname) -cf - ($target | path basename)
-                | ^pv -s $size
-                | ^zstd -19 -T0 > $out
+            | ^pv -s $size
+            | ^zstd -19 -T0 > $out
             print $"Done: ($out) ((^du -sh $out | split row "\t" | get 0))"
         }
         "zip" => {
@@ -254,7 +253,10 @@ def compress [
             ^zip -r $out $target
             print $"Done: ($out) ((^du -sh $out | split row "\t" | get 0))"
         }
-        _ => { print $"Unknown format: ($fmt)"; print "Available: tar.xz, tar.gz, tar.zst, zip" }
+        _ => {
+            print $"Unknown format: ($fmt)"
+            print "Available: tar.xz, tar.gz, tar.zst, zip"
+        }
     }
 }
 
@@ -270,7 +272,9 @@ def nvimconf [] { ^nvim ($env.HOME | path join ".config" "nvim" "init.lua") }
 
 # --- misc ---
 
-def lssize [] { ^du -sh * | sort-by size | each {|r| print $r} }
+def lssize [] {
+    ^du -sh * | sort-by size | each {|r| print $r}
+}
 
 def --env mkcd [dir: string] {
     mkdir $dir
@@ -342,17 +346,19 @@ use std/config *
 # Initialize the PWD hook as an empty list if it doesn't exist
 $env.config.hooks.env_change.PWD = $env.config.hooks.env_change.PWD? | default []
 
-$env.config.hooks.env_change.PWD ++= [{||
-  if (which direnv | is-empty) {
-    # If direnv isn't installed, do nothing
-    return
-  }
+$env.config.hooks.env_change.PWD ++= [
+    {||
+        if (which direnv | is-empty) {
+            # If direnv isn't installed, do nothing
+            return
+        }
 
-  direnv export json | from json | default {} | update cells --columns [ PATH ] {
+        direnv export json | from json | default {} | update cells --columns [PATH] {
     # If direnv changes the PATH, it will become a string and we need to re-convert it to a list
     do (env-conversions).path.from_string $in
   } | load-env
-}]
+    }
+]
 
 # -- zoxide --
 
@@ -376,12 +382,8 @@ def "nu-complete zoxide path" [context: string] {
                 }
             })
     {
-        options: {
-            sort: false,
-            completion_algorithm: substring,
-            case_sensitive: false,
-        },
-        completions: $completions,
+        options: {sort: false, completion_algorithm: substring, case_sensitive: false}
+        completions: $completions
     }
 }
 
@@ -389,20 +391,33 @@ def "nu-complete zoxide path" [context: string] {
 
 def clean-name [name: string, cmd: string] {
     let base = $name
-        | str replace --regex '^\.' ''
-        | str replace --regex '-wrapped$|-wrapper$|_wrapped$' ''
-        | str replace --regex '-bin$' ''
+    | str replace --regex '^\.' ''
+    | str replace --regex '-wrapped$|-wrapper$|_wrapped$' ''
+    | str replace --regex '-bin$' ''
 
-    let generic = [qs quickshell node bun python python3 electron chrome bash zsh nu sh]
+    let generic = [
+        qs
+        quickshell
+        node
+        bun
+        python
+        python3
+        electron
+        chrome
+        bash
+        zsh
+        nu
+        sh
+    ]
     if ($base | str lowercase) in $generic {
         let args = $cmd | split row ' ' | skip 1
         let hint = if ($args | is-empty) {
             null
-        } else if ($args | any { |a| $a == "-c" }) {
+        } else if ($args | any {|a| $a == "-c" }) {
             let i = $args | enumerate | where item == "-c" | first | get index
             $args | get -o ($i + 1)
         } else {
-            $args | where { |a| not ($a | str starts-with "-") } | first | default null
+            $args | where {|a| not ($a | str starts-with "-") } | first | default null
         }
 
         if $hint != null {
@@ -422,14 +437,14 @@ def memu [
     --raw (-r)                    # Show the raw process name from ps
 ] {
     let sort_col = match $sort {
-        "real" | "pss" => "Real Memory",
-        "resident" | "rss" => "Resident",
-        "virtual" | "vsz" => "Virtual",
-        _ => "Real Memory",
+        "real" | "pss" => "Real Memory"
+        "resident" | "rss" => "Resident"
+        "virtual" | "vsz" => "Virtual"
+        _ => "Real Memory"
     }
 
     if ($targets | is-empty) {
-        error make { msg: "Give at least one PID or process name" }
+        error make {msg: "Give at least one PID or process name"}
     }
 
     let procs = ps --long
@@ -447,7 +462,7 @@ def memu [
     } | flatten | uniq-by pid
 
     if ($matched | is-empty) {
-        error make { msg: $"No process found for: ($targets | str join ', ')" }
+        error make {msg: $"No process found for: ($targets | str join ', ')"}
     }
 
     let rows = $matched | each { |p|
@@ -477,7 +492,7 @@ def memu [
         }
     }
 
-    let sorted = $rows | sort-by { |r| $r | get $sort_col } --reverse
+    let sorted = $rows | sort-by {|r| $r | get $sort_col } --reverse
 
     if $total {
         let sum = {

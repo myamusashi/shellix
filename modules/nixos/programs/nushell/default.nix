@@ -23,11 +23,14 @@
     );
 in {
     config = lib.mkIf cfg.enable {
-        environment.shells = [pkgs.nushell];
-        environment.systemPackages = [
-            pkgs.nushell
-            pkgs.carapace
-        ];
+        environment = {
+            shells = [pkgs.nushell];
+            systemPackages = with pkgs; [
+                nushell
+                carapace
+                nufmt
+            ];
+        };
 
         systemd.user.tmpfiles.rules = [
             "d %h/.config/nushell 0755 myamusashi users - -"
