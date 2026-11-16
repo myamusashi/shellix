@@ -74,6 +74,10 @@
             input = ./templates/serein/shellix.json;
             output = ".config/serein/shellix.json";
         }
+        {
+            input = ./templates/yapfast/layout.json;
+            output = ".local/share/yapfast/layout.json";
+        }
     ];
 
     outputDirectories = lib.unique (map (template: builtins.dirOf template.output) templates);
