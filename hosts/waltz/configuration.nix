@@ -42,7 +42,6 @@
             vaultwarden.enable = true;
             vsftpd.enable = true;
             ocis.enable = true;
-            headroom.enable = false;
             cloudflared = {
                 enable = true;
                 ingress = {
@@ -50,8 +49,6 @@
                     "vault.myamusashi.cc" = "http://127.0.0.1:80";
                     "cloud.myamusashi.cc" = "https://localhost:${toString config.shellix.variables.port.OCIS}";
                     "ssh.myamusashi.cc" = "ssh://localhost:22";
-                    "router.myamusashi.cc" = "http://127.0.0.1:${toString config.shellix.variables.port.NINEROUTER}";
-                    "headroom.myamusashi.cc" = "http://127.0.0.1:${toString config.shellix.variables.port.HEADROOM}";
                 };
             };
             phpApps = {
