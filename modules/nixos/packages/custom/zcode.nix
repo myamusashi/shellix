@@ -4,13 +4,13 @@
     fetchurl,
 }: let
     pname = "zcode";
-    version = "3.16.3";
+    version = "3.18.2";
 
     arch = "x64";
 
     src = fetchurl {
         url = "https://cdn-zcode.z.ai/zcode/electron/releases/${version}/linux-${arch}/ZCode-${version}-linux-${arch}.AppImage";
-        hash = "sha512-GH9hXVJFQCHma9EIX1GiiWFYwbzdZXROqQkDc6EWtq59v0jfYOP5kPvyuLIANKriuoRorCuJTrSmricoHO+Wgg==";
+        hash = "sha512-m0Lv6FHS8LRD5/DWYY6z9HztzXYp8+meZTcrfCdlJrUdjN0BKmALvHrFP39PneRViUp5lpa9h7HFQ1NP9pOJuQ==";
     };
 
     appimageContents = appimageTools.extract {
@@ -24,8 +24,6 @@ in
         extraInstallCommands = ''
             install -Dm444 ${appimageContents}/${pname}.desktop -t $out/share/applications
             cp -r ${appimageContents}/usr/share/icons $out/share
-            # Point the desktop entry at the wrapped binary and keep upstream's
-            # --no-sandbox launch (matches the shipped AppRun invocation).
             substituteInPlace $out/share/applications/${pname}.desktop \
               --replace-fail 'Exec=AppRun --no-sandbox %U' "Exec=$out/bin/${pname} --no-sandbox %U"
         '';

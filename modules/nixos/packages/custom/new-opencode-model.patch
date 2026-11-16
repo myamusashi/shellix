@@ -1,0 +1,13 @@
+diff --git a/models.json b/models.json
+index 8d9b1b5..fbc2da6 100644
+--- a/models.json
++++ b/models.json
+@@ -10,6 +10,7 @@
+     "glm-5.3-flash-free",
+     "beam-free",
+     "flint-40b-free",
+-    "pulse-alpha-free"
++    "pulse-alpha-free",
++    "crouton-alpha-free"
+   ]
+ }

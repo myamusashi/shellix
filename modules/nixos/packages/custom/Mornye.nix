@@ -32,18 +32,20 @@
     pname = "mornye";
     version = "5.2.6";
     applicationId = "com.zarz.mornye";
-
-    appImage = fetchurl {
-        url = "https://github.com/mornyeapp/Mornye-Desktop/releases/download/v${version}/Mornye-v${version}-linux-x86_64.AppImage";
-        hash = "sha256-PTQRQLqajPYDRprddBE3UejYoPcGLrdNQkvdYpWnZe0=";
-    };
+    iconName = "Mornye";
 
     extracted = appimageTools.extract {
         inherit pname version;
-        src = appImage;
+        src = fetchurl {
+            url = "https://github.com/mornyeapp/Mornye-Desktop/releases/download/v${version}/Mornye-v${version}-linux-x86_64.AppImage";
+            hash = "sha256-PTQRQLqajPYDRprddBE3UejYoPcGLrdNQkvdYpWnZe0=";
+        };
     };
 
-    dlopenLibraries = [
+    installDirectory = "$out/libexec/${pname}";
+    bundledLibraryDirectory = "${installDirectory}/usr/lib/${pname}/lib";
+
+    runtimeLoadedLibraries = [
         libGL
         libepoxy
         libsecret
@@ -54,16 +56,19 @@
         libxkbcommon
         libX11
     ];
-
-    bundledLibraryDirectory = "$out/libexec/${pname}/usr/lib/${pname}/lib";
 in
     stdenv.mkDerivation {
         inherit pname version;
 
+        dontUnpack = true;
+        dontWrapGApps = true;
+        dontStrip = true;
+        autoPatchelfIgnoreMissingDeps = ["libjvm.so"];
+
         nativeBuildInputs = [
-            wrapGAppsHook3
-            makeWrapper
             autoPatchelfHook
+            makeWrapper
+            wrapGAppsHook3
         ];
 
         buildInputs = [
@@ -88,38 +93,35 @@ in
             gst_all_1.gst-plugins-good
         ];
 
-        unpackPhase = ''
-            cp -r ${extracted} extracted
-            chmod -R u+w extracted
-        '';
-
-        dontWrapGApps = true;
-        dontStrip = true;
-        autoPatchelfIgnoreMissingDeps = ["libjvm.so"];
-
         installPhase = ''
             runHook preInstall
 
-            mkdir -p $out/libexec/${pname} $out/bin
-            cp -r extracted/. $out/libexec/${pname}/
+            mkdir -p ${installDirectory} $out/bin $out/share/icons $out/share/metainfo
+            cp -r ${extracted}/. ${installDirectory}/
+            chmod -R u+w ${installDirectory}
 
-            install -Dm444 extracted/${applicationId}.desktop \
-              $out/share/applications/${applicationId}.desktop
-            sed -i "s|^Exec=[^ ]*|Exec=$out/bin/${pname}|" \
-              $out/share/applications/${applicationId}.desktop
+            install -Dm444 ${extracted}/${applicationId}.desktop \
+                $out/share/applications/${applicationId}.desktop
+            sed -i \
+                -e "s|^Exec=[^ ]*|Exec=$out/bin/${pname}|" \
+                -e "s|^Icon=.*|Icon=${iconName}|" \
+                $out/share/applications/${applicationId}.desktop
 
-            mkdir -p $out/share/icons $out/share/metainfo
-            cp -r extracted/usr/share/icons/* $out/share/icons/
-            cp extracted/usr/share/metainfo/*.metainfo.xml $out/share/metainfo/
+            cp -r --no-preserve=mode ${extracted}/usr/share/icons/* $out/share/icons/
+            for iconPath in $out/share/icons/hicolor/*/apps/${applicationId}.*; do
+                mv "$iconPath" "$(dirname "$iconPath")/${iconName}.''${iconPath##*.}"
+            done
+
+            cp -r --no-preserve=mode ${extracted}/. ${installDirectory}/
 
             runHook postInstall
         '';
 
         preFixup = ''
-            makeWrapper $out/libexec/${pname}/usr/lib/${pname}/${pname} $out/bin/${pname} \
-              "''${gappsWrapperArgs[@]}" \
-              --prefix PATH : "${lib.makeBinPath [xdg-user-dirs]}" \
-              --prefix LD_LIBRARY_PATH : "${bundledLibraryDirectory}:/run/opengl-driver/lib:${jdk}/lib/openjdk/lib/server:${lib.makeLibraryPath dlopenLibraries}"
+            makeWrapper ${installDirectory}/usr/lib/${pname}/${pname} $out/bin/${pname} \
+                "''${gappsWrapperArgs[@]}" \
+                --prefix PATH : "${lib.makeBinPath [xdg-user-dirs]}" \
+                --prefix LD_LIBRARY_PATH : "${bundledLibraryDirectory}:/run/opengl-driver/lib:${jdk}/lib/openjdk/lib/server:${lib.makeLibraryPath runtimeLoadedLibraries}"
         '';
 
         meta = {
