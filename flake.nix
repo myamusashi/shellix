@@ -15,58 +15,13 @@
             inputs.nixpkgs.follows = "nixpkgs";
         };
 
-        aquamarine = {
-            url = "github:hyprwm/aquamarine";
-            inputs.nixpkgs.follows = "nixpkgs";
-        };
-
         hyprland = {
-            url = "github:hyprwm/Hyprland/v0.57.0";
-            inputs.nixpkgs.follows = "nixpkgs";
-        };
-
-        hyprutils = {
-            url = "github:hyprwm/hyprutils";
-            inputs.nixpkgs.follows = "nixpkgs";
-        };
-
-        hyprcursor = {
-            url = "github:hyprwm/hyprcursor";
-            inputs.nixpkgs.follows = "nixpkgs";
-        };
-
-        hyprgraphics = {
-            url = "github:hyprwm/hyprgraphics";
-            inputs.nixpkgs.follows = "nixpkgs";
-        };
-
-        hyprland-protocols = {
-            url = "github:hyprwm/hyprland-protocols";
-            inputs.nixpkgs.follows = "nixpkgs";
-        };
-
-        hyprland-guiutils = {
-            url = "github:hyprwm/hyprland-guiutils";
-            inputs.nixpkgs.follows = "nixpkgs";
-        };
-
-        hyprlang = {
-            url = "github:hyprwm/hyprlang";
+            url = "github:hyprwm/Hyprland?rev=70ec30e71656bce5e1af3364129421a4386a69e1";
             inputs.nixpkgs.follows = "nixpkgs";
         };
 
         xdg-desktop-portal-hyprland = {
             url = "github:hyprwm/xdg-desktop-portal-hyprland";
-            inputs.nixpkgs.follows = "nixpkgs";
-        };
-
-        hyprwayland-scanner = {
-            url = "github:hyprwm/hyprland-guiutils";
-            inputs.nixpkgs.follows = "nixpkgs";
-        };
-
-        hyprwire = {
-            url = "github:hyprwm/hyprwire";
             inputs.nixpkgs.follows = "nixpkgs";
         };
 
@@ -93,23 +48,8 @@
             inputs.nixpkgs.follows = "nixpkgs";
         };
 
-        hyprqt6engine = {
-            url = "github:hyprwm/hyprqt6engine";
-            inputs.nixpkgs.follows = "nixpkgs";
-        };
-
-        hyprtoolkit = {
-            url = "github:hyprwm/hyprtoolkit";
-            inputs.nixpkgs.follows = "nixpkgs";
-        };
-
         hyprpicker = {
             url = "github:hyprwm/hyprpicker";
-            inputs.nixpkgs.follows = "nixpkgs";
-        };
-
-        hyprpwcenter = {
-            url = "github:hyprwm/hyprpwcenter";
             inputs.nixpkgs.follows = "nixpkgs";
         };
 
@@ -141,10 +81,10 @@
             inputs.nixpkgs.follows = "nixpkgs";
         };
 
-        # sesame = {
-        #     url = "git+https://git.myamusashi.cc/myamusashi/sesame.git";
-        #     inputs.nixpkgs.follows = "nixpkgs";
-        # };
+        bootvine = {
+            url = "git+https://codeberg.org/wvhulle/bootvine";
+            inputs.nixpkgs.follows = "nixpkgs";
+        };
 
         areofyl-fetch.url = "github:areofyl/fetch";
         apple-fonts.url = "github:Lyndeno/apple-fonts.nix";
