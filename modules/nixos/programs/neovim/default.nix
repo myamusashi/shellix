@@ -7,8 +7,6 @@
 }: let
     cfg = config.shellix.programs.neovim;
     lang = cfg.languages;
-    csskit = inputs.myamusashi-pkgs.packages.${pkgs.stdenv.hostPlatform.system}.csskit;
-    php-lsp = inputs.myamusashi-pkgs.packages.${pkgs.stdenv.hostPlatform.system}.php-lsp;
 
     runtimePackages = with pkgs;
         lib.optionals lang.web [
@@ -17,14 +15,16 @@
             svelte-language-server
             tailwindcss-language-server
             vscode-langservers-extracted
-            csskit
             typescript
             nodejs
             yarn
             pnpm
         ]
         ++ lib.optionals lang.php [
-            php-lsp
+            intelephense
+            php
+            php84Packages.php-cs-fixer
+            phpstan
         ]
         ++ lib.optionals lang.lua [
             lua-language-server
