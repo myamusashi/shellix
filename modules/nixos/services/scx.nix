@@ -4,9 +4,9 @@
     ...
 }: {
     config = lib.mkIf config.shellix.services.scx.enable {
-        services.scx = {
+        services.scx-loader = {
             enable = true;
-            scheduler = "scx_bpfland";
+            config.default_sched = "scx_bpfland";
         };
     };
 }

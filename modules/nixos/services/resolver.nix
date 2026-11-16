@@ -14,9 +14,11 @@
                 DNSOverTLS = "opportunistic";
                 DNSSEC = "allow-downgrade";
                 DNSStubListener = true;
-                FallbackDNS = [
-                    "1.1.1.1#one.one.one.one"
-                    "1.0.0.1#one.one.one.one"
+                ResolveUnicastSingleLabel = true;
+                Domains = [
+                    "~."
+                    "home.myamusashi.dev"
+                    "warp-svc"
                 ];
             };
         };
