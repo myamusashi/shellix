@@ -12,8 +12,6 @@
         ./php-app.nix
         ./cloudflared.nix
         ./mail.nix
-        ./9router.nix
-        ./headroom.nix
         ./pihole.nix
     ];
 
@@ -29,8 +27,6 @@
         nix-serve.enable = lib.mkEnableOption "Enable nix-serve for serving nix objects";
         mail.enable = lib.mkEnableOption "Enable stalwart mail server";
         cloudflared.enable = lib.mkEnableOption "Enable Cloudflare Tunnel";
-        "9router".enable = lib.mkEnableOption "Enable 9Router AI LLM proxy router";
-        headroom.enable = lib.mkEnableOption "Enable headroom-ai context compression proxy";
         pihole.enable = lib.mkEnableOption "Pi-hole adblocker (FTL + web dashboard)";
     };
 }

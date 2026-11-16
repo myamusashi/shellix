@@ -71,16 +71,6 @@
                 default = 3731;
                 description = "Port number for nix-serve for serve binary cache nix";
             };
-            NINEROUTER = lib.mkOption {
-                type = lib.types.port;
-                default = 20128;
-                description = "Port number for 9Router AI LLM proxy router";
-            };
-            HEADROOM = lib.mkOption {
-                type = lib.types.port;
-                default = 8787;
-                description = "Port number for headroom-ai context compression proxy";
-            };
             PIHOLE = lib.mkOption {
                 type = lib.types.port;
                 default = 8080;
