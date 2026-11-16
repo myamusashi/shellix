@@ -1,51 +1,269 @@
-diff --git a/scrollOverview.cpp b/scrollOverview.cpp
-index 015ecb4..7872f53 100644
---- a/scrollOverview.cpp
-+++ b/scrollOverview.cpp
-@@ -19,7 +19,6 @@
- #include <hyprland/src/Compositor.hpp>
- #include <hyprland/src/config/ConfigValue.hpp>
+From 2b6088e0d2e365661d5ef5ad31b19e11da2603b1 Mon Sep 17 00:00:00 2001
+From: Yiheng He <yiheng.he@proton.me>
+Date: Thu, 12 Nov 2026 08:37:03 -0600
+Subject: [PATCH 1/3] fix: update Hyprlang config types
+
+---
+ Config.cpp |  2 +-
+ Config.hpp | 17 +++++++++--------
+ Window.cpp |  2 +-
+ 3 files changed, 11 insertions(+), 10 deletions(-)
+
+diff --git a/Config.cpp b/Config.cpp
+index 71c5287..71078e8 100644
+--- a/Config.cpp
++++ b/Config.cpp
+@@ -406,7 +406,7 @@ static void defineConfigValues() {
+     addValue(makeShared<CIntValue>("plugin:scrolloverview:gesture_distance", "gesture distance in pixels", 200, SIntValueOptions{.min = 1}));
+     addValue(makeShared<CFloatValue>("plugin:scrolloverview:scale", "overview scale", 0.5F, SFloatValueOptions{.min = 0.1F, .max = 0.9F}));
+     addValue(makeShared<CIntValue>("plugin:scrolloverview:workspace_gap", "gap between overview workspaces", 0, SIntValueOptions{.min = 0}));
+-    addValue(makeShared<CStringValue>("plugin:scrolloverview:layout", "overview layout", Hyprlang::STRING{"vertical"}));
++    addValue(makeShared<CStringValue>("plugin:scrolloverview:layout", "overview layout", ::Config::STRING{"vertical"}));
+     addValue(makeShared<CBoolValue>("plugin:scrolloverview:cross_monitor_drag", "enable cross-monitor window dragging", false));
+     addValue(makeShared<CIntValue>("plugin:scrolloverview:input:scroll_event_delay", "minimum delay (ms) between discrete scroll steps (wheel workspace nav and trackpad focus stepping)", 200, SIntValueOptions{.min = 0}));
+     addValue(makeShared<CFloatValue>("plugin:scrolloverview:input:touchpad_scroll_factor", "overview touchpad scroll factor", 1.F,
+diff --git a/Config.hpp b/Config.hpp
+index 14aacac..c84550f 100644
+--- a/Config.hpp
++++ b/Config.hpp
+@@ -4,6 +4,7 @@
+ 
  #include <hyprland/src/config/ConfigManager.hpp>
--#include <hyprland/src/config/lua/ConfigManager.hpp>
- #include <hyprland/src/config/shared/actions/ConfigActions.hpp>
- #include <hyprland/src/config/shared/animation/AnimationTree.hpp>
+ #include <hyprland/src/config/ConfigValue.hpp>
++#include <hyprland/src/config/shared/Types.hpp>
  #include <hyprland/src/config/shared/complex/ComplexDataTypes.hpp>
-@@ -64,7 +63,6 @@
- #include <hyprland/src/render/decorations/CHyprGroupBarDecoration.hpp>
- #include <hyprland/src/render/decorations/DecorationPositioner.hpp>
- #include <hyprutils/utils/ScopeGuard.hpp>
--#include <hyprutils/string/Numeric.hpp>
- #undef protected
- #undef private
- #include "Config.hpp"
-@@ -1669,7 +1667,7 @@ CScrollOverview::CScrollOverview(PHLWORKSPACE startedOn_, bool swipe_, PHLMONITO
-     windowMoveHook      = Event::bus()->m_events.window.moveToWorkspace.listen(onWindowMove);
-     windowActiveHook    = Event::bus()->m_events.window.active.listen(onWindowActive);
-     windowFullscreenHook = Event::bus()->m_events.window.fullscreen.listen(onWindowFullscreen);
--    workspaceCreatedHook = Event::bus()->m_events.workspace.created.listen(onWorkspaceLifecycle);
-+    workspaceCreatedHook = Event::bus()->m_events.workspace.createdLate.listen(onWorkspaceLifecycle);
-     workspaceRemovedHook = Event::bus()->m_events.workspace.removed.listen(onWorkspaceLifecycle);
-     activateSubmapIfConfigured();
-     if (!usesSubmapKeybinds)
-@@ -5545,10 +5543,8 @@ bool CScrollOverview::dispatchSubmapMouseClick(uint32_t button) {
-     if (KEYBIND == BINDS.end())
-         return false;
  
--    const auto INDEX = Hyprutils::String::strToNumber<int>((*KEYBIND)->metadata().argument);
--    const auto MGR   = Config::Lua::mgr();
--    if (!INDEX || !MGR)
--        return false;
-+    // Keep the callback alive if it removes its own binding.
-+    const auto BIND = *KEYBIND;
+ #include <optional>
+@@ -56,9 +57,9 @@ T getValue(const std::string& name, PHLMONITOR monitor = {}) {
+         else if constexpr (std::is_same_v<TValue, bool>)
+             return *static_cast<const bool*>(DATA);
+         else if constexpr (std::is_integral_v<TValue>)
+-            return static_cast<TValue>(*static_cast<const Hyprlang::INT*>(DATA));
++            return static_cast<TValue>(*static_cast<const ::Config::INTEGER*>(DATA));
+         else if constexpr (std::is_floating_point_v<TValue>)
+-            return static_cast<TValue>(*static_cast<const Hyprlang::FLOAT*>(DATA));
++            return static_cast<TValue>(*static_cast<const ::Config::FLOAT*>(DATA));
+         else
+             return *static_cast<const TValue*>(DATA);
+     }
+@@ -69,11 +70,11 @@ T getValue(const std::string& name, PHLMONITOR monitor = {}) {
+             return {};
+         return *sc<::Config::CGradientValueData*>(ref.ptr());
+     } else if constexpr (std::is_same_v<TValue, bool>)
+-        return *valueRef<Hyprlang::INT>(name) != 0;
++        return *valueRef<::Config::INTEGER>(name) != 0;
+     else if constexpr (std::is_integral_v<TValue> && !std::is_same_v<TValue, bool>)
+-        return sc<TValue>(*valueRef<Hyprlang::INT>(name));
++        return sc<TValue>(*valueRef<::Config::INTEGER>(name));
+     else if constexpr (std::is_floating_point_v<TValue>)
+-        return sc<TValue>(*valueRef<Hyprlang::FLOAT>(name));
++        return sc<TValue>(*valueRef<::Config::FLOAT>(name));
+     else
+         return *valueRef<TValue>(name);
+ }
+@@ -88,11 +89,11 @@ void setValue(const std::string& name, const T& value) {
+     using TValue = std::decay_t<T>;
  
-     auto&      actionState          = *Config::Actions::state();
-     const int PREVIOUSPASSPRESSED   = actionState.m_passPressed;
-@@ -5566,7 +5562,7 @@ bool CScrollOverview::dispatchSubmapMouseClick(uint32_t button) {
-         actionState.m_lastMouseCode       = PREVIOUSMOUSECODE;
-     });
+     if constexpr (std::is_same_v<TValue, bool>)
+-        *getValuePtr<Hyprlang::INT>(name) = value ? 1 : 0;
++        *getValuePtr<::Config::INTEGER>(name) = value ? 1 : 0;
+     else if constexpr (std::is_integral_v<TValue> && !std::is_same_v<TValue, bool>)
+-        *getValuePtr<Hyprlang::INT>(name) = sc<Hyprlang::INT>(value);
++        *getValuePtr<::Config::INTEGER>(name) = sc<::Config::INTEGER>(value);
+     else if constexpr (std::is_floating_point_v<TValue>)
+-        *getValuePtr<Hyprlang::FLOAT>(name) = sc<Hyprlang::FLOAT>(value);
++        *getValuePtr<::Config::FLOAT>(name) = sc<::Config::FLOAT>(value);
+     else
+         *getValuePtr<TValue>(name) = value;
+ }
+diff --git a/Window.cpp b/Window.cpp
+index 18995fd..d7230d5 100644
+--- a/Window.cpp
++++ b/Window.cpp
+@@ -611,7 +611,7 @@ static void renderOverviewWindowShadow(PHLMONITOR monitor, const PHLWINDOW& wind
+     const auto PSHADOWS      = ScrollOverview::Config::getValue<int>("decoration:shadow:enabled");
+     const auto PSHADOWSIZE   = ScrollOverview::Config::getValue<int>("decoration:shadow:range");
+     const auto PSHADOWSCALE  = ScrollOverview::Config::getValue<float>("decoration:shadow:scale");
+-    const auto PSHADOWOFFSET = ScrollOverview::Config::getValue<Hyprlang::VEC2>("decoration:shadow:offset");
++    const auto PSHADOWOFFSET = ScrollOverview::Config::getValue<::Config::VEC2>("decoration:shadow:offset");
  
--    const auto RESULT = MGR->callLuaFnBind(*INDEX);
-+    const auto RESULT = BIND->invoke();
-     return RESULT.success;
+     if (PSHADOWS != 1 || PSHADOWSIZE <= 0)
+         return;
+
+From 7c3643683d3021e928af72470a787e406377f07b Mon Sep 17 00:00:00 2001
+From: Yiheng He <yiheng.he@proton.me>
+Date: Thu, 12 Nov 2026 08:37:18 -0600
+Subject: [PATCH 2/3] fix: remove obsolete Hyprlang gesture parser
+
+---
+ Config.cpp |  4 +---
+ Config.hpp |  3 +--
+ main.cpp   | 63 +-----------------------------------------------------
+ 3 files changed, 3 insertions(+), 67 deletions(-)
+
+diff --git a/Config.cpp b/Config.cpp
+index 71078e8..fc1785a 100644
+--- a/Config.cpp
++++ b/Config.cpp
+@@ -379,9 +379,7 @@ void registerDispatcher(const std::string& name, TDispatcher dispatcher) {
+     HyprlandAPI::addLuaFunction(SCROLLOVERVIEW_HANDLE, "scrolloverview", std::string{DISPATCHER->name}, DISPATCHER->luaFunction);
  }
  
+-void registerGesture(TGestureRegistrar gestureRegistrar, TGestureKeyword gestureKeyword) {
+-    HyprlandAPI::addConfigKeyword(SCROLLOVERVIEW_HANDLE, "scrolloverview-gesture", gestureKeyword, {});
+-
++void registerGesture(TGestureRegistrar gestureRegistrar) {
+     if (::Config::mgr()->type() != ::Config::CONFIG_LUA)
+         return;
+ 
+diff --git a/Config.hpp b/Config.hpp
+index c84550f..01f18dd 100644
+--- a/Config.hpp
++++ b/Config.hpp
+@@ -15,7 +15,6 @@
+ namespace ScrollOverview::Config {
+ 
+ using TDispatcher       = SDispatchResult (*)(std::string);
+-using TGestureKeyword   = Hyprlang::CParseResult (*)(const char* LHS, const char* RHS);
+ using TGestureRegistrar   = SDispatchResult (*)(size_t fingerCount, const std::string& direction, const std::string& action, const std::string& mods, float deltaScale,
+                                                 bool disableInhibit);
+ 
+@@ -31,7 +30,7 @@ enum class EScrollAction {
+ };
+ 
+ void registerDispatcher(const std::string& name, TDispatcher dispatcher);
+-void registerGesture(TGestureRegistrar gestureRegistrar, TGestureKeyword gestureKeyword);
++void registerGesture(TGestureRegistrar gestureRegistrar);
+ void registerConfig();
+ const void* monitorValueData(const std::string& name, PHLMONITOR monitor);
+ bool hasCrossMonitorDragEnabled();
+diff --git a/main.cpp b/main.cpp
+index 6abeb23..4415892 100644
+--- a/main.cpp
++++ b/main.cpp
+@@ -565,67 +565,6 @@ static SDispatchResult onRegisterOverviewGesture(size_t fingerCount, const std::
+     return {};
+ }
+ 
+-static Hyprlang::CParseResult overviewGestureKeyword(const char* LHS, const char* RHS) {
+-    Hyprlang::CParseResult result;
+-
+-    if (g_unloading)
+-        return result;
+-
+-    CConstVarList             data(RHS);
+-
+-    size_t                    fingerCount = 0;
+-
+-    try {
+-        fingerCount = std::stoul(std::string{data[0]});
+-    } catch (...) {
+-        result.setError(std::format("Invalid value {} for finger count", data[0]).c_str());
+-        return result;
+-    }
+-
+-    const auto direction = g_pTrackpadGestures->dirForString(data[1]);
+-
+-    if (direction == TRACKPAD_GESTURE_DIR_NONE) {
+-        result.setError(std::format("Invalid direction: {}", data[1]).c_str());
+-        return result;
+-    }
+-
+-    int      startDataIdx   = 2;
+-    Input::ModifierMask modMask        = Input::HL_MODIFIER_NONE;
+-    float    deltaScale     = 1.F;
+-    bool     disableInhibit = false;
+-
+-    while (true) {
+-
+-        if (data[startDataIdx].starts_with("mod:")) {
+-            modMask = Keybinds::modMaskFromString(std::string{data[startDataIdx].substr(4)});
+-            startDataIdx++;
+-            continue;
+-        } else if (data[startDataIdx].starts_with("scale:")) {
+-            try {
+-                deltaScale = std::clamp(std::stof(std::string{data[startDataIdx].substr(6)}), 0.1F, 10.F);
+-                startDataIdx++;
+-                continue;
+-            } catch (...) {
+-                result.setError(std::format("Invalid delta scale: {}", std::string{data[startDataIdx].substr(6)}).c_str());
+-                return result;
+-            }
+-        } else if (data[startDataIdx] == "disable_inhibit") {
+-            disableInhibit = true;
+-            startDataIdx++;
+-            continue;
+-        }
+-
+-        break;
+-    }
+-
+-    const auto resultFromGesture = applyOverviewGesture(fingerCount, direction, std::string{data[startDataIdx]}, modMask, deltaScale, disableInhibit);
+-
+-    if (!resultFromGesture)
+-        result.setError(resultFromGesture.error().c_str());
+-
+-    return result;
+-}
+-
+ APICALL EXPORT PLUGIN_DESCRIPTION_INFO PLUGIN_INIT(HANDLE handle) {
+     SCROLLOVERVIEW_HANDLE = handle;
+ 
+@@ -706,7 +645,7 @@ APICALL EXPORT PLUGIN_DESCRIPTION_INFO PLUGIN_INIT(HANDLE handle) {
+     ScrollOverview::Config::registerDispatcher("overview", ::onOverviewDispatcher);
+     ScrollOverview::Config::registerDispatcher("navigate", ::onNavigateDispatcher);
+     ScrollOverview::Config::registerDispatcher("window", ::onWindowDispatcher);
+-    ScrollOverview::Config::registerGesture(::onRegisterOverviewGesture, ::overviewGestureKeyword);
++    ScrollOverview::Config::registerGesture(::onRegisterOverviewGesture);
+     ScrollOverview::Config::registerConfig();
+ 
+     return {"scrolloverview", "A plugin for an overview", "Vaxry, yayuuu", SCROLLOVERVIEW_VERSION};
+
+From d50303541951032efd0ec67249fe94f5a18d7e5f Mon Sep 17 00:00:00 2001
+From: Yiheng He <yiheng.he@proton.me>
+Date: Thu, 12 Nov 2026 13:31:27 -0600
+Subject: [PATCH 3/3] fix: update workspace change hook signature
+
+---
+ main.cpp | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/main.cpp b/main.cpp
+index 4415892..1eb8669 100644
+--- a/main.cpp
++++ b/main.cpp
+@@ -47,7 +47,7 @@ typedef void (*origScheduleFrame)(void*, Aquamarine::IOutput::scheduleFrameReaso
+ typedef void (*origSendFrameEventsToWorkspace)(void*, PHLMONITOR, PHLWORKSPACE, const Time::steady_tp&);
+ typedef void (*origSurfaceFrame)(void*, const Time::steady_tp&);
+ typedef void (*origMoveMouse)(void*, const Vector2D&);
+-using origChangeWorkspace = Config::Actions::ActionResult (*)(PHLWORKSPACE);
++using origChangeWorkspace = Config::Actions::ActionResult (*)(PHLWORKSPACE, bool);
+ 
+ static bool g_unloading = false;
+ 
+@@ -71,14 +71,14 @@ static void warnNativeDragUnavailable();
+ static void disableNativeDragHook();
+ static void reconcileNativeDragHook();
+ 
+-static Config::Actions::ActionResult hkChangeWorkspace(PHLWORKSPACE workspace) {
++static Config::Actions::ActionResult hkChangeWorkspace(PHLWORKSPACE workspace, bool noFocus) {
+     if (workspace && !g_unloading) {
+         const auto overviews = scrollOverviews();
+         for (const auto& overview : overviews)
+             removeOverview(overview.get());
+     }
+ 
+-    return rc<origChangeWorkspace>(g_pScrollChangeWorkspaceHook->m_original)(workspace);
++    return rc<origChangeWorkspace>(g_pScrollChangeWorkspaceHook->m_original)(workspace, noFocus);
+ }
+ 
+ bool ensureScrollOverviewHooks() {
+@@ -616,7 +616,7 @@ APICALL EXPORT PLUGIN_DESCRIPTION_INFO PLUGIN_INIT(HANDLE handle) {
+     // rendering hooks inside hkChangeWorkspace, which still needs its original function.
+     g_pScrollChangeWorkspaceHook = HyprlandAPI::createFunctionHook(
+         SCROLLOVERVIEW_HANDLE,
+-        findFnOrThrow("changeWorkspace", {"Config::Actions::changeWorkspace(Hyprutils::Memory::CSharedPointer<Workspace::CHLWorkspace>)"}),
++        findFnOrThrow("changeWorkspace", {"Config::Actions::changeWorkspace(Hyprutils::Memory::CSharedPointer<Workspace::CHLWorkspace>, bool)"}),
+         rc<void*>(hkChangeWorkspace));
+     if (!g_pScrollChangeWorkspaceHook || !g_pScrollChangeWorkspaceHook->hook()) {
+         failNotif("Failed enabling workspace change hook");

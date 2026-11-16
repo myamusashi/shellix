@@ -46,14 +46,8 @@
                 };
             };
         };
-        domain = "home.myamusashi.dev";
-        search = ["home.myamusashi.dev"];
         nameservers = [
             "192.168.18.14" # pi-hole
-            "1.1.1.1#one.one.one.one"
-            "1.0.0.1#one.one.one.one"
-            "94.140.14.14" # adGuard
-            "94.140.15.15"
         ];
         extraHosts = ''
             127.0.0.1 pmo.com

@@ -111,6 +111,7 @@ in {
                 user = "myamusashi";
             };
         };
+        gpu-screen-recorder.enable = true;
         dconf.enable = true;
         thunderbird.enable = true;
         mtr.enable = true;
@@ -148,6 +149,13 @@ in {
         };
         hyprland = {
             enable = true;
+            package = inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.default.overrideAttrs (oldAttrs: {
+                patches =
+                    (oldAttrs.patches or [])
+                    ++ [
+                        ../../0001-surface-fix-partial-damage-for-layer-surfaces-background-effects-and-hyprland-surfaces.patch
+                    ];
+            });
             portalPackage =
                 inputs.xdg-desktop-portal-hyprland.packages.${pkgs.stdenv.hostPlatform.system}.default;
         };
@@ -189,7 +197,9 @@ in {
     xdg.portal = {
         enable = true;
         extraPortals = with pkgs; [
+            lxqt.xdg-desktop-portal-lxqt
             xdg-desktop-portal-gtk
+            inputs.myamusashi-pkgs.packages.${stdenv.hostPlatform.system}.loaf-fm
         ];
         config = {
             common = {
@@ -198,7 +208,7 @@ in {
 
             hyprland = {
                 default = ["hyprland"];
-                "org.freedesktop.impl.portal.FileChooser" = ["gtk"];
+                "org.freedesktop.impl.portal.FileChooser" = ["loaf"];
                 "org.freedesktop.impl.portal.Secret" = ["gnome-keyring"];
                 "org.freedesktop.impl.portal.ScreenCast" = ["hyprland"];
                 "org.freedesktop.impl.portal.Screenshot" = ["hyprland"];

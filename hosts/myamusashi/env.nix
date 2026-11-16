@@ -33,6 +33,7 @@ in {
             duf
             pv
             mprisence
+
             libsixel
             ueberzugpp
             fd
@@ -85,6 +86,9 @@ in {
             hyprpicker
             hyprsunset
 
+            samba
+            cifs-utils
+
             ## video and document tools
             ffmpeg
             imagemagick
@@ -119,13 +123,14 @@ in {
 
             ## Office
             unoconv
+            inputs.myamusashi-pkgs.packages.${stdenv.hostPlatform.system}.wordcraft
 
             ## Apps
-            inputs.myamusashi-pkgs.packages.${stdenv.hostPlatform.system}.wordcraft
+            inputs.myamusashi-pkgs.packages.${stdenv.hostPlatform.system}.yapfast
             inputs.myamusashi-pkgs.packages.${stdenv.hostPlatform.system}.serein
             inputs.myamusashi-pkgs.packages.${stdenv.hostPlatform.system}.zapfast
             inputs.myamusashi-pkgs.packages.${stdenv.hostPlatform.system}.qmlformat-rs
-            inputs.myamusashi-pkgs.packages.${stdenv.hostPlatform.system}.mangaDesk
+            # inputs.myamusashi-pkgs.packages.${stdenv.hostPlatform.system}.mangaDesk
             inputs.myamusashi-pkgs.packages.${stdenv.hostPlatform.system}.lightauth
             inputs.myamusashi-pkgs.packages.${stdenv.hostPlatform.system}.loaf-fm
             (wrapElectron vesktop "vesktop")
@@ -133,7 +138,16 @@ in {
             (wrapElectron inputs.helium.packages.${stdenv.hostPlatform.system}.default "helium")
 
             ## Misc
+            bun
+            nodejs
+            luajitPackages.luacheck
+            lua5_5_compat
+            luajitPackages.lua-cjson
+            antigravity-cli
+            (callPackage ../../modules/nixos/packages/custom/zcode-bridge.nix {})
             inputs.myamusashi-pkgs.packages.${stdenv.hostPlatform.system}.omp
+            (callPackage ../../modules/nixos/packages/custom/zcode.nix {})
+            (callPackage ../../modules/nixos/packages/custom/zen-proxy.nix {})
             git-credential-manager
             gh
             git
@@ -144,6 +158,7 @@ in {
             gvfs
             wget2
             vim
+            distrobox
 
             # remote desktop
             # virt-viewer
@@ -156,9 +171,7 @@ in {
 
             ## Hyprland plugins
             (inputs.hypr-scroll-overview.packages.${stdenv.hostPlatform.system}.default.overrideAttrs (oldAttrs: {
-                patches = [
-                    ./overview.patch
-                ];
+                patches = [./overview.patch];
             }))
             inputs.hypr-dynamic-cursors.packages.${stdenv.hostPlatform.system}.hypr-dynamic-cursors
 
@@ -228,9 +241,9 @@ in {
         enable = true;
         defaultApplications = {
             "x-scheme-handler/tonsite" = "org.telegram.desktop.desktop";
-            "text/plain" = "vim.desktop";
-            "inode/directory" = "pcmanfm-qt.desktop";
-            "application/x-gnome-saved-search" = "org.kde.dolphin.desktop";
+            "text/plain" = "nvim.desktop";
+            "inode/directory" = "loaf.desktop";
+            "application/x-gnome-saved-search" = "loaf.desktop";
             "application/pdf" = "zen-twilight.desktop";
             "image/png" = "lximage-qt.desktop.in";
             "x-scheme-handler/tg" = "org.telegram.desktop.desktop";
@@ -244,13 +257,13 @@ in {
                 "lximage-qt.desktop.in"
                 "yazi.desktop"
             ];
-            "text/x-log" = ["vim.desktop"];
+            "text/x-log" = ["nvim.desktop"];
             "image/svg+xml" = ["lximage-qt.desktop.in"];
             "x-scheme-handler/tg" = ["org.telegram.desktop.desktop"];
-            "text/x-java-source" = ["vim.desktop"];
+            "text/x-java-source" = ["nvim.desktop"];
             "image/jpeg" = ["lximage-qt.desktop.in"];
-            "text/plain" = ["vim.desktop"];
-            "text/x-shellscript" = ["vim.desktop"];
+            "text/plain" = ["nvim.desktop"];
+            "text/x-shellscript" = ["nvim.desktop"];
         };
     };
 }

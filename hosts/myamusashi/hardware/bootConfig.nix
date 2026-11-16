@@ -1,4 +1,12 @@
-{pkgs, ...}: {
+{
+    pkgs,
+    inputs,
+    ...
+}: {
+    imports = [inputs.bootvine.nixosModules.default];
+
+    services.bootvine.enable = true;
+
     boot = {
         kernelPackages = pkgs.cachyosKernels.linuxPackages-cachyos-latest-lto;
         consoleLogLevel = 0;
