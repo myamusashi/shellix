@@ -4,6 +4,28 @@ final: prev: {
         doCheck = false;
     });
 
+    antigravity-cli = prev.antigravity-cli.overrideAttrs (oldAttrs: let
+        version = "1.5.9";
+        buildId = "4515810895593472";
+    in {
+        inherit version;
+
+        src = prev.fetchurl {
+            url = "https://storage.googleapis.com/antigravity-public/antigravity-cli/${version}-${buildId}/linux-x64/cli_linux_x64.tar.gz";
+            hash = "sha256-ix9eVnefJDSgrzbxtxWoOSoITeVQ+MaLx5gh+V+r8/o=";
+        };
+
+        passthru =
+            (oldAttrs.passthru or {})
+            // {
+                wholeVersion = "${version}-${buildId}";
+            };
+    });
+
+    mprisence = prev.mprisence.overrideAttrs (oldAttrs: {
+        buildInputs = (oldAttrs.buildInputs or []) ++ [final.aws-lc];
+    });
+
     fastfetch-unwrapped = prev.fastfetch-unwrapped.overrideAttrs (oldAttrs: rec {
         version = "2.69.0";
 
