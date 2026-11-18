@@ -541,11 +541,11 @@
         "utils": "utils"
       },
       "locked": {
-        "lastModified": 1793837022,
-        "narHash": "sha256-XYdp4ULjA4Esod6bK7x4gTMMvTNZ0UnK5Yh08QJHYKo=",
+        "lastModified": 1794864821,
+        "narHash": "sha256-ianpOK9RKmvRSe1/Jw/vFo61iO4gtyNLb/LSgilSwQ8=",
         "ref": "refs/heads/master",
-        "rev": "b29f6edb1760e819bd86935259a73479c8fdb9e0",
-        "revCount": 59,
+        "rev": "afd6c29f425f7666601eac3d5d7d445f7faa56f7",
+        "revCount": 60,
         "type": "git",
         "url": "https://git.myamusashi.cc/myamusashi/helium-flakes.git"
       },
@@ -771,17 +771,17 @@
         "xdph": "xdph"
       },
       "locked": {
-        "lastModified": 1794422235,
-        "narHash": "sha256-z4JcvSa6Q2R+Qs6zGRV5MlTLaatVpl1nzD2zc+pOWwo=",
+        "lastModified": 1794866807,
+        "narHash": "sha256-iQ1yaNszaMkK6/qbpPC4yX3t/PYA17Xsk+GaTZrsdaU=",
         "owner": "hyprwm",
         "repo": "Hyprland",
-        "rev": "70ec30e71656bce5e1af3364129421a4386a69e1",
+        "rev": "f3e076844484255b77629acc5c75379817c405a8",
         "type": "github"
       },
       "original": {
         "owner": "hyprwm",
         "repo": "Hyprland",
-        "rev": "70ec30e71656bce5e1af3364129421a4386a69e1",
+        "rev": "f3e076844484255b77629acc5c75379817c405a8",
         "type": "github"
       }
     },
@@ -2257,11 +2257,11 @@
         "qmlformat-rs": "qmlformat-rs_2"
       },
       "locked": {
-        "lastModified": 1794849182,
-        "narHash": "sha256-OunhRZG60is+MHs88dUWOxdMVl623vrTuOw6b1PMqh0=",
+        "lastModified": 1794957729,
+        "narHash": "sha256-xLdWQlRvJuU3+CLxap4CA1RHF5hPANoOWJmXdejZsLs=",
         "ref": "refs/heads/master",
-        "rev": "ce3a038556afee9da633474668127fff9dbd5048",
-        "revCount": 1903,
+        "rev": "9441d2787891bdd468487590931df104c87a7046",
+        "revCount": 1914,
         "type": "git",
         "url": "https://git.myamusashi.cc/myamusashi/vast-shell"
       },
