@@ -46,6 +46,18 @@ in {
                     "8039de3b-72e1-41ea-83b3-5077cf0f98d1" # TrackpadAnimation (theme-store fallback, same author)
                     "4c2bec61-7f6c-4e5c-bdc6-c9ad1aba1827" # VerticalSplitTabGroups (theme-store fallback)
                 ];
+                localMods = [
+                    {
+                        id = "zen-matugen";
+                        name = "Zen Matugen Colors";
+                        source = ../../../modules/nixos/programs/vast-shell-color-templates/templates/zen;
+                        style = {
+                            chrome = "chrome.css";
+                            content = "content.css";
+                        };
+                        scripts = ["hot-reload.sys.mjs"];
+                    }
+                ];
             };
 
             # sine.enable forbids extraPrefs (both claim general.config.filename; the bootloader wins),

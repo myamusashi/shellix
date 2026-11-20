@@ -82,7 +82,10 @@
             shell.enable = false;
             spicetify.enable = false;
             vscode.enable = false;
-            color-templates.enable = true;
+            color-templates = {
+                enable = true;
+                zenProfiles = [".zen/kxhdnjqx.zen"];
+            };
             yazi.enable = true;
         };
     };

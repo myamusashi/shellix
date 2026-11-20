@@ -83,7 +83,36 @@
     outputDirectories = lib.unique (map (template: builtins.dirOf template.output) templates);
     directoryRules = map (directory: "d %h/${directory} 0755 - - - -") outputDirectories;
     templateRules = map (template: "L+ %h/${template.output}.tmpl - - - - ${template.input}") templates;
+
+    # Upserts the zen chrome/content template entries into vast-shell's
+    # templates.json by name, so hand-curated entries survive, then renders once.
+    zenSyncBlocks =
+        lib.concatImapStrings (
+            i: profile: let
+                suffix =
+                    if lib.length cfg.zenProfiles == 1
+                    then ""
+                    else "-${toString i}";
+            in ''
+                # --- zen profile: ${profile} ---
+                entries=$(jq -cn --arg home "$HOME" --arg profile "${profile}" '
+                  [
+                    {name: "zen-chrome-colors${suffix}", input: ($home+"/"+$profile+"/chrome/sine-mods/zen-matugen/chrome.css.tmpl"), post_hook: "", enabled: true},
+                    {name: "zen-content-colors${suffix}", input: ($home+"/"+$profile+"/chrome/sine-mods/zen-matugen/content.css.tmpl"), post_hook: "", enabled: true}
+                  ]')
+                jq --argjson entries "$entries" \
+                  '.templates = ((.templates // []) | map(select(.name | IN($entries[].name) | not)) + $entries)' \
+                  "$cfg" > "$cfg.tmp" && mv "$cfg.tmp" "$cfg"
+            ''
+        )
+        cfg.zenProfiles;
 in {
+    options.shellix.programs.color-templates.zenProfiles = lib.mkOption {
+        type = lib.types.listOf lib.types.str;
+        default = [];
+        description = "Zen profile paths (relative to HOME, e.g. \".zen/kxhdnjqx.zen\") whose chrome/content colors render through vastctl.";
+    };
+
     config = lib.mkIf cfg.enable {
         systemd.user.tmpfiles.rules =
             directoryRules
@@ -91,5 +120,20 @@ in {
             ++ [
                 "L+ %h/.config/Kvantum/Shellix-matugen/Shellix-matugen.svg - - - - ${./templates/kvantum/MaterialAdw.svg}"
             ];
+
+        systemd.user.services.vast-templates-zen-sync = {
+            wantedBy = ["default.target"];
+            serviceConfig = {
+                Type = "oneshot";
+                RemainAfterExit = true;
+            };
+            script = ''
+                cfg="''${XDG_CONFIG_DIR:-$HOME/.config}/vast-shell/templates.json"
+                mkdir -p "$(dirname "$cfg")"
+                [ -s "$cfg" ] || printf '{"templates":[]}\n' > "$cfg"
+                ${zenSyncBlocks}
+                vastctl colors render || true
+            '';
+        };
     };
 }

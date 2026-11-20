@@ -541,11 +541,11 @@
         "utils": "utils"
       },
       "locked": {
-        "lastModified": 1794864821,
-        "narHash": "sha256-ianpOK9RKmvRSe1/Jw/vFo61iO4gtyNLb/LSgilSwQ8=",
+        "lastModified": 1795068028,
+        "narHash": "sha256-mczPVNpQLduv+C4W64IukdXUgUXTBL1PeUmvHI5wpQg=",
         "ref": "refs/heads/master",
-        "rev": "afd6c29f425f7666601eac3d5d7d445f7faa56f7",
-        "revCount": 60,
+        "rev": "241276f555f27900468ea5f690e17f4b895f0dab",
+        "revCount": 61,
         "type": "git",
         "url": "https://git.myamusashi.cc/myamusashi/helium-flakes.git"
       },
@@ -1590,11 +1590,11 @@
         "zapfast": "zapfast"
       },
       "locked": {
-        "lastModified": 1794801309,
-        "narHash": "sha256-31lEYB+cey+U+Z6vvG1+Fj4gsejOGWjaiVn0MVVAWdk=",
+        "lastModified": 1795079948,
+        "narHash": "sha256-TuR18LnfrYn/JeNZOnX0Jcw3GSoG3RfltcshdTsg+8Q=",
         "owner": "myamusashi",
         "repo": "nix-myamusashi-packages",
-        "rev": "a28bf0709f8a877fbcf6cac10404aa42a8283c73",
+        "rev": "fc5bd31107ecbe509ef07de62930026886399d65",
         "type": "github"
       },
       "original": {
@@ -1929,11 +1929,11 @@
         "rust-overlay": "rust-overlay_2"
       },
       "locked": {
-        "lastModified": 1794791510,
-        "narHash": "sha256-q7qwPTNm9C/UGZYjV542Svitp7srtlbNRFcXhkA8SE8=",
+        "lastModified": 1795044896,
+        "narHash": "sha256-/yL4l34pfboulZOlsnetYFQHtJk3jPNbVluWtZXNbOY=",
         "owner": "can1357",
         "repo": "oh-my-pi",
-        "rev": "90935366da0c368a437da4343ae748b03a2ffe97",
+        "rev": "57771ae562b9345e0579bceb2d68d585e3e6927e",
         "type": "github"
       },
       "original": {
@@ -2257,11 +2257,11 @@
         "qmlformat-rs": "qmlformat-rs_2"
       },
       "locked": {
-        "lastModified": 1794957729,
-        "narHash": "sha256-xLdWQlRvJuU3+CLxap4CA1RHF5hPANoOWJmXdejZsLs=",
+        "lastModified": 1795120510,
+        "narHash": "sha256-mSOrp62nwSXXkGZ7OTDdduRHX+e5N+GLbiUATlEzIDA=",
         "ref": "refs/heads/master",
-        "rev": "9441d2787891bdd468487590931df104c87a7046",
-        "revCount": 1914,
+        "rev": "5f11295d0be4ce439f818c76811b14a68070ac02",
+        "revCount": 1926,
         "type": "git",
         "url": "https://git.myamusashi.cc/myamusashi/vast-shell"
       },
@@ -2663,11 +2663,11 @@
         "rust-overlay": "rust-overlay_3"
       },
       "locked": {
-        "lastModified": 1794710534,
-        "narHash": "sha256-IGrdjvKXcHPQ20/H6kUMECFuGElWE6u29Rwq2A4ModU=",
+        "lastModified": 1795062410,
+        "narHash": "sha256-KfuBBK3Q9qTMi9PylwfsLUPbVjWBJCwf4yLpfmruJtI=",
         "owner": "yapfast",
         "repo": "yapfast",
-        "rev": "30d1bc8d7db9d38aaf345dc5913ebed642cbb563",
+        "rev": "d85f4d9b45c036fd9352d318af9c4fdae39f6888",
         "type": "github"
       },
       "original": {
@@ -2706,11 +2706,11 @@
         "rust-overlay": "rust-overlay_4"
       },
       "locked": {
-        "lastModified": 1794773243,
-        "narHash": "sha256-+Liby2fqrm62iHch4LG/sDyj6FwV1VIIJgUK3zBKUe8=",
+        "lastModified": 1794888131,
+        "narHash": "sha256-eDXn2wSXK7zYx+6ZUBP2r2ovjsGzHxR3G7REq+ermQY=",
         "owner": "crmne",
         "repo": "zapfast",
-        "rev": "b48299fc57da1c451c843309139fbf677063f452",
+        "rev": "a6f0f624a4a82dbdc5b0b08e721794fbe943348a",
         "type": "github"
       },
       "original": {
@@ -2729,17 +2729,14 @@
         ]
       },
       "locked": {
-        "lastModified": 1794805570,
-        "narHash": "sha256-sG0P1rHWgbPQIeR+peNmapCWQKf0nauyDl500JhX9Qo=",
-        "owner": "0xc000022070",
-        "repo": "zen-browser-flake",
-        "rev": "cb44a9fc1faa18c55dde38a8338f6d46fa2bc6de",
-        "type": "github"
+        "lastModified": 1795128731,
+        "narHash": "sha256-R1riJzBScyzX1XB+RKO+Hit0hCMSMeEhNiRupawdQP0=",
+        "path": "/home/myamusashi/Projects/zen-browser-flake",
+        "type": "path"
       },
       "original": {
-        "owner": "0xc000022070",
-        "repo": "zen-browser-flake",
-        "type": "github"
+        "path": "/home/myamusashi/Projects/zen-browser-flake",
+        "type": "path"
       }
     }
   },

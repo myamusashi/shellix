@@ -54,7 +54,9 @@
         };
 
         zen-browser = {
-            url = "github:0xc000022070/zen-browser-flake";
+            # TEMP (testing): local clone carrying sine.localMods; revert to
+            # github:0xc000022070/zen-browser-flake after push.
+            url = "path:/home/myamusashi/Projects/zen-browser-flake";
             inputs = {
                 nixpkgs.follows = "nixpkgs";
                 home-manager.follows = "home-manager";
@@ -95,7 +97,10 @@
 
     outputs = inputs @ {flake-parts, ...}:
         flake-parts.lib.mkFlake {inherit inputs;} {
-            systems = ["x86_64-linux" "aarch64-linux"];
+            systems = [
+                "x86_64-linux"
+                "aarch64-linux"
+            ];
 
             flake = let
                 lib = import ./lib {inherit inputs;};

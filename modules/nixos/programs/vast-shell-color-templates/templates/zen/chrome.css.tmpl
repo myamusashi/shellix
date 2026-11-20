@@ -16,7 +16,7 @@
 * {
 	/* Accent color — kept for anything that still reads the raw accent
 	   (e.g. native color-mix fallbacks). Sourced from Matugen's primary. */
-	--natsumi-pages-accent-color: {{colors.primary.default.hex}};
+	--natsumi-pages-accent-color: {{colors.primary.hex}};
 
 	/* Natsumi Glass Effect */
 	--glass-blur-radius: 20px;
@@ -50,24 +50,24 @@
 
 * {
 	/* Colors — fed from Matugen instead of derived via color-mix() */
-	--natsumi-primary-color: {{colors.primary.default.hex}};
-	--natsumi-colors-primary: {{colors.primary_container.default.hex}};
-	--natsumi-colors-secondary: {{colors.secondary_container.default.hex}};
-	--natsumi-colors-tertiary: {{colors.surface_container.default.hex}};
-	--natsumi-colors-primary-foreground: {{colors.on_primary_container.default.hex}};
-	--natsumi-colors-border: {{colors.outline_variant.default.hex}};
+	--natsumi-primary-color: {{colors.primary.hex}};
+	--natsumi-colors-primary: {{colors.primary_container.hex}};
+	--natsumi-colors-secondary: {{colors.secondary_container.hex}};
+	--natsumi-colors-tertiary: {{colors.surface_container.hex}};
+	--natsumi-colors-primary-foreground: {{colors.on_primary_container.hex}};
+	--natsumi-colors-border: {{colors.outline_variant.hex}};
 
 	@media (prefers-color-scheme: dark) {
-		--natsumi-colors-primary: {{colors.primary_container.default.hex}};
-		--natsumi-colors-secondary: {{colors.secondary_container.default.hex}};
-		--natsumi-colors-tertiary: {{colors.surface_container.default.hex}};
-		--natsumi-colors-primary-foreground: {{colors.on_primary_container.default.hex}};
+		--natsumi-colors-primary: {{colors.primary_container.hex}};
+		--natsumi-colors-secondary: {{colors.secondary_container.hex}};
+		--natsumi-colors-tertiary: {{colors.surface_container.hex}};
+		--natsumi-colors-primary-foreground: {{colors.on_primary_container.hex}};
 
 		@media (-moz-bool-pref: 'zen.theme.color-prefs.colorful') {
-			--natsumi-colors-primary: {{colors.primary.default.hex}};
-			--natsumi-colors-secondary: {{colors.secondary.default.hex}};
-			--natsumi-colors-tertiary: {{colors.surface_container_high.default.hex}};
-			--natsumi-colors-primary-foreground: {{colors.on_primary.default.hex}};
+			--natsumi-colors-primary: {{colors.primary.hex}};
+			--natsumi-colors-secondary: {{colors.secondary.hex}};
+			--natsumi-colors-tertiary: {{colors.surface_container_high.hex}};
+			--natsumi-colors-primary-foreground: {{colors.on_primary.hex}};
 		}
 	}
 
@@ -87,51 +87,51 @@
    tokens as the Natsumi block above so both stay in sync on re-generation. */
 
 :root {
-	--zen-primary-color: {{colors.primary_container.default.hex}} !important;
-	--toolbarbutton-icon-fill: {{colors.primary.default.hex}} !important;
-	--toolbar-field-color: {{colors.on_background.default.hex}} !important;
-	--tab-selected-textcolor: {{colors.primary.default.hex}} !important;
-	--toolbar-color: {{colors.on_background.default.hex}} !important;
-	--arrowpanel-color: {{colors.on_background.default.hex}} !important;
-	--arrowpanel-background: {{colors.surface_container.default.hex}} !important;
-	--sidebar-text-color: {{colors.on_background.default.hex}} !important;
-	--zen-main-browser-background: {{colors.background.default.hex}} !important;
-	--zen-main-browser-background-toolbar: {{colors.background.default.hex}} !important;
+	--zen-primary-color: {{colors.primary_container.hex}} !important;
+	--toolbarbutton-icon-fill: {{colors.primary.hex}} !important;
+	--toolbar-field-color: {{colors.on_background.hex}} !important;
+	--tab-selected-textcolor: {{colors.primary.hex}} !important;
+	--toolbar-color: {{colors.on_background.hex}} !important;
+	--arrowpanel-color: {{colors.on_background.hex}} !important;
+	--arrowpanel-background: {{colors.surface_container.hex}} !important;
+	--sidebar-text-color: {{colors.on_background.hex}} !important;
+	--zen-main-browser-background: {{colors.background.hex}} !important;
+	--zen-main-browser-background-toolbar: {{colors.background.hex}} !important;
 }
 
 #zen-browser-background {
-	--zen-main-browser-background: {{colors.background.default.hex}} !important;
+	--zen-main-browser-background: {{colors.background.hex}} !important;
 	--zen-background-opacity: 1 !important;
 }
 
 #zen-toolbar-background {
-	--zen-main-browser-background-toolbar: {{colors.background.default.hex}} !important;
+	--zen-main-browser-background-toolbar: {{colors.background.hex}} !important;
 	--zen-background-opacity: 1 !important;
 }
 
 .sidebar-placesTree {
-	background-color: {{colors.surface_container.default.hex}} !important;
+	background-color: {{colors.surface_container.hex}} !important;
 }
 
 #zen-workspaces-button {
-	background-color: {{colors.surface_container.default.hex}} !important;
+	background-color: {{colors.surface_container.hex}} !important;
 }
 
 #TabsToolbar {
-	background-color: {{colors.background.default.hex}} !important;
+	background-color: {{colors.background.hex}} !important;
 }
 
 .urlbar-background {
-	background-color: {{colors.surface_container.default.hex}} !important;
+	background-color: {{colors.surface_container.hex}} !important;
 }
 
 .urlbar-input::selection {
-	color: {{colors.on_primary.default.hex}} !important;
-	background-color: {{colors.primary.default.hex}} !important;
+	color: {{colors.on_primary.hex}} !important;
+	background-color: {{colors.primary.hex}} !important;
 }
 
 .urlbarView-url {
-	color: {{colors.on_surface_variant.default.hex}} !important;
+	color: {{colors.on_surface_variant.hex}} !important;
 }
 
 toolbar .toolbarbutton-1 {
@@ -142,31 +142,31 @@ toolbar .toolbarbutton-1 {
 				.toolbarbutton-text,
 				.toolbarbutton-badge-stack
 			) {
-			fill: {{colors.primary.default.hex}}
+			fill: {{colors.primary.hex}}
 		}
 	}
 }
 
 #zen-appcontent-navbar-container {
-	background-color: {{colors.background.default.hex}} !important;
+	background-color: {{colors.background.hex}} !important;
 }
 
 #PanelUI-menu-button .toolbarbutton-icon,
 #downloads-button .toolbarbutton-icon,
 #unified-extensions-button .toolbarbutton-icon {
-	fill: {{colors.primary.default.hex}} !important;
-	color: {{colors.primary.default.hex}} !important;
+	fill: {{colors.primary.hex}} !important;
+	color: {{colors.primary.hex}} !important;
 }
 
 #PanelUI-menu-button .toolbarbutton-badge-stack,
 #downloads-button .toolbarbutton-badge-stack,
 #unified-extensions-button .toolbarbutton-badge-stack {
-	fill: {{colors.primary.default.hex}} !important;
-	color: {{colors.primary.default.hex}} !important;
+	fill: {{colors.primary.hex}} !important;
+	color: {{colors.primary.hex}} !important;
 }
 
 toolbar .toolbarbutton-1 > .toolbarbutton-icon {
-	fill: {{colors.primary.default.hex}} !important;
+	fill: {{colors.primary.hex}} !important;
 }
 
 /* pdfjs */
@@ -719,7 +719,7 @@ toolbar .toolbarbutton-1 > .toolbarbutton-icon {
 			background: var(--natsumi-primary-color) !important;
 
 			@media (prefers-color-scheme: dark) {
-				background: {{colors.primary.default.hex}} !important;
+				background: {{colors.primary.hex}} !important;
 			}
 		}
 	}
