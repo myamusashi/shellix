@@ -54,8 +54,6 @@
         };
 
         zen-browser = {
-            # TEMP (testing): local clone carrying sine.localMods; revert to
-            # github:0xc000022070/zen-browser-flake after push.
             url = "path:/home/myamusashi/Projects/zen-browser-flake";
             inputs = {
                 nixpkgs.follows = "nixpkgs";
