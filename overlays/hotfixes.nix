@@ -5,14 +5,14 @@ final: prev: {
     });
 
     antigravity-cli = prev.antigravity-cli.overrideAttrs (oldAttrs: let
-        version = "1.5.9";
-        buildId = "4515810895593472";
+        version = "1.5.12";
+        buildId = "5281398513336320";
     in {
         inherit version;
 
         src = prev.fetchurl {
             url = "https://storage.googleapis.com/antigravity-public/antigravity-cli/${version}-${buildId}/linux-x64/cli_linux_x64.tar.gz";
-            hash = "sha256-ix9eVnefJDSgrzbxtxWoOSoITeVQ+MaLx5gh+V+r8/o=";
+            hash = "sha256-Dwy4Uc3J++3VBDJXCqaunEw5i56j8eI+d3b3B2Q8Wz4=";
         };
 
         passthru =
