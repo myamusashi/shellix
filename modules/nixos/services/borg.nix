@@ -35,7 +35,7 @@ in {
             myamusashi = lib.mkIf cfg.myamusashi.enable {
                 repo = "waltz@10.88.0.1:/opt/backup/Stations/myamusashi";
                 environment = {
-                    BORG_RSH = "ssh -i /root/.ssh/id_ed25519 -o StrictHostKeyChecking=accept-new";
+                    BORG_RSH = "ssh -i /root/.ssh/id_ed25519 -o IdentitiesOnly=yes -o BatchMode=yes -o StrictHostKeyChecking=accept-new";
                     BORG_RELOCATED_REPO_ACCESS_IS_OK = "yes";
                 };
                 encryption = {
@@ -60,13 +60,10 @@ in {
                     "/home/myamusashi/Downloads"
                     "/home/myamusashi/Kde-connect/"
                     "/home/myamusashi/Games"
-                    "/home/myamusashi/NetBeansProjects"
                     "/home/myamusashi/Pictures"
                     "/home/myamusashi/.config"
-                    "/home/myamusashi/.zen/h2lo302h.zen"
                     # On-disk backing of the tmpfs Zen profile (the live profile path is a symlink into /dev/shm)
-                    "/home/myamusashi/.zen/static-kxhdnjqx.zen"
-                    "/home/myamusashi/.android"
+                    "/home/myamusashi/.zen/kxhdnjqx.zen/chrome/"
                     "/home/myamusashi/.cloudflared"
                     "/home/myamusashi/.password-store"
                     "/home/myamusashi/.dots"
@@ -116,28 +113,28 @@ in {
                         "*/external"
                     ];
 
-                paths = [
-                    "/var/lib/containers"
-                    "/var/lib/docker"
-                    "/var/lib/forgejo"
-                    "/var/lib/grafana"
-                    "/etc/wireguard-keys"
-                    "/var/lib/mysql"
-                    "/var/lib/ocis"
-                    "/var/lib/redis-ocis"
-                    "/var/lib/postgresql"
-                    "/var/lib/prometheus2"
-                    "/var/lib/redis"
-                    "/var/lib/systemd"
-                    "/var/lib/vaultwarden"
-                    "/opt/Stirling-PDF"
-                    "/etc/ssh"
-                    "/etc/NetworkManager/system-connections"
-                    "/home/forgejo-runner"
-                    "/tmp/pg_db-dump"
-                ];
-                preHook = ''
-                    ${pkgs.sudo}/bin/sudo -u postgres ${pkgs-stable.postgresql}/bin/pg_dumpall > /tmp/pg_db-dump
+                paths =
+                    [
+                        "/etc/ssh"
+                        "/var/lib/systemd"
+                    ]
+                    ++ lib.optional config.networking.networkmanager.enable "/etc/NetworkManager/system-connections"
+                    ++ lib.optional config.shellix.server.wireguard.enable "/etc/wireguard-keys"
+                    ++ lib.optional config.virtualisation.podman.enable "/var/lib/containers"
+                    ++ lib.optional config.virtualisation.docker.enable "/var/lib/docker"
+                    ++ lib.optional config.services.forgejo.enable "/var/lib/forgejo"
+                    ++ lib.optional config.services.grafana.enable "/var/lib/grafana"
+                    ++ lib.optional config.services.mysql.enable "/var/lib/mysql"
+                    ++ lib.optional config.services.ocis.enable "/var/lib/ocis"
+                    ++ lib.optional config.services.prometheus.enable "/var/lib/prometheus2"
+                    ++ lib.optional config.services.vaultwarden.enable "/var/lib/vaultwarden"
+                    ++ lib.optional config.shellix.services.systemd.stirling.enable "/opt/Stirling-PDF"
+                    ++ lib.optional config.services.postgresql.enable "/tmp/pg_db-dump";
+                preHook = lib.optionalString config.services.postgresql.enable ''
+                    (umask 077 && ${pkgs.sudo}/bin/sudo -u postgres ${config.services.postgresql.package}/bin/pg_dumpall > /tmp/pg_db-dump)
+                '';
+                postHook = lib.optionalString config.services.postgresql.enable ''
+                    rm -f /tmp/pg_db-dump
                 '';
             };
         };
