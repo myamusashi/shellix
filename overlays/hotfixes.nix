@@ -26,6 +26,11 @@ final: prev: {
         buildInputs = (oldAttrs.buildInputs or []) ++ [final.aws-lc];
     });
 
+    firecracker = prev.firecracker.overrideAttrs (oldAttrs: {
+        nativeBuildInputs = (oldAttrs.nativeBuildInputs or []) ++ [final.pkg-config];
+        buildInputs = (oldAttrs.buildInputs or []) ++ [final.aws-lc];
+    });
+
     fastfetch-unwrapped = prev.fastfetch-unwrapped.overrideAttrs (oldAttrs: rec {
         version = "2.69.0";
 
