@@ -7,6 +7,12 @@
 }: let
     cfg = config.shellix.services.microvm;
     gatewayIp = lib.head (lib.splitString "/" cfg.subnetCidr);
+    ipv4OctetPattern = "(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])";
+    subnetHasValidIpv4Prefix16 =
+        builtins.match
+        "^${ipv4OctetPattern}\\.${ipv4OctetPattern}\\.${ipv4OctetPattern}\\.${ipv4OctetPattern}/16$"
+        cfg.subnetCidr
+        != null;
     ipv4Nameservers = builtins.filter (address: !(lib.hasInfix ":" address)) cfg.nameservers;
     ipv6Nameservers = builtins.filter (address: lib.hasInfix ":" address) cfg.nameservers;
     blockedIpv4Ranges = builtins.filter (range: !(lib.hasInfix ":" range)) cfg.blockedForwardRanges;
@@ -154,7 +160,13 @@ in {
         }
         (lib.mkIf cfg.enable {
             assertions =
-                lib.mapAttrsToList (name: vm: {
+                [
+                    {
+                        assertion = subnetHasValidIpv4Prefix16;
+                        message = "shellix.services.microvm.subnetCidr ('${cfg.subnetCidr}') must be a valid IPv4 address with a /16 prefix (e.g. '10.95.0.1/16').";
+                    }
+                ]
+                ++ lib.mapAttrsToList (name: vm: {
                     assertion = lib.hasPrefix "vm-" vm.tapName && builtins.stringLength vm.tapName <= 15;
                     message = "shellix.services.microvm.vms.${name}.tapName ('${vm.tapName}') must start with 'vm-' and be <= 15 characters.";
                 })
