@@ -9,7 +9,6 @@
             };
         };
         systemPackages = with pkgs; [
-            podman-compose
             libva-utils
             virtualgl
             vulkan-tools

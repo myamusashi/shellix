@@ -10,8 +10,8 @@
         kernelPackages = pkgs-stable.cachyosKernels.linuxPackages-cachyos-server;
         supportedFilesystems = ["ntfs"];
 
-        # 2 GB of RAM hosting ocis + mariadb + forgejo (and 4 runners) + pi-hole +
-        # vaultwarden + vsftpd + podman. Compressed RAM sits above the disk swap
+        # 2 GB of RAM hosting ocis + mariadb + forgejo (and 4 runners in a Firecracker MicroVM) +
+        # pi-hole + vaultwarden + vsftpd. Compressed RAM sits above the disk swap
         # partition so the N3350 spends its 6 W on CPU instead of swap I/O.
         kernel.sysctl."vm.swappiness" = 180;
     };
@@ -43,24 +43,7 @@
     virtualisation = {
         libvirtd.enable = false;
         docker.enable = false;
-
-        podman = {
-            enable = true;
-            dockerCompat = true;
-            dockerSocket.enable = true;
-            # Default podman subnet 10.88.0.0/16 collides with WireGuard 10.88.0.0/24 (wg0 = 10.88.0.1).
-            # Move podman0 far away so it never claims the WG gateway IP; per-job
-            # bridges (10.89.x) are unaffected. BIND-mode Pi-hole then leaves their :53 free.
-            defaultNetwork.settings = {
-                dns_enabled = true;
-                subnets = [
-                    {
-                        gateway = "10.94.0.1";
-                        subnet = "10.94.0.0/16";
-                    }
-                ];
-            };
-        };
+        podman.enable = false;
     };
 
     fileSystems = {

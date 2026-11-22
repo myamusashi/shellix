@@ -1,12 +1,8 @@
 {
     virtualisation = {
         libvirtd.enable = true;
-        podman = {
-            enable = true;
-            dockerCompat = true;
-            dockerSocket.enable = true;
-            defaultNetwork.settings.dns_enabled = true;
-        };
+        docker.enable = false;
+        podman.enable = false;
         vmware = {
             host.enable = false;
             guest = {

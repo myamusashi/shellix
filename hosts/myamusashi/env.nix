@@ -158,7 +158,6 @@ in {
             gvfs
             wget2
             vim
-            distrobox
 
             # remote desktop
             # virt-viewer
