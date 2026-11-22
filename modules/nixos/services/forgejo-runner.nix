@@ -107,8 +107,8 @@
 
             mkdir -p "$STATE_DIR"
             ${lib.concatStringsSep "\n" (
-                lib.mapAttrsToList (name: runner: ''
-                    install -m 0400 "${runner.tokenFile}" "$STAGE/${name}.token"
+                lib.mapAttrsToList (runnerName: runner: ''
+                    install -m 0400 ${lib.escapeShellArg runner.tokenFile} "$STAGE/${runnerName}.token"
                 '')
                 cfg.runners
             )}
@@ -203,9 +203,12 @@ in {
                         };
 
                         tokenFile = lib.mkOption {
-                            type = lib.types.path;
-                            example = "/path/to/token-file";
-                            description = "Path to the file containing the runner registration token";
+                            type = lib.types.pathWith {
+                                inStore = false;
+                                absolute = true;
+                            };
+                            example = "/run/secrets/forgejo-runner-token";
+                            description = "Absolute host filesystem path outside the Nix store to the file containing the runner token.";
                         };
 
                         labels = lib.mkOption {
