@@ -1,0 +1,585 @@
+From 105c6af9b8eb7b49117689c792743aeaddd8f2e4 Mon Sep 17 00:00:00 2001
+From: myamusashi <myamusashi@users.noreply.github.com>
+Date: Fri, 20 Nov 2026 07:06:23 +0700
+Subject: [PATCH] feat(sine): support configuration-shipped local mods
+
+Add profiles.<name>.sine.localMods: mods whose files ship with the
+configuration instead of coming from the Sine/Zen stores.
+
+- updater merge-copies each mod's source into the profile (rendered
+  outputs like vastctl-generated css survive switches), writes a
+  store-origin mods.json entry (scripts need origin "store" and an
+  object-shaped scripts map for getScripts), keeps local ids out of
+  the purge, and tracks them in the managed state
+- sources are interpolated as derivation inputs, so the store paths
+  the script references are protected from GC
+- regression test: sine-local-mods
+---
+ hm-module/sine.nix        | 239 ++++++++++++++++++++++++++++----------
+ tests/default.nix         |  83 ++++++-------
+ tests/sine-local-mods.nix | 110 ++++++++++++++++++
+ 3 files changed, 329 insertions(+), 103 deletions(-)
+ create mode 100644 tests/sine-local-mods.nix
+
+diff --git a/hm-module/sine.nix b/hm-module/sine.nix
+index c97dd15..e993235 100644
+--- a/hm-module/sine.nix
++++ b/hm-module/sine.nix
+@@ -1,10 +1,19 @@
+-{mkSinePack}: {
++{ mkSinePack }:
++{
+   config,
+   pkgs,
+   lib,
+   ...
+-}: let
+-  inherit (lib) getAttrFromPath mkForce mkIf mkOption setAttrByPath types;
++}:
++let
++  inherit (lib)
++    getAttrFromPath
++    mkForce
++    mkIf
++    mkOption
++    setAttrByPath
++    types
++    ;
+ 
+   modulePath = [
+     "programs"
+@@ -14,13 +23,15 @@
+   cfg = getAttrFromPath modulePath config;
+ 
+   isSineEnabled = lib.any (profile: profile.sine.enable) (lib.attrValues cfg.profiles);
+-in {
++in
++{
+   options = setAttrByPath modulePath {
+     profiles = mkOption {
+-      type = with types;
++      type =
++        with types;
+         attrsOf (
+           submodule (
+-            {config, ...}: {
++            { config, ... }: {
+               options = {
+                 sine = {
+                   enable = mkOption {
+@@ -30,15 +41,45 @@ in {
+                   };
+                   mods = mkOption {
+                     type = listOf str;
+-                    default = [];
++                    default = [ ];
+                     description = "List of mod IDs to install from the Sine store. Falls back to the Zen theme store if unavailable in the Sine store.";
+                   };
++                  localMods = mkOption {
++                    type = listOf (submodule {
++                      options = {
++                        id = mkOption {
++                          type = str;
++                          description = "Mod directory name and mods.json key.";
++                        };
++                        name = mkOption {
++                          type = str;
++                          description = "Display name shown in the Sine settings pane.";
++                        };
++                        source = mkOption {
++                          type = path;
++                          description = "Store path copied verbatim into the mod directory on every switch.";
++                        };
++                        style = mkOption {
++                          type = attrsOf str;
++                          default = { };
++                          description = "mods.json style map, e.g. { chrome = \"chrome.css\"; content = \"content.css\"; }.";
++                        };
++                        scripts = mkOption {
++                          type = listOf str;
++                          default = [ ];
++                          description = "Mod script files (relative to the mod dir), e.g. [ \"hot-reload.sys.mjs\" ].";
++                        };
++                      };
++                    });
++                    default = [ ];
++                    description = "Mods whose files ship with the configuration instead of coming from a store.";
++                  };
+                 };
+               };
+ 
+               config = mkIf config.sine.enable {
+                 settings."sine.engine.auto-update" = mkForce false;
+-                presets.managedPrefNames = ["sine.engine.auto-update"];
++                presets.managedPrefNames = [ "sine.engine.auto-update" ];
+               };
+             }
+           )
+@@ -48,21 +89,23 @@ in {
+ 
+   config = mkIf cfg.enable {
+     home.file =
+-      if isSineEnabled
+-      then let
+-        sinePack = mkSinePack {};
+-
+-        engineVersionFile =
+-          pkgs.runCommand "sine-engine.json" {
+-            nativeBuildInputs = [pkgs.jq];
+-          } ''
+-            jq '.updates[0]' ${sinePack.manager}/engine.json > $out
+-          '';
+-      in
++      if isSineEnabled then
++        let
++          sinePack = mkSinePack { };
++
++          engineVersionFile =
++            pkgs.runCommand "sine-engine.json"
++              {
++                nativeBuildInputs = [ pkgs.jq ];
++              }
++              ''
++                jq '.updates[0]' ${sinePack.manager}/engine.json > $out
++              '';
++        in
+         lib.concatMapAttrs (
+           _: profile:
+-            if profile.sine.enable
+-            then {
++          if profile.sine.enable then
++            {
+               "${cfg.profilesPath}/${profile.path}/chrome/JS" = {
+                 source = sinePack.manager + "/src";
+                 recursive = true;
+@@ -83,37 +126,59 @@ in {
+                 force = true;
+               };
+             }
+-            else {}
+-        )
+-        cfg.profiles
+-      else {};
+-
+-    programs.zen-browser.activationFragments = let
+-      inherit
+-        (lib)
+-        filterAttrs
+-        mapAttrs'
+-        nameValuePair
+-        ;
+-
+-      profilesWithSineMods =
+-        filterAttrs
+-        (_: profile: profile.sine.mods != [])
+-        cfg.profiles;
+-    in
+-      mapAttrs'
+-      (
+-        profileName: profile: let
++          else
++            { }
++        ) cfg.profiles
++      else
++        { };
++
++    programs.zen-browser.activationFragments =
++      let
++        inherit (lib)
++          filterAttrs
++          mapAttrs'
++          nameValuePair
++          ;
++
++        profilesWithSineMods = filterAttrs (
++          _: profile: profile.sine.mods != [ ] || profile.sine.localMods != [ ]
++        ) cfg.profiles;
++      in
++      mapAttrs' (
++        profileName: profile:
++        let
+           modsFilePath = "${cfg.profilesPath}/${profile.path}/chrome/sine-mods/mods.json";
+ 
+-          updateSineModsScript =
+-            pkgs.writeShellScript "zen-sine-mods-update-${profileName}"
+-            ''
++          updateSineModsScript = pkgs.writeShellScript "zen-sine-mods-update-${profileName}" ''
+               MODS_FILE="${modsFilePath}"
+               SINE_MODS="${lib.concatStringsSep " " profile.sine.mods}"
+               BASE_DIR="${cfg.profilesPath}/${profile.path}"
+               MANAGED_FILE="$BASE_DIR/zen-sine-mods-nix-managed.json"
+ 
++            # Mods whose files ship with the configuration. Declared as JSON so the
++            # shell loop can walk them with the same jq tooling as store mods.
++            LOCAL_MODS_JSON='${
++              builtins.toJSON (
++                map (m: {
++                  inherit (m)
++                    id
++                    name
++                    style
++                    scripts
++                    ;
++                  source = toString m.source;
++                }) profile.sine.localMods
++              )
++            }'
++            LOCAL_IDS=$(echo "$LOCAL_MODS_JSON" | ${lib.getExe pkgs.jq} -r 'map(.id) | join(" ")')
++            ALL_MODS="$SINE_MODS $LOCAL_IDS"
++            # Interpolating the sources (not toString) keeps them as derivation
++            # inputs, so the store paths are protected and realized when this
++            # script runs. MOD_SRC is resolved from here, not from the JSON.
++            LOCAL_MOD_SOURCES='${
++              lib.concatMapStringsSep "\n" (m: "${m.id} ${m.source}") profile.sine.localMods
++            }'
++
+               mkdir -p "$BASE_DIR/chrome/sine-mods"
+ 
+               if [ ! -f "$MODS_FILE" ]; then
+@@ -138,7 +203,7 @@ in {
+               }
+ 
+               for mod_id in $(echo "$PREV_STATE" | ${lib.getExe pkgs.jq} -r 'keys[]'); do
+-                if [[ " $SINE_MODS " != *" $mod_id "* ]]; then
++                if [[ " $ALL_MODS " != *" $mod_id "* ]]; then
+                   ${lib.getExe pkgs.jq} "del(.[\"$mod_id\"])" "$MODS_FILE" > "$MODS_FILE.tmp" && mv "$MODS_FILE.tmp" "$MODS_FILE"
+                   rm -rf "$BASE_DIR/chrome/sine-mods/$mod_id"
+                   echo "Removed sine mod $mod_id"
+@@ -147,6 +212,55 @@ in {
+ 
+               NEW_STATE="{}"
+ 
++              # Local mods: merge-copy the configuration-supplied files over the mod
++              # directory (vastctl-rendered outputs survive switches) and rewrite their
++              # mods.json entry unconditionally, so declared style/scripts always win.
++              # origin stays "store": getScripts() drops scripts from any mod without it.
++              mapfile -t LOCAL_SPECS < <(echo "$LOCAL_MODS_JSON" | ${lib.getExe pkgs.jq} -c '.[]')
++              for spec in "''${LOCAL_SPECS[@]}"; do
++                MOD_ID=$(echo "$spec" | ${lib.getExe pkgs.jq} -r '.id')
++                MOD_NAME=$(echo "$spec" | ${lib.getExe pkgs.jq} -r '.name')
++                MOD_SRC=$(grep "^$MOD_ID " <<<"$LOCAL_MOD_SOURCES" | cut -d' ' -f2-)
++                if [ -z "$MOD_SRC" ] || [ ! -d "$MOD_SRC" ]; then
++                  echo "zen-sine-mods: local mod '$MOD_ID' source missing in store: '$MOD_SRC'" >&2
++                  exit 1
++                fi
++                MOD_STYLE=$(echo "$spec" | ${lib.getExe pkgs.jq} -c '.style')
++                MOD_SCRIPTS=$(echo "$spec" | ${lib.getExe pkgs.jq} -c '.scripts')
++
++                if [[ " $SINE_MODS " == *" $MOD_ID "* ]]; then
++                  echo "zen-sine-mods: local mod id '$MOD_ID' collides with a store mod id" >&2
++                  exit 1
++                fi
++
++                MOD_DIR="$BASE_DIR/chrome/sine-mods/$MOD_ID"
++                mkdir -p "$MOD_DIR"
++                # Store files copy as 0444: re-enable writing so a re-switch can
++                # overwrite them (same convention as wrap-zen's postInstall).
++                chmod -R u+w "$MOD_DIR" 2>/dev/null || true
++                cp -r "$MOD_SRC/." "$MOD_DIR/"
++
++                ENTRY=$(${lib.getExe pkgs.jq} -cn \
++                  --arg id "$MOD_ID" \
++                  --arg name "$MOD_NAME" \
++                  --argjson style "$MOD_STYLE" \
++                  --argjson scripts "$MOD_SCRIPTS" '
++                  # getScripts() walks mod.scripts as a path -> options OBJECT;
++                  # a plain array would be skipped by flattenPathStructure.
++                  {id: $id, name: $name, enabled: true, "no-updates": true, origin: "store", style: $style}
++                  | (if ($scripts | length) > 0
++                     then .scripts = ($scripts | map({(.): {}}) | add // {})
++                     else . end)
++                ')
++                ${lib.getExe pkgs.jq} --arg id "$MOD_ID" --argjson entry "$ENTRY" \
++                  '.[$id] = $entry' "$MODS_FILE" > "$MODS_FILE.tmp" && mv "$MODS_FILE.tmp" "$MODS_FILE"
++
++                SRC_HASH=$(${pkgs.findutils}/bin/find "$MOD_SRC" -type f -print0 | sort -z | ${pkgs.findutils}/bin/xargs -0 -r sha256sum | sha256sum | cut -c1-64)
++                NEW_STATE=$(echo "$NEW_STATE" | ${lib.getExe pkgs.jq} -c \
++                  --arg id "$MOD_ID" --arg h "$SRC_HASH" \
++                  '.[$id] = {hash: $h, source: "local", etag: ""}')
++              done
++
+               SINE_BASE="https://raw.githubusercontent.com/sineorg/store/main/mods"
+               THEME_BASE="https://raw.githubusercontent.com/zen-browser/theme-store/main/themes"
+ 
+@@ -439,12 +553,12 @@ in {
+                 fi
+               done
+ 
+-              SINE_MODS_JSON=$(echo "$SINE_MODS" | tr ' ' '\n' | ${lib.getExe pkgs.jq} -R -s 'split("\n") | map(select(. != ""))')
++              SINE_MODS_JSON=$(echo "$ALL_MODS" | tr ' ' '\n' | ${lib.getExe pkgs.jq} -R -s 'split("\n") | map(select(. != ""))')
+               echo "$NEW_STATE" | ${lib.getExe pkgs.jq} '.' > "$MANAGED_FILE"
+ 
+               PREF_VALIDITY="{}"
+               DEFAULT_PREFS="{}"
+-              for mod_id in $SINE_MODS; do
++              for mod_id in $ALL_MODS; do
+                 PREF_NAME=$(${lib.getExe pkgs.jq} -r --arg id "$mod_id" '.[$id].preferences // ""' "$MODS_FILE")
+                 PREF_VALID=false
+                 if [ -n "$PREF_NAME" ]; then
+@@ -490,21 +604,20 @@ in {
+                 echo "Error: Generated invalid JSON in $MODS_FILE"
+                 exit 1
+               fi
+-            '';
++          '';
+         in
+-          nameValuePair profileName [
+-            {
+-              text = ''
+-                ${updateSineModsScript}
+-                if [[ "$?" -eq 0 ]]; then
+-                  $VERBOSE_ECHO "zen-sine-mods: Updated sine mods for profile '${profileName}'"
+-                else
+-                  echo "zen-sine-mods: Failed to update sine mods for profile '${profileName}'!" >&2
+-                fi
+-              '';
+-            }
+-          ]
+-      )
+-      profilesWithSineMods;
++        nameValuePair profileName [
++          {
++            text = ''
++              ${updateSineModsScript}
++              if [[ "$?" -eq 0 ]]; then
++                $VERBOSE_ECHO "zen-sine-mods: Updated sine mods for profile '${profileName}'"
++              else
++                echo "zen-sine-mods: Failed to update sine mods for profile '${profileName}'!" >&2
++              fi
++            '';
++          }
++        ]
++      ) profilesWithSineMods;
+   };
+ }
+diff --git a/tests/default.nix b/tests/default.nix
+index e939c92..ee0003d 100644
+--- a/tests/default.nix
++++ b/tests/default.nix
+@@ -2,57 +2,59 @@
+   self,
+   nixpkgs,
+   home-manager,
+-}: let
++}:
++let
+   pkgs = nixpkgs;
+ 
+-  mkGenericTest = name: suitePath: let
+-    suite = import suitePath {
+-      inherit pkgs home-manager;
+-      zen-browser-flake = self;
++  mkGenericTest =
++    name: suitePath:
++    let
++      suite = import suitePath {
++        inherit pkgs home-manager;
++        zen-browser-flake = self;
+ 
+-      wrapWithX11 = testScript: ''
+-        machine.succeed("( nohup Xvfb :99 -screen 0 1024x768x24 </dev/null >>/tmp/xvfb.log 2>&1 & )")
+-        machine.wait_for_file("/tmp/.X11-unix/X99")
+-        machine.succeed("su - testuser -c 'DISPLAY=:99 timeout 5 zen-beta about:blank' || true")
+-        ${testScript}
+-      '';
+-    };
+-  in
++        wrapWithX11 = testScript: ''
++          machine.succeed("( nohup Xvfb :99 -screen 0 1024x768x24 </dev/null >>/tmp/xvfb.log 2>&1 & )")
++          machine.wait_for_file("/tmp/.X11-unix/X99")
++          machine.succeed("su - testuser -c 'DISPLAY=:99 timeout 5 zen-beta about:blank' || true")
++          ${testScript}
++        '';
++      };
++    in
+     pkgs.testers.nixosTest {
+       inherit name;
+       nodes.machine = {
+-        imports =
+-          [
+-            {
+-              imports = [home-manager.nixosModules.home-manager];
++        imports = [
++          {
++            imports = [ home-manager.nixosModules.home-manager ];
+ 
+-              environment.systemPackages = with pkgs; [
+-                jq
+-                mozlz4a
+-                xorg-server
+-              ];
++            environment.systemPackages = with pkgs; [
++              jq
++              mozlz4a
++              xorg-server
++            ];
+ 
+-              users.users.testuser = {
+-                isNormalUser = true;
+-                home = "/home/testuser";
+-                createHome = true;
+-                group = "users";
+-                uid = 1000;
+-              };
++            users.users.testuser = {
++              isNormalUser = true;
++              home = "/home/testuser";
++              createHome = true;
++              group = "users";
++              uid = 1000;
++            };
+ 
+-              home-manager = {
+-                useGlobalPkgs = true;
+-                useUserPackages = true;
++            home-manager = {
++              useGlobalPkgs = true;
++              useUserPackages = true;
+ 
+-                users.testuser = {
+-                  imports = [suite.homeModule];
++              users.testuser = {
++                imports = [ suite.homeModule ];
+ 
+-                  home.stateVersion = "26.05";
+-                };
++                home.stateVersion = "26.05";
+               };
+-            }
+-          ]
+-          ++ (suite.machineModules or []);
++            };
++          }
++        ]
++        ++ (suite.machineModules or [ ]);
+       };
+ 
+       testScript = ''
+@@ -86,6 +88,7 @@
+     "sine" = ./sine.nix;
+     "sine-mods" = ./sine-mods.nix;
+     "sine-mod-incompat" = ./sine-mod-incompat.nix;
++    "sine-local-mods" = ./sine-local-mods.nix;
+   };
+ in
+-  pkgs.lib.mapAttrs (name: path: mkGenericTest name path) suites
++pkgs.lib.mapAttrs (name: path: mkGenericTest name path) suites
+diff --git a/tests/sine-local-mods.nix b/tests/sine-local-mods.nix
+new file mode 100644
+index 0000000..2b3c22f
+--- /dev/null
++++ b/tests/sine-local-mods.nix
+@@ -0,0 +1,110 @@
++# Local mods ship their files with the configuration instead of a store. The
++# updater must copy the source into the profile, write a store-origin mods.json
++# entry (getScripts() drops scripts from anything else), keep the id out of the
++# purge, and leave files it does not own (vastctl-rendered outputs) in place
++# across switches.
++{
++  pkgs,
++  zen-browser-flake,
++  ...
++}:
++let
++  modId = "nix-local-mod";
++
++  modSource = pkgs.runCommand "sine-local-mod-src" { } ''
++        mkdir -p $out
++        cat > $out/chrome.css <<'EOF'
++    :root {
++      --local-mod-marker: #00ff00;
++    }
++    EOF
++        cat > $out/content.css <<'EOF'
++    :root {
++      --local-content-marker: #00ff00;
++    }
++    EOF
++        cat > $out/probe.sys.mjs <<'EOF'
++    try {
++      Services.prefs.setBoolPref("nixtest.local.script.ran", true);
++    } catch (e) {}
++    EOF
++  '';
++in
++{
++  machineModules = [
++    {
++      virtualisation.memorySize = 2048;
++    }
++  ];
++
++  homeModule = {
++    imports = [ zen-browser-flake.homeModules.beta ];
++
++    programs.zen-browser = {
++      enable = true;
++      profiles.default = {
++        id = 0;
++
++        sine.enable = true;
++        sine.localMods = [
++          {
++            id = modId;
++            name = "Nix Local Mod";
++            source = modSource;
++            style = {
++              chrome = "chrome.css";
++              content = "content.css";
++            };
++            scripts = [ "probe.sys.mjs" ];
++          }
++        ];
++
++        settings = {
++          "zen.welcome-screen.seen" = true;
++          "browser.shell.checkDefaultBrowser" = false;
++        };
++      };
++    };
++  };
++
++  testScript = ''
++    import json
++
++    profile = "/home/testuser/.config/zen/default"
++    mods_dir = profile + "/chrome/sine-mods"
++    mod_dir = mods_dir + "/${modId}"
++
++    machine.succeed("systemctl restart home-manager-testuser.service")
++    machine.wait_for_unit("home-manager-testuser.service")
++
++    files = machine.succeed(f"ls {mod_dir}")
++    assert "chrome.css" in files, files
++    assert "content.css" in files, files
++    assert "probe.sys.mjs" in files, files
++
++    mods = json.loads(machine.succeed(f"cat {mods_dir}/mods.json"))
++    entry = mods["${modId}"]
++    assert entry["enabled"] is True, entry
++    assert entry["origin"] == "store", entry
++    assert entry["style"] == {"chrome": "chrome.css", "content": "content.css"}, entry
++    assert entry["scripts"] == {"probe.sys.mjs": {}}, entry
++
++    state = json.loads(machine.succeed(
++        f"cat {profile}/zen-sine-mods-nix-managed.json"))["${modId}"]
++    assert state["source"] == "local", state
++
++    # NOTE: the aggregator mods_dir/chrome.css is written by the Sine engine at
++    # runtime, not by the updater; its content is covered by tests/sine-mods.nix,
++    # which launches the browser.
++
++    # A rendered output the updater does not own must survive a re-switch.
++    machine.succeed(f"printf ':root {{ --rendered: #123456; }}' > {mod_dir}/rendered.css")
++    machine.succeed("systemctl restart home-manager-testuser.service")
++    machine.wait_for_unit("home-manager-testuser.service")
++
++    machine.succeed(f"test -f {mod_dir}/rendered.css")
++    machine.succeed(f"test -f {mod_dir}/probe.sys.mjs")
++    entry2 = json.loads(machine.succeed(f"cat {mods_dir}/mods.json"))["${modId}"]
++    assert entry2["style"] == {"chrome": "chrome.css", "content": "content.css"}, entry2
++  '';
++}
+-- 
+2.56.0
+

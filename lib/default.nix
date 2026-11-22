@@ -14,6 +14,28 @@ in rec {
     shellix-lib = import ./modules.nix {inherit lib;};
     shellix-pkgs = system: import ./pkgs.nix {pkgs = mkPkgs {inherit system;};};
 
+    mkPatchedZenBrowser = system: let
+        pkgs = inputs.nixpkgs.legacyPackages.${system};
+        src = pkgs.applyPatches {
+            name = "zen-browser-flake-patched";
+            src = inputs.zen-browser.outPath;
+            patches = [
+                ../0001-feat-sine-support-configuration-shipped-local-mods.patch
+            ];
+        };
+        flake = import "${src}/flake.nix";
+        self =
+            inputs.zen-browser
+            // {
+                outPath = "${src}";
+            }
+            // flake.outputs {
+                inherit self;
+                inherit (inputs) nixpkgs home-manager;
+            };
+    in
+        self;
+
     mkPkgs = {
         system,
         nixpkgs ? inputs.nixpkgs,
@@ -48,11 +70,18 @@ in rec {
         username ? null,
         homeFile ? "home.nix",
         extraModules ? [],
-    }:
+    }: let
+        patchedInputs =
+            inputs
+            // {
+                zen-browser = mkPatchedZenBrowser system;
+            };
+    in
         inputs.nixpkgs.lib.nixosSystem {
             inherit system;
             specialArgs = {
-                inherit inputs shellix-lib;
+                inherit shellix-lib;
+                inputs = patchedInputs;
                 pkgs-stable = mkPkgsStable {inherit system;};
                 pkgs-unstable = mkPkgs {inherit system;};
                 shellix-pkgs = shellix-pkgs system;
