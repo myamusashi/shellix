@@ -231,6 +231,15 @@
             fi
         }
 
+        jailer_uid_for_vm_id() {
+            local vm_id="$1"
+            if [[ ! "$vm_id" =~ ^[0-9]+$ ]] || [ "$((10#$vm_id))" -lt 2 ] || [ "$((10#$vm_id))" -gt 254 ]; then
+                echo "Invalid VM_ID '$vm_id': must be an integer between 2 and 254" >&2
+                return 1
+            fi
+            echo "$((20000 + 10#$vm_id))"
+        }
+
         validate_ipv4_address() {
             local address="$1"
             if [[ ! "$address" =~ ^([0-9]{1,3})\.([0-9]{1,3})\.([0-9]{1,3})\.([0-9]{1,3})$ ]]; then
@@ -295,8 +304,8 @@
             VM_OWNER_GID="$(grep -E '^VM_OWNER_GID=' "$config_file" | cut -d= -f2-)"
             VM_PUBKEY_B64="$(grep -E '^VM_PUBKEY_B64=' "$config_file" | cut -d= -f2-)"
 
-            if [[ ! "$VM_ID" =~ ^[0-9]+$ ]]; then
-                echo "Invalid VM_ID '$VM_ID' in '$config_file'" >&2
+            if [[ ! "$VM_ID" =~ ^[0-9]+$ ]] || [ "$((10#$VM_ID))" -lt 10 ] || [ "$((10#$VM_ID))" -gt 254 ]; then
+                echo "Invalid VM_ID '$VM_ID' in '$config_file' (must be 10..254)" >&2
                 return 1
             fi
             if ! validate_ipv4_cidr "$VM_IP"; then
@@ -344,12 +353,12 @@
 
     buildArchBaseScript = pkgs.writeShellApplication {
         name = "fcbox-build-arch-base";
+        extraShellCheckFlags = ["-x"];
         runtimeInputs = with pkgs; [
             coreutils
             curl
             e2fsprogs
             firecracker
-            getent
             glibc.bin
             gnugrep
             gnupg
@@ -361,6 +370,7 @@
         ];
         text = ''
             set -euo pipefail
+            source "${commonShellLibrary}"
 
             if [ "$(id -u)" -ne 0 ]; then
                 echo "fcbox-build-arch-base must be run as root (try: sudo fcbox init-base)" >&2
@@ -382,11 +392,16 @@
             BOOT_TAP="vm-fcboot"
             JAIL_DIR="/srv/jailer/firecracker/$BOOT_ID"
             JAIL_ROOT="$JAIL_DIR/root"
+            BOOT_PID=""
 
             WORKDIR="$(mktemp -d /tmp/fcbox-arch-build.XXXXXX)"
             cleanup() {
+                if [ -n "$BOOT_PID" ] && kill -0 "$BOOT_PID" 2>/dev/null; then
+                    kill "$BOOT_PID" 2>/dev/null || true
+                fi
                 ip link delete "$BOOT_TAP" 2>/dev/null || true
                 rm -rf "$JAIL_DIR" "$WORKDIR"
+                rmdir "/sys/fs/cgroup/firecracker/$BOOT_ID" 2>/dev/null || true
             }
             trap cleanup EXIT
 
@@ -446,13 +461,12 @@
             SETUP_EOF
             chmod 0755 "$ROOTFS/fcbox-setup.sh"
 
-            FC_UID="$(id -u fcbox)"
-            KVM_GID="$(getent group kvm | cut -d: -f3)"
+            JAILER_UID="$(jailer_uid_for_vm_id 2)"
             FC_BIN="$(readlink -f "${pkgs.firecracker}/bin/firecracker")"
 
             rm -rf "$JAIL_DIR"
             mkdir -p "$JAIL_ROOT"
-            chown "$FC_UID:$KVM_GID" "$JAIL_DIR" "$JAIL_ROOT"
+            chown "$JAILER_UID:$JAILER_UID" "$JAIL_DIR" "$JAIL_ROOT"
 
             for libpath in $(ldd "$FC_BIN" | grep -o '/nix/store/[^ ]*'); do
                 mkdir -p "$JAIL_ROOT$(dirname "$libpath")"
@@ -463,14 +477,15 @@
             mke2fs -t ext4 -d "$ROOTFS" -L arch-base -m 0 "$JAIL_ROOT/base.ext4" 6G >/dev/null
             cp -f "${vmlinuxPath}" "$JAIL_ROOT/vmlinux"
             cp -f "${initrdFile}" "$JAIL_ROOT/initrd"
-            chown "$FC_UID:$KVM_GID" "$JAIL_ROOT/base.ext4" "$JAIL_ROOT/vmlinux" "$JAIL_ROOT/initrd"
-            chmod 0660 "$JAIL_ROOT/base.ext4"
+            chown root:root "$JAIL_ROOT/vmlinux" "$JAIL_ROOT/initrd"
             chmod 0444 "$JAIL_ROOT/vmlinux" "$JAIL_ROOT/initrd"
+            chown "$JAILER_UID:$JAILER_UID" "$JAIL_ROOT/base.ext4"
+            chmod 0600 "$JAIL_ROOT/base.ext4"
 
             if ip link show "$BOOT_TAP" >/dev/null 2>&1; then
                 ip link delete "$BOOT_TAP"
             fi
-            ip tuntap add name "$BOOT_TAP" mode tap user fcbox vnet_hdr
+            ip tuntap add name "$BOOT_TAP" mode tap user "$JAILER_UID" vnet_hdr
             ip link set "$BOOT_TAP" master "${cfg.bridgeName}"
             ip link set "$BOOT_TAP" up
 
@@ -506,21 +521,36 @@
                         }
                     ]
                 }' > "$JAIL_ROOT/vm.json"
-            chown "$FC_UID:$KVM_GID" "$JAIL_ROOT/vm.json"
-            chmod 0440 "$JAIL_ROOT/vm.json"
+            chown "$JAILER_UID:$JAILER_UID" "$JAIL_ROOT/vm.json"
+            chmod 0400 "$JAIL_ROOT/vm.json"
+
+            FSIZE_BYTES="$(stat -c '%s' "$JAIL_ROOT/base.ext4")"
+            MEM_MAX_BYTES="$(((1024 + 256) * 1024 * 1024))"
 
             echo "Running Arch Linux setup inside isolated Firecracker + jailer MicroVM..."
             "${pkgs.firecracker}/bin/jailer" \
                 --id "$BOOT_ID" \
                 --exec-file "$FC_BIN" \
-                --uid "$FC_UID" \
-                --gid "$KVM_GID" \
+                --uid "$JAILER_UID" \
+                --gid "$JAILER_UID" \
                 --chroot-base-dir /srv/jailer \
+                --new-pid-ns \
+                --resource-limit "no-file=1024" \
+                --resource-limit "fsize=$FSIZE_BYTES" \
                 --cgroup-version 2 \
+                --cgroup "memory.max=$MEM_MAX_BYTES" \
+                --cgroup "cpu.max=200000 100000" \
                 -- \
                 --no-api \
                 --enable-pci \
                 --config-file vm.json
+
+            # With --new-pid-ns, jailer writes the child Firecracker PID and exits 0.
+            BOOT_PID="$(cat "$JAIL_ROOT/firecracker.pid")"
+            while kill -0 "$BOOT_PID" 2>/dev/null; do
+                sleep 0.2
+            done
+            BOOT_PID=""
 
             if ! debugfs -R "stat /fcbox-bootstrap-ok" "$JAIL_ROOT/base.ext4" 2>/dev/null | grep -q "Inode:"; then
                 echo "Arch Linux bootstrap inside Firecracker VM did not complete cleanly." >&2
@@ -541,7 +571,6 @@
         extraShellCheckFlags = ["-x"];
         runtimeInputs = with pkgs; [
             coreutils
-            getent
             glibc.bin
             gnugrep
             iproute2
@@ -568,21 +597,20 @@
 
             load_vm_config "$STATE_DIR/config.env"
 
-            FC_UID="$(id -u fcbox)"
-            KVM_GID="$(getent group kvm | cut -d: -f3)"
+            JAILER_UID="$(jailer_uid_for_vm_id "$VM_ID")"
             FC_BIN="$(readlink -f "${pkgs.firecracker}/bin/firecracker")"
 
             # Setup TAP attached to host bridge
             if ip link show "$VM_TAP" >/dev/null 2>&1; then
                 ip link delete "$VM_TAP"
             fi
-            ip tuntap add name "$VM_TAP" mode tap user fcbox vnet_hdr
+            ip tuntap add name "$VM_TAP" mode tap user "$JAILER_UID" vnet_hdr
             ip link set "$VM_TAP" master "${cfg.bridgeName}"
             ip link set "$VM_TAP" up
 
             rm -rf "$JAIL_ROOT"
             mkdir -p "$JAIL_ROOT"
-            chown "$FC_UID:$KVM_GID" "/srv/jailer/firecracker/$VM_NAME" "$JAIL_ROOT"
+            chown "$JAILER_UID:$JAILER_UID" "/srv/jailer/firecracker/$VM_NAME" "$JAIL_ROOT"
 
             for libpath in $(ldd "$FC_BIN" | grep -o '/nix/store/[^ ]*'); do
                 mkdir -p "$JAIL_ROOT$(dirname "$libpath")"
@@ -607,7 +635,7 @@
             ln -f "$STATE_DIR/home.ext4" "$JAIL_ROOT/home.ext4" 2>/dev/null \
                 || { echo "home.ext4 must live on the same filesystem as /srv/jailer for hardlinking" >&2; exit 1; }
 
-            chown "$FC_UID:$KVM_GID" \
+            chown "$JAILER_UID:$JAILER_UID" \
                 "$JAIL_ROOT/overlay.ext4" \
                 "$JAIL_ROOT/home.ext4"
             chmod 0600 "$JAIL_ROOT/overlay.ext4" "$JAIL_ROOT/home.ext4"
@@ -660,8 +688,8 @@
                         }
                     ]
                 }' > "$JAIL_ROOT/vm.json"
-            chown "$FC_UID:$KVM_GID" "$JAIL_ROOT/vm.json"
-            chmod 0440 "$JAIL_ROOT/vm.json"
+            chown "$JAILER_UID:$JAILER_UID" "$JAIL_ROOT/vm.json"
+            chmod 0400 "$JAIL_ROOT/vm.json"
         '';
     };
 
@@ -671,7 +699,6 @@
         runtimeInputs = with pkgs; [
             coreutils
             firecracker
-            getent
             gnugrep
         ];
         text = ''
@@ -680,17 +707,38 @@
 
             VM_NAME="''${1:?Missing VM name}"
             validate_vm_name "$VM_NAME"
-            FC_UID="$(id -u fcbox)"
-            KVM_GID="$(getent group kvm | cut -d: -f3)"
+            STATE_DIR="/var/lib/microvms/archbox/$VM_NAME"
+            load_vm_config "$STATE_DIR/config.env"
+
+            JAILER_UID="$(jailer_uid_for_vm_id "$VM_ID")"
             FC_BIN="$(readlink -f "${pkgs.firecracker}/bin/firecracker")"
+
+            # RLIMIT_FSIZE applies to pwrite offsets on existing sparse ext4 images.
+            OVERLAY_SIZE="$(stat -c '%s' "$STATE_DIR/overlay.ext4")"
+            HOME_SIZE="$(stat -c '%s' "$STATE_DIR/home.ext4")"
+            FSIZE_BYTES="$OVERLAY_SIZE"
+            if [ "$HOME_SIZE" -gt "$FSIZE_BYTES" ]; then
+                FSIZE_BYTES="$HOME_SIZE"
+            fi
+            if [ "$FSIZE_BYTES" -lt 67108864 ]; then
+                FSIZE_BYTES=67108864
+            fi
+
+            MEM_MAX_BYTES="$(((VM_MEM + 256) * 1024 * 1024))"
+            CPU_QUOTA_US="$((VM_VCPU * 100000))"
 
             exec "${pkgs.firecracker}/bin/jailer" \
                 --id "$VM_NAME" \
                 --exec-file "$FC_BIN" \
-                --uid "$FC_UID" \
-                --gid "$KVM_GID" \
+                --uid "$JAILER_UID" \
+                --gid "$JAILER_UID" \
                 --chroot-base-dir /srv/jailer \
+                --new-pid-ns \
+                --resource-limit "no-file=1024" \
+                --resource-limit "fsize=$FSIZE_BYTES" \
                 --cgroup-version 2 \
+                --cgroup "memory.max=$MEM_MAX_BYTES" \
+                --cgroup "cpu.max=''${CPU_QUOTA_US} 100000" \
                 -- \
                 --enable-pci \
                 --config-file vm.json \
@@ -732,6 +780,7 @@
             fi
 
             rm -rf "$JAIL_DIR"
+            rmdir "/sys/fs/cgroup/firecracker/$VM_NAME" 2>/dev/null || true
         '';
     };
 
@@ -741,7 +790,6 @@
         runtimeInputs = with pkgs; [
             coreutils
             e2fsprogs
-            getent
             gnugrep
             systemd
         ];
@@ -769,13 +817,12 @@
                 exit 1
             fi
 
-            FC_UID="$(id -u fcbox)"
-            KVM_GID="$(getent group kvm | cut -d: -f3)"
+            JAILER_UID="$(jailer_uid_for_vm_id "$VM_ID")"
 
             rm -f "$STATE_DIR/overlay.ext4"
             truncate -s "${archCfg.overlaySize}" "$STATE_DIR/overlay.ext4"
             mkfs.ext4 -q -F -L fcbox-ovl "$STATE_DIR/overlay.ext4"
-            chown "$FC_UID:$KVM_GID" "$STATE_DIR/overlay.ext4"
+            chown "$JAILER_UID:$JAILER_UID" "$STATE_DIR/overlay.ext4"
             chmod 0600 "$STATE_DIR/overlay.ext4"
         '';
     };
@@ -1118,12 +1165,6 @@ in {
 
     config = lib.mkIf (cfg.enable && archCfg.enable) {
         users.groups.microvm = {};
-        users.users.fcbox = {
-            isSystemUser = true;
-            group = "kvm";
-            extraGroups = ["microvm"];
-            description = "Unprivileged Firecracker jailer user for fcbox MicroVMs";
-        };
 
         environment.systemPackages = with pkgs; [
             fcboxCli
@@ -1135,7 +1176,7 @@ in {
             tmpfiles.rules = [
                 "d /var/lib/microvms 0775 microvm kvm -"
                 "d /var/lib/microvms/images 0755 root root -"
-                "d /var/lib/microvms/archbox 2775 fcbox microvm -"
+                "d /var/lib/microvms/archbox 2775 root microvm -"
                 "d /srv/jailer 0755 root root -"
                 "d /srv/jailer/firecracker 0755 root root -"
             ];
@@ -1149,7 +1190,9 @@ in {
                     ];
                     wants = ["systemd-networkd.service"];
                     serviceConfig = {
-                        Type = "simple";
+                        # jailer --new-pid-ns clones Firecracker, writes firecracker.pid, and exits 0.
+                        Type = "forking";
+                        PIDFile = "/srv/jailer/firecracker/%i/root/firecracker.pid";
                         ExecStartPre = "${lib.getExe fcboxPreStart} %i";
                         ExecStart = "${lib.getExe fcboxExecStart} %i";
                         ExecStopPost = "${lib.getExe fcboxExecStop} %i";
