@@ -531,7 +531,7 @@
             e2fsck -fy "$JAIL_ROOT/base.ext4" >/dev/null 2>&1 || true
             mv "$JAIL_ROOT/base.ext4" "$OUT_IMG"
             chown root:root "$OUT_IMG"
-            chmod 0644 "$OUT_IMG"
+            chmod 0444 "$OUT_IMG"
             echo "Built Arch Linux base image at $OUT_IMG"
         '';
     };
@@ -592,8 +592,15 @@
             # Stage kernel, initrd, base, overlay, and isolated home inside jailer chroot
             cp -f "${vmlinuxPath}" "$JAIL_ROOT/vmlinux"
             cp -f "${initrdFile}" "$JAIL_ROOT/initrd"
-            ln -f "${archCfg.baseImagePath}" "$JAIL_ROOT/base.ext4" 2>/dev/null \
-                || cp -f "${archCfg.baseImagePath}" "$JAIL_ROOT/base.ext4"
+            chown root:root "$JAIL_ROOT/vmlinux" "$JAIL_ROOT/initrd"
+            chmod 0444 "$JAIL_ROOT/vmlinux" "$JAIL_ROOT/initrd"
+
+            # Keep the shared base image root:root 0444 without mutating the hardlinked inode.
+            if ! ln -f "${archCfg.baseImagePath}" "$JAIL_ROOT/base.ext4" 2>/dev/null; then
+                cp -f "${archCfg.baseImagePath}" "$JAIL_ROOT/base.ext4"
+                chown root:root "$JAIL_ROOT/base.ext4"
+                chmod 0444 "$JAIL_ROOT/base.ext4"
+            fi
 
             ln -f "$STATE_DIR/overlay.ext4" "$JAIL_ROOT/overlay.ext4" 2>/dev/null \
                 || { echo "overlay.ext4 must live on the same filesystem as /srv/jailer for hardlinking" >&2; exit 1; }
@@ -601,13 +608,9 @@
                 || { echo "home.ext4 must live on the same filesystem as /srv/jailer for hardlinking" >&2; exit 1; }
 
             chown "$FC_UID:$KVM_GID" \
-                "$JAIL_ROOT/vmlinux" \
-                "$JAIL_ROOT/initrd" \
-                "$JAIL_ROOT/base.ext4" \
                 "$JAIL_ROOT/overlay.ext4" \
                 "$JAIL_ROOT/home.ext4"
-            chmod 0444 "$JAIL_ROOT/vmlinux" "$JAIL_ROOT/initrd" "$JAIL_ROOT/base.ext4"
-            chmod 0660 "$JAIL_ROOT/overlay.ext4" "$JAIL_ROOT/home.ext4"
+            chmod 0600 "$JAIL_ROOT/overlay.ext4" "$JAIL_ROOT/home.ext4"
 
             BOOT_ARGS="console=ttyS0,115200 reboot=k panic=1 random.trust_cpu=on i8042.noaux i8042.nomux i8042.nopnp i8042.dumbkbd fcbox.ip=$VM_IP fcbox.gw=${gatewayIp} fcbox.dns=${lib.head cfg.nameservers} fcbox.host=$VM_NAME fcbox.user=$VM_USER fcbox.uid=$VM_OWNER_UID fcbox.gid=$VM_OWNER_GID fcbox.pubkey=$VM_PUBKEY_B64"
 
@@ -729,6 +732,51 @@
             fi
 
             rm -rf "$JAIL_DIR"
+        '';
+    };
+
+    fcboxReset = pkgs.writeShellApplication {
+        name = "fcbox-reset";
+        extraShellCheckFlags = ["-x"];
+        runtimeInputs = with pkgs; [
+            coreutils
+            e2fsprogs
+            getent
+            gnugrep
+            systemd
+        ];
+        text = ''
+            set -euo pipefail
+            source "${commonShellLibrary}"
+
+            VM_NAME="''${1:?Missing VM name}"
+            validate_vm_name "$VM_NAME"
+            STATE_DIR="/var/lib/microvms/archbox/$VM_NAME"
+
+            if [ -L "$STATE_DIR" ] || [ ! -d "$STATE_DIR" ]; then
+                echo "Invalid state directory '$STATE_DIR'" >&2
+                exit 1
+            fi
+            if [ ! -f "$STATE_DIR/config.env" ]; then
+                echo "Missing $STATE_DIR/config.env for archbox '$VM_NAME'" >&2
+                exit 1
+            fi
+
+            load_vm_config "$STATE_DIR/config.env"
+
+            if systemctl is-active --quiet "fcbox@$VM_NAME.service"; then
+                echo "Refusing to reset overlay while fcbox@$VM_NAME.service is active" >&2
+                exit 1
+            fi
+
+            FC_UID="$(id -u fcbox)"
+            KVM_GID="$(getent group kvm | cut -d: -f3)"
+
+            rm -f "$STATE_DIR/overlay.ext4"
+            truncate -s "${archCfg.overlaySize}" "$STATE_DIR/overlay.ext4"
+            mkfs.ext4 -q -F -L fcbox-ovl "$STATE_DIR/overlay.ext4"
+            chown "$FC_UID:$KVM_GID" "$STATE_DIR/overlay.ext4"
+            chmod 0600 "$STATE_DIR/overlay.ext4"
         '';
     };
 
@@ -987,11 +1035,7 @@
                 reset)
                     NAME="''${1:?Missing VM name}"
                     validate_vm_name "$NAME"
-                    VM_DIR="$BASE_DIR/$NAME"
-                    systemctl stop "fcbox@$NAME.service" || true
-                    truncate -s "${archCfg.overlaySize}" "$VM_DIR/overlay.ext4"
-                    mkfs.ext4 -q -F -L fcbox-ovl "$VM_DIR/overlay.ext4"
-                    chmod 0660 "$VM_DIR/overlay.ext4"
+                    systemctl start "fcbox-reset@$NAME.service"
                     echo "Reset root overlay for '$NAME' (isolated home.ext4 preserved)."
                     ;;
                 stop)
@@ -1087,37 +1131,51 @@ in {
             waypipe
         ];
 
-        systemd.tmpfiles.rules = [
-            "d /var/lib/microvms 0775 microvm kvm -"
-            "d /var/lib/microvms/images 0755 root root -"
-            "d /var/lib/microvms/archbox 2775 fcbox microvm -"
-            "d /srv/jailer 0755 root root -"
-            "d /srv/jailer/firecracker 0755 root root -"
-        ];
-
-        systemd.services."fcbox@" = {
-            description = "Jailer-isolated Arch Linux Firecracker MicroVM (%i)";
-            after = [
-                "network.target"
-                "systemd-networkd.service"
+        systemd = {
+            tmpfiles.rules = [
+                "d /var/lib/microvms 0775 microvm kvm -"
+                "d /var/lib/microvms/images 0755 root root -"
+                "d /var/lib/microvms/archbox 2775 fcbox microvm -"
+                "d /srv/jailer 0755 root root -"
+                "d /srv/jailer/firecracker 0755 root root -"
             ];
-            wants = ["systemd-networkd.service"];
-            serviceConfig = {
-                Type = "simple";
-                ExecStartPre = "${lib.getExe fcboxPreStart} %i";
-                ExecStart = "${lib.getExe fcboxExecStart} %i";
-                ExecStopPost = "${lib.getExe fcboxExecStop} %i";
-                LimitNOFILE = 1048576;
-                LimitMEMLOCK = "infinity";
-                Restart = "no";
+
+            services = {
+                "fcbox@" = {
+                    description = "Jailer-isolated Arch Linux Firecracker MicroVM (%i)";
+                    after = [
+                        "network.target"
+                        "systemd-networkd.service"
+                    ];
+                    wants = ["systemd-networkd.service"];
+                    serviceConfig = {
+                        Type = "simple";
+                        ExecStartPre = "${lib.getExe fcboxPreStart} %i";
+                        ExecStart = "${lib.getExe fcboxExecStart} %i";
+                        ExecStopPost = "${lib.getExe fcboxExecStop} %i";
+                        LimitNOFILE = 1048576;
+                        LimitMEMLOCK = "infinity";
+                        Restart = "no";
+                    };
+                };
+
+                "fcbox-reset@" = {
+                    description = "Reset rootfs overlay for Arch Linux Firecracker MicroVM (%i)";
+                    conflicts = ["fcbox@%i.service"];
+                    after = ["fcbox@%i.service"];
+                    serviceConfig = {
+                        Type = "oneshot";
+                        ExecStart = "${lib.getExe fcboxReset} %i";
+                    };
+                };
             };
         };
 
-        # Allow microvm/wheel group users to manage fcbox@*.service without sudo prompts.
+        # Allow microvm/wheel group users to manage fcbox@*.service and fcbox-reset@*.service without sudo prompts.
         security.polkit.extraConfig = ''
             polkit.addRule(function(action, subject) {
                 if (action.id == "org.freedesktop.systemd1.manage-units" &&
-                    /^fcbox@.*\.service$/.test(action.lookup("unit")) &&
+                    /^fcbox(-reset)?@[a-z0-9][a-z0-9-]{0,30}\.service$/.test(action.lookup("unit")) &&
                     (subject.isInGroup("microvm") || subject.isInGroup("wheel"))) {
                     return polkit.Result.YES;
                 }
