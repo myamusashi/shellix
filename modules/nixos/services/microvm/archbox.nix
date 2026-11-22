@@ -133,6 +133,17 @@
             sleep 0.1
         done
 
+        # Firecracker exposes host (st_dev, st_rdev, st_ino) as virtio-blk serial rather than drive_id,
+        # so verify the base image's ext4 label before mounting /dev/vda.
+        VDA_BLKID="$(blkid /dev/vda 2>/dev/null || true)"
+        case "$VDA_BLKID" in
+            *'LABEL="arch-base"'*) ;;
+            *)
+                echo "fcbox-init: /dev/vda does not have expected label arch-base (got: $VDA_BLKID)" >&2
+                exec /bin/sh
+                ;;
+        esac
+
         mount -o ro,noload -t ext4 /dev/vda /ro-base
         mount -o rw -t ext4 /dev/vdb /rw-overlay
         mkdir -p /rw-overlay/upper /rw-overlay/work
