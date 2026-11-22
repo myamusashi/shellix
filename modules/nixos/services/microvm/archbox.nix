@@ -845,6 +845,102 @@
             BASE_DIR="/var/lib/microvms/archbox"
             SSH_KEY_DIR="$HOME/.local/share/fcbox"
             SSH_KEY="$SSH_KEY_DIR/id_ed25519"
+            CLEANUP_PATHS=()
+
+            cleanup_temp_paths() {
+                local path
+                for path in "''${CLEANUP_PATHS[@]}"; do
+                    if [ -n "$path" ]; then
+                        rm -rf "$path"
+                    fi
+                done
+            }
+            trap cleanup_temp_paths EXIT
+
+            # Always excluded from VM home images and sync-home, even with --home-full.
+            HOME_SECRET_DENYLIST=(
+                "/.ssh"
+                "/.gnupg"
+                "/.config/sops"
+                "/.local/share/keyrings"
+                "/.local/share/fcbox"
+                "/.password-store"
+                "/password-store"
+                "/.mozilla"
+                "/.config/chromium"
+                "/.config/google-chrome"
+                "/.zen"
+                "/zen"
+                "/.config/zen"
+                "/.librewolf"
+                "/librewolf"
+                "*.ext4"
+            )
+
+            HOME_DEFAULT_EXCLUDES=(
+                "/.cache"
+                "/.local/share/Trash"
+                "/.local/share/Steam"
+                "*.qcow2"
+            )
+
+            build_home_rsync_args() {
+                local full_copy="$1"
+                shift
+                HOME_RSYNC_ARGS=("--exclude=/.ssh/authorized_keys")
+
+                local raw_path include_path prefix part idx last_idx
+                local -a parts
+                for raw_path in "$@"; do
+                    include_path="$raw_path"
+                    while [[ "$include_path" == ./* ]]; do
+                        include_path="''${include_path#./}"
+                    done
+                    while [[ "$include_path" == /* ]]; do
+                        include_path="''${include_path#/}"
+                    done
+                    while [[ "$include_path" == */ ]]; do
+                        include_path="''${include_path%/}"
+                    done
+
+                    if [ -z "$include_path" ] || [[ "$include_path" == ".." ]] || [[ "$include_path" == ../* ]] || [[ "$include_path" == */../* ]] || [[ "$include_path" == */.. ]]; then
+                        echo "Invalid --include path '$raw_path'" >&2
+                        return 1
+                    fi
+                    if [ "$include_path" = ".ssh/authorized_keys" ]; then
+                        echo "Refusing to include host .ssh/authorized_keys (would overwrite VM SSH key)" >&2
+                        return 1
+                    fi
+
+                    prefix=""
+                    IFS='/' read -ra parts <<< "$include_path"
+                    last_idx=$(( ''${#parts[@]} - 1 ))
+                    for ((idx = 0; idx < last_idx; idx++)); do
+                        part="''${parts[$idx]}"
+                        [ -n "$part" ] || continue
+                        prefix="$prefix/$part"
+                        HOME_RSYNC_ARGS+=("--include=$prefix/")
+                    done
+                    HOME_RSYNC_ARGS+=("--include=/$include_path" "--include=/$include_path/***")
+                done
+
+                local entry
+                for entry in "''${HOME_SECRET_DENYLIST[@]}"; do
+                    HOME_RSYNC_ARGS+=("--exclude=$entry")
+                    if [[ "$entry" == /* ]]; then
+                        HOME_RSYNC_ARGS+=("--exclude=$entry/**")
+                    fi
+                done
+
+                if [ "$full_copy" != "1" ]; then
+                    for entry in "''${HOME_DEFAULT_EXCLUDES[@]}"; do
+                        HOME_RSYNC_ARGS+=("--exclude=$entry")
+                        if [[ "$entry" == /* ]]; then
+                            HOME_RSYNC_ARGS+=("--exclude=$entry/**")
+                        fi
+                    done
+                fi
+            }
 
             usage() {
                 cat <<EOF
@@ -852,10 +948,11 @@
 
             Usage:
               fcbox init-base                         Build Arch Linux base image (requires sudo/root)
-              fcbox create <name> [--copy-home] [--home-full] [--mem MB] [--vcpu N]
+              fcbox create <name> [--copy-home] [--home-full] [--include <path>] [--mem MB] [--vcpu N]
               fcbox enter <name> [--waypipe]          Start VM if stopped and open interactive shell
               fcbox run <name> -- <cmd...>            Run a command inside the VM
-              fcbox sync-home <name> [--home-full]    One-way rsync of host \$HOME into isolated VM \$HOME
+              fcbox sync-home <name> [--home-full] [--include <path>]
+                                                      One-way rsync of host \$HOME into isolated VM \$HOME
               fcbox pull <name> <vm-path> <host-path> Copy files out of VM isolation
               fcbox reset <name>                      Wipe overlay.ext4 (keep isolated home.ext4)
               fcbox stop <name>                       Stop VM
@@ -906,26 +1003,18 @@
 
             stage_home_image() {
                 local home_img="$1" full_copy="$2"
+                shift 2
                 local stage
-                stage="$(mktemp -d /tmp/fcbox-home-stage.XXXXXX)"
-                trap 'rm -rf "$stage"' RETURN
+                stage="$(mktemp -d /var/tmp/fcbox-home-stage.XXXXXX)"
+                CLEANUP_PATHS+=("$stage")
 
-                local excludes=(
-                    "--exclude=.cache"
-                    "--exclude=.local/share/Trash"
-                    "--exclude=.local/share/Steam"
-                    "--exclude=.local/share/fcbox"
-                    "--exclude=*.qcow2"
-                    "--exclude=*.ext4"
-                )
-                if [ "$full_copy" = "1" ]; then
-                    excludes=("--exclude=.local/share/fcbox")
-                fi
+                build_home_rsync_args "$full_copy" "$@"
 
                 echo "Copying \$HOME into isolated ext4 volume..."
-                rsync -a --delete "''${excludes[@]}" "$HOME/" "$stage/"
+                rsync -a --delete "''${HOME_RSYNC_ARGS[@]}" "$HOME/" "$stage/"
                 mke2fs -t ext4 -d "$stage" -L fcbox-home -m 1 "$home_img" "${archCfg.homeSize}" >/dev/null
                 chmod 0660 "$home_img"
+                rm -rf "$stage"
             }
 
             cmd="''${1:-help}"
@@ -941,6 +1030,7 @@
                     shift
                     COPY_HOME=0
                     FULL_HOME=0
+                    HOME_INCLUDES=()
                     VM_MEM="${toString archCfg.defaultMem}"
                     VM_VCPU="${toString archCfg.defaultVcpu}"
 
@@ -948,12 +1038,18 @@
                         case "$1" in
                             --copy-home) COPY_HOME=1 ;;
                             --home-full) COPY_HOME=1; FULL_HOME=1 ;;
+                            --include) shift; HOME_INCLUDES+=("''${1:?Missing value for --include}") ;;
                             --mem) shift; VM_MEM="''${1:?Missing value for --mem}" ;;
                             --vcpu) shift; VM_VCPU="''${1:?Missing value for --vcpu}" ;;
                             *) echo "Unknown option: $1" >&2; exit 1 ;;
                         esac
                         shift
                     done
+
+                    if [ "''${#HOME_INCLUDES[@]}" -gt 0 ] && [ "$COPY_HOME" != "1" ]; then
+                        echo "--include requires --copy-home or --home-full" >&2
+                        exit 1
+                    fi
 
                     if [[ ! "$VM_MEM" =~ ^[1-9][0-9]*$ ]]; then
                         echo "Invalid --mem value '$VM_MEM': must be a positive integer" >&2
@@ -991,7 +1087,7 @@
                     chmod 0660 "$VM_DIR/overlay.ext4"
 
                     if [ "$COPY_HOME" = "1" ]; then
-                        stage_home_image "$VM_DIR/home.ext4" "$FULL_HOME"
+                        stage_home_image "$VM_DIR/home.ext4" "$FULL_HOME" "''${HOME_INCLUDES[@]}"
                     else
                         truncate -s "${archCfg.homeSize}" "$VM_DIR/home.ext4"
                         mkfs.ext4 -q -L fcbox-home "$VM_DIR/home.ext4"
@@ -1054,14 +1150,21 @@
                     validate_vm_name "$NAME"
                     shift
                     FULL_HOME=0
-                    [ "''${1:-}" = "--home-full" ] && FULL_HOME=1
+                    HOME_INCLUDES=()
+                    while [ $# -gt 0 ]; do
+                        case "$1" in
+                            --home-full) FULL_HOME=1 ;;
+                            --include) shift; HOME_INCLUDES+=("''${1:?Missing value for --include}") ;;
+                            *) echo "Unknown option: $1" >&2; exit 1 ;;
+                        esac
+                        shift
+                    done
                     VM_DIR="$BASE_DIR/$NAME"
                     load_vm_config "$VM_DIR/config.env"
+                    build_home_rsync_args "$FULL_HOME" "''${HOME_INCLUDES[@]}"
                     systemctl start "fcbox@$NAME.service"
                     wait_ssh "$NAME" "$VM_HOST_IP" "$VM_USER"
-                    excludes=("--exclude=.cache" "--exclude=.local/share/Trash" "--exclude=.local/share/Steam" "--exclude=.local/share/fcbox")
-                    [ "$FULL_HOME" = "1" ] && excludes=("--exclude=.local/share/fcbox")
-                    exec rsync -av "''${excludes[@]}" \
+                    exec rsync -av "''${HOME_RSYNC_ARGS[@]}" \
                         -e "ssh -i $SSH_KEY -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null" \
                         "$HOME/" "$VM_USER@$VM_HOST_IP:/home/$VM_USER/"
                     ;;
