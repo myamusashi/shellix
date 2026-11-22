@@ -669,13 +669,15 @@
                             "drive_id": "overlay",
                             "path_on_host": "overlay.ext4",
                             "is_root_device": false,
-                            "is_read_only": false
+                            "is_read_only": false,
+                            "cache_type": "Writeback"
                         },
                         {
                             "drive_id": "home",
                             "path_on_host": "home.ext4",
                             "is_root_device": false,
-                            "is_read_only": false
+                            "is_read_only": false,
+                            "cache_type": "Writeback"
                         }
                     ],
                     "network-interfaces": [
