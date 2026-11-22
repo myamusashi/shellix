@@ -751,6 +751,51 @@
             coreutils
             curl
             gnugrep
+        ];
+        text = ''
+            set -euo pipefail
+            source "${commonShellLibrary}"
+
+            VM_NAME="''${1:?Missing VM name}"
+            validate_vm_name "$VM_NAME"
+            JAIL_ROOT="/srv/jailer/firecracker/$VM_NAME/root"
+            SOCK="$JAIL_ROOT/control.socket"
+            PID_FILE="$JAIL_ROOT/firecracker.pid"
+
+            TARGET_PID="''${MAINPID:-}"
+            if [ -z "$TARGET_PID" ] && [ -f "$PID_FILE" ] && [ ! -L "$PID_FILE" ]; then
+                TARGET_PID="$(cat "$PID_FILE" 2>/dev/null || true)"
+            fi
+            if [[ ! "$TARGET_PID" =~ ^[0-9]+$ ]]; then
+                TARGET_PID=""
+            fi
+
+            if [ -S "$SOCK" ]; then
+                curl -fsS --max-time 5 --unix-socket "$SOCK" \
+                    -X PUT http://localhost/actions \
+                    -d '{"action_type": "SendCtrlAltDel"}' >/dev/null 2>&1 || true
+            fi
+
+            # Wait up to 20s for Firecracker to exit cleanly before systemd sends SIGTERM.
+            if [ -n "$TARGET_PID" ]; then
+                waited=0
+                while [ "$waited" -lt 100 ]; do
+                    if ! kill -0 "$TARGET_PID" 2>/dev/null; then
+                        exit 0
+                    fi
+                    sleep 0.2
+                    waited=$((waited + 1))
+                done
+            fi
+        '';
+    };
+
+    fcboxExecStopPost = pkgs.writeShellApplication {
+        name = "fcbox-poststop";
+        extraShellCheckFlags = ["-x"];
+        runtimeInputs = with pkgs; [
+            coreutils
+            gnugrep
             iproute2
         ];
         text = ''
@@ -761,14 +806,6 @@
             validate_vm_name "$VM_NAME"
             STATE_DIR="/var/lib/microvms/archbox/$VM_NAME"
             JAIL_DIR="/srv/jailer/firecracker/$VM_NAME"
-            SOCK="$JAIL_DIR/root/control.socket"
-
-            if [ -S "$SOCK" ]; then
-                curl -s --unix-socket "$SOCK" \
-                    -X PUT http://localhost/actions \
-                    -d '{"action_type": "SendCtrlAltDel"}' || true
-                sleep 1
-            fi
 
             if [ -f "$STATE_DIR/config.env" ]; then
                 load_vm_config "$STATE_DIR/config.env"
@@ -1296,7 +1333,9 @@ in {
                         PIDFile = "/srv/jailer/firecracker/%i/root/firecracker.pid";
                         ExecStartPre = "${lib.getExe fcboxPreStart} %i";
                         ExecStart = "${lib.getExe fcboxExecStart} %i";
-                        ExecStopPost = "${lib.getExe fcboxExecStop} %i";
+                        ExecStop = "${lib.getExe fcboxExecStop} %i";
+                        ExecStopPost = "${lib.getExe fcboxExecStopPost} %i";
+                        TimeoutStopSec = "30s";
                         LimitNOFILE = 1048576;
                         LimitMEMLOCK = "infinity";
                         Restart = "no";
