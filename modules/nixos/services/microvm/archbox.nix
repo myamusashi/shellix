@@ -18,7 +18,8 @@
     guestModules = pkgs.makeModulesClosure {
         kernel = kernelPkg.modules or kernelPkg;
         firmware = pkgs.linux-firmware;
-        allowMissing = false;
+        # Allow built-in modules when archbox.kernelPackage is overridden with a custom kernel.
+        allowMissing = true;
         rootModules = [
             "virtio_pci"
             "virtio_mmio"
@@ -38,7 +39,6 @@
         export PATH=/bin:/sbin:/usr/bin:/usr/sbin
         ${pkgs.busybox}/bin/busybox mkdir -p /bin /sbin /usr/bin /usr/sbin /proc /sys /dev /ro-base /rw-overlay /newroot
         ${pkgs.busybox}/bin/busybox --install -s /bin
-        ln -sf ${pkgs.kmod}/bin/kmod /bin/modprobe
 
         mount -t proc proc /proc
         mount -t sysfs sysfs /sys
@@ -73,7 +73,7 @@
         done
 
         for mod in virtio_pci virtio_mmio virtio_blk virtio_net virtio_rng ext4 overlay af_packet i8042 atkbd; do
-            /bin/modprobe "$mod" || echo "fcbox-init: failed to load $mod"
+            /bin/modprobe -q "$mod" 2>/dev/null || true
         done
 
         if [ "$FC_BOOTSTRAP" = "1" ]; then
