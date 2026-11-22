@@ -2767,14 +2767,17 @@
         ]
       },
       "locked": {
-        "lastModified": 1795128731,
-        "narHash": "sha256-R1riJzBScyzX1XB+RKO+Hit0hCMSMeEhNiRupawdQP0=",
-        "path": "/home/myamusashi/Projects/zen-browser-flake",
-        "type": "path"
+        "lastModified": 1795333741,
+        "narHash": "sha256-xJaT+L8DeMR0TJjAOlrjGqaRG2AjZrjivQfCtiLRtlY=",
+        "owner": "0xc000022070",
+        "repo": "zen-browser-flake",
+        "rev": "81376950ac382a96b965f9d6f8bf60354ad99c2f",
+        "type": "github"
       },
       "original": {
-        "path": "/home/myamusashi/Projects/zen-browser-flake",
-        "type": "path"
+        "owner": "0xc000022070",
+        "repo": "zen-browser-flake",
+        "type": "github"
       }
     }
   },
