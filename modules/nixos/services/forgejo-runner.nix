@@ -280,6 +280,20 @@ in {
                     extraConfig = {
                         microvm.writableStoreOverlay = "/nix/.rw-store";
 
+                        # microvm.nix forwards volume.readOnly to Firecracker (is_read_only = true)
+                        # but does not propagate it to guest fileSystems; mount read-only without
+                        # journal replay or fsck so systemd does not fail on the read-only block device.
+                        fileSystems."/run/vm-secrets" = {
+                            options = [
+                                "ro"
+                                "noload"
+                                "nosuid"
+                                "nodev"
+                                "noexec"
+                            ];
+                            noCheck = true;
+                        };
+
                         nix = {
                             enable = true;
                             settings = {
