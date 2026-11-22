@@ -138,13 +138,13 @@ in {
         microvm = {
             mem = lib.mkOption {
                 type = lib.types.ints.positive;
-                default = 4096;
+                default = 1024;
                 description = "Memory size in MiB for the ci-runner Firecracker MicroVM. The guest root filesystem is a tmpfs (capped at 50% of RAM by microvm.nix), so writes to / (such as /tmp and /nix/var) count against this RAM allocation.";
             };
 
             vcpu = lib.mkOption {
                 type = lib.types.ints.positive;
-                default = 2;
+                default = 1;
                 description = "Number of vCPUs for the ci-runner Firecracker MicroVM.";
             };
 
@@ -174,7 +174,7 @@ in {
 
             storeOverlaySize = lib.mkOption {
                 type = lib.types.ints.positive;
-                default = 20480;
+                default = 16480;
                 description = "Sparse writable /nix/store overlay volume size in MiB for /nix/.rw-store inside the CI MicroVM.";
             };
 
