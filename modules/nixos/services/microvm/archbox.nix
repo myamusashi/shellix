@@ -410,19 +410,17 @@
             curl -fL "$BOOTSTRAP_URL" -o "$WORKDIR/arch-bootstrap.tar.zst"
             curl -fL "$BOOTSTRAP_URL.sig" -o "$WORKDIR/arch-bootstrap.tar.zst.sig"
 
-            if [ "''${FCBOX_SKIP_PGP:-0}" != "1" ]; then
-                echo "Verifying Arch Linux bootstrap PGP signature..."
-                GNUPGHOME="$WORKDIR/gnupg"
-                export GNUPGHOME
-                mkdir -p "$GNUPGHOME"
-                chmod 700 "$GNUPGHOME"
-                if gpg --keyserver hkps://keyserver.ubuntu.com --recv-keys 3E80CA1A8B89F69CBA57D98A76A5EF9054449A5C 2>/dev/null \
-                    || gpg --keyserver hkps://keys.openpgp.org --recv-keys 3E80CA1A8B89F69CBA57D98A76A5EF9054449A5C 2>/dev/null; then
-                    gpg --verify "$WORKDIR/arch-bootstrap.tar.zst.sig" "$WORKDIR/arch-bootstrap.tar.zst"
-                else
-                    echo "Warning: Could not fetch Arch release signing key; continuing (set FCBOX_SKIP_PGP=1 to silence)." >&2
-                fi
+            echo "Verifying Arch Linux bootstrap PGP signature..."
+            GNUPGHOME="$WORKDIR/gnupg"
+            export GNUPGHOME
+            mkdir -p "$GNUPGHOME"
+            chmod 700 "$GNUPGHOME"
+            gpg --batch --import "${./archbox/keys/arch-release-signing-key.asc}"
+            if ! gpg --batch --with-colons --fingerprint 3E80CA1A8B89F69CBA57D98A76A5EF9054449A5C | grep -q '^fpr:::::::::3E80CA1A8B89F69CBA57D98A76A5EF9054449A5C:$'; then
+                echo "Vendored Arch release signing key does not match expected fingerprint" >&2
+                exit 1
             fi
+            gpg --batch --verify "$WORKDIR/arch-bootstrap.tar.zst.sig" "$WORKDIR/arch-bootstrap.tar.zst"
 
             tar --zstd -xf "$WORKDIR/arch-bootstrap.tar.zst" -C "$WORKDIR"
             ROOTFS="$WORKDIR/root.x86_64"
