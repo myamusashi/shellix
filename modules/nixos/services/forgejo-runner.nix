@@ -5,174 +5,295 @@
     ...
 }: let
     cfg = config.shellix.services.forgejo-runner;
+    yamlFormat = pkgs.formats.yaml {};
 
-    # act_runner copies the checkout into /var/run/act inside the job container.
-    # Stock act-latest images ship /var/run as a symlink -> ../run, and Podman 5.x
-    # (behind the dockerCompat socket) rejects CopyToContainer through it with
-    # "path escapes from parent", nektos/act#6092, a Docker 29.5.0+ regression.
-    actImageRef = "localhost/act-fixed:latest";
-    actContainerfile = pkgs.writeText "act-fixed.Containerfile" ''
-        FROM docker.io/catthehacker/ubuntu:act-latest
-        RUN rm -f /var/run && mkdir -p /var/run
-    '';
-    # podman build needs a context directory; -f points at the Containerfile.
-    actBuildContext = pkgs.runCommand "act-fixed-context" {} ''
-        mkdir -p $out
-        cp ${actContainerfile} $out/Containerfile
-    '';
+    mkRunnerConfig = tokenPath: runner:
+        yamlFormat.generate "forgejo-runner.yaml" {
+            runner = {
+                file = ".runner";
+                capacity = 1;
+                timeout = "3h";
+                shutdown_timeout = "3h";
+                insecure = false;
+                fetch_timeout = "30s";
+                fetch_interval = "2s";
+                report_interval = "1s";
+                inherit (runner) labels;
+            };
+            cache = {
+                enabled = true;
+                port = 0;
+                proxy_port = 0;
+            };
+            container = {
+                network = "";
+                enable_ipv6 = false;
+                privileged = false;
+                workdir_parent = "/workspace";
+                valid_volumes = [];
+                docker_host = "";
+                force_pull = false;
+                force_rebuild = false;
+            };
+            host.workdir_parent = "";
+            server.connections.default = {
+                inherit (runner) url uuid labels;
+                token_url = "file://${tokenPath}";
+            };
+        };
 
-    # Must land in the store the runner actually uses. Runner units have no User=,
-    # so they run as root and talk to /var/run/docker.sock (root's podman).
-    actImageLoad = pkgs.writeShellScriptBin "forgejo-act-image-load" ''
-        set -euo pipefail
-        podman=${lib.getExe pkgs.podman}
-        if $podman image exists ${actImageRef} 2>/dev/null; then
-            echo "act job image already present: ${actImageRef}"
-            exit 0
-        fi
-        $podman build --cgroup-manager=cgroupfs \
-            -t ${actImageRef} \
-            ${actBuildContext}
-        $podman image exists ${actImageRef}
-    '';
+    mkRunnerServices = tokenPathFor:
+        lib.mapAttrs' (
+            name: runner:
+                lib.nameValuePair "forgejo-runner-${name}" {
+                    description = "Forgejo Runner — ${name}";
+                    after = [
+                        "network-online.target"
+                        "nix-daemon.socket"
+                    ];
+                    wants = [
+                        "network-online.target"
+                        "nix-daemon.socket"
+                    ];
+                    wantedBy = ["multi-user.target"];
+
+                    environment = {
+                        NIX_REMOTE = "daemon";
+                    };
+
+                    path = with pkgs; [
+                        bash
+                        coreutils
+                        curl
+                        findutils
+                        gawk
+                        git
+                        gnugrep
+                        gnused
+                        gnutar
+                        gzip
+                        jq
+                        nix
+                        nodejs
+                        openssh
+                        unzip
+                    ];
+
+                    serviceConfig = {
+                        Type = "simple";
+                        WorkingDirectory = "/var/lib/forgejo-runner/${name}";
+                        StateDirectory = "forgejo-runner/${name}";
+                        ExecStart = "${lib.getExe pkgs.forgejo-runner} daemon --config ${mkRunnerConfig (tokenPathFor name runner) runner}";
+                        Restart = "on-failure";
+                        RestartSec = 5;
+                    };
+                }
+        )
+        cfg.runners;
+
+    secretsPackScript = pkgs.writeShellApplication {
+        name = "forgejo-runner-pack-secrets";
+        runtimeInputs = with pkgs; [
+            coreutils
+            e2fsprogs
+            util-linux
+        ];
+        text = ''
+            set -euo pipefail
+            STATE_DIR="/var/lib/microvms/ci-runner"
+            OUT_IMG="$STATE_DIR/ci-secrets.ext4"
+            STAGE="$(mktemp -d /tmp/ci-secrets-stage.XXXXXX)"
+            trap 'rm -rf "$STAGE"' EXIT
+
+            mkdir -p "$STATE_DIR"
+            ${lib.concatStringsSep "\n" (
+                lib.mapAttrsToList (name: runner: ''
+                    install -m 0400 "${runner.tokenFile}" "$STAGE/${name}.token"
+                '')
+                cfg.runners
+            )}
+
+            TMP_IMG="$OUT_IMG.tmp"
+            rm -f "$TMP_IMG"
+            mke2fs -t ext4 -d "$STAGE" -L ci-secrets -m 0 "$TMP_IMG" 16M >/dev/null
+            chown microvm:kvm "$TMP_IMG"
+            chmod 0400 "$TMP_IMG"
+            mv "$TMP_IMG" "$OUT_IMG"
+        '';
+    };
 in {
-    options.shellix.services.forgejo-runner.runners = lib.mkOption {
-        type = lib.types.attrsOf (
-            lib.types.submodule {
-                options = {
-                    url = lib.mkOption {
-                        type = lib.types.str;
-                        example = "https://git.example.com";
-                        description = "Forgejo instance URL";
-                    };
+    options.shellix.services.forgejo-runner = {
+        backend = lib.mkOption {
+            type = lib.types.enum [
+                "microvm"
+                "host"
+            ];
+            default = "microvm";
+            description = ''
+                Execution backend for Forgejo runners.
+                - "microvm": Runs all runners inside an isolated Firecracker MicroVM in :host mode (no Podman/Docker required).
+                - "host": Runs runners directly on the host without VM isolation.
+            '';
+        };
 
-                    uuid = lib.mkOption {
-                        type = lib.types.str;
-                        example = "xxx-xxx-xxx-xxx-xxx";
-                        description = "Runner UUID";
-                    };
+        microvm = {
+            mem = lib.mkOption {
+                type = lib.types.ints.positive;
+                default = 512;
+                description = "Memory size in MiB for the ci-runner Firecracker MicroVM.";
+            };
 
-                    tokenFile = lib.mkOption {
-                        type = lib.types.path;
-                        example = "/path/to/token-file";
-                        description = "Path to the file containing the runner registration token";
-                    };
+            vcpu = lib.mkOption {
+                type = lib.types.ints.positive;
+                default = 2;
+                description = "Number of vCPUs for the ci-runner Firecracker MicroVM.";
+            };
 
-                    labels = lib.mkOption {
-                        type = lib.types.listOf lib.types.str;
-                        default = ["ubuntu-latest:docker://${actImageRef}"];
-                        defaultText = lib.literalExpression ''["ubuntu-latest:docker://${actImageRef}"]'';
-                        example = ["ubuntu-latest:docker://localhost/act-fixed:latest"];
-                        description = ''
-                            Runner labels. The default points at the locally built act job
-                            image which works around nektos/act#6092; the runners only pick jobs
-                            that request it.
-                        '';
-                    };
+            ip = lib.mkOption {
+                type = lib.types.str;
+                default = "10.95.1.10/16";
+                description = "Static IPv4 CIDR assigned to the ci-runner MicroVM.";
+            };
 
-                    containerNetwork = lib.mkOption {
-                        type = lib.types.nullOr lib.types.str;
-                        default = null;
-                        example = "podman";
-                        description = ''
-                            Docker/Podman network for job containers. Set to your compose network name
-                            so job containers can resolve the Forgejo instance hostname.
-                            If null, forgejo-runner creates an isolated network per job (default behavior).
-                        '';
+            mac = lib.mkOption {
+                type = lib.types.str;
+                default = "02:fc:00:01:00:01";
+                description = "MAC address assigned to the ci-runner MicroVM TAP interface.";
+            };
+
+            tapName = lib.mkOption {
+                type = lib.types.str;
+                default = "vm-ci";
+                description = "Host TAP interface name for the ci-runner MicroVM.";
+            };
+
+            workspaceSize = lib.mkOption {
+                type = lib.types.int;
+                default = 4096;
+                description = "Persistent workspace volume size in MiB for /var/lib/forgejo-runner inside the CI MicroVM.";
+            };
+
+            extraPackages = lib.mkOption {
+                type = lib.types.listOf lib.types.package;
+                default = [];
+                description = "Additional packages installed inside the ci-runner Firecracker MicroVM.";
+            };
+        };
+
+        runners = lib.mkOption {
+            type = lib.types.attrsOf (
+                lib.types.submodule {
+                    options = {
+                        url = lib.mkOption {
+                            type = lib.types.str;
+                            example = "https://git.example.com";
+                            description = "Forgejo instance URL";
+                        };
+
+                        uuid = lib.mkOption {
+                            type = lib.types.str;
+                            example = "xxx-xxx-xxx-xxx-xxx";
+                            description = "Runner UUID";
+                        };
+
+                        tokenFile = lib.mkOption {
+                            type = lib.types.path;
+                            example = "/path/to/token-file";
+                            description = "Path to the file containing the runner registration token";
+                        };
+
+                        labels = lib.mkOption {
+                            type = lib.types.listOf lib.types.str;
+                            default = ["ubuntu-latest:host"];
+                            defaultText = lib.literalExpression ''["ubuntu-latest:host"]'';
+                            example = ["ubuntu-latest:host"];
+                            description = "Runner labels executed in isolated host mode inside the MicroVM.";
+                        };
+                    };
+                }
+            );
+            default = {};
+            description = "Attrsets of Forgejo runners to run as systemd services";
+        };
+    };
+
+    config = lib.mkIf cfg.enable (
+        lib.mkMerge [
+            (lib.mkIf (cfg.backend == "host") {
+                environment.systemPackages = [pkgs.forgejo-runner];
+                systemd.services = mkRunnerServices (_: runner: runner.tokenFile);
+            })
+            (lib.mkIf (cfg.backend == "microvm") {
+                assertions = [
+                    {
+                        assertion = config.shellix.services.microvm.enable;
+                        message = "shellix.services.forgejo-runner with backend = \"microvm\" requires shellix.services.microvm.enable = true.";
+                    }
+                ];
+
+                shellix.services.microvm.vms.ci-runner = {
+                    inherit
+                        (cfg.microvm)
+                        vcpu
+                        mem
+                        ip
+                        mac
+                        tapName
+                        ;
+                    autostart = true;
+                    # Root is tmpfs so /nix/var/nix/db resets on every boot; recreating the
+                    # overlay image avoids unregistered stale store paths after a VM restart.
+                    preStart = ''
+                        ${lib.getExe' pkgs.coreutils "rm"} -f ci-nix-store.ext4
+                    '';
+                    volumes = [
+                        {
+                            image = "ci-nix-store.ext4";
+                            label = "nix-rw-store";
+                            mountPoint = "/nix/.rw-store";
+                            size = 20480;
+                            autoCreate = true;
+                        }
+                        {
+                            image = "ci-workspace.ext4";
+                            mountPoint = "/var/lib/forgejo-runner";
+                            size = cfg.microvm.workspaceSize;
+                            autoCreate = true;
+                        }
+                        {
+                            image = "ci-secrets.ext4";
+                            mountPoint = "/run/vm-secrets";
+                            size = 16;
+                            autoCreate = false;
+                            readOnly = true;
+                        }
+                    ];
+                    extraConfig = {
+                        microvm.writableStoreOverlay = "/nix/.rw-store";
+
+                        nix = {
+                            enable = true;
+                            settings = {
+                                experimental-features = [
+                                    "nix-command"
+                                    "flakes"
+                                ];
+                                allowed-users = ["*"];
+                            };
+                        };
+
+                        environment.systemPackages =
+                            [pkgs.forgejo-runner]
+                            ++ cfg.microvm.extraPackages;
+
+                        systemd.services = mkRunnerServices (name: _: "/run/vm-secrets/${name}.token");
                     };
                 };
-            }
-        );
-        default = {};
-        description = "Attrsets of Forgejo runners to run as systemd services";
-    };
 
-    config = lib.mkIf cfg.enable {
-        environment.systemPackages = [pkgs.forgejo-runner];
-
-        systemd.services = (
-            lib.listToAttrs (
-                [
-                    {
-                        name = "forgejo-runner-act-image";
-                        value = {
-                            description = "Forgejo Runner — build and load act job image";
-                            after = ["network-online.target"];
-                            wants = ["network-online.target"];
-                            wantedBy = ["multi-user.target"];
-                            before = lib.mapAttrsToList (name: _: "forgejo-runner-${name}.service") cfg.runners;
-                            serviceConfig = {
-                                Type = "oneshot";
-                                RemainAfterExit = true;
-                                ExecStart = lib.getExe actImageLoad;
-                            };
-                        };
-                    }
-                ]
-                ++ (lib.mapAttrsToList (name: runner: {
-                        name = "forgejo-runner-${name}";
-                        value = {
-                            description = "Forgejo Runner — ${name}";
-                            after = [
-                                "network-online.target"
-                                "forgejo-runner-act-image.service"
-                            ];
-                            wants = [
-                                "network-online.target"
-                                "forgejo-runner-act-image.service"
-                            ];
-                            wantedBy = ["multi-user.target"];
-
-                            serviceConfig = let
-                                yamlFormat = pkgs.formats.yaml {};
-                                configFile = yamlFormat.generate "forgejo-runner-${name}.yaml" {
-                                    runner = {
-                                        file = ".runner";
-                                        capacity = 1;
-                                        timeout = "3h";
-                                        shutdown_timeout = "3h";
-                                        insecure = false;
-                                        fetch_timeout = "30s";
-                                        fetch_interval = "2s";
-                                        report_interval = "1s";
-                                        labels = runner.labels;
-                                    };
-                                    cache = {
-                                        enabled = true;
-                                        port = 0;
-                                        proxy_port = 0;
-                                    };
-                                    container = {
-                                        network =
-                                            if runner.containerNetwork == null
-                                            then ""
-                                            else runner.containerNetwork;
-                                        enable_ipv6 = false;
-                                        privileged = false;
-                                        workdir_parent = "/workspace";
-                                        valid_volumes = [];
-                                        docker_host = "-";
-                                        force_pull = false;
-                                        force_rebuild = false;
-                                    };
-                                    host.workdir_parent = "";
-                                    server.connections.default = {
-                                        url = runner.url;
-                                        uuid = runner.uuid;
-                                        token_url = "file://${runner.tokenFile}";
-                                        labels = runner.labels;
-                                    };
-                                };
-                            in {
-                                Type = "simple";
-                                ExecStart = "${lib.getExe pkgs.forgejo-runner} daemon --config ${configFile}";
-                                Restart = "on-failure";
-                                RestartSec = 5;
-                            };
-                        };
-                    })
-                    cfg.runners)
-            )
-        );
-    };
+                systemd.services."microvm@ci-runner".serviceConfig.ExecStartPre = [
+                    "+${lib.getExe secretsPackScript}"
+                ];
+            })
+        ]
+    );
 }
