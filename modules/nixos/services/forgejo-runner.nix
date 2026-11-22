@@ -7,13 +7,15 @@
     cfg = config.shellix.services.forgejo-runner;
     yamlFormat = pkgs.formats.yaml {};
 
-    mkRunnerConfig = tokenPath: runner:
-        yamlFormat.generate "forgejo-runner.yaml" {
+    mkRunnerConfig = runnerName: tokenPath: runner:
+        yamlFormat.generate "forgejo-runner-${runnerName}.yaml" {
             runner = {
                 file = ".runner";
                 capacity = 1;
                 timeout = "3h";
-                shutdown_timeout = "3h";
+                # Kept below TimeoutStopSec (90s) and microvm@ host TimeoutSec (150s)
+                # so the runner can cancel and report in-flight jobs before SIGKILL.
+                shutdown_timeout = "60s";
                 insecure = false;
                 fetch_timeout = "30s";
                 fetch_interval = "2s";
@@ -25,17 +27,7 @@
                 port = 0;
                 proxy_port = 0;
             };
-            container = {
-                network = "";
-                enable_ipv6 = false;
-                privileged = false;
-                workdir_parent = "/workspace";
-                valid_volumes = [];
-                docker_host = "";
-                force_pull = false;
-                force_rebuild = false;
-            };
-            host.workdir_parent = "";
+            host.workdir_parent = "/var/lib/forgejo-runner/${runnerName}/work";
             server.connections.default = {
                 inherit (runner) url uuid labels;
                 token_url = "file://${tokenPath}";
@@ -82,8 +74,12 @@
                     serviceConfig = {
                         Type = "simple";
                         WorkingDirectory = "/var/lib/forgejo-runner/${name}";
-                        StateDirectory = "forgejo-runner/${name}";
-                        ExecStart = "${lib.getExe pkgs.forgejo-runner} daemon --config ${mkRunnerConfig (tokenPathFor name runner) runner}";
+                        StateDirectory = [
+                            "forgejo-runner/${name}"
+                            "forgejo-runner/${name}/work"
+                        ];
+                        ExecStart = "${lib.getExe pkgs.forgejo-runner} daemon --config ${mkRunnerConfig name (tokenPathFor name runner) runner}";
+                        TimeoutStopSec = "90s";
                         Restart = "on-failure";
                         RestartSec = 5;
                     };
