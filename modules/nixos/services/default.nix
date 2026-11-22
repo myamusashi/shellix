@@ -25,6 +25,7 @@
         ./hypridle.nix
         ./mpd.nix
         ./systemd/nm-applet.nix
+        ./microvm/default.nix
     ];
 
     options.shellix.services = {
@@ -152,6 +153,7 @@
         };
         kdeconnect.enable = lib.mkEnableOption "Enable kde-connect";
         forgejo-runner.enable = lib.mkEnableOption "Enable Forgejo runners";
+        microvm.enable = lib.mkEnableOption "Enable Firecracker MicroVMs host module";
         clipse.enable = lib.mkEnableOption "Enable clipboard manager";
         kbuildsycoca6.enable = lib.mkEnableOption "Enable KDE build system cache (fixes Dolphin Open With)";
         hypridle.enable = lib.mkEnableOption "Enable idle manager";
