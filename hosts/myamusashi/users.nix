@@ -10,7 +10,7 @@ in {
                 extraGroups = [
                     "networkmanager"
                     "wheel"
-                    "podman"
+                    "microvm"
                     "libvirtd"
                     "qemu-libvirtd"
                     "kvm"
@@ -31,7 +31,6 @@ in {
             };
         };
         groups = {
-            docker = {};
             nginx = {};
         };
     };

@@ -39,6 +39,13 @@
             kbuildsycoca6.enable = false;
             hypridle.enable = false;
             kdeconnect.enable = true;
+            microvm = {
+                enable = true;
+                archbox = {
+                    enable = true;
+                    user = "myamusashi";
+                };
+            };
             mpd.enable = false;
             systemd.nm-applet.enable = false;
         };
