@@ -89,6 +89,10 @@
         areofyl-fetch.url = "github:areofyl/fetch";
         apple-fonts.url = "github:Lyndeno/apple-fonts.nix";
         sops-nix.url = "github:Mic92/sops-nix";
+        microvm = {
+            url = "github:microvm-nix/microvm.nix";
+            inputs.nixpkgs.follows = "nixpkgs";
+        };
         nix-cachyos-kernel.url = "github:xddxdd/nix-cachyos-kernel/release";
         spicetify-nix.url = "github:Gerg-L/spicetify-nix";
     };
