@@ -146,6 +146,9 @@ in {
                         # jailer --new-pid-ns clones Firecracker, writes firecracker.pid, and exits 0.
                         Type = "forking";
                         PIDFile = "/srv/jailer/firecracker/%i/root/firecracker.pid";
+                        # Keep jailer's cgroup v2 leaf inside this unit's cgroup so systemd tracks and accepts the PID.
+                        Delegate = "cpu memory";
+                        DelegateSubgroup = "jailer_launcher";
                         ExecStartPre = "${lib.getExe jailerScripts.preStartScript} %i";
                         ExecStart = "${lib.getExe jailerScripts.runScript} %i";
                         ExecStop = "${lib.getExe jailerScripts.stopScript} %i";

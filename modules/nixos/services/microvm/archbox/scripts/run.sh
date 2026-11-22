@@ -23,6 +23,14 @@ fi
 MEM_MAX_BYTES="$(((VM_MEM + 256) * 1024 * 1024))"
 CPU_QUOTA_US="$((VM_VCPU * 100000))"
 
+SELF_CGROUP="$(grep -m1 '^0::/' /proc/self/cgroup | cut -d: -f3-)"
+PARENT_CGROUP="${SELF_CGROUP#/}"
+PARENT_CGROUP="${PARENT_CGROUP%/jailer_launcher}"
+if [ -z "$PARENT_CGROUP" ] || [ "$PARENT_CGROUP" = "${SELF_CGROUP#/}" ]; then
+    echo "Expected fcbox-run to execute inside systemd DelegateSubgroup 'jailer_launcher' (got cgroup '$SELF_CGROUP')" >&2
+    exit 1
+fi
+
 exec "$FCBOX_JAILER_BIN" \
     --id "$VM_NAME" \
     --exec-file "$FIRECRACKER_BIN" \
@@ -33,6 +41,7 @@ exec "$FCBOX_JAILER_BIN" \
     --resource-limit "no-file=1024" \
     --resource-limit "fsize=$FSIZE_BYTES" \
     --cgroup-version 2 \
+    --parent-cgroup "$PARENT_CGROUP" \
     --cgroup "memory.max=$MEM_MAX_BYTES" \
     --cgroup "cpu.max=${CPU_QUOTA_US} 100000" \
     -- \

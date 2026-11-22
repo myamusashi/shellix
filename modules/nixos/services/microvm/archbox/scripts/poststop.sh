@@ -14,4 +14,3 @@ if [ -f "$STATE_DIR/config.env" ]; then
 fi
 
 rm -rf "$JAIL_DIR"
-rmdir "/sys/fs/cgroup/firecracker/$VM_NAME" 2>/dev/null || true
