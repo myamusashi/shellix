@@ -1020,17 +1020,27 @@
             }
 
             next_ip_octet() {
-                local used max=10
+                local -A used_ids=()
+                local config_file used candidate
                 if [ -d "$BASE_DIR" ]; then
-                    for f in "$BASE_DIR"/*/config.env; do
-                        [ -f "$f" ] || continue
-                        used="$(grep -E '^VM_ID=' "$f" | cut -d= -f2 || true)"
-                        if [ -n "$used" ] && [ "$used" -ge "$max" ]; then
-                            max=$((used + 1))
+                    for config_file in "$BASE_DIR"/*/config.env; do
+                        [ -f "$config_file" ] || continue
+                        used="$(grep -E '^VM_ID=' "$config_file" | cut -d= -f2- || true)"
+                        if [[ "$used" =~ ^[0-9]+$ ]] && [ "$((10#$used))" -ge 10 ] && [ "$((10#$used))" -le 254 ]; then
+                            used_ids["$((10#$used))"]=1
                         fi
                     done
                 fi
-                echo "$max"
+                candidate=10
+                while [ "$candidate" -le 254 ]; do
+                    if [ -z "''${used_ids[$candidate]:-}" ]; then
+                        echo "$candidate"
+                        return 0
+                    fi
+                    candidate=$((candidate + 1))
+                done
+                echo "No available VM IP octets in ${ipPrefix}.10.10-254 (maximum 254 reached)" >&2
+                return 1
             }
 
             wait_ssh() {
@@ -1115,14 +1125,24 @@
                         exit 1
                     fi
 
+                    ensure_ssh_key
+
+                    LOCK_FILE="$BASE_DIR/.lock"
+                    exec 9>>"$LOCK_FILE"
+                    chmod 0660 "$LOCK_FILE" 2>/dev/null || true
+                    flock -x 9
+
                     VM_DIR="$BASE_DIR/$NAME"
                     if [ -d "$VM_DIR" ]; then
                         echo "fcbox '$NAME' already exists at $VM_DIR" >&2
                         exit 1
                     fi
 
-                    ensure_ssh_key
                     VM_ID="$(next_ip_octet)"
+                    if [ "$VM_ID" -gt 254 ]; then
+                        echo "Allocated VM_ID '$VM_ID' exceeds maximum allowed octet 254" >&2
+                        exit 1
+                    fi
                     VM_IP="${ipPrefix}.10.$VM_ID/${subnetPrefix}"
                     VM_HOST_IP="${ipPrefix}.10.$VM_ID"
                     HEX_ID="$(printf '%02x' "$VM_ID")"
@@ -1157,6 +1177,9 @@
             VM_OWNER_GID=$(id -g)
             VM_PUBKEY_B64=$PUBKEY_B64
             EOF
+                    chmod 0640 "$VM_DIR/config.env"
+                    flock -u 9
+                    exec 9>&-
                     echo "Created fcbox '$NAME' ($VM_HOST_IP, copy-home=$COPY_HOME)"
                     ;;
                 enter)
@@ -1315,6 +1338,17 @@ in {
     };
 
     config = lib.mkIf (cfg.enable && archCfg.enable) {
+        assertions = [
+            {
+                assertion =
+                    builtins.length (lib.splitString "/" cfg.subnetCidr)
+                    == 2
+                    && subnetPrefix == "16"
+                    && builtins.length subnetParts == 4;
+                message = "shellix.services.microvm.subnetCidr ('${cfg.subnetCidr}') must be an IPv4 /16 CIDR when archbox is enabled.";
+            }
+        ];
+
         users.groups.microvm = {};
 
         environment.systemPackages = with pkgs; [
@@ -1328,6 +1362,7 @@ in {
                 "d /var/lib/microvms 0775 microvm kvm -"
                 "d /var/lib/microvms/images 0755 root root -"
                 "d /var/lib/microvms/archbox 2775 root microvm -"
+                "f /var/lib/microvms/archbox/.lock 0660 root microvm -"
                 "d /srv/jailer 0755 root root -"
                 "d /srv/jailer/firecracker 0755 root root -"
             ];
