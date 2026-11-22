@@ -242,8 +242,8 @@ in {
                 firewall = {
                     filterForward = lib.mkIf config.networking.nftables.enable true;
                     interfaces.${cfg.bridgeName} = {
-                        allowedTCPPorts = [53] ++ cfg.allowedBridgeTCPPorts;
-                        allowedUDPPorts = [53] ++ cfg.allowedBridgeUDPPorts;
+                        allowedTCPPorts = cfg.allowedBridgeTCPPorts;
+                        allowedUDPPorts = cfg.allowedBridgeUDPPorts;
                     };
                     extraForwardRules = lib.mkIf config.networking.nftables.enable (
                         lib.mkBefore nftablesForwardRules
