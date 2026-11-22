@@ -7,6 +7,24 @@
 }: let
     cfg = config.shellix.services.microvm;
     gatewayIp = lib.head (lib.splitString "/" cfg.subnetCidr);
+    ipv4Nameservers = builtins.filter (address: !(lib.hasInfix ":" address)) cfg.nameservers;
+    ipv6Nameservers = builtins.filter (address: lib.hasInfix ":" address) cfg.nameservers;
+    blockedIpv4Ranges = builtins.filter (range: !(lib.hasInfix ":" range)) cfg.blockedForwardRanges;
+    blockedIpv6Ranges = builtins.filter (range: lib.hasInfix ":" range) cfg.blockedForwardRanges;
+
+    nftablesForwardRules = lib.concatStringsSep "\n" (
+        [
+            "# Drop rules must precede the blanket and NAT accept rules because nftables evaluates rules top-to-bottom."
+            ''iifname "${cfg.bridgeName}" ip daddr ${gatewayIp} accept''
+        ]
+        ++ lib.optional (ipv4Nameservers != []) ''iifname "${cfg.bridgeName}" ip daddr { ${lib.concatStringsSep ", " ipv4Nameservers} } meta l4proto { udp, tcp } th dport 53 accept''
+        ++ lib.optional (ipv6Nameservers != []) ''iifname "${cfg.bridgeName}" ip6 daddr { ${lib.concatStringsSep ", " ipv6Nameservers} } meta l4proto { udp, tcp } th dport 53 accept''
+        ++ lib.optional (blockedIpv4Ranges != []) ''iifname "${cfg.bridgeName}" ip daddr { ${lib.concatStringsSep ", " blockedIpv4Ranges} } drop''
+        ++ lib.optional (blockedIpv6Ranges != []) ''iifname "${cfg.bridgeName}" ip6 daddr { ${lib.concatStringsSep ", " blockedIpv6Ranges} } drop''
+        ++ [
+            ''iifname "${cfg.bridgeName}" accept''
+        ]
+    );
 in {
     imports = [
         inputs.microvm.nixosModules.host
@@ -52,6 +70,17 @@ in {
             type = lib.types.listOf lib.types.port;
             default = [];
             description = "Additional host UDP ports accessible from MicroVMs over the bridge interface.";
+        };
+
+        blockedForwardRanges = lib.mkOption {
+            type = lib.types.listOf lib.types.str;
+            default = [
+                "10.0.0.0/8"
+                "172.16.0.0/12"
+                "192.168.0.0/16"
+                "169.254.0.0/16"
+            ];
+            description = "Destination CIDR ranges blocked from being forwarded out of the MicroVM bridge.";
         };
 
         vms = lib.mkOption {
@@ -160,6 +189,46 @@ in {
                     }
                     // lib.optionalAttrs (cfg.externalInterface != null) {
                         inherit (cfg) externalInterface;
+                    }
+                    // lib.optionalAttrs (!config.networking.nftables.enable) {
+                        # Insert the isolation chain at position 1 so drops run before NixOS NAT's blanket ACCEPT rule.
+                        extraCommands = ''
+                            iptables -w -t filter -N microvm-forward 2>/dev/null || iptables -w -t filter -F microvm-forward
+                            iptables -w -t filter -A microvm-forward -m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT
+                            iptables -w -t filter -A microvm-forward -d '${gatewayIp}' -j ACCEPT
+                            ${lib.concatMapStrings (address: ''
+                                    iptables -w -t filter -A microvm-forward -d '${address}' -p udp --dport 53 -j ACCEPT
+                                    iptables -w -t filter -A microvm-forward -d '${address}' -p tcp --dport 53 -j ACCEPT
+                                '')
+                                ipv4Nameservers}
+                            ${lib.concatMapStrings (range: ''
+                                    iptables -w -t filter -A microvm-forward -d '${range}' -j DROP
+                                '')
+                                blockedIpv4Ranges}
+                            iptables -w -t filter -I nixos-filter-forward 1 -i '${cfg.bridgeName}' -j microvm-forward
+                            ${lib.optionalString (config.networking.enableIPv6 && blockedIpv6Ranges != []) ''
+                                ip6tables -w -t filter -N microvm-forward 2>/dev/null || ip6tables -w -t filter -F microvm-forward
+                                ip6tables -w -t filter -A microvm-forward -m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT
+                                ${lib.concatMapStrings (address: ''
+                                        ip6tables -w -t filter -A microvm-forward -d '${address}' -p udp --dport 53 -j ACCEPT
+                                        ip6tables -w -t filter -A microvm-forward -d '${address}' -p tcp --dport 53 -j ACCEPT
+                                    '')
+                                    ipv6Nameservers}
+                                ${lib.concatMapStrings (range: ''
+                                        ip6tables -w -t filter -A microvm-forward -d '${range}' -j DROP
+                                    '')
+                                    blockedIpv6Ranges}
+                                ip6tables -w -t filter -I nixos-filter-forward 1 -i '${cfg.bridgeName}' -j microvm-forward
+                            ''}
+                        '';
+                        extraStopCommands = ''
+                            iptables -w -t filter -F microvm-forward 2>/dev/null || true
+                            iptables -w -t filter -X microvm-forward 2>/dev/null || true
+                            ${lib.optionalString config.networking.enableIPv6 ''
+                                ip6tables -w -t filter -F microvm-forward 2>/dev/null || true
+                                ip6tables -w -t filter -X microvm-forward 2>/dev/null || true
+                            ''}
+                        '';
                     };
 
                 firewall = {
@@ -168,9 +237,9 @@ in {
                         allowedTCPPorts = [53] ++ cfg.allowedBridgeTCPPorts;
                         allowedUDPPorts = [53] ++ cfg.allowedBridgeUDPPorts;
                     };
-                    extraForwardRules = lib.mkIf config.networking.nftables.enable ''
-                        iifname "${cfg.bridgeName}" accept
-                    '';
+                    extraForwardRules = lib.mkIf config.networking.nftables.enable (
+                        lib.mkBefore nftablesForwardRules
+                    );
                 };
             };
 
@@ -199,6 +268,7 @@ in {
                         matchConfig.Name = "vm-*";
                         linkConfig.RequiredForOnline = "no";
                         networkConfig.Bridge = cfg.bridgeName;
+                        bridgeConfig.Isolated = true;
                     };
                 };
             };
