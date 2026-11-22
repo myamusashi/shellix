@@ -69,6 +69,9 @@
                         nodejs
                         openssh
                         unzip
+                        which
+                        xz
+                        zstd
                     ];
 
                     serviceConfig = {
@@ -209,9 +212,9 @@ in {
 
                         labels = lib.mkOption {
                             type = lib.types.listOf lib.types.str;
-                            default = ["ubuntu-latest:host"];
-                            defaultText = lib.literalExpression ''["ubuntu-latest:host"]'';
-                            example = ["ubuntu-latest:host"];
+                            default = ["nixos:host"];
+                            defaultText = lib.literalExpression ''["nixos:host"]'';
+                            example = ["nixos:host"];
                             description = "Runner labels executed in isolated host mode inside the MicroVM.";
                         };
                     };
@@ -300,6 +303,8 @@ in {
                                 allowed-users = ["*"];
                             };
                         };
+
+                        programs.nix-ld.enable = true;
 
                         environment.systemPackages =
                             [pkgs.forgejo-runner]
