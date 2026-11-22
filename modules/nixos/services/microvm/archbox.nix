@@ -14,6 +14,7 @@
 
     kernelPkg = archCfg.kernelPackage;
     vmlinuxPath = "${kernelPkg.dev}/vmlinux";
+    stagedKernelPath = "/var/lib/microvms/images/vmlinux-${builtins.baseNameOf kernelPkg.dev}";
 
     guestModules = pkgs.makeModulesClosure {
         kernel = kernelPkg.modules or kernelPkg;
@@ -251,6 +252,39 @@
             echo "$((20000 + 10#$vm_id))"
         }
 
+        stage_kernel_into_jail() {
+            local store_vmlinux="$1"
+            local staged_kernel="$2"
+            local jail_kernel="$3"
+            local images_dir
+            images_dir="$(dirname "$staged_kernel")"
+
+            mkdir -p "$images_dir"
+            if [ ! -f "$staged_kernel" ] || [ -L "$staged_kernel" ]; then
+                local temp_kernel="$staged_kernel.tmp.$$"
+                cp -f "$store_vmlinux" "$temp_kernel"
+                chown root:root "$temp_kernel"
+                chmod 0444 "$temp_kernel"
+                mv -f "$temp_kernel" "$staged_kernel"
+
+                # Remove older staged kernels; any running jails keep their hardlinked inode alive.
+                local old_kernel
+                for old_kernel in "$images_dir"/vmlinux-*; do
+                    [ -e "$old_kernel" ] || continue
+                    case "$old_kernel" in
+                        "$staged_kernel"|*.tmp.*) continue ;;
+                        *) rm -f "$old_kernel" ;;
+                    esac
+                done
+            fi
+
+            if ! ln -f "$staged_kernel" "$jail_kernel" 2>/dev/null; then
+                cp -f "$staged_kernel" "$jail_kernel"
+                chown root:root "$jail_kernel"
+                chmod 0444 "$jail_kernel"
+            fi
+        }
+
         validate_ipv4_address() {
             local address="$1"
             if [[ ! "$address" =~ ^([0-9]{1,3})\.([0-9]{1,3})\.([0-9]{1,3})\.([0-9]{1,3})$ ]]; then
@@ -484,10 +518,10 @@
 
             echo "Packing bootstrap rootfs into isolated ext4 image (no host mounts)..."
             mke2fs -t ext4 -d "$ROOTFS" -L arch-base -m 0 "$JAIL_ROOT/base.ext4" 6G >/dev/null
-            cp -f "${vmlinuxPath}" "$JAIL_ROOT/vmlinux"
+            stage_kernel_into_jail "${vmlinuxPath}" "${stagedKernelPath}" "$JAIL_ROOT/vmlinux"
             cp -f "${initrdFile}" "$JAIL_ROOT/initrd"
-            chown root:root "$JAIL_ROOT/vmlinux" "$JAIL_ROOT/initrd"
-            chmod 0444 "$JAIL_ROOT/vmlinux" "$JAIL_ROOT/initrd"
+            chown root:root "$JAIL_ROOT/initrd"
+            chmod 0444 "$JAIL_ROOT/initrd"
             chown "$JAILER_UID:$JAILER_UID" "$JAIL_ROOT/base.ext4"
             chmod 0600 "$JAIL_ROOT/base.ext4"
 
@@ -627,10 +661,10 @@
             done
 
             # Stage kernel, initrd, base, overlay, and isolated home inside jailer chroot
-            cp -f "${vmlinuxPath}" "$JAIL_ROOT/vmlinux"
+            stage_kernel_into_jail "${vmlinuxPath}" "${stagedKernelPath}" "$JAIL_ROOT/vmlinux"
             cp -f "${initrdFile}" "$JAIL_ROOT/initrd"
-            chown root:root "$JAIL_ROOT/vmlinux" "$JAIL_ROOT/initrd"
-            chmod 0444 "$JAIL_ROOT/vmlinux" "$JAIL_ROOT/initrd"
+            chown root:root "$JAIL_ROOT/initrd"
+            chmod 0444 "$JAIL_ROOT/initrd"
 
             # Keep the shared base image root:root 0444 without mutating the hardlinked inode.
             if ! ln -f "${archCfg.baseImagePath}" "$JAIL_ROOT/base.ext4" 2>/dev/null; then
