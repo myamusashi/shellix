@@ -139,8 +139,8 @@ in {
         microvm = {
             mem = lib.mkOption {
                 type = lib.types.ints.positive;
-                default = 512;
-                description = "Memory size in MiB for the ci-runner Firecracker MicroVM.";
+                default = 4096;
+                description = "Memory size in MiB for the ci-runner Firecracker MicroVM. The guest root filesystem is a tmpfs (capped at 50% of RAM by microvm.nix), so writes to / (such as /tmp and /nix/var) count against this RAM allocation.";
             };
 
             vcpu = lib.mkOption {
@@ -168,9 +168,15 @@ in {
             };
 
             workspaceSize = lib.mkOption {
-                type = lib.types.int;
-                default = 4096;
-                description = "Persistent workspace volume size in MiB for /var/lib/forgejo-runner inside the CI MicroVM.";
+                type = lib.types.ints.positive;
+                default = 30720;
+                description = "Sparse persistent workspace volume size in MiB for /var/lib/forgejo-runner inside the CI MicroVM.";
+            };
+
+            storeOverlaySize = lib.mkOption {
+                type = lib.types.ints.positive;
+                default = 20480;
+                description = "Sparse writable /nix/store overlay volume size in MiB for /nix/.rw-store inside the CI MicroVM.";
             };
 
             extraPackages = lib.mkOption {
@@ -251,7 +257,7 @@ in {
                             image = "ci-nix-store.ext4";
                             label = "nix-rw-store";
                             mountPoint = "/nix/.rw-store";
-                            size = 20480;
+                            size = cfg.microvm.storeOverlaySize;
                             autoCreate = true;
                         }
                         {
