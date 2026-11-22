@@ -173,11 +173,7 @@ in {
                 cfg.vms;
 
             boot = {
-                kernelModules = [
-                    "vhost_net"
-                    "tun"
-                    "tap"
-                ];
+                kernelModules = ["tun"];
                 kernel.sysctl."net.ipv4.ip_forward" = lib.mkDefault 1;
             };
 
