@@ -1,7 +1,7 @@
 {
     lib,
     config,
-    pkgs-stable,
+    pkgs,
     ...
 }: let
     cfg = config.shellix.server.pihole;
@@ -9,6 +9,22 @@
     wgIf = config.shellix.server.wireguard.wireguardInterfaces or "wg0";
     wgAddress = config.shellix.server.wireguard.wireguardAddress or "10.88.0.1/24";
     wgIp = lib.head (lib.splitString "/" wgAddress);
+
+    # Workaround for upstream nixpkgs pihole-ftl.nix referencing
+    # `cfg.piholePackage.src.src.tag` while unstable `pkgs.pihole` exposes `src.tag` directly.
+    piholePkg = pkgs.pihole.overrideAttrs (old: let
+        origSrc = old.passthru.src or old.src;
+    in {
+        passthru =
+            (old.passthru or {})
+            // {
+                src =
+                    origSrc
+                    // {
+                        src = origSrc.src or origSrc;
+                    };
+            };
+    });
 in {
     options.shellix.server.pihole = {
         webPort = lib.mkOption {
@@ -80,8 +96,8 @@ in {
                 };
         };
 
-        environment.systemPackages = with pkgs-stable; [
-            pihole
+        environment.systemPackages = [
+            piholePkg
         ];
 
         # Pi-hole owns port 53, disable conflicting resolvers
@@ -92,6 +108,7 @@ in {
 
             pihole-ftl = {
                 enable = true;
+                piholePackage = piholePkg;
                 openFirewallDNS = true;
                 openFirewallDHCP = false;
                 # useDnsmasqConfig = false; # we disabled dnsmasq
@@ -172,7 +189,7 @@ in {
                     description = "Pi-hole gravity update";
                     serviceConfig = {
                         Type = "oneshot";
-                        ExecStart = "${pkgs-stable.pihole}/bin/pihole -g";
+                        ExecStart = "${piholePkg}/bin/pihole -g";
                         User = "pihole";
                     };
                 };
