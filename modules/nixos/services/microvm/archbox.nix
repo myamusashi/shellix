@@ -30,6 +30,7 @@
 
     jailerScripts = import ./archbox/jailer.nix {
         inherit
+            lib
             pkgs
             gatewayAddress
             subnetIpPrefix
@@ -51,7 +52,7 @@
             subnetIpPrefix
             subnetPrefixLength
             ;
-        inherit (jailerScripts) commonShellLibrary buildArchBaseScript;
+        inherit (jailerScripts) mkNuApplication buildArchBaseScript;
         inherit (archboxConfig) baseImagePath homeSize overlaySize;
         defaultMemoryMib = archboxConfig.defaultMem;
         defaultVcpuCount = archboxConfig.defaultVcpu;

@@ -1,4 +1,5 @@
 {
+    lib,
     pkgs,
     bridgeName,
     gatewayAddress,
@@ -12,36 +13,86 @@
     stagedKernelPath,
     initrdFile,
 }: let
-    scriptsDirectory = ./scripts;
-    commonShellLibrary = pkgs.writeText "fcbox-common.sh" (builtins.readFile ./scripts/common.sh);
+    nuCheck = pkgs.writers.writeNu "fcbox-nu-check" ''
+        def main [script: path, --include-path (-I): string = ""] {
+            let extra_args = if ($include_path | is-empty) {
+                []
+            } else {
+                ["--include-path" $include_path]
+            }
+            let diagnostics = (
+                ^${lib.getExe pkgs.nushell} --no-config-file ...$extra_args --ide-check 100 $script
+                | lines
+                | where { |line| ($line | str trim) != "" }
+                | each { |line| $line | from json }
+                | where type == "diagnostic" and $it.severity in ["Error" "Warning"]
+            )
+            if ($diagnostics | is-not-empty) {
+                for diag in $diagnostics {
+                    print -e $"($script): ($diag.message)"
+                }
+                exit 1
+            }
+        }
+    '';
+
+    commonNuLibDir = pkgs.runCommandLocal "fcbox-common-nu-lib" {} ''
+        mkdir -p "$out"
+        cp ${./scripts/common.nu} "$out/common.nu"
+        ${nuCheck} "$out/common.nu"
+    '';
+
+    mkNuApplication = {
+        name,
+        src,
+        runtimeInputs ? [],
+        runtimeEnv ? {},
+    }: let
+        envArgs = lib.concatLists (
+            lib.mapAttrsToList (varName: value: [
+                "--set"
+                varName
+                (toString value)
+            ])
+            runtimeEnv
+        );
+        pathArgs = lib.optionals (runtimeInputs != []) [
+            "--prefix"
+            "PATH"
+            ":"
+            (lib.makeBinPath runtimeInputs)
+        ];
+        libDirArgs = [
+            "--set"
+            "NU_LIB_DIRS"
+            (toString commonNuLibDir)
+        ];
+    in
+        pkgs.writers.writeNuBin name {
+            check = "${nuCheck} -I ${commonNuLibDir}";
+            makeWrapperArgs = libDirArgs ++ pathArgs ++ envArgs;
+        }
+        (builtins.readFile src);
+
     archReleaseSigningKey = ./keys/arch-release-signing-key.asc;
     firecrackerBinary = "${pkgs.firecracker}/bin/firecracker";
     jailerBinary = "${pkgs.firecracker}/bin/jailer";
-    shellCheckFlags = [
-        "-x"
-        "-P"
-        "${scriptsDirectory}"
-    ];
 
-    buildArchBaseScript = pkgs.writeShellApplication {
+    buildArchBaseScript = mkNuApplication {
         name = "fcbox-build-arch-base";
-        extraShellCheckFlags = shellCheckFlags;
+        src = ./scripts/build-arch-base.nu;
         runtimeInputs = with pkgs; [
             coreutils
             curl
             e2fsprogs
             firecracker
             glibc.bin
-            gnugrep
             gnupg
             gnutar
             iproute2
-            jq
-            util-linux
             zstd
         ];
         runtimeEnv = {
-            FCBOX_COMMON_LIBRARY = commonShellLibrary;
             FCBOX_BRIDGE_NAME = bridgeName;
             FCBOX_BASE_IMAGE_PATH = toString baseImagePath;
             FCBOX_DEFAULT_USER = defaultUser;
@@ -56,22 +107,17 @@
             FCBOX_SUBNET_PREFIX_LENGTH = subnetPrefixLength;
             FCBOX_GATEWAY_ADDRESS = gatewayAddress;
         };
-        text = builtins.readFile ./scripts/build-arch-base.sh;
     };
 
-    preStartScript = pkgs.writeShellApplication {
+    preStartScript = mkNuApplication {
         name = "fcbox-prestart";
-        extraShellCheckFlags = shellCheckFlags;
+        src = ./scripts/prestart.nu;
         runtimeInputs = with pkgs; [
             coreutils
             glibc.bin
-            gnugrep
             iproute2
-            jq
-            util-linux
         ];
         runtimeEnv = {
-            FCBOX_COMMON_LIBRARY = commonShellLibrary;
             FCBOX_BRIDGE_NAME = bridgeName;
             FCBOX_BASE_IMAGE_PATH = toString baseImagePath;
             FCBOX_FIRECRACKER_BIN = firecrackerBinary;
@@ -81,71 +127,55 @@
             FCBOX_GATEWAY_ADDRESS = gatewayAddress;
             FCBOX_PRIMARY_NAMESERVER = primaryNameserver;
         };
-        text = builtins.readFile ./scripts/prestart.sh;
     };
 
-    runScript = pkgs.writeShellApplication {
+    runScript = mkNuApplication {
         name = "fcbox-run";
-        extraShellCheckFlags = shellCheckFlags;
+        src = ./scripts/run.nu;
         runtimeInputs = with pkgs; [
             coreutils
             firecracker
-            gnugrep
         ];
         runtimeEnv = {
-            FCBOX_COMMON_LIBRARY = commonShellLibrary;
             FCBOX_FIRECRACKER_BIN = firecrackerBinary;
             FCBOX_JAILER_BIN = jailerBinary;
         };
-        text = builtins.readFile ./scripts/run.sh;
     };
 
-    stopScript = pkgs.writeShellApplication {
+    stopScript = mkNuApplication {
         name = "fcbox-stop";
-        extraShellCheckFlags = shellCheckFlags;
+        src = ./scripts/stop.nu;
         runtimeInputs = with pkgs; [
             coreutils
             curl
-            gnugrep
         ];
-        runtimeEnv = {
-            FCBOX_COMMON_LIBRARY = commonShellLibrary;
-        };
-        text = builtins.readFile ./scripts/stop.sh;
     };
 
-    postStopScript = pkgs.writeShellApplication {
+    postStopScript = mkNuApplication {
         name = "fcbox-poststop";
-        extraShellCheckFlags = shellCheckFlags;
+        src = ./scripts/poststop.nu;
         runtimeInputs = with pkgs; [
             coreutils
-            gnugrep
             iproute2
         ];
-        runtimeEnv = {
-            FCBOX_COMMON_LIBRARY = commonShellLibrary;
-        };
-        text = builtins.readFile ./scripts/poststop.sh;
     };
 
-    resetScript = pkgs.writeShellApplication {
+    resetScript = mkNuApplication {
         name = "fcbox-reset";
-        extraShellCheckFlags = shellCheckFlags;
+        src = ./scripts/reset.nu;
         runtimeInputs = with pkgs; [
             coreutils
             e2fsprogs
-            gnugrep
             systemd
         ];
         runtimeEnv = {
-            FCBOX_COMMON_LIBRARY = commonShellLibrary;
             FCBOX_OVERLAY_SIZE = overlaySize;
         };
-        text = builtins.readFile ./scripts/reset.sh;
     };
 in {
     inherit
-        commonShellLibrary
+        commonNuLibDir
+        mkNuApplication
         buildArchBaseScript
         preStartScript
         runScript

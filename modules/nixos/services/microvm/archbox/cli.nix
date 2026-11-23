@@ -1,7 +1,7 @@
 {
     lib,
     pkgs,
-    commonShellLibrary,
+    mkNuApplication,
     buildArchBaseScript,
     baseImagePath,
     defaultMemoryMib,
@@ -11,17 +11,12 @@
     subnetIpPrefix,
     subnetPrefixLength,
 }:
-pkgs.writeShellApplication {
+mkNuApplication {
     name = "fcbox";
-    extraShellCheckFlags = [
-        "-x"
-        "-P"
-        "${./scripts}"
-    ];
+    src = ./scripts/cli.nu;
     runtimeInputs = with pkgs; [
         coreutils
         e2fsprogs
-        gnugrep
         openssh
         rsync
         systemd
@@ -29,7 +24,6 @@ pkgs.writeShellApplication {
         waypipe
     ];
     runtimeEnv = {
-        FCBOX_COMMON_LIBRARY = commonShellLibrary;
         FCBOX_BUILD_ARCH_BASE_BIN = lib.getExe buildArchBaseScript;
         FCBOX_BASE_IMAGE_PATH = toString baseImagePath;
         FCBOX_DEFAULT_MEM = toString defaultMemoryMib;
@@ -39,5 +33,4 @@ pkgs.writeShellApplication {
         FCBOX_SUBNET_IP_PREFIX = subnetIpPrefix;
         FCBOX_SUBNET_PREFIX_LENGTH = subnetPrefixLength;
     };
-    text = builtins.readFile ./scripts/cli.sh;
 }
