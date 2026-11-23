@@ -553,7 +553,6 @@
         config.allowUnfree = true;
     };
     nix = {
-        package = pkgs-stable.nix;
         settings = {
             experimental-features = [
                 "nix-command"

@@ -1,4 +1,4 @@
-{pkgs, ...}: {
+_: {
     nixpkgs = {
         config = {
             allowUnfree = true;
@@ -7,7 +7,6 @@
     };
     nix = {
         enable = true;
-        package = pkgs.nix;
         settings = {
             experimental-features = [
                 "nix-command"

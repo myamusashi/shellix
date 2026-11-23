@@ -1,4 +1,16 @@
-{pkgs-stable, ...}: {
+{
+    config,
+    lib,
+    pkgs-stable,
+    ...
+}: let
+    nhWrapped = pkgs-stable.nh.overrideAttrs {
+        postBuild = ''
+            wrapProgram $out/bin/nh \
+                --prefix PATH : ${lib.makeBinPath [config.nix.package pkgs-stable.nix-output-monitor]}
+        '';
+    };
+in {
     environment = {
         systemPackages = with pkgs-stable; [
             bat
@@ -21,7 +33,7 @@
             lazygit
             lazysql
             nil
-            nh
+            nhWrapped
             # podman-compose
             # podman
             git

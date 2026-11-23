@@ -92,8 +92,23 @@ in rec {
                     ../sops/sops.nix
 
                     inputs.sops-nix.nixosModules.sops
+                    inputs.determinate.nixosModules.default
 
                     {
+                        nix.settings = {
+                            eval-cores = 0;
+                            lazy-trees = true;
+                            experimental-features = [
+                                "parallel-eval"
+                            ];
+                            substituters = [
+                                "https://install.determinate.systems"
+                            ];
+                            trusted-public-keys = [
+                                "cache.flakehub.com-3:hJuILl5sVK4iKm86JzgdXW12Y2Hwd5G07qKtHTOcDCM="
+                            ];
+                        };
+
                         nixpkgs.overlays =
                             [
                                 (import ../overlays)

@@ -2,6 +2,7 @@
     inputs = {
         nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
         nixpkgs-stable.url = "github:NixOS/nixpkgs/release-26.05";
+        determinate.url = "https://flakehub.com/f/DeterminateSystems/determinate/*";
         flake-parts.url = "github:hercules-ci/flake-parts";
         myamusashi-pkgs.url = "github:myamusashi/nix-myamusashi-packages";
 

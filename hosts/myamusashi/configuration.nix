@@ -117,6 +117,12 @@ in {
         mtr.enable = true;
         nh = {
             enable = true;
+            package = pkgs.nh.overrideAttrs {
+                postBuild = ''
+                    wrapProgram $out/bin/nh \
+                        --prefix PATH : ${lib.makeBinPath [config.nix.package pkgs.nix-output-monitor]}
+                '';
+            };
             clean = {
                 enable = true;
                 extraArgs = "--quiet";
