@@ -1744,11 +1744,11 @@
         "zapfast": "zapfast"
       },
       "locked": {
-        "lastModified": 1795318694,
-        "narHash": "sha256-DiB65iPbtswESXJc5jzSsf4Ojks1GmdS0Gbo7zZ8EIk=",
+        "lastModified": 1795495270,
+        "narHash": "sha256-gGLHpJJWHme8sScL9tCwFMw47TPTpMufxRyjAr2Mzaw=",
         "owner": "myamusashi",
         "repo": "nix-myamusashi-packages",
-        "rev": "5d866b80d85193da83e9d588d31df27925c46c20",
+        "rev": "f978e1963fbe1d86c637e25cba699925dca9a460",
         "type": "github"
       },
       "original": {
@@ -2388,15 +2388,16 @@
         ]
       },
       "locked": {
-        "lastModified": 1794616023,
-        "narHash": "sha256-47qS9USkGgZHtsHVRwGXcJ2HP9XNORZEn5ZL44Xf5Ho=",
-        "owner": "ViceVerse-cz",
+        "lastModified": 1795471461,
+        "narHash": "sha256-qNBBO/ctBoxkhv1lJh9rp8uBivSln0hyDw37o+GBrwA=",
+        "owner": "myamusashi",
         "repo": "Serein",
-        "rev": "bedb57c0c8def62e736e8a4f03e0a5d248b22126",
+        "rev": "9fb7c0bb390399cebce896c9bfd73655efde78c8",
         "type": "github"
       },
       "original": {
-        "owner": "ViceVerse-cz",
+        "owner": "myamusashi",
+        "ref": "fix/superseed-hot-reload",
         "repo": "Serein",
         "type": "github"
       }
@@ -2495,11 +2496,11 @@
         "qmlformat-rs": "qmlformat-rs_2"
       },
       "locked": {
-        "lastModified": 1795338460,
-        "narHash": "sha256-Vw/qjuVfmZShzpqaNFGmUg6JW+QFKC3vj9W8r2rt6/g=",
+        "lastModified": 1795434844,
+        "narHash": "sha256-Bs5hgpX4jpRDkpDjULOxdbDjLRIjhV9SQ0pub/PnAx4=",
         "ref": "refs/heads/master",
-        "rev": "40db43c78b15e90650e4e47cbcad894e7d18730c",
-        "revCount": 1944,
+        "rev": "728fc6cca848b006f9aea2a487bdfac3aa267ca5",
+        "revCount": 1952,
         "type": "git",
         "url": "https://git.myamusashi.cc/myamusashi/vast-shell"
       },
@@ -2983,11 +2984,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1795333741,
-        "narHash": "sha256-xJaT+L8DeMR0TJjAOlrjGqaRG2AjZrjivQfCtiLRtlY=",
+        "lastModified": 1795434855,
+        "narHash": "sha256-R2BZyn0NAM3maHw1GfzEtHFpUPAuJyg4t8I6Dbuzsjg=",
         "owner": "0xc000022070",
         "repo": "zen-browser-flake",
-        "rev": "81376950ac382a96b965f9d6f8bf60354ad99c2f",
+        "rev": "e2e4f8220406ce60d64395cfbf91e2189c894769",
         "type": "github"
       },
       "original": {

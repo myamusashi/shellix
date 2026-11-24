@@ -30,7 +30,7 @@
     jdk,
 }: let
     pname = "mornye";
-    version = "5.2.6";
+    version = "5.4.0";
     applicationId = "com.zarz.mornye";
     iconName = "Mornye";
 
@@ -38,7 +38,7 @@
         inherit pname version;
         src = fetchurl {
             url = "https://github.com/mornyeapp/Mornye-Desktop/releases/download/v${version}/Mornye-v${version}-linux-x86_64.AppImage";
-            hash = "sha256-PTQRQLqajPYDRprddBE3UejYoPcGLrdNQkvdYpWnZe0=";
+            hash = "sha256-zpU5pEBf5kyn2c+vkFPD6xc9vRsv0b2gF01tqcy/d6s=";
         };
     };
 
