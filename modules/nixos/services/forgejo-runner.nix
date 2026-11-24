@@ -91,6 +91,32 @@
         )
         cfg.runners;
 
+    guestCleanupScript = pkgs.writeShellApplication {
+        name = "forgejo-runner-cleanup";
+        runtimeInputs = with pkgs; [
+            coreutils
+            findutils
+            nix
+        ];
+        text = ''
+            retention_days=${toString cfg.microvm.cleanup.retentionDays}
+
+            nix-collect-garbage --delete-older-than "''${retention_days}d"
+
+            for runner_directory in /var/lib/forgejo-runner/*/; do
+                for stale_directory in \
+                    "$runner_directory/work" \
+                    "$runner_directory/.cache/act" \
+                    "$runner_directory/.cache/actcache"; do
+                    if [ -d "$stale_directory" ]; then
+                        find "$stale_directory" -mindepth 1 -maxdepth 1 \
+                            -mtime "+$retention_days" -exec rm -rf {} +
+                    fi
+                done
+            done
+        '';
+    };
+
     secretsPackScript = pkgs.writeShellApplication {
         name = "forgejo-runner-pack-secrets";
         runtimeInputs = with pkgs; [
@@ -177,6 +203,21 @@ in {
                 type = lib.types.ints.positive;
                 default = 16480;
                 description = "Sparse writable /nix/store overlay volume size in MiB for /nix/.rw-store inside the CI MicroVM.";
+            };
+
+            cleanup = {
+                schedule = lib.mkOption {
+                    type = lib.types.str;
+                    default = "daily";
+                    example = "*-*-* 04:00:00";
+                    description = "systemd OnCalendar expression for the in-guest cleanup of old Nix store paths and stale runner work/cache directories.";
+                };
+
+                retentionDays = lib.mkOption {
+                    type = lib.types.ints.positive;
+                    default = 7;
+                    description = "Nix store paths unreferenced for longer than this, and runner work/cache entries not modified for longer than this, are deleted by the cleanup.";
+                };
             };
 
             extraPackages = lib.mkOption {
@@ -307,11 +348,32 @@ in {
 
                         programs.nix-ld.enable = true;
 
+                        systemd = {
+                            services =
+                                mkRunnerServices (name: _: "/run/vm-secrets/${name}.token")
+                                // {
+                                    forgejo-runner-cleanup = {
+                                        description = "Clean old Nix store paths and stale Forgejo runner data";
+                                        environment.NIX_REMOTE = "daemon";
+                                        serviceConfig = {
+                                            Type = "oneshot";
+                                            ExecStart = lib.getExe guestCleanupScript;
+                                        };
+                                    };
+                                };
+                            timers.forgejo-runner-cleanup = {
+                                wantedBy = ["timers.target"];
+                                timerConfig = {
+                                    OnCalendar = cfg.microvm.cleanup.schedule;
+                                    Persistent = true;
+                                    RandomizedDelaySec = "30m";
+                                };
+                            };
+                        };
+
                         environment.systemPackages =
                             [pkgs.forgejo-runner]
                             ++ cfg.microvm.extraPackages;
-
-                        systemd.services = mkRunnerServices (name: _: "/run/vm-secrets/${name}.token");
                     };
                 };
 
