@@ -50,6 +50,7 @@
                     wantedBy = ["multi-user.target"];
 
                     environment = {
+                        HOME = "/var/lib/forgejo-runner/${name}";
                         NIX_REMOTE = "daemon";
                     };
 
