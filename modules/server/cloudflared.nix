@@ -1,30 +1,27 @@
 {
-    lib,
-    config,
-    pkgs,
-    ...
-}: let
-    cfg = config.shellix.server.cloudflared;
-    domains = lib.attrNames cfg.ingress;
-    credsFile = config.sops.secrets.cloudflare_creds.path;
-in {
-    options.shellix.server.cloudflared.ingress = lib.mkOption {
-        type = lib.types.attrsOf lib.types.str;
-        default = {};
-        description = ''
-            Ingress rules as hostname → target URL.
-            Other modules can add entries here and they will be merged.
-        '';
-    };
+    flake.modules.nixos.cloudflared = {
+        config,
+        lib,
+        ...
+    }: let
+        cloudflaredConfig = config.shellix.cloudflared;
+        credentialsFile = config.sops.secrets.cloudflare_creds.path;
+    in {
+        key = "shellix.nixos.cloudflared";
 
-    config = lib.mkIf cfg.enable {
-        services.cloudflared = {
+        options.shellix.cloudflared.ingress = lib.mkOption {
+            type = lib.types.attrsOf lib.types.str;
+            default = {};
+            description = "Ingress rules mapping hostname to target URL; entries from multiple aspects merge automatically.";
+        };
+
+        config.services.cloudflared = {
             enable = true;
             tunnels."home-server" = {
-                credentialsFile = credsFile;
+                inherit credentialsFile;
                 originRequest.noTLSVerify = true;
                 default = "http_status:404";
-                inherit (cfg) ingress;
+                inherit (cloudflaredConfig) ingress;
             };
         };
     };

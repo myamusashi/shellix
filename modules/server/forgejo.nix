@@ -1,9 +1,14 @@
-{
-    lib,
-    config,
-    ...
-}: {
-    config = lib.mkIf config.shellix.server.forgejo.enable {
+flakeParts: let
+    flakeConfig = flakeParts.config;
+in {
+    flake.modules.nixos.forgejo = {config, ...}: {
+        key = "shellix.nixos.forgejo";
+
+        imports = [
+            flakeConfig.flake.modules.nixos.database
+            flakeConfig.flake.modules.nixos.servicePorts
+        ];
+
         services.forgejo = {
             enable = true;
             database.type = "postgres";
@@ -14,7 +19,7 @@
                     DOMAIN = "git.myamusashi.cc";
                     ROOT_URL = "https://git.myamusashi.cc";
                     HTTP_ADDR = "/run/forgejo/forgejo.sock";
-                    HTTP_PORT = 3000;
+                    HTTP_PORT = config.shellix.ports.forgejo;
                     SSH_DOMAIN = "git.myamusashi.cc";
                 };
                 actions = {

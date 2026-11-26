@@ -1,10 +1,17 @@
-{
-    lib,
-    config,
-    pkgs,
-    ...
-}: {
-    config = lib.mkIf config.shellix.server.ocis.enable {
+flakeParts: let
+    flakeConfig = flakeParts.config;
+in {
+    flake.modules.nixos.ocis = {
+        config,
+        pkgs,
+        ...
+    }: {
+        key = "shellix.nixos.ocis";
+
+        imports = [
+            flakeConfig.flake.modules.nixos.servicePorts
+        ];
+
         systemd.tmpfiles.rules = [
             "d /var/lib/ocis 0750 ocis ocis - -"
             "d /var/lib/ocis/config 0750 ocis ocis - -"
@@ -18,26 +25,17 @@
             package = pkgs.ocis_5-bin;
             configDir = "/var/lib/ocis/config";
             address = "127.0.0.1";
-            port = config.shellix.variables.port.OCIS;
+            port = config.shellix.ports.ocis;
             url = "https://cloud.myamusashi.cc";
             stateDir = "/var/lib/ocis";
             environment = {
                 CS3_ALLOW_INSECURE = "true";
-                # GATEWAY_STORAGE_USERS_MOUNT_ID = "123";
-                # GRAPH_APPLICATION_ID = "1234";
                 IDP_ISS = "https://cloud.myamusashi.cc";
                 IDP_TLS = "false";
                 PROXY_ENABLE_BASIC_AUTH = "true";
                 OCIS_INSECURE = "false";
                 OCIS_INSECURE_BACKENDS = "true";
                 OCIS_LOG_LEVEL = "error";
-                # OCIS_MACHINE_AUTH_API_KEY = "foo";
-                # OCIS_MOUNT_ID = "123";
-                # OCIS_SERVICE_ACCOUNT_ID = "foo";
-                # OCIS_STORAGE_USERS_MOUNT_ID = "123";
-                # OCIS_SYSTEM_USER_API_KEY = "foo";
-                # OCIS_SYSTEM_USER_ID = "123";
-                # STORAGE_USERS_MOUNT_ID = "123";
                 TLS_INSECURE = "true";
                 TLS_SKIP_VERIFY_CLIENT_CERT = "true";
                 WEBDAV_ALLOW_INSECURE = "true";

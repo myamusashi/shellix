@@ -1,9 +1,7 @@
 {
-    lib,
-    config,
-    ...
-}: {
-    config = lib.mkIf config.shellix.server.vsftpd.enable {
+    flake.modules.nixos.vsftpd = {
+        key = "shellix.nixos.vsftpd";
+
         services.vsftpd = {
             enable = true;
             writeEnable = true;

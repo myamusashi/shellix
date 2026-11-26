@@ -1,33 +1,41 @@
 name: "Update Flake Inputs"
 
 on:
-  push:
-    branches:
-      - "master"
+  schedule:
+    - cron: "0 0 * * 0"
+  workflow_dispatch:
 
 jobs:
   update:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
-    - name: "Install sudo (for local 'act' runner)"
-      run: apt-get update && apt-get install -y sudo
-    - uses: cachix/install-nix-action@v31
-      with:
-        kvm_enabled: false
-        nix_path: nixpkgs=channel:nixos-unstable
-    - name: "Update flake inputs"
-      run: nix flake update
+      - uses: actions/checkout@v4
 
-    - name: "Check for changes"
-      id: git_status
-      run: echo "porcelain=$(git status --porcelain=v1 flake.lock)" >> $GITHUB_OUTPUT
+      - uses: cachix/install-nix-action@v31
+        with:
+          kvm_enabled: false
+          extra_nix_config: |
+            experimental-features = nix-command flakes
 
-    - name: "Commit and push changes"
-      if: steps.git_status.outputs.porcelain
-      run: |
-        git config --global user.name 'github-actions[bot]'
-        git config --global user.email 'github-actions[bot]@users.noreply.github.com'
-        git add flake.lock
-        git commit -m "chore: update flake.lock"
-        git push
+      - name: "Update flake inputs"
+        run: nix flake update
+
+      - name: "Verify hosts evaluate"
+        run: |
+          nix eval --raw .#nixosConfigurations.myamusashi.config.system.build.toplevel.drvPath
+          echo ""
+          nix eval --raw .#nixosConfigurations.waltz.config.system.build.toplevel.drvPath
+          echo ""
+
+      - name: "Check for changes"
+        id: git_status
+        run: echo "porcelain=$(git status --porcelain=v1 flake.lock)" >> $GITHUB_OUTPUT
+
+      - name: "Commit and push changes"
+        if: steps.git_status.outputs.porcelain
+        run: |
+          git config --global user.name 'forgejo-actions[bot]'
+          git config --global user.email 'forgejo-actions[bot]@users.noreply.git.myamusashi.cc'
+          git add flake.lock
+          git commit -m "chore: update flake.lock"
+          git push

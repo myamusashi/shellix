@@ -1,19 +1,18 @@
 {
-    config,
-    lib,
-    pkgs-stable,
-    ...
-}: {
-    config = lib.mkIf config.shellix.server.database.enable {
-        services.postgresql = {
-            enable = true;
-            ensureDatabases = ["forgejo"];
-        };
+    flake.modules.nixos.database = {pkgs, ...}: {
+        key = "shellix.nixos.database";
 
-        services.mysql = {
-            enable = true;
-            package = pkgs-stable.mariadb;
-            settings.mysqld."bind-address" = "0.0.0.0";
+        services = {
+            postgresql = {
+                enable = true;
+                ensureDatabases = ["forgejo"];
+            };
+
+            mysql = {
+                enable = true;
+                package = pkgs.mariadb;
+                settings.mysqld."bind-address" = "0.0.0.0";
+            };
         };
     };
 }

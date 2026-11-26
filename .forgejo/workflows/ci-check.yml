@@ -1,0 +1,34 @@
+name: "Check and evaluate flake outputs"
+
+on:
+  pull_request:
+  push:
+    branches:
+      - "master"
+  workflow_dispatch:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: "Checkout repository"
+        uses: actions/checkout@v4
+
+      - name: "Install Nix"
+        uses: cachix/install-nix-action@v31
+        with:
+          extra_nix_config: |
+            experimental-features = nix-command flakes
+
+      - name: "Run lint and formatting checks"
+        run: |
+          nix build --no-link .#checks.x86_64-linux.treefmt
+          nix build --no-link .#checks.x86_64-linux.statix
+          nix build --no-link .#checks.x86_64-linux.deadnix
+
+      - name: "Evaluate all NixOS host toplevels"
+        run: |
+          nix eval --raw .#nixosConfigurations.myamusashi.config.system.build.toplevel.drvPath
+          echo ""
+          nix eval --raw .#nixosConfigurations.waltz.config.system.build.toplevel.drvPath
+          echo ""

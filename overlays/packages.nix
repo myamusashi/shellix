@@ -1,5 +1,5 @@
 final: prev: {
-    material-symbols = prev.material-symbols.overrideAttrs (oldAttrs: {
+    material-symbols = prev.material-symbols.overrideAttrs {
         version = "4.0.0-unstable-2025-09-19";
 
         src = final.fetchFromGitHub {
@@ -9,9 +9,9 @@ final: prev: {
             hash = "sha256-5bcEh7Oetd2JmFEPCcoweDrLGQTpcuaCU8hCjz8ls3M=";
             sparseCheckout = ["variablefont"];
         };
-    });
+    };
 
-    vesktop = prev.vesktop.overrideAttrs (oldAttrs: {
+    vesktop = prev.vesktop.overrideAttrs {
         preBuild = ''
             cp -r ${prev.electron.dist} electron-dist
             chmod -R u+w electron-dist
@@ -42,5 +42,5 @@ final: prev: {
                 keywords = ["discord" "vencord" "electron" "chat"];
                 categories = ["Network" "InstantMessaging" "Chat"];
             });
-    });
+    };
 }

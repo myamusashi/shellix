@@ -1,8 +1,7 @@
-# Hotfixes for broken or outdated packages
 final: prev: {
-    upower = prev.upower.overrideAttrs (oldAttrs: {
+    upower = prev.upower.overrideAttrs {
         doCheck = false;
-    });
+    };
 
     antigravity-cli = prev.antigravity-cli.overrideAttrs (oldAttrs: let
         version = "1.5.12";
@@ -31,7 +30,7 @@ final: prev: {
         buildInputs = (oldAttrs.buildInputs or []) ++ [final.aws-lc];
     });
 
-    fastfetch-unwrapped = prev.fastfetch-unwrapped.overrideAttrs (oldAttrs: rec {
+    fastfetch-unwrapped = prev.fastfetch-unwrapped.overrideAttrs rec {
         version = "2.69.0";
 
         src = final.fetchFromGitHub {
@@ -40,9 +39,9 @@ final: prev: {
             tag = version;
             hash = "sha256-osfQZEP6t3TdwlO+0agD8fU2z1UECJWLF+WPovwEk64=";
         };
-    });
+    };
 
-    stylua = prev.stylua.overrideAttrs (oldAttrs: rec {
+    stylua = prev.stylua.overrideAttrs rec {
         version = "2.5.2";
 
         src = final.fetchFromGitHub {
@@ -56,9 +55,9 @@ final: prev: {
             inherit src;
             hash = "sha256-m31oocBkx4i2KxM0YC1omVWtypFi7iEoDVlXgT93iSI=";
         };
-    });
+    };
 
-    luaformatter = prev.luaformatter.overrideAttrs (oldAttrs: {
+    luaformatter = prev.luaformatter.overrideAttrs {
         version = "unstable-21-02-2023";
 
         src = final.fetchFromGitHub {
@@ -69,7 +68,7 @@ final: prev: {
         };
 
         patches = [
-            (final.replaceVars ./patch/luaformatter/fix-lib-paths.patch {
+            (final.replaceVars ../patches/luaformatter-fix-lib-paths.patch {
                 antlr4RuntimeCppDev = final.antlr4_9.runtime.cpp.dev;
                 antlr4RuntimeCpp = final.antlr4_9.runtime.cpp;
                 yamlCppDev = final.yaml-cpp;
@@ -77,34 +76,33 @@ final: prev: {
                 inherit (final) libargs catch2;
             })
         ];
-    });
+    };
 
-    # Fix tree-sitter-bundled-vendor hash
-    tree-sitter-bundled-vendor = prev.tree-sitter-bundled-vendor.override (oldAttrs: {
+    tree-sitter-bundled-vendor = prev.tree-sitter-bundled-vendor.override {
         vendorHash = "sha256-ie+/48dVU3r+tx/sQBWRIZEWSNWwMBANCqQLnv96JXs=";
-    });
+    };
 
-    python313Packages = prev.python313Packages.overrideScope (pyFinal: pyPrev: {
-        gradio-client = pyPrev.gradio-client.overridePythonAttrs (old: {
+    python313Packages = prev.python313Packages.overrideScope (_: pythonPrev: {
+        gradio-client = pythonPrev.gradio-client.overridePythonAttrs {
             dontCheckPythonMetadata = true;
-        });
+        };
 
-        gradio = pyPrev.gradio.overridePythonAttrs (old: {
+        gradio = pythonPrev.gradio.overridePythonAttrs {
             dontCheckPythonMetadata = true;
             dontCheckRuntimeDeps = true;
-        });
+        };
 
-        gradio-client-sans-reverse-dependencies = pyPrev.gradio-client-sans-reverse-dependencies.overrideAttrs (old: {
+        gradio-client-sans-reverse-dependencies = pythonPrev.gradio-client-sans-reverse-dependencies.overrideAttrs {
             pythonMetadataCheckPhase = true;
-        });
+        };
 
-        hf-gradio = pyPrev.hf-gradio.overrideAttrs (old: {
+        hf-gradio = pythonPrev.hf-gradio.overrideAttrs {
             pythonMetadataCheckPhase = true;
-        });
+        };
     });
 
-    python3Packages = prev.python3Packages.overrideScope (self: super: {
-        textual = super.textual.overrideAttrs (oldAttrs: {
+    python3Packages = prev.python3Packages.overrideScope (_: pythonPrev: {
+        textual = pythonPrev.textual.overrideAttrs (oldAttrs: {
             meta = oldAttrs.meta // {broken = false;};
             disabledTestPaths = [
                 "tests/snapshot_tests/test_snapshots.py"
@@ -115,18 +113,17 @@ final: prev: {
         });
     });
 
-    # Fix cmake policy
-    libvdpau-va-gl = prev.libvdpau-va-gl.overrideAttrs (oldAttrs: {
+    libvdpau-va-gl = prev.libvdpau-va-gl.overrideAttrs {
         cmakeFlags = ["-DCMAKE_POLICY_VERSION_MINIMUM=3.5"];
-    });
+    };
 
-    grpc-tools = prev.grpc-tools.overrideAttrs (oldAttrs: {
+    grpc-tools = prev.grpc-tools.overrideAttrs {
         cmakeFlags = ["-DCMAKE_POLICY_VERSION_MINIMUM=3.5"];
-    });
+    };
 
-    cmark-gfm = prev.cmark-gfm.overrideAttrs (oldAttrs: {
+    cmark-gfm = prev.cmark-gfm.overrideAttrs {
         cmakeFlags = ["-DCMAKE_POLICY_VERSION_MINIMUM=3.5"];
-    });
+    };
 
     allegro = prev.allegro.overrideAttrs (oldAttrs: {
         cmakeFlags =
