@@ -88,15 +88,38 @@
 
 :root {
 	--zen-primary-color: {{colors.primary_container.hex}} !important;
+	--zen-colors-primary: {{colors.primary_container.hex}} !important;
+	--zen-colors-secondary: {{colors.secondary_container.hex}} !important;
+	--zen-colors-tertiary: {{colors.surface_container.hex}} !important;
+	--zen-colors-border: {{colors.outline_variant.hex}} !important;
+	--zen-accent-button-background: {{colors.primary.hex}} !important;
+	--zen-accent-button-color: {{colors.primary.hex}} !important;
 	--toolbarbutton-icon-fill: {{colors.primary.hex}} !important;
 	--toolbar-field-color: {{colors.on_background.hex}} !important;
 	--tab-selected-textcolor: {{colors.primary.hex}} !important;
 	--toolbar-color: {{colors.on_background.hex}} !important;
 	--arrowpanel-color: {{colors.on_background.hex}} !important;
 	--arrowpanel-background: {{colors.surface_container.hex}} !important;
+	--arrowpanel-border-color: {{colors.outline_variant.hex}} !important;
+	--panel-border-color: {{colors.outline_variant.hex}} !important;
 	--sidebar-text-color: {{colors.on_background.hex}} !important;
 	--zen-main-browser-background: {{colors.background.hex}} !important;
 	--zen-main-browser-background-toolbar: {{colors.background.hex}} !important;
+	--zen-themed-toolbar-bg-transparent: {{colors.background.hex}} !important;
+	--zen-browser-content-background: {{colors.surface.hex}} !important;
+	--zen-urlbar-view-url-color: {{colors.on_surface_variant.hex}} !important;
+	--zen-urlbar-background-base: {{colors.surface_container.hex}} !important;
+	--zen-urlbar-background-transparent: color-mix(in srgb, {{colors.surface_container.hex}} 85%, transparent) !important;
+	--arc-urlbar-bg: color-mix(in srgb, {{colors.surface_container.hex}} 85%, transparent) !important;
+
+	/* Little Zen (ZenLittleWindow) design tokens */
+	--zen-little-window-container-background: {{colors.surface_container_high.hex}} !important;
+	--zen-little-window-open-background: {{colors.surface_container_high.hex}} !important;
+	--zen-little-window-open-shortcut-background: {{colors.surface_container_highest.hex}} !important;
+	--zen-little-window-open-color: {{colors.on_surface.hex}} !important;
+	--zen-little-window-open-muted-color: {{colors.on_surface_variant.hex}} !important;
+	--zen-little-window-open-shortcut-color: {{colors.on_surface_variant.hex}} !important;
+	--zen-little-window-open-space-color: {{colors.primary.hex}} !important;
 }
 
 #zen-browser-background {
@@ -167,6 +190,123 @@ toolbar .toolbarbutton-1 {
 
 toolbar .toolbarbutton-1 > .toolbarbutton-icon {
 	fill: {{colors.primary.hex}} !important;
+}
+
+/* ==== Floating / Expanded URL Bar (Main Window & Little Zen) ==== */
+
+#urlbar[open] .urlbar-background,
+#urlbar[breakout-extend] .urlbar-background {
+	background-color: var(--arc-urlbar-bg) !important;
+	outline: 1px solid {{colors.outline_variant.hex}} !important;
+}
+
+#urlbar .urlbarView-row {
+	color: {{colors.on_surface.hex}} !important;
+
+	&:hover {
+		background-color: color-mix(in srgb, {{colors.surface_container_high.hex}} 75%, transparent) !important;
+	}
+
+	&[selected] {
+		background-color: {{colors.primary_container.hex}} !important;
+
+		& *,
+		& .urlbarView-title-separator::before {
+			color: {{colors.on_primary_container.hex}} !important;
+		}
+
+		& .urlbarView-shortcutContent {
+			color: {{colors.on_primary_container.hex}} !important;
+			background-color: color-mix(in srgb, {{colors.primary.hex}} 25%, transparent) !important;
+		}
+	}
+}
+
+#urlbar #zen-loading-progress-bar {
+	--zen-loading-progress-bar-color: {{colors.primary.hex}} !important;
+}
+
+/* ==== Little Zen (ZenLittleWindow) ==== */
+
+:root[zen-little-window] {
+	/* Collapsed / hovered urlbar — beats Arc-2.0's #urlbar .urlbar-background */
+	#urlbar:not([open]) .urlbar-background {
+		background-color: {{colors.surface_container.hex}} !important;
+	}
+
+	#urlbar:not([open]):is(:hover, [focused="true"], :active) .urlbar-background {
+		background-color: {{colors.surface_container_high.hex}} !important;
+	}
+
+	#zen-little-window-urlbar-close {
+		fill: {{colors.on_surface_variant.hex}} !important;
+		color: {{colors.on_surface_variant.hex}} !important;
+
+		&:hover {
+			fill: {{colors.primary.hex}} !important;
+			color: {{colors.primary.hex}} !important;
+		}
+	}
+
+	/* "Open in <Space>" split button */
+	#zen-little-window-open-in-space {
+		border-color: {{colors.outline_variant.hex}} !important;
+
+		> :last-child {
+			border-inline-start-color: {{colors.outline_variant.hex}} !important;
+		}
+	}
+
+	#zen-little-window-spaces-button > .toolbarbutton-icon {
+		fill: {{colors.on_surface.hex}} !important;
+		opacity: 0.75 !important;
+	}
+
+	/* First-run intro banner (pairs with on_primary_container for light/dark contrast) */
+	#zen-little-window-intro {
+		background: {{colors.primary_container.hex}} !important;
+		color: {{colors.on_primary_container.hex}} !important;
+	}
+
+	/* Download toast cards */
+	.zen-little-window-download {
+		background: {{colors.surface_container.hex}} !important;
+		color: {{colors.on_surface.hex}} !important;
+		border: 1px solid {{colors.outline_variant.hex}} !important;
+	}
+
+	.zen-little-window-download-progress {
+		color: {{colors.primary.hex}} !important;
+	}
+
+	.zen-little-window-download-status,
+	.zen-little-window-download-source {
+		color: {{colors.on_surface_variant.hex}} !important;
+	}
+}
+
+/* Frameless urlbar-only launcher mode: restore flush edges over Arc-2.0's 12px radius
+   and allow Wayland transparency through behind the translucent glass urlbar. */
+:root[zen-little-window-urlbar-only] {
+	#urlbar[open] .urlbar-background,
+	#urlbar[breakout-extend] .urlbar-background {
+		border-radius: 0 !important;
+		outline: none !important;
+		box-shadow: none !important;
+	}
+
+	@media (-moz-platform: linux) and -moz-pref("zen.widget.linux.transparency") {
+		#zen-main-app-wrapper,
+		#zen-appcontent-navbar-wrapper,
+		#zen-appcontent-navbar-container {
+			background-color: transparent !important;
+		}
+
+		#zen-browser-background {
+			--zen-main-browser-background: transparent !important;
+			--zen-background-opacity: 0 !important;
+		}
+	}
 }
 
 /* pdfjs */
