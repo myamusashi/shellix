@@ -15,10 +15,10 @@ configuration instead of coming from the Sine/Zen stores.
   the script references are protected from GC
 - regression test: sine-local-mods
 ---
- hm-module/sine.nix        | 239 ++++++++++++++++++++++++++++----------
+ hm-module/sine.nix        | 238 ++++++++++++++++++++++++++++----------
  tests/default.nix         |  83 ++++++-------
  tests/sine-local-mods.nix | 110 ++++++++++++++++++
- 3 files changed, 329 insertions(+), 103 deletions(-)
+ 3 files changed, 328 insertions(+), 103 deletions(-)
  create mode 100644 tests/sine-local-mods.nix
 
 diff --git a/hm-module/sine.nix b/hm-module/sine.nix
@@ -152,7 +152,7 @@ index c97dd15..e993235 100644
                "${cfg.profilesPath}/${profile.path}/chrome/JS" = {
                  source = sinePack.manager + "/src";
                  recursive = true;
-@@ -83,37 +126,59 @@ in {
+@@ -83,37 +126,58 @@ in {
                  force = true;
                };
              }
@@ -220,7 +220,6 @@ index c97dd15..e993235 100644
 +                    style
 +                    scripts
 +                    ;
-+                  source = toString m.source;
 +                }) profile.sine.localMods
 +              )
 +            }'
@@ -236,7 +235,7 @@ index c97dd15..e993235 100644
                mkdir -p "$BASE_DIR/chrome/sine-mods"
  
                if [ ! -f "$MODS_FILE" ]; then
-@@ -138,7 +203,7 @@ in {
+@@ -138,7 +202,7 @@ in {
                }
  
                for mod_id in $(echo "$PREV_STATE" | ${lib.getExe pkgs.jq} -r 'keys[]'); do
@@ -245,7 +244,7 @@ index c97dd15..e993235 100644
                    ${lib.getExe pkgs.jq} "del(.[\"$mod_id\"])" "$MODS_FILE" > "$MODS_FILE.tmp" && mv "$MODS_FILE.tmp" "$MODS_FILE"
                    rm -rf "$BASE_DIR/chrome/sine-mods/$mod_id"
                    echo "Removed sine mod $mod_id"
-@@ -147,6 +212,55 @@ in {
+@@ -147,6 +211,55 @@ in {
  
                NEW_STATE="{}"
  
@@ -301,7 +300,7 @@ index c97dd15..e993235 100644
                SINE_BASE="https://raw.githubusercontent.com/sineorg/store/main/mods"
                THEME_BASE="https://raw.githubusercontent.com/zen-browser/theme-store/main/themes"
  
-@@ -439,12 +553,12 @@ in {
+@@ -439,12 +552,12 @@ in {
                  fi
                done
  
@@ -316,7 +315,7 @@ index c97dd15..e993235 100644
                  PREF_NAME=$(${lib.getExe pkgs.jq} -r --arg id "$mod_id" '.[$id].preferences // ""' "$MODS_FILE")
                  PREF_VALID=false
                  if [ -n "$PREF_NAME" ]; then
-@@ -490,21 +604,20 @@ in {
+@@ -490,21 +603,20 @@ in {
                  echo "Error: Generated invalid JSON in $MODS_FILE"
                  exit 1
                fi

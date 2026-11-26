@@ -52,7 +52,11 @@
             lib.mapAttrsToList (varName: value: [
                 "--set"
                 varName
-                (toString value)
+                (
+                    if builtins.isPath value
+                    then "${value}"
+                    else toString value
+                )
             ])
             runtimeEnv
         );
@@ -74,7 +78,7 @@
         }
         (builtins.readFile src);
 
-    archReleaseSigningKey = ./keys/arch-release-signing-key.asc;
+    archReleaseSigningKey = "${./keys/arch-release-signing-key.asc}";
     firecrackerBinary = "${pkgs.firecracker}/bin/firecracker";
     jailerBinary = "${pkgs.firecracker}/bin/jailer";
 
