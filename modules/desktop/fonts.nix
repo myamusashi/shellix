@@ -5,15 +5,15 @@
         key = "shellix.nixos.desktopFonts";
 
         fonts = {
-            packages = [
+            packages = with pkgs; [
                 appleFonts.sf-pro
                 appleFonts.sf-mono
                 appleFonts.ny
-                pkgs.maple-mono.NF
-                pkgs.noto-fonts
-                pkgs.weather-icons
-                (pkgs.callPackage ../../packages/switzer-font.nix {})
-                (pkgs.callPackage ../../packages/google-sans-flex.nix {})
+                maple-mono.NF
+                noto-fonts
+                weather-icons
+                (callPackage ../../packages/switzer-font.nix {})
+                (callPackage ../../packages/google-sans-flex.nix {})
             ];
             enableDefaultPackages = true;
             fontconfig = {

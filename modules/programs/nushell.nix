@@ -40,10 +40,10 @@ in {
         config = {
             environment = {
                 shells = [pkgs.nushell];
-                systemPackages = [
-                    pkgs.nushell
-                    pkgs.carapace
-                    pkgs.nufmt
+                systemPackages = with pkgs; [
+                    nushell
+                    carapace
+                    nufmt
                 ];
             };
 

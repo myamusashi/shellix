@@ -1,12 +1,12 @@
 {
     perSystem = {pkgs, ...}: {
         devShells.default = pkgs.mkShell {
-            buildInputs = [
-                pkgs.alejandra
-                pkgs.deadnix
-                pkgs.nil
-                pkgs.nixd
-                pkgs.statix
+            buildInputs = with pkgs; [
+                alejandra
+                deadnix
+                nil
+                nixd
+                statix
             ];
             shellHook = ''
                 echo "NixOS configuration development environment"

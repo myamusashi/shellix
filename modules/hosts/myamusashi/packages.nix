@@ -26,104 +26,104 @@
         key = "shellix.nixos.myamusashiPackages";
 
         environment = {
-            systemPackages = [
-                pkgs.darkly
-                pkgs.bat
-                pkgs.duf
-                pkgs.pv
-                pkgs.mprisence
-                pkgs.libsixel
-                pkgs.ueberzugpp
-                pkgs.fd
-                pkgs.zellij
-                pkgs.ripgrep
-                pkgs.rich-cli
-                pkgs.mediainfo
-                pkgs.ouch
-                pkgs.glow
-                pkgs.hexyl
-                pkgs.antiprism
-                pkgs.fzf
-                pkgs.jq
-                pkgs.firecrawl-mcp
-                pkgs.fastfetch
-                pkgs.unzip
-                pkgs.zip
-                pkgs.unrar
-                pkgs.p7zip
-                pkgs.qt6.qtsvg
-                pkgs.lxqt.pcmanfm-qt
-                pkgs.lxqt.pavucontrol-qt
-                pkgs.lxqt.lxqt-archiver
-                pkgs.pinentry-qt
-                pkgs.media-downloader
-                pkgs.qtcreator
+            systemPackages = with pkgs; [
+                darkly
+                bat
+                duf
+                pv
+                mprisence
+                libsixel
+                ueberzugpp
+                fd
+                zellij
+                ripgrep
+                rich-cli
+                mediainfo
+                ouch
+                glow
+                hexyl
+                antiprism
+                fzf
+                jq
+                firecrawl-mcp
+                fastfetch
+                unzip
+                zip
+                unrar
+                p7zip
+                qt6.qtsvg
+                lxqt.pcmanfm-qt
+                lxqt.pavucontrol-qt
+                lxqt.lxqt-archiver
+                pinentry-qt
+                media-downloader
+                qtcreator
                 myamusashiPackages.telegram
-                pkgs.better-adb-sync
-                pkgs.scrcpy
-                pkgs.android-tools
-                pkgs.iptables
-                pkgs.inetutils
-                pkgs.strawberry
-                (pkgs.callPackage ../../../packages/mornye.nix {})
-                pkgs.samba
-                pkgs.cifs-utils
-                pkgs.ffmpeg
-                pkgs.imagemagick
-                pkgs.ffmpegthumbnailer
-                pkgs.poppler-utils
-                pkgs.lxqt.lximage-qt
-                pkgs.zathura
-                pkgs.gtk3
-                pkgs.gtk4
-                pkgs.morewaita-icon-theme
-                pkgs.qt6Packages.qt6ct
-                (pkgs.callPackage ../../../packages/future-cursor.nix {})
-                (pkgs.callPackage ../../../packages/future-cyan-hyprcursor.nix {})
+                better-adb-sync
+                scrcpy
+                android-tools
+                iptables
+                inetutils
+                strawberry
+                (callPackage ../../../packages/mornye.nix {})
+                samba
+                cifs-utils
+                ffmpeg
+                imagemagick
+                ffmpegthumbnailer
+                poppler-utils
+                lxqt.lximage-qt
+                zathura
+                gtk3
+                gtk4
+                morewaita-icon-theme
+                qt6Packages.qt6ct
+                (callPackage ../../../packages/future-cursor.nix {})
+                (callPackage ../../../packages/future-cyan-hyprcursor.nix {})
                 myamusashiPackages.wl-screenrec-fork
-                pkgs.pass-wayland
-                pkgs.wine-wayland
-                pkgs.winetricks
-                pkgs.wineWow64Packages.waylandFull
-                pkgs.protonup-qt
-                pkgs.gamemode
-                pkgs.pcsx2
-                pkgs.unoconv
+                pass-wayland
+                wine-wayland
+                winetricks
+                wineWow64Packages.waylandFull
+                protonup-qt
+                gamemode
+                pcsx2
+                unoconv
                 myamusashiPackages.wordcraft
                 myamusashiPackages.yapfast
                 myamusashiPackages.serein
                 myamusashiPackages.zapfast
                 myamusashiPackages.qmlformat-rs
                 myamusashiPackages.loaf-fm
-                (wrapElectron pkgs.vesktop "vesktop")
-                pkgs.opencode
+                (wrapElectron vesktop "vesktop")
+                opencode
                 (wrapElectron inputs.helium.packages.${system}.default "helium")
-                pkgs.bun
-                pkgs.nodejs
-                pkgs.luajitPackages.luacheck
-                pkgs.lua5_5_compat
-                pkgs.luajitPackages.lua-cjson
-                pkgs.antigravity-cli
-                (pkgs.callPackage ../../../packages/zcode-bridge.nix {})
+                bun
+                nodejs
+                luajitPackages.luacheck
+                lua5_5_compat
+                luajitPackages.lua-cjson
+                antigravity-cli
+                (callPackage ../../../packages/zcode-bridge.nix {})
                 myamusashiPackages.omp
-                (pkgs.callPackage ../../../packages/zcode.nix {})
-                (pkgs.callPackage ../../../packages/zen-proxy.nix {})
-                pkgs.git-credential-manager
-                pkgs.gh
-                pkgs.git
-                pkgs.curl
-                pkgs.kdiff3
-                (pkgs.callPackage ../../../packages/app2unit.nix {})
-                pkgs.sops
-                pkgs.gvfs
-                pkgs.wget2
-                pkgs.vim
-                pkgs.qbittorrent-enhanced-nox
-                pkgs.nil
-                pkgs.alejandra
-                pkgs.statix
-                pkgs.ollama-vulkan
-                pkgs.libva
+                (callPackage ../../../packages/zcode.nix {})
+                (callPackage ../../../packages/zen-proxy.nix {})
+                git-credential-manager
+                gh
+                git
+                curl
+                kdiff3
+                (callPackage ../../../packages/app2unit.nix {})
+                sops
+                gvfs
+                wget2
+                vim
+                qbittorrent-enhanced-nox
+                nil
+                alejandra
+                statix
+                ollama-vulkan
+                libva
             ];
 
             sessionVariables = {

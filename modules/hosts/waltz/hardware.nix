@@ -50,12 +50,12 @@
             graphics = {
                 enable = true;
                 enable32Bit = true;
-                extraPackages = [
-                    pkgs.intel-media-driver
-                    pkgs.intel-vaapi-driver
-                    pkgs.libva-vdpau-driver
-                    pkgs.libva
-                    pkgs.libvdpau-va-gl
+                extraPackages = with pkgs; [
+                    intel-media-driver
+                    intel-vaapi-driver
+                    libva-vdpau-driver
+                    libva
+                    libvdpau-va-gl
                 ];
                 extraPackages32 = [
                     pkgs.pkgsi686Linux.intel-media-driver

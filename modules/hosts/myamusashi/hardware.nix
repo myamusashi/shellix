@@ -186,12 +186,12 @@
             graphics = {
                 enable = true;
                 enable32Bit = true;
-                extraPackages = [
-                    pkgs.vulkan-loader
-                    pkgs.libGLX
-                    pkgs.libGL
-                    pkgs.libva
-                    pkgs.intel-media-driver
+                extraPackages = with pkgs; [
+                    vulkan-loader
+                    libGLX
+                    libGL
+                    libva
+                    intel-media-driver
                 ];
                 extraPackages32 = [
                     pkgs.pkgsi686Linux.intel-media-driver
@@ -227,13 +227,13 @@
                 "icc/thinkpad-x270.icm".source = ../../../assets/icc/thinkpad_270_icc.icm;
                 "icc/lg-mk400.icm".source = ../../../assets/icc/lg_mk400_icc.icm;
             };
-            systemPackages = [
-                pkgs.libva-utils
-                pkgs.virtualgl
-                pkgs.vulkan-tools
-                pkgs.pciutils
-                pkgs.udisks
-                pkgs.udiskie
+            systemPackages = with pkgs; [
+                libva-utils
+                virtualgl
+                vulkan-tools
+                pciutils
+                udisks
+                udiskie
             ];
         };
 

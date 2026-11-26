@@ -57,25 +57,25 @@ in {
                             NIX_REMOTE = "daemon";
                         };
 
-                        path = [
-                            pkgs.bash
-                            pkgs.coreutils
-                            pkgs.curl
-                            pkgs.findutils
-                            pkgs.gawk
-                            pkgs.git
-                            pkgs.gnugrep
-                            pkgs.gnused
-                            pkgs.gnutar
-                            pkgs.gzip
-                            pkgs.jq
-                            pkgs.nix
-                            pkgs.nodejs
-                            pkgs.openssh
-                            pkgs.unzip
-                            pkgs.which
-                            pkgs.xz
-                            pkgs.zstd
+                        path = with pkgs; [
+                            bash
+                            coreutils
+                            curl
+                            findutils
+                            gawk
+                            git
+                            gnugrep
+                            gnused
+                            gnutar
+                            gzip
+                            jq
+                            nix
+                            nodejs
+                            openssh
+                            unzip
+                            which
+                            xz
+                            zstd
                         ];
 
                         serviceConfig = {
@@ -96,10 +96,10 @@ in {
 
         guestCleanupScript = pkgs.writeShellApplication {
             name = "forgejo-runner-cleanup";
-            runtimeInputs = [
-                pkgs.coreutils
-                pkgs.findutils
-                pkgs.nix
+            runtimeInputs = with pkgs; [
+                coreutils
+                findutils
+                nix
             ];
             text = ''
                 retention_days=${toString runnerConfig.microvm.cleanup.retentionDays}
@@ -122,10 +122,10 @@ in {
 
         secretsPackScript = pkgs.writeShellApplication {
             name = "forgejo-runner-pack-secrets";
-            runtimeInputs = [
-                pkgs.coreutils
-                pkgs.e2fsprogs
-                pkgs.util-linux
+            runtimeInputs = with pkgs; [
+                coreutils
+                e2fsprogs
+                util-linux
             ];
             text = ''
                 set -euo pipefail

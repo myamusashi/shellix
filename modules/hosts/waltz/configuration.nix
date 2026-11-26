@@ -206,28 +206,28 @@ in {
 
                 fonts.packages = [pkgs.nerd-fonts.hack];
 
-                environment.systemPackages = [
-                    pkgs.bat
-                    pkgs.vim
-                    pkgs.pciutils
-                    pkgs.fzf
-                    pkgs.inetutils
-                    pkgs.duf
-                    pkgs.forgejo-runner
-                    pkgs.sops
-                    pkgs.age
-                    pkgs.alejandra
-                    pkgs.unzip
-                    pkgs.jq
-                    pkgs.btop
-                    pkgs.htop
-                    pkgs.lazygit
-                    pkgs.lazysql
-                    pkgs.nil
-                    pkgs.git
-                    pkgs.gh
-                    pkgs.curl
-                    pkgs.cloudflared
+                environment.systemPackages = with pkgs; [
+                    bat
+                    vim
+                    pciutils
+                    fzf
+                    inetutils
+                    duf
+                    forgejo-runner
+                    sops
+                    age
+                    alejandra
+                    unzip
+                    jq
+                    btop
+                    htop
+                    lazygit
+                    lazysql
+                    nil
+                    git
+                    gh
+                    curl
+                    cloudflared
                 ];
 
                 system.stateVersion = "24.11";

@@ -8,9 +8,9 @@
                     ../../patches/hyprland-surface-partial-damage.patch
                 ];
         });
-        patchedScrollOverview = inputs.hypr-scroll-overview.packages.${system}.default.overrideAttrs (_: {
-            patches = [../../patches/hyprland-scroll-overview.patch];
-        });
+        # patchedScrollOverview = inputs.hypr-scroll-overview.packages.${system}.default.overrideAttrs (_: {
+        #     patches = [../../patches/hyprland-scroll-overview.patch];
+        # });
     in {
         key = "shellix.nixos.hyprland";
 
@@ -24,18 +24,17 @@
             portalPackage = inputs.xdg-desktop-portal-hyprland.packages.${system}.default;
         };
 
-        environment.systemPackages = [
-            pkgs.wl-clipboard
-            pkgs.hyprpicker
-            pkgs.hyprsunset
-            patchedScrollOverview
+        environment.systemPackages = with pkgs; [
+            wl-clipboard
+            hyprpicker
+            hyprsunset
+            # patchedScrollOverview
             inputs.hypr-dynamic-cursors.packages.${system}.hypr-dynamic-cursors
         ];
 
         xdg.portal = {
             enable = true;
             extraPortals = [
-                pkgs.lxqt.xdg-desktop-portal-lxqt
                 pkgs.xdg-desktop-portal-gtk
                 inputs.myamusashi-pkgs.packages.${system}.loaf-fm
             ];
