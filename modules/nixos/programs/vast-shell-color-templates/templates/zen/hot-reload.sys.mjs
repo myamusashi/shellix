@@ -5,7 +5,7 @@
 // timers: main-process scopes only have the ones from Timer.sys.mjs.
 const MODS_JSON_POLL_MS = 1000;
 
-const { setInterval } = ChromeUtils.importESModule(
+const { setTimeout } = ChromeUtils.importESModule(
   "resource://gre/modules/Timer.sys.mjs"
 );
 
@@ -13,8 +13,8 @@ const enabledStyleFiles = (mods, chromeDir) => {
   const files = [];
   for (const mod of Object.values(mods)) {
     if (!mod.enabled || !mod.style) continue;
-    for (const rel of Object.values(mod.style)) {
-      if (rel) files.push(PathUtils.join(chromeDir, "sine-mods", mod.id, rel));
+    for (const relativePath of Object.values(mod.style)) {
+      if (relativePath) files.push(PathUtils.join(chromeDir, "sine-mods", mod.id, relativePath));
     }
   }
   return files;
@@ -22,15 +22,23 @@ const enabledStyleFiles = (mods, chromeDir) => {
 
 const collect = async (chromeDir) => {
   const mods = await IOUtils.readJSON(PathUtils.join(chromeDir, "sine-mods", "mods.json"));
-  const seen = new Map();
+  const modifiedTimes = new Map();
   for (const path of enabledStyleFiles(mods, chromeDir)) {
     try {
-      seen.set(path, (await IOUtils.stat(path)).lastModified);
+      modifiedTimes.set(path, (await IOUtils.stat(path)).lastModified);
     } catch {
-      // file not rendered yet (first run) or mod removed: no state
+      // file not rendered yet or mod removed
     }
   }
-  return seen;
+  return modifiedTimes;
+};
+
+const hasChanged = (previous, current) => {
+  if (previous.size !== current.size) return true;
+  for (const [path, modifiedTime] of current) {
+    if (previous.get(path) !== modifiedTime) return true;
+  }
+  return false;
 };
 
 try {
@@ -40,29 +48,24 @@ try {
   const chromeDir = Services.dirsvc.get("UChrm", Ci.nsIFile).path;
 
   (async () => {
-    try {
-      const lastMtimes = await collect(chromeDir); // prime: startup must not force a rebuild
+    let previousTimes = await collect(chromeDir);
 
-      setInterval(async () => {
-        try {
-          const next = await collect(chromeDir);
-          let changed = false;
-          for (const [path, mtime] of next) {
-            if (lastMtimes.get(path) !== mtime) changed = true;
-          }
-          for (const [path, mtime] of lastMtimes) {
-            if (!next.has(path) || next.get(path) !== mtime) changed = true;
-          }
-          for (const [path, mtime] of next) lastMtimes.set(path, mtime);
-          if (changed) await sheets.rebuildMods(true);
-        } catch (err) {
-          console.warn("[zen-matugen] watcher tick failed:", err);
+    const tick = async () => {
+      try {
+        const currentTimes = await collect(chromeDir);
+        if (hasChanged(previousTimes, currentTimes)) {
+          await sheets.rebuildMods(true);
+          // the rebuild may rewrite these files; don't treat that as a user change
+          previousTimes = await collect(chromeDir);
         }
-      }, MODS_JSON_POLL_MS);
-    } catch (err) {
-      console.error("[zen-matugen] watcher failed to start:", err);
-    }
+      } catch (error) {
+        console.warn("[zen-matugen] watcher tick failed:", error);
+      }
+      setTimeout(tick, MODS_JSON_POLL_MS);
+    };
+
+    setTimeout(tick, MODS_JSON_POLL_MS);
   })();
-} catch (err) {
-  console.error("[zen-matugen] watcher failed to start:", err);
+} catch (error) {
+  console.error("[zen-matugen] watcher failed to start:", error);
 }
