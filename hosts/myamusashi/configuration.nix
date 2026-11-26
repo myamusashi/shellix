@@ -65,6 +65,14 @@ in {
                 owner = config.users.users.myamusashi.name;
             };
         };
+        templates."git-user-email" = {
+            content = ''
+                [user]
+                    email = ${config.sops.placeholder.proton-mail_account}
+            '';
+            owner = config.users.users.myamusashi.name;
+            mode = "0400";
+        };
     };
 
     i18n.defaultLocale = "en_US.UTF-8";
@@ -132,10 +140,8 @@ in {
             enable = true;
             lfs.enable = true;
             config = {
-                user = {
-                    name = "myamusashi";
-                    email = "myamusashi@users.noreply.github.com";
-                };
+                include.path = config.sops.templates."git-user-email".path;
+                user.name = "myamusashi";
                 credential.helper = "store";
                 alias = {
                     ci = "commit";

@@ -5,16 +5,26 @@
     ...
 }: {
     config = lib.mkIf config.shellix.server.vaultwarden.enable {
+        sops.templates."vaultwarden-smtp.env" = {
+            content = ''
+                SMTP_FROM=${config.sops.placeholder.gmail_account}
+                SMTP_USERNAME=${config.sops.placeholder.gmail_account}
+            '';
+        };
+
         services.vaultwarden = {
             enable = true;
             package = pkgs-stable.vaultwarden;
             webVaultPackage = pkgs-stable.vaultwarden.webvault;
             dbBackend = "sqlite";
             backupDir = "/var/backup/vaultwarden";
-            environmentFile = config.sops.secrets.smtp_app_password.path;
+            environmentFile = [
+                config.sops.secrets.smtp_app_password.path
+                config.sops.templates."vaultwarden-smtp.env".path
+            ];
             config = {
                 DOMAIN = "https://vault.myamusashi.cc";
-                SIGNUPS_ALLOWED = true;
+                SIGNUPS_ALLOWED = false;
                 PASSWORD_HINTS_ALLOWED = true;
                 MAX_INVALID_LOGINS = 5;
                 IP_HEADER = "X-Real-IP";
@@ -24,9 +34,7 @@
                 SMTP_HOST = "smtp.gmail.com";
                 SMTP_PORT = 587;
                 SMTP_SECURITY = "starttls";
-                SMTP_FROM = "REDACTED_EMAIL";
                 SMTP_FROM_NAME = "Vaultwarden";
-                SMTP_USERNAME = "REDACTED_EMAIL";
             };
         };
 

@@ -7,6 +7,8 @@
         ../../shared/Variable.nix
     ];
     config = lib.mkIf config.shellix.server.monitoring.enable {
+        sops.secrets.grafana_secret_key.owner = "grafana";
+
         services = {
             grafana = {
                 enable = true;
@@ -16,7 +18,7 @@
                         http_port = config.shellix.variables.port.GRAFANA;
                         domain = "dash.myamusashi.com";
                     };
-                    security.secret_key = config.sops.secrets.grafana_secret_key.path;
+                    security.secret_key = "$__file{${config.sops.secrets.grafana_secret_key.path}}";
                 };
             };
 

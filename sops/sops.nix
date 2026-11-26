@@ -10,6 +10,8 @@
             smtp_app_password.mode = "0440";
             user1-mail.mode = "0440";
             ocis_secrets_password.mode = "0440";
+            gmail_account.mode = "0440";
+            proton-mail_account.mode = "0440";
 
             lightauth_configs = {
                 path = "/home/myamusashi/.config/sops-nix/secrets/lightauth_configs";

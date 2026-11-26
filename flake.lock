@@ -595,11 +595,11 @@
         "systems": "systems_6"
       },
       "locked": {
-        "lastModified": 1794427683,
-        "narHash": "sha256-o7ey9gEilsxaifqJWnBDlYSKbNWYQYtKwDyXeZU2kaU=",
+        "lastModified": 1791914995,
+        "narHash": "sha256-Zf/xfQEAasnwnmEfHqW/4hjDE/s44yn2hD4RuVIZRjA=",
         "owner": "numtide",
         "repo": "flake-utils",
-        "rev": "cd489559845d81f673a12885576016c65cbe9363",
+        "rev": "b7a79d3fea1e214f6d668d521cecec0c01e26544",
         "type": "github"
       },
       "original": {
@@ -1650,16 +1650,15 @@
         ]
       },
       "locked": {
-        "lastModified": 1795318676,
-        "narHash": "sha256-85yvoHGGl4BKm9d6n5wAusLGjw8mYsIZ7KfdEHJk0Gg=",
-        "owner": "myamusashi",
+        "lastModified": 1795535432,
+        "narHash": "sha256-1HWvMTI5fenDn0tbwCX/teDbvuTeg7DRB+5Wqf915UQ=",
+        "owner": "m-uvex",
         "repo": "loaf-fm",
-        "rev": "02a84f33a40c2df1eb32ad748c5fbee7a468e3aa",
+        "rev": "47d9546fa8cb7bcf9630e65dea3dc40268db3f11",
         "type": "github"
       },
       "original": {
-        "owner": "myamusashi",
-        "ref": "optimize",
+        "owner": "m-uvex",
         "repo": "loaf-fm",
         "type": "github"
       }
@@ -1744,11 +1743,11 @@
         "zapfast": "zapfast"
       },
       "locked": {
-        "lastModified": 1795495270,
-        "narHash": "sha256-gGLHpJJWHme8sScL9tCwFMw47TPTpMufxRyjAr2Mzaw=",
+        "lastModified": 1795648853,
+        "narHash": "sha256-L1+yoTExsokNr84uXBk4XRtl7BEMIW4DjdRTK4AKXxk=",
         "owner": "myamusashi",
         "repo": "nix-myamusashi-packages",
-        "rev": "f978e1963fbe1d86c637e25cba699925dca9a460",
+        "rev": "6c3a4712659361ffa6c15b2103273911eb196141",
         "type": "github"
       },
       "original": {
@@ -2229,11 +2228,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1793554398,
-        "narHash": "sha256-dGiWGjZuBzyG0+u61gQpsL+DazAwFU72TF26iNiUKe4=",
+        "lastModified": 1795266808,
+        "narHash": "sha256-Q0cxImdrIiuRa+KhY/sgHiGtUtTDwr864rplpQ9NOD4=",
         "ref": "refs/heads/master",
-        "rev": "9c6e7b12510dd388eff7a3dfe0c4d519fb01dfb5",
-        "revCount": 30,
+        "rev": "f609d60e40ccde16fc6ca82cb13847dae50abcab",
+        "revCount": 31,
         "type": "git",
         "url": "https://git.myamusashi.cc/myamusashi/qmlformat-rs"
       },
@@ -2388,16 +2387,16 @@
         ]
       },
       "locked": {
-        "lastModified": 1795471461,
-        "narHash": "sha256-qNBBO/ctBoxkhv1lJh9rp8uBivSln0hyDw37o+GBrwA=",
+        "lastModified": 1795648796,
+        "narHash": "sha256-gHi4pO1fo1tvUld6LiUUitwpJ+R2g51NyujoEo5Se2Y=",
         "owner": "myamusashi",
         "repo": "Serein",
-        "rev": "9fb7c0bb390399cebce896c9bfd73655efde78c8",
+        "rev": "817f09bf94af4584951b2a46b8e7fa678837872c",
         "type": "github"
       },
       "original": {
         "owner": "myamusashi",
-        "ref": "fix/superseed-hot-reload",
+        "ref": "master",
         "repo": "Serein",
         "type": "github"
       }
@@ -2496,11 +2495,11 @@
         "qmlformat-rs": "qmlformat-rs_2"
       },
       "locked": {
-        "lastModified": 1795434844,
-        "narHash": "sha256-Bs5hgpX4jpRDkpDjULOxdbDjLRIjhV9SQ0pub/PnAx4=",
+        "lastModified": 1795649390,
+        "narHash": "sha256-BxVS5FI/0gHDMTgtiPuyuzLJVBvkvjQhFvnVE8GTauk=",
         "ref": "refs/heads/master",
-        "rev": "728fc6cca848b006f9aea2a487bdfac3aa267ca5",
-        "revCount": 1952,
+        "rev": "a88ca8292ccfa3e00a2086b209b019d61a41de2e",
+        "revCount": 1957,
         "type": "git",
         "url": "https://git.myamusashi.cc/myamusashi/vast-shell"
       },
@@ -2684,11 +2683,11 @@
     },
     "systems_6": {
       "locked": {
-        "lastModified": 1791244623,
-        "narHash": "sha256-uuanbkFk8a313Zfrxdcz8Us/yQtaxNnKJtX8v0ZPpd8=",
+        "lastModified": 1681028828,
+        "narHash": "sha256-Vy1rq5AaRuLzOxct8nz4T6wlgyUR7zLU309k9mBC768=",
         "owner": "nix-systems",
         "repo": "default",
-        "rev": "d36eeed142f88b5a636f2e3856a53c61654cf29b",
+        "rev": "da67096a3b9bf56a91d16901293e51ba5b49a27e",
         "type": "github"
       },
       "original": {

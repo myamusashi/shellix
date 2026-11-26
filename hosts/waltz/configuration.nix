@@ -36,7 +36,7 @@
             };
             monitoring.enable = false;
             pihole = {
-                enable = true; # -> 192.168.18.14:8080 + :53 (BIND mode: per-interface bind so podman/aardvark keeps its own :53; host uses 127.0.0.1)
+                enable = true;
                 listeningMode = "BIND";
             };
             vaultwarden.enable = true;
@@ -51,106 +51,7 @@
                     "ssh.myamusashi.cc" = "ssh://localhost:22";
                 };
             };
-            phpApps = {
-                enable = false;
-
-                apps.example = {
-                    enable = false;
-                    version = "1.0.0";
-
-                    vHostDomain = "example.com";
-                    subdomain = "example";
-                    listenAddress = "127.0.0.1";
-                    port = 8801;
-
-                    src = pkgs-stable.fetchFromForgejo {
-                        domain = "git.myamusashi.cc";
-                        owner = "myamusashi";
-                        repo = "REDACTED_REPO";
-                        rev = "7c00e04be3df87d10607be9840f2880c918a1274";
-                        hash = "sha256-aAvrxBeLrZdh8TGNvH7PHd3czOeStA4XSPXmZnc9puY=";
-                    };
-
-                    phpPackage = pkgs-stable.php83;
-                    phpExtensions = all:
-                        with all; [
-                            pdo
-                            pdo_mysql
-                            mysqli
-                            mbstring
-                            gd
-                            curl
-                            zip
-                        ];
-
-                    phpOptions = {
-                        upload_max_filesize = "16M";
-                        post_max_size = "16M";
-                        memory_limit = "128M";
-                    };
-
-                    fpmSettings = {
-                        "pm" = "dynamic";
-                        "pm.max_children" = "10";
-                        "pm.start_servers" = "3";
-                        "pm.min_spare_servers" = "2";
-                        "pm.max_spare_servers" = "5";
-                    };
-
-                    database = {
-                        enable = true;
-                        name = "REDACTED_DB";
-                    };
-                };
-                apps.example = {
-                    enable = false;
-                    version = "1.0.0";
-
-                    vHostDomain = "example.com";
-                    subdomain = "example";
-                    listenAddress = "127.0.0.1";
-                    port = 8800;
-
-                    src = pkgs-stable.fetchFromGitHub {
-                        owner = "REDACTED_OWNER";
-                        repo = "REDACTED_REPO";
-                        rev = "92508d1f25a983fad758e79002b3ed111d2196ab";
-                        hash = "sha256-xcP4YBR3N4AhGlwRJgopfifhBm3GC8XQKXTmExOLCXs=";
-                    };
-
-                    patches = [./pathshit.patch];
-                    phpPackage = pkgs-stable.php83;
-                    phpExtensions = all:
-                        with all; [
-                            pdo
-                            pdo_mysql
-                            mysqli
-                            mbstring
-                            gd
-                            curl
-                            zip
-                        ];
-
-                    phpOptions = {
-                        upload_max_filesize = "16M";
-                        post_max_size = "16M";
-                        memory_limit = "128M";
-                    };
-
-                    fpmSettings = {
-                        "pm" = "dynamic";
-                        "pm.max_children" = "10";
-                        "pm.start_servers" = "3";
-                        "pm.min_spare_servers" = "2";
-                        "pm.max_spare_servers" = "5";
-                    };
-
-                    database = {
-                        enable = true;
-                        name = "REDACTED_DB";
-                    };
-                };
-            };
+            phpApps.enable = false;
         };
         services = {
             earlyoom.enable = true;
@@ -253,9 +154,6 @@
 
     boot.kernel.sysctl."net.ipv4.ip_forward" = lib.mkForce 1;
 
-    # nixpkgs enables systemd-oomd by default. earlyoom is the right killer for this
-    # box; oomd would otherwise sit alongside it judging swap pressure and killing
-    # real services. myamusashi keeps the desktop defaults via shellix.services.oom.
     systemd.oomd.enable = lib.mkForce false;
     networking.nftables = {
         enable = true;
@@ -268,10 +166,6 @@
             }
         '';
     };
-
-    # qt.platformTheme = "lxqt";
-    # xdg.portal.lxqt.enable = true;
-    # programs.gnupg.agent.pinentryPackage = pkgs-stable.pinentry-qt;
 
     services = {
         xrdp = {
@@ -502,7 +396,6 @@
 
     users = {
         users = {
-            # nginx.extraGroups = ["simaset"];
             waltz = {
                 isNormalUser = true;
                 description = "waltz";
